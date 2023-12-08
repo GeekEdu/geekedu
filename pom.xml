@@ -7,7 +7,11 @@
     <artifactId>geekedu</artifactId>
     <version>1.0</version>
     <description>GeekEdu-在线教育系统</description>
-    <packaging>pom</packaging>
+	<modules>
+		<module>geekedu-api</module>
+		<module>geekedu-common</module>
+	</modules>
+	<packaging>pom</packaging>
     <!-- 继承SpringBoot父类 -->
     <parent>
         <groupId>org.springframework.boot</groupId>
