@@ -9,7 +9,7 @@ minio:
   secretKey: admin123
 aliyun:
   oss:
-    accessKeyID: LTAI5tFSxzWKNpCR6Mqr7iAK
-    accessKeySecret: uAsOMfMDW67YDSZUa1jnCgI0jEgNFg
-    endPoint: oss-cn-chengdu.aliyuncs.com
-    bucketName: geekedu
+    accessKeyID: 
+    accessKeySecret: 
+    endPoint: 
+    bucketName: 
