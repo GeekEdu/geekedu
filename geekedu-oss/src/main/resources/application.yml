@@ -1,9 +1,15 @@
 server:
   port: 4000
+spring:
+  application:
+    name: geekedu-oss
 minio:
   url: http://192.168.150.101:9000
   accessKey: admin
   secretKey: admin123
-spring:
-  application:
-    name: geekedu-oss
+aliyun:
+  oss:
+    accessKeyID: LTAI5tFSxzWKNpCR6Mqr7iAK
+    accessKeySecret: uAsOMfMDW67YDSZUa1jnCgI0jEgNFg
+    endPoint: oss-cn-chengdu.aliyuncs.com
+    bucketName: geekedu
