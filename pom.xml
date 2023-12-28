@@ -30,6 +30,7 @@
         <spring-cloud-alibaba.version>2021.0.1.0</spring-cloud-alibaba.version>
 
 		<jakarta.version>6.0.0</jakarta.version>
+		<hibernate-validator.version>8.0.0.Final</hibernate-validator.version>
 
 		<!--数据库相关依赖-->
 		<mysql.version>8.0.30</mysql.version>
@@ -46,6 +47,9 @@
 		<!--OSS-->
 		<minio.version>8.5.2</minio.version>
 		<aliyun.sdk.version>3.17.2</aliyun.sdk.version>
+
+		<!--swagger-->
+		<knife4j.version>3.0.3</knife4j.version>
 	</properties>
 
     <dependencyManagement>
@@ -68,6 +72,11 @@
 				<groupId>jakarta.servlet</groupId>
 				<artifactId>jakarta.servlet-api</artifactId>
 				<version>${jakarta.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate.validator</groupId>
+				<artifactId>hibernate-validator</artifactId>
+				<version>${hibernate-validator.version}</version>
 			</dependency>
 			<!--数据库相关依赖-->
 			<dependency>
@@ -123,6 +132,13 @@
 				<groupId>com.aliyun.oss</groupId>
 				<artifactId>aliyun-sdk-oss</artifactId>
 				<version>${aliyun.sdk.version}</version>
+			</dependency>
+
+			<!--swagger-->
+			<dependency>
+				<groupId>com.github.xiaoymin</groupId>
+				<artifactId>knife4j-spring-boot-starter</artifactId>
+				<version>${knife4j.version}</version>
 			</dependency>
         </dependencies>
     </dependencyManagement>
