@@ -9,11 +9,13 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.OperationModelsProviderPlugin;
 import springfox.documentation.spi.service.contexts.RequestMappingContext;
 
+import javax.annotation.Resource;
+
 import static com.github.xiaoymin.knife4j.spring.util.TypeUtils.isVoid;
 
 public class BaseSwaggerResponseModelPlugin implements OperationModelsProviderPlugin, Ordered {
 
-    @Autowired
+    @Resource
     private TypeResolver typeResolver;
 
     @Override

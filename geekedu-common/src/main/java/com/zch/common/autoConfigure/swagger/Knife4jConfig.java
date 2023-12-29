@@ -57,13 +57,13 @@ public class Knife4jConfig {
 
     @Bean
     @Primary
-    @ConditionalOnProperty(prefix = "tj.swagger", name = "enableResponseWrap",havingValue = "true")
+    @ConditionalOnProperty(prefix = "geekedu.swagger", name = "enableResponseWrap",havingValue = "true")
     public BaseSwaggerResponseModelPlugin baseSwaggerResponseModelPlugin(){
         return new BaseSwaggerResponseModelPlugin();
     }
     @Bean
     @Primary
-    @ConditionalOnProperty(prefix = "tj.swagger", name = "enableResponseWrap",havingValue = "true")
+    @ConditionalOnProperty(prefix = "geekedu.swagger", name = "enableResponseWrap",havingValue = "true")
     public BaseSwaggerResponseBuilderPlugin baseSwaggerResponseBuilderPlugin(){
         return new BaseSwaggerResponseBuilderPlugin();
     }

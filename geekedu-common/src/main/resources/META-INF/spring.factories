@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.zch.common.autoConfigure.swagger.Knife4jConfig,\
+  com.zch.common.autoConfigure.mybatis.MybatisConfig
