@@ -14,4 +14,12 @@ public interface Constant {
     // 数据字段 - updater
     String DATA_FIELD_NAME_UPDATEBY = "updateBy";
 
+    // 数据字段 - create_time
+    String DATA_FIELD_NAME_CREATE_TIME = "create_time";
+    String DATA_FIELD_NAME_CREATE_TIME_CAMEL = "createTime";
+
+    // 数据字段 - update_time
+    String DATA_FIELD_NAME_UPDATE_TIME = "update_time";
+    String DATA_FIELD_NAME_UPDATE_TIME_CAMEL = "updateTime";
+
 }

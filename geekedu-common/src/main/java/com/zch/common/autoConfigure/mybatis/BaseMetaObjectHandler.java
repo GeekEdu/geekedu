@@ -27,14 +27,14 @@ public class BaseMetaObjectHandler implements MetaObjectHandler {
     }
 
     private void setCreateBy(MetaObject metaObject) {
-        String userId = UserContext.getUser();
+        Long userId = UserContext.getUser();
         // 未找到用户id默认为0
-        this.strictInsertFill(metaObject, DATA_FIELD_NAME_CREATEBY, String.class, NumberUtils.null2Zero(userId));
+        this.strictInsertFill(metaObject, DATA_FIELD_NAME_CREATEBY, Long.class, NumberUtils.null2Zero(userId));
     }
 
     private void setUpdateBy(MetaObject metaObject) {
-        String userId = UserContext.getUser();
+        Long userId = UserContext.getUser();
         // 未找到用户id默认为0
-        this.strictInsertFill(metaObject, DATA_FIELD_NAME_UPDATEBY, String.class, NumberUtils.null2Zero(userId));
+        this.strictInsertFill(metaObject, DATA_FIELD_NAME_UPDATEBY, Long.class, NumberUtils.null2Zero(userId));
     }
 }

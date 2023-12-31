@@ -7,13 +7,13 @@ package com.zch.common.context;
  */
 public class UserContext {
 
-    private static final ThreadLocal<String> TL = new ThreadLocal<>();
+    private static final ThreadLocal<Long> TL = new ThreadLocal<>();
 
     /**
      * 保存用户id
      * @param userId 用户id
      */
-    public static void setUser(String userId) {
+    public static void setUser(Long userId) {
         TL.set(userId);
     }
 
@@ -21,7 +21,7 @@ public class UserContext {
      * 获取用户id
      * @return 用户id
      */
-    public static String getUser() {
+    public static Long getUser() {
         return TL.get();
     }
 
