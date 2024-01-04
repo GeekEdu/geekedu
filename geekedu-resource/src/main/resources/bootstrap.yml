@@ -22,3 +22,36 @@ spring:
             refresh: false
           - data-id: shared-feign.yaml # 共享feign配置
             refresh: false
+geekedu:
+  swagger:
+    enable: true
+    package-path: com.geekedu.oss.controller
+    title: GeekEdu - 资源中心接口文档
+    description: 该服务包含图片管理、媒资管理等
+    contact-name: 成大20软工2班-郑才华
+    contact-url: 192.168.150.101
+    contact-email: Z2069820192@163.com
+    version: v1.0
+    enableResponseWrap: true
+  jdbc:
+    database: geekedu-resource
+  platform:
+    file: TENCENT
+    media: TENCENT
+  tencent:
+    appId: 1312394356
+    secretId: AKIDDG3arrZ0B42sXzEOM8h182jDVbVDiAPS
+    secretKey: uc7RaXIqDPOAk9MAnAG5duvf8LHvIODl
+    vod:
+      enable: true
+      vodValidSeconds: 7776000
+      region: "ap-shanghai"
+      procedure: "wisehub-base"
+      urlKey: "HZFlxjPYoOm5AfShupOx"
+      pfcg: "basicDrmPreset"
+    cos:
+      enable: true
+      region: "ap-shanghai"
+      bucket: wisehub
+      multipartUploadThreshold: 5242880 # 5mb，触发分片上传的阈值
+      minimumUploadPartSize: 1048576 # 1mb，分片的最小大小
