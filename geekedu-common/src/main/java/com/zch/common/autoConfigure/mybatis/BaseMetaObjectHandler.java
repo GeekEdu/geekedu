@@ -1,9 +1,9 @@
 package com.zch.common.autoConfigure.mybatis;
 
-import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+// import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.zch.common.context.UserContext;
 import com.zch.common.utils.NumberUtils;
-import org.apache.ibatis.reflection.MetaObject;
+// import org.apache.ibatis.reflection.MetaObject;
 
 import static com.zch.common.constants.Constant.DATA_FIELD_NAME_CREATEBY;
 import static com.zch.common.constants.Constant.DATA_FIELD_NAME_UPDATEBY;
@@ -12,8 +12,9 @@ import static com.zch.common.constants.Constant.DATA_FIELD_NAME_UPDATEBY;
  * @author Poison02
  * @date 2023/12/28
  */
-public class BaseMetaObjectHandler implements MetaObjectHandler {
-    @Override
+// public class BaseMetaObjectHandler implements MetaObjectHandler {
+public class BaseMetaObjectHandler {
+    /*@Override
     public void insertFill(MetaObject metaObject) {
         // 插入数据时，插入创建人和更新人
         setCreateBy(metaObject);
@@ -36,5 +37,5 @@ public class BaseMetaObjectHandler implements MetaObjectHandler {
         Long userId = UserContext.getUser();
         // 未找到用户id默认为0
         this.strictInsertFill(metaObject, DATA_FIELD_NAME_UPDATEBY, Long.class, NumberUtils.null2Zero(userId));
-    }
+    }*/
 }

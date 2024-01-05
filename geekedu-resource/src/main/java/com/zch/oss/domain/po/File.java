@@ -1,8 +1,8 @@
 package com.zch.oss.domain.po;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+// import com.baomidou.mybatisplus.annotation.TableField;
+// import com.baomidou.mybatisplus.annotation.TableId;
+// import com.baomidou.mybatisplus.annotation.TableName;
 import com.zch.oss.enums.FileStatus;
 import com.zch.oss.enums.Platform;
 import lombok.Data;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("file")
+// @TableName("file")
 public class File implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -27,13 +27,13 @@ public class File implements Serializable {
     /**
      * 主键，文件id
      */
-    @TableId(value = "id")
+    // @TableId(value = "id")
     private Long id;
 
     /**
      * 文件在云端的唯一标示，例如：aaa.jpg
      */
-    @TableField("`key_id`")
+    // @TableField("`key_id`")
     private String keyId;
 
     /**

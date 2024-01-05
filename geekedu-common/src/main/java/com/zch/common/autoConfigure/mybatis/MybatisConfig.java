@@ -1,10 +1,10 @@
 package com.zch.common.autoConfigure.mybatis;
 
-import com.baomidou.mybatisplus.annotation.DbType;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.DynamicTableNameInnerInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+// import com.baomidou.mybatisplus.annotation.DbType;
+// import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+// import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+// import com.baomidou.mybatisplus.extension.plugins.inner.DynamicTableNameInnerInterceptor;
+// import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -17,19 +17,19 @@ import javax.annotation.Resource;
  * @author Poison02
  * @date 2023/12/28
  */
-@Configuration
-@ConditionalOnClass({MybatisPlusInterceptor.class, BaseMapper.class})
+// @Configuration
+// @ConditionalOnClass({MybatisPlusInterceptor.class, BaseMapper.class})
 public class MybatisConfig {
 
     /**
      * 通过自定义拦截器来实现自动注入createBy和updateBy
      * @return
      */
-    public BaseMetaObjectHandler baseMetaObjectHandler() {
+    /*public BaseMetaObjectHandler baseMetaObjectHandler() {
         return new BaseMetaObjectHandler();
-    }
+    }*/
 
-    @Bean
+    /*@Bean
     @ConditionalOnMissingBean
     public MybatisPlusInterceptor mybatisPlusInterceptor(@Autowired(required = false) DynamicTableNameInnerInterceptor innerInterceptor) {
         // 1. 定义插件主体，注意顺序：表名 > 多租户 > 分页 > 乐观锁 > 字段填充
@@ -43,8 +43,8 @@ public class MybatisConfig {
         paginationInnerInterceptor.setMaxLimit(200L);
         interceptor.addInnerInterceptor(paginationInnerInterceptor);
         // 4. 字段填充插件
-        interceptor.addInnerInterceptor(new MyBatisAutoFillInterceptor());
+        // interceptor.addInnerInterceptor(new MyBatisAutoFillInterceptor());
         return interceptor;
-    }
+    }*/
 
 }

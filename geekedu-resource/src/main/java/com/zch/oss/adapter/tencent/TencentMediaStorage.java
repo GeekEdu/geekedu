@@ -127,7 +127,7 @@ public class TencentMediaStorage implements MediaStorageAdapter {
         }
         // 3.解析结果
         MediaUploadResult result = new MediaUploadResult();
-        result.setFileId(response.getFileId());
+        result.setMediaId(response.getFileId());
         result.setMediaUrl(response.getMediaUrl());
         result.setCoverUrl(response.getCoverUrl());
         result.setRequestId(response.getRequestId());

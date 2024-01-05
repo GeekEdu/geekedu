@@ -1,6 +1,6 @@
 package com.zch.oss.enums;
 
-import com.baomidou.mybatisplus.annotation.EnumValue;
+// import com.baomidou.mybatisplus.annotation.EnumValue;
 import lombok.Getter;
 
 @Getter
@@ -8,7 +8,7 @@ public enum FilePlatform {
     TENCENT(1, "/img-tx/"),
     ALI(2, "/img-ali/"),
     ;
-    @EnumValue
+    // @EnumValue
     int value;
     String path;
 

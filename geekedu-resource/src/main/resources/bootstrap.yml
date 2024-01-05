@@ -7,6 +7,10 @@ spring:
     active: dev
   application:
     name: resource-service
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
   cloud:
     nacos:
       config:
@@ -40,9 +44,9 @@ geekedu:
     file: TENCENT
     media: TENCENT
   tencent:
-    appId: 1312394356
-    secretId: AKIDDG3arrZ0B42sXzEOM8h182jDVbVDiAPS
-    secretKey: uc7RaXIqDPOAk9MAnAG5duvf8LHvIODl
+    appId: 1315662121
+    secretId: AKIDWuHXxDE3g6IH3cWCl7d9Yozzu7LQMXcZ
+    secretKey: zpmgTL9sumQGtHQM5JOIzUls54rW1Lat
     vod:
       enable: true
       vodValidSeconds: 7776000
@@ -52,7 +56,7 @@ geekedu:
       pfcg: "basicDrmPreset"
     cos:
       enable: true
-      region: "ap-shanghai"
-      bucket: wisehub
+      region: "ap-chengdu"
+      bucket: geekedu
       multipartUploadThreshold: 5242880 # 5mb，触发分片上传的阈值
       minimumUploadPartSize: 1048576 # 1mb，分片的最小大小

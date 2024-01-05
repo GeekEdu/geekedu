@@ -1,6 +1,6 @@
 package com.zch.oss.enums;
 
-import com.baomidou.mybatisplus.annotation.EnumValue;
+// import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.zch.common.exceptions.BadRequestException;
 
 import static com.zch.oss.enums.FileErrorInfo.Msg.INVALID_FILE_STATUS;
@@ -11,7 +11,7 @@ public enum FileStatus {
     UPLOADED(2, "已上传"),
     PROCESSED(3, "已处理"),
     ;
-    @EnumValue
+    // @EnumValue
     private int value;
     private String desc;
 

@@ -1,11 +1,11 @@
 package com.zch.common.autoConfigure.mybatis;
 
-import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
+// import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 import com.zch.common.context.UserContext;
 import com.zch.common.utils.ReflectUtils;
-import org.apache.ibatis.executor.Executor;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.SqlCommandType;
+// import org.apache.ibatis.executor.Executor;
+// import org.apache.ibatis.mapping.MappedStatement;
+// import org.apache.ibatis.mapping.SqlCommandType;
 
 import java.sql.SQLException;
 
@@ -16,9 +16,10 @@ import static com.zch.common.constants.Constant.DATA_FIELD_NAME_UPDATEBY;
  * @author Poison02
  * @date 2023/12/28
  */
-public class MyBatisAutoFillInterceptor implements InnerInterceptor {
+// public class MyBatisAutoFillInterceptor implements InnerInterceptor {
+public class MyBatisAutoFillInterceptor {
 
-    @Override
+    /*@Override
     public void beforeUpdate(Executor executor, MappedStatement ms, Object parameter) throws SQLException {
         // 更新操作
         updateExe(ms, parameter);
@@ -52,5 +53,5 @@ public class MyBatisAutoFillInterceptor implements InnerInterceptor {
                 ReflectUtils.setFieldValue(parameter, DATA_FIELD_NAME_UPDATEBY, userId);
             }
         }
-    }
+    }*/
 }

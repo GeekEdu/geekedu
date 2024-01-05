@@ -1,6 +1,6 @@
 package com.zch.oss.enums;
 
-import com.baomidou.mybatisplus.annotation.EnumValue;
+// import com.baomidou.mybatisplus.annotation.EnumValue;
 import lombok.Getter;
 
 @Getter
@@ -9,7 +9,7 @@ public enum Platform {
     ALI(2, "阿里云", "/img-ali/"),
     QI_NIU(3, "七牛云", "/img-qn/"),
     ;
-    @EnumValue
+    // @EnumValue
     private final int value;
     private final String desc;
     private final String path;

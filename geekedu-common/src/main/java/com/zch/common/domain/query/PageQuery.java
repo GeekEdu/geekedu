@@ -1,3 +1,4 @@
+package com.zch.common.domain.query;/*
 package com.zch.common.domain.query;
 
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
@@ -11,10 +12,12 @@ import lombok.experimental.Accessors;
 
 import javax.validation.constraints.Min;
 
+*/
 /**
  * @author Poison02
  * @date 2023/12/31
- */
+ *//*
+
 @Data
 @ApiModel(description = "分页请求参数")
 @Accessors(chain = true)
@@ -74,4 +77,7 @@ public class PageQuery {
     public <T> Page<T> toMpPageDefaultSortByCreateTimeDesc() {
         return toMpPage(Constant.DATA_FIELD_NAME_CREATE_TIME, false);
     }
+}
+*/
+public class PageQuery {
 }

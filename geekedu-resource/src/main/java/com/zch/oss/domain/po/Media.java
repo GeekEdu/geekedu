@@ -1,7 +1,7 @@
 package com.zch.oss.domain.po;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+// import com.baomidou.mybatisplus.annotation.TableId;
+// import com.baomidou.mybatisplus.annotation.TableName;
 import com.zch.oss.enums.FileStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("media")
+// @TableName("media")
 public class Media implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -25,7 +25,7 @@ public class Media implements Serializable {
     /**
      * 主键
      */
-    @TableId(value = "id")
+    // @TableId(value = "id")
     private Long id;
 
     /**

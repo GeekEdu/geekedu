@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class MediaUploadResult {
 
-    private String fileId;
+    private String mediaId;
 
 
     private String mediaUrl;
