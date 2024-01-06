@@ -5,6 +5,6 @@
 <mapper namespace="com.zch.oss.mapper.FileMapper">
 	<insert id="insertFileInfo" parameterType="com.zch.oss.domain.po.File">
 		insert into file_resource (id, key_id, file_name, request_id, status, platform)
-		values (1, #{keyId}, #{fileName}, #{requestId}, 2, 1)
+		values (2, #{keyId}, #{fileName}, #{requestId}, #{status}, #{platform})
 	</insert>
 </mapper>

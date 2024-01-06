@@ -16,4 +16,13 @@ public enum FilePlatform {
         this.value = value;
         this.path = path;
     }
+
+    public static String returnPath(int value) {
+        for (FilePlatform platform : FilePlatform.values()) {
+            if (platform.getValue() == value) {
+                return platform.getPath();
+            }
+        }
+        return null;
+    }
 }

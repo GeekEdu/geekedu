@@ -49,12 +49,14 @@ public class File implements Serializable {
     /**
      * 状态：1-待上传 2-已上传,未使用 3-已使用
      */
-    private FileStatus status;
+    // private FileStatus status;
+    private int status;
 
     /**
      * 状态：1-腾讯 2-阿里
      */
-    private Platform platform;
+    // private Platform platform;
+    private int platform;
 
     /**
      * 创建者

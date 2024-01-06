@@ -9,6 +9,7 @@ import com.zch.oss.config.properties.PlatformProperties;
 import com.zch.oss.domain.dto.FileDTO;
 import com.zch.oss.domain.po.File;
 import com.zch.oss.enums.FileErrorInfo;
+import com.zch.oss.enums.FilePlatform;
 import com.zch.oss.enums.FileStatus;
 import com.zch.oss.mapper.FileMapper;
 import com.zch.oss.service.IFileService;
@@ -57,9 +58,9 @@ public class FileServiceImpl implements IFileService {
             fileInfo = new File();
             fileInfo.setFileName(originalFileName);
             fileInfo.setKeyId(newFileName);
-            fileInfo.setStatus(FileStatus.UPLOADED);
+            fileInfo.setStatus(FileStatus.UPLOADED.getValue());
             fileInfo.setRequestId(requestId);
-            fileInfo.setPlatform(properties.getFile());
+            fileInfo.setPlatform(properties.getFile().getValue());
             // save(fileInfo);
             fileMapper.insertFileInfo(fileInfo);
         } catch (Exception e) {
@@ -70,7 +71,7 @@ public class FileServiceImpl implements IFileService {
         // 6. 返回
         FileDTO fileDTO = new FileDTO();
         fileDTO.setId(fileInfo.getId());
-        fileDTO.setPath(fileInfo.getPlatform().getPath() + newFileName);
+        fileDTO.setPath(FilePlatform.returnPath(fileInfo.getPlatform()) + newFileName);
         fileDTO.setFileName(originalFileName);
         return fileDTO;
     }
