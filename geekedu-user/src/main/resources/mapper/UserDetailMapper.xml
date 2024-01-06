@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zch.user.mapper.UserDetailMapper">
+  <resultMap id="BaseResultMap" type="com.zch.user.domain.po.UserDetail">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="type" jdbcType="TINYINT" property="type" />
+    <result column="gender" jdbcType="TINYINT" property="gender" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="qq" jdbcType="VARCHAR" property="qq" />
+    <result column="wx" jdbcType="VARCHAR" property="wx" />
+    <result column="birthday" jdbcType="DATE" property="birthday" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="district" jdbcType="VARCHAR" property="district" />
+    <result column="intro" jdbcType="VARCHAR" property="intro" />
+    <result column="course_amount" jdbcType="SMALLINT" property="courseAmount" />
+    <result column="role_id" jdbcType="BIGINT" property="roleId" />
+    <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
+    <result column="created_time" jdbcType="DATE" property="createdTime" />
+    <result column="updated_by" jdbcType="VARCHAR" property="updatedBy" />
+    <result column="updated_time" jdbcType="DATE" property="updatedTime" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, `name`, `type`, gender, avatar, email, qq, wx, birthday, province, city, district,
+    intro, course_amount, role_id, created_by, created_time, updated_by, updated_time,
+    is_delete
+  </sql>
+  <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user_detail
+    where id = #{id}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.String">
+    delete from user_detail
+    where id = #{id}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.zch.user.domain.po.UserDetail" useGeneratedKeys="true">
+    insert into user_detail (`name`, `type`, gender, avatar,
+      email, qq, wx, birthday,
+      province, city, district,
+      intro, course_amount, role_id,
+      created_by, created_time, updated_by,
+      updated_time, is_delete)
+    values (#{name}, #{type}, #{gender}, #{avatar},
+      #{email}, #{qq}, #{wx}, #{birthday},
+      #{province}, #{city}, #{district},
+      #{intro}, #{courseAmount}, #{roleId},
+      #{createdBy}, #{createdTime}, #{updatedBy},
+      #{updatedTime}, #{isDelete})
+  </insert>
+  <update id="updateById" parameterType="com.zch.user.domain.po.UserDetail">
+    update user_detail
+    set `name` = #{name},
+      `type` = #{type},
+      gender = #{gender},
+      avatar = #{avatar},
+      email = #{email},
+      qq = #{qq},
+      wx = #{wx},
+      birthday = #{birthday},
+      province = #{province},
+      city = #{city},
+      district = #{district},
+      intro = #{intro},
+      course_amount = #{courseAmount},
+      role_id = #{roleId},
+      created_by = #{createdBy},
+      created_time = #{createdTime},
+      updated_by = #{updatedBy},
+      updated_time = #{updatedTime},
+      is_delete = #{isDelete}
+    where id = #{id}
+  </update>
+</mapper>
