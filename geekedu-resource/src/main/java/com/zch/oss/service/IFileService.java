@@ -24,4 +24,11 @@ public interface IFileService{
      */
     FileDTO getFileInfo(Long id);
 
+    /**
+     * 删除文件信息
+     * @param id 文件id
+     * @return
+     */
+    FileDTO deleteFileInfo(Long id);
+
 }

@@ -78,7 +78,24 @@ public class FileServiceImpl implements IFileService {
 
     @Override
     public FileDTO getFileInfo(Long id) {
-        return null;
+        File file = fileMapper.selectFileInfoById(id);
+        if (file == null) {
+            return null;
+        }
+        return FileDTO.of(file.getId(), file.getFileName(), FilePlatform.returnPath(file.getPlatform()) + file.getKeyId());
+    }
+
+    @Override
+    public FileDTO deleteFileInfo(Long id) {
+        int row = fileMapper.deleteFileInfo(id);
+        if (row != 1) {
+            return null;
+        }
+        File file = fileMapper.selectFileInfoById(id);
+        if (file == null) {
+            return null;
+        }
+        return FileDTO.of(file.getId(), file.getFileName(), FilePlatform.returnPath(file.getPlatform()) + file.getKeyId());
     }
 
     /**

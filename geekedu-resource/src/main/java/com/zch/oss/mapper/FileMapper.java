@@ -14,4 +14,8 @@ public interface FileMapper {
 
     int insertFileInfo(File fileInfo);
 
+    File selectFileInfoById(Long id);
+
+    int deleteFileInfo(Long id);
+
 }
