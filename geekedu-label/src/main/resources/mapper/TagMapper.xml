@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zch.label.mapper.TagMapper">
+	<resultMap id="BaseResultMap" type="com.zch.label.domain.po.Tag">
+		<id column="id" jdbcType="BIGINT" property="id"/>
+		<result column="name" jdbcType="VARCHAR" property="name"/>
+		<result column="created_by" jdbcType="BIGINT" property="createdBy"/>
+		<result column="created_time" jdbcType="DATE" property="createdTime"/>
+		<result column="updated_by" jdbcType="BIGINT" property="updatedBy"/>
+		<result column="updated_time" jdbcType="DATE" property="updatedTime"/>
+		<result column="is_delete" jdbcType="TINYINT" property="isDelete"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, `name`, created_by, created_time, updated_by, updated_time, is_delete
+	</sql>
+
+	<select id="selectTagList" resultMap="BaseResultMap">
+		select
+		    <include refid="Base_Column_List" />
+		from tag
+		where is_delete=0;
+	</select>
+
+	<select id="selectTagByCondition" resultMap="BaseResultMap">
+		select
+		    <include refid="Base_Column_List" />
+		from tag
+		where 1=1
+		<if test="name != '' and name != null">
+			and name like concat('%', #{tagName}, '%')
+		</if>
+		and is_delete=0;
+	</select>
+
+	<insert id="insertTag" parameterType="com.zch.label.domain.po.Tag">
+		insert into
+		tag (id, name, created_by, created_time, updated_by, updated_time)
+		values (#{id}, #{name}, #{createdBy}, #{createdTime}, #{updatedBy}, #{updatedTime});
+	</insert>
+
+	<update id="deleteTag" parameterType="com.zch.label.domain.po.Tag">
+		update tag
+		set is_delete=1, updated_by=#{updatedBy}, updated_time=#{updatedTime}
+		where id=#{id} and is_delete=0;
+	</update>
+
+	<update id="updateTag" >
+		update tag
+		set
+		    <if test="name != '' and name != null">
+				name=#{name}
+			</if>
+	</update>
+
+</mapper>

@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.slf4j.MDC;
 
+import java.util.Date;
+
 import static com.zch.common.constants.ErrorInfo.Code.FAILED;
 import static com.zch.common.constants.ErrorInfo.Code.SUCCESS;
 import static com.zch.common.constants.ErrorInfo.Msg.OK;
@@ -24,8 +26,8 @@ public class Response<T> {
     private String msg;
     @ApiModelProperty(value = "响应数据")
     private T data;
-    @ApiModelProperty(value = "请求id", example = "1af123c11412e")
-    private String requestId;
+    @ApiModelProperty(value = "当前时间戳", example = "1593852985")
+    private Long timestamp;
 
     public static Response<Void> ok() {
         return new Response<Void>(SUCCESS, OK, null);
@@ -50,16 +52,11 @@ public class Response<T> {
         this.code = code;
         this.msg = msg;
         this.data = data;
-        this.requestId = MDC.get(Constant.REQUEST_ID_HEADER);
+        this.timestamp = new Date().getTime();
     }
 
     public boolean success(){
         return code == SUCCESS;
-    }
-
-    public Response<T> requestId(String requestId) {
-        this.requestId = requestId;
-        return this;
     }
 
 }

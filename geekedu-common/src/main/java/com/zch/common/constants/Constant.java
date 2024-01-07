@@ -6,8 +6,6 @@ package com.zch.common.constants;
  */
 public interface Constant {
 
-    String REQUEST_ID_HEADER = "requestId";
-
     // 数据字段 - creater
     String DATA_FIELD_NAME_CREATEBY = "createBy";
 

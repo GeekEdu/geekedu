@@ -1,12 +1,12 @@
 server:
-  port: 8085  #端口
+  port: 8086  #端口
   tomcat:
     uri-encoding: UTF-8   #服务编码
 spring:
   profiles:
     active: dev
   application:
-    name: user-service
+    name: label-service
   servlet:
     multipart:
       max-file-size: 50MB
@@ -30,16 +30,16 @@ spring:
 geekedu:
   swagger:
     enable: true
-    package-path: com.geekedu.user.controller
-    title: GeekEdu - 用户中心接口文档
-    description: 该服务是用户相关操作
+    package-path: com.geekedu.label.controller
+    title: GeekEdu - 分类标签中心接口文档
+    description: 该服务包含图片管理、媒资管理等
     contact-name: 成大20软工2班-郑才华
     contact-url: 192.168.150.101
     contact-email: Z2069820192@163.com
     version: v1.0
     enableResponseWrap: true
   jdbc:
-    database: geekedu-user
+    database: geekedu-label
   platform:
     file: TENCENT
     media: TENCENT
