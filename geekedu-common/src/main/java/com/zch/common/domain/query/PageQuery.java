@@ -13,6 +13,11 @@ import lombok.experimental.Accessors;
 import javax.validation.constraints.Min;
 
 */
+
+import lombok.Data;
+
+import java.util.List;
+
 /**
  * @author Poison02
  * @date 2023/12/31
@@ -79,5 +84,33 @@ public class PageQuery {
     }
 }
 */
-public class PageQuery {
+@Data
+public class PageQuery<T> {
+
+    private Long total;
+
+    private String pageNum;
+
+    private String pageSize;
+
+    private Integer pageCount;
+
+    private List<T> data;
+
+    /**
+     * 获取封装后的分页数据
+     * @param pageQuery 继承了 PageQuery 类
+     * @param data 数据库中查出来的数据
+     * @return
+     */
+    public PageQuery getPageQuery(PageQuery<T> pageQuery, List<T> data) {
+        PageQuery<T> pages = new PageQuery<>();
+        pages.setPageNum(pageQuery.getPageNum());
+        pages.setPageCount(pageQuery.getPageCount());
+        pages.setPageSize(pageQuery.pageSize);
+        pages.setTotal(pageQuery.getTotal());
+        pages.setData(data);
+        return pages;
+    }
+
 }

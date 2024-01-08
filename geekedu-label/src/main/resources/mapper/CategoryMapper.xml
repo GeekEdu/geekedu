@@ -15,4 +15,50 @@
 		id, `name`, `type`, created_by, created_time, updated_by, updated_time, is_delete
 	</sql>
 
+	<select id="selectCategoryList" resultMap="BaseResultMap">
+		select
+		    <include refid="Base_Column_List" />
+		from category
+		where is_delete=0;
+	</select>
+
+	<select id="selectCategoryByCondition" resultMap="BaseResultMap">
+		select
+		    <include refid="Base_Column_List" />
+		from category
+		where 1=1
+		    <if test="name != '' and name != null">
+				and name like concat('%', #{name}, '%')
+			</if>
+			<if test="type != '' and type != null">
+				and type like concat('%', #{type}, '%')
+			</if>
+		and is_delete=0;
+	</select>
+
+	<insert id="insertCategory" parameterType="com.zch.label.domain.po.Category">
+		insert into
+		category(id, name, type, created_by, created_time, updated_by, updated_time)
+		values (#{id}, #{name}, #{type}, #{createdBy}, #{createdTime}, #{updatedBy}, #{updatedTime});
+	</insert>
+
+	<update id="deleteCategory" parameterType="com.zch.label.domain.po.Category">
+		update category
+		set is_delete=1, updated_by=#{updatedBy}, updated_time=#{updatedTime}
+		where id=#{id} and is_delete=0;
+	</update>
+
+	<update id="updateCategory" parameterType="com.zch.label.domain.po.Category">
+		update category
+		set
+		    <if test="name != '' and name != null">
+				name=#{name},
+			</if>
+		    <if test="type != '' and type != null">
+				type=#{type},
+			</if>
+				updated_by=#{updatedBy}, updated_time=#{updatedTime}
+		where id=#{id} and is_delete=0;
+	</update>
+
 </mapper>

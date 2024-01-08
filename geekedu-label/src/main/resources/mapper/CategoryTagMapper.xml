@@ -17,4 +17,33 @@
     is_delete
 	</sql>
 
+	<select id="selectTagByCategoryId" parameterType="long" resultMap="BaseResultMap">
+		select
+		    <include refid="Base_Column_List" />
+		from category_tag
+		where category_id=#{categoryId} and is_delete=0;
+	</select>
+
+	<update id="updateCategory" parameterType="com.zch.label.domain.po.CategoryTag">
+		update category_tag
+		set
+		    <if test="type != '' and type != null">
+				type=#{type},
+			</if>
+			updated_by=#{updatedBy}, updated_time=#{updatedTime}
+		where category_id=#{categoryId} and is_delete=0;
+	</update>
+
+	<update id="deleteCategory" parameterType="com.zch.label.domain.po.CategoryTag">
+		update category_tag
+		set is_delete=1, updated_by=#{updatedBy}, updated_time=#{updatedTime}
+		where category_id=#{categoryId} and is_delete=0;
+	</update>
+
+	<insert id="insertCategoryTag" parameterType="com.zch.label.domain.po.CategoryTag">
+		insert into
+		category_tag (id, category_id, tag_id, type, created_by, created_time, updated_by, updated_time)
+		values (#{id}, #{categoryId}, #{tagId}, #{type}, #{createdBy}, #{createdTime}, #{updatedBy}, #{updatedTime})
+	</insert>
+
 </mapper>

@@ -1,20 +1,23 @@
 package com.zch.label.domain.query;
 
+import com.zch.common.domain.query.PageQuery;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
  * @author Poison02
  * @date 2024/1/7
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiModel("分类标签条件查询实体")
-public class CategoryTagQuery {
+public class CategoryTagQuery extends PageQuery {
 
     @ApiModelProperty(value = "分类id", example = "14894575")
     private Long categoryId;
