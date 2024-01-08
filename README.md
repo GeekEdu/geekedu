@@ -1,6 +1,6 @@
 ## 毕设后端项目
 <center>
-<div style="width: 256px; height: 256px;">
+<div style="width: 64px; height: 64px;">
 <img src="./assets/logo.png" alt="logo">
 </div>
 </center>
