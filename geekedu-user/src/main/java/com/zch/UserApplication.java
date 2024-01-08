@@ -1,7 +1,9 @@
 package com.zch;
 
+import com.zch.common.listener.AppStartupListener;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 /**
  * @author Poison02
@@ -12,4 +14,10 @@ public class UserApplication {
     public static void main(String[] args) {
         SpringApplication.run(UserApplication.class, args);
     }
+
+    @Bean
+    public AppStartupListener appStartupListener(){
+        return new AppStartupListener();
+    }
+
 }
