@@ -40,23 +40,3 @@ geekedu:
     enableResponseWrap: true
   jdbc:
     database: geekedu-user
-  platform:
-    file: TENCENT
-    media: TENCENT
-  tencent:
-    appId: 1315662121
-    secretId: AKIDWuHXxDE3g6IH3cWCl7d9Yozzu7LQMXcZ
-    secretKey: zpmgTL9sumQGtHQM5JOIzUls54rW1Lat
-    vod:
-      enable: true
-      vodValidSeconds: 7776000
-      region: "ap-shanghai"
-      procedure: "wisehub-base"
-      urlKey: "HZFlxjPYoOm5AfShupOx"
-      pfcg: "basicDrmPreset"
-    cos:
-      enable: true
-      region: "ap-chengdu"
-      bucket: geekedu
-      multipartUploadThreshold: 5242880 # 5mb，触发分片上传的阈值
-      minimumUploadPartSize: 1048576 # 1mb，分片的最小大小

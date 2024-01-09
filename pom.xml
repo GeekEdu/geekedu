@@ -13,7 +13,8 @@
 		<module>geekedu-resource</module>
 		<module>geekedu-user</module>
         <module>geekedu-label</module>
-    </modules>
+		<module>geekedu-course</module>
+	</modules>
 	<packaging>pom</packaging>
     <!-- 继承SpringBoot父类 -->
     <parent>

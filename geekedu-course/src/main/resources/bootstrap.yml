@@ -1,12 +1,12 @@
 server:
-  port: 8086  #端口
+  port: 8087  #端口
   tomcat:
     uri-encoding: UTF-8   #服务编码
 spring:
   profiles:
     active: dev
   application:
-    name: label-service
+    name: course-service
   servlet:
     multipart:
       max-file-size: 50MB
@@ -39,4 +39,4 @@ geekedu:
     version: v1.0
     enableResponseWrap: true
   jdbc:
-    database: geekedu-label
+    database: geekedu-course
