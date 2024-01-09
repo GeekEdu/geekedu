@@ -1,6 +1,5 @@
 package com.zch.label.mapper;
 
-import com.zch.common.annotation.Page;
 import com.zch.common.domain.vo.PageReqVO;
 import com.zch.label.domain.po.Tag;
 import com.zch.label.domain.query.CategoryTagQuery;
@@ -22,8 +21,21 @@ public interface TagMapper {
      * @param query
      * @return
      */
-    @Page
     List<Tag> selectTagByCondition(CategoryTagQuery query);
+
+    /**
+     * 根据 id 查找 tag
+     * @param id
+     * @return
+     */
+    Tag selectTagById(Long id);
+
+    /**
+     * 根据 标签名 查询标签
+     * @param name
+     * @return
+     */
+    Tag selectTagByName(String name);
 
     /**
      * 新增 tag

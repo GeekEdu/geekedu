@@ -32,6 +32,20 @@
 		and is_delete=0
 	</select>
 
+	<select id="selectTagById" parameterType="long" resultMap="BaseResultMap">
+		select
+		    <include refid="Base_Column_List" />
+		from tag
+		where id=#{id} and is_delete=0
+	</select>
+
+	<select id="selectTagByName" parameterType="string" resultMap="BaseResultMap">
+		select
+		    <include refid="Base_Column_List" />
+		from tag
+		where name=#{name} and is_delete=0
+	</select>
+
 	<insert id="insertTag" parameterType="com.zch.label.domain.po.Tag">
 		insert into
 		tag (id, name, created_by, created_time, updated_by, updated_time)

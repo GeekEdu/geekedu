@@ -2,6 +2,7 @@ package com.zch.label.mapper;
 
 import com.zch.label.domain.po.CategoryTag;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -14,6 +15,14 @@ public interface CategoryTagMapper {
      * @return
      */
     List<CategoryTag> selectTagByCategoryId(Long id);
+
+    /**
+     * 根据分类id和标签id查找数据
+     * @param categoryId
+     * @param tagId
+     * @return
+     */
+    CategoryTag selectCategoryTagByCategoryIdAndTagId(@Param("categoryId") Long categoryId, @Param("tagId") Long tagId);
 
     /**
      * 更新分类信息

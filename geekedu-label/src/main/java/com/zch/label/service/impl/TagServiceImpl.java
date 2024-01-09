@@ -3,11 +3,13 @@ package com.zch.label.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zch.api.dto.label.TagForm;
-import com.zch.common.domain.Response;
-import com.zch.common.domain.query.PageQuery;
 import com.zch.common.domain.vo.PageReqVO;
 import com.zch.common.domain.vo.PageVO;
+import com.zch.common.exceptions.CommonException;
+import com.zch.common.utils.CollUtils;
 import com.zch.common.utils.IdUtils;
+import com.zch.common.utils.ObjectUtils;
+import com.zch.common.utils.StringUtils;
 import com.zch.label.domain.dto.TagDTO;
 import com.zch.label.domain.po.CategoryTag;
 import com.zch.label.domain.po.Tag;
@@ -20,8 +22,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -40,7 +44,7 @@ public class TagServiceImpl implements ITagService {
     private final CategoryTagMapper categoryTagMapper;
 
     @Override
-    public Response<PageVO<TagDTO>> getTagList(PageReqVO req) {
+    public PageVO<TagDTO> getTagList(PageReqVO req) {
         PageHelper.startPage(req.getPageNum(), req.getPageSize());
         List<TagDTO> result = tagMapper.selectTagList(req).stream()
                 .map(item -> {
@@ -56,11 +60,15 @@ public class TagServiceImpl implements ITagService {
         vo.setPageSize(req.getPageSize());
         vo.setPageCount(pageInfo.getPages());
         vo.setList(result);
-        return Response.ok(vo);
+        return vo;
     }
 
     @Override
-    public Response<PageQuery> getTagByCondition(CategoryTagQuery query) {
+    public PageVO<TagDTO> getTagByCondition(CategoryTagQuery query) {
+        if (StringUtils.isBlank(query.getTagName())) {
+            throw new CommonException("请输入标签名！");
+        }
+        PageHelper.startPage(query.getPageNum(), query.getPageSize());
         List<TagDTO> result = tagMapper.selectTagByCondition(query).stream()
                 .map(item -> {
                     TagDTO tagDTO = new TagDTO();
@@ -68,13 +76,23 @@ public class TagServiceImpl implements ITagService {
                     tagDTO.setName(item.getName());
                     return tagDTO;
                 }).collect(Collectors.toList());
-        return Response.ok(query.getPageQuery(query, result));
+        PageInfo<TagDTO> pageInfo = new PageInfo<>(result);
+        PageVO<TagDTO> vo = new PageVO<>();
+        vo.setTotal(pageInfo.getTotal());
+        vo.setPageNum(query.getPageNum());
+        vo.setPageSize(query.getPageSize());
+        vo.setPageCount(pageInfo.getPages());
+        vo.setList(result);
+        return vo;
     }
 
     @Override
-    public Response<Tag> addTag(TagForm form) {
-        // 构建数据，添加到 tag 表中
+    public Tag addTag(TagForm form) {
+        if (form.getCategoryId()== null || form.getName() == null) {
+            throw new CommonException("请选择对应分类下或者输入更改后的标签名！");
+        }
         Date time = new Date();
+        // 构建数据
         Tag tag = new Tag();
         tag.setId(IdUtils.getId());
         tag.setName(form.getName());
@@ -82,6 +100,29 @@ public class TagServiceImpl implements ITagService {
         tag.setCreatedTime(time);
         tag.setUpdatedBy(1484844949L);
         tag.setUpdatedTime(time);
+
+        // 从数据库中查找，同一分类下不能存在相同标签
+        List<CategoryTag> categoryTags = categoryTagMapper.selectTagByCategoryId(form.getCategoryId());
+        boolean isSameName = false;
+        // 如果不为空，则需要继续判断是否有重名标签
+        if (CollUtils.isNotEmpty(categoryTags)) {
+            List<Tag> tagList = new ArrayList<>();
+            for (CategoryTag item : categoryTags) {
+                tagList.add(tagMapper.selectTagById(item.getTagId()));
+            }
+            // 和新传入的tagName进行对比，若有相同的则直接退出
+            for (Tag item : tagList) {
+                if (StringUtils.isSameStringByUpperToLower(item.getName(), form.getName())) {
+                    // 说明有重名的标签名
+                    isSameName = true;
+                    break;
+                }
+            }
+        }
+        if (isSameName) {
+            throw new CommonException("不允许同一分类下有相同标签名！");
+        }
+
         CategoryTag categoryTag = new CategoryTag();
         categoryTag.setId(IdUtils.getId());
         categoryTag.setCategoryId(form.getCategoryId());
@@ -93,18 +134,48 @@ public class TagServiceImpl implements ITagService {
         int row = tagMapper.insertTag(tag);
         int row1 = categoryTagMapper.insertCategoryTag(categoryTag);
         if (row != 1 || row1 != 1) {
-            return Response.error("新增标签失败！请联系管理员！");
+            return new Tag();
         }
-        return Response.ok(tag);
+        return tag;
     }
 
     @Override
-    public Response<Tag> deleteTag(Long id) {
-        return null;
+    public Tag deleteTag(Long id) {
+        if (id == null) {
+            throw new CommonException("请选择要修改的标签！");
+        }
+        Date time = new Date();
+        Tag tag = new Tag();
+        tag.setId(id);
+        tag.setUpdatedBy(1484844949L);
+        tag.setUpdatedTime(time);
+        int row = tagMapper.deleteTag(tag);
+        if (row != 1) {
+            return new Tag();
+        }
+        return tag;
     }
 
     @Override
-    public Response<Tag> updateTag(TagForm form) {
-        return null;
+    public Tag updateTag(TagForm form) {
+        if (form.getId() == null || form.getName() == null) {
+            throw new CommonException("请选择需要更改的标签或输入更改后的标签名！");
+        }
+        Date time = new Date();
+        Tag tag = new Tag();
+        tag.setId(form.getId());
+        tag.setName(form.getName());
+        tag.setCreatedBy(1484844949L);
+        tag.setUpdatedTime(time);
+        int row = tagMapper.updateTag(tag);
+        if (row != 1) {
+            return new Tag();
+        }
+        // 查询出来最新的 tag 返回给前端
+        Tag res = tagMapper.selectTagById(form.getId());
+        if (res == null) {
+            throw new CommonException("未找到对应标签，请输入正确的标签名！");
+        }
+        return res;
     }
 }

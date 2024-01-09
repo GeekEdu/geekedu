@@ -24,6 +24,13 @@
 		where category_id=#{categoryId} and is_delete=0;
 	</select>
 
+	<select id="selectCategoryTagByCategoryIdAndTagId" parameterType="string" resultMap="BaseResultMap">
+		select
+		    <include refid="Base_Column_List" />
+		from category_tag
+		where category_id=#{categoryId} and tag_id=#{tagId} and is_delete=0
+	</select>
+
 	<update id="updateCategory" parameterType="com.zch.label.domain.po.CategoryTag">
 		update category_tag
 		set

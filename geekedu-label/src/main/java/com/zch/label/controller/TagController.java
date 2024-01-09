@@ -1,7 +1,6 @@
 package com.zch.label.controller;
 
 import com.zch.api.dto.label.TagForm;
-import com.zch.common.domain.Response;
 import com.zch.common.domain.query.PageQuery;
 import com.zch.common.domain.vo.PageReqVO;
 import com.zch.common.domain.vo.PageVO;
@@ -14,7 +13,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 /**
  * @author Poison02
@@ -30,31 +28,31 @@ public class TagController {
 
     @ApiOperation("查找所有标签")
     @GetMapping("/getTagList")
-    public Response<PageVO<TagDTO>> getTagList(@RequestBody PageReqVO req) {
+    public PageVO<TagDTO> getTagList(@RequestBody PageReqVO req) {
         return tagService.getTagList(req);
     }
 
     @ApiOperation("根据条件查找标签")
     @GetMapping("/getTagByCondition")
-    public Response<PageQuery> getTagByCondition(@RequestBody CategoryTagQuery query) {
+    public PageVO<TagDTO> getTagByCondition(@RequestBody CategoryTagQuery query) {
         return tagService.getTagByCondition(query);
     }
 
     @ApiOperation("新增标签")
     @PostMapping("/add")
-    public Response<Tag> addTag(@RequestBody TagForm form) {
+    public Tag addTag(@RequestBody TagForm form) {
         return tagService.addTag(form);
     }
 
     @ApiOperation("删除标签")
     @PostMapping("/delete")
-    public Response<Tag> deleteTag(Long id) {
+    public Tag deleteTag(Long id) {
         return tagService.deleteTag(id);
     }
 
     @ApiOperation("修改标签")
     @PostMapping("/update")
-    public Response<Tag> updateTag(@RequestBody TagForm form) {
+    public Tag updateTag(@RequestBody TagForm form) {
         return tagService.updateTag(form);
     }
 
