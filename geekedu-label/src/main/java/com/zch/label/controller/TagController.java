@@ -45,8 +45,8 @@ public class TagController {
     }
 
     @ApiOperation("删除标签")
-    @PostMapping("/delete")
-    public Tag deleteTag(Long id) {
+    @PostMapping("/delete/{id}")
+    public Tag deleteTag(@PathVariable("id") Long id) {
         return tagService.deleteTag(id);
     }
 

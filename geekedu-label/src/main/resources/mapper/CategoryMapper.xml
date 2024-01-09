@@ -19,33 +19,47 @@
 		select
 		    <include refid="Base_Column_List" />
 		from category
-		where is_delete=0;
+		where is_delete=0
 	</select>
 
-	<select id="selectCategoryByCondition" resultMap="BaseResultMap">
+	<select id="selectCategoryByCondition" parameterType="com.zch.label.domain.query.CategoryTagQuery" resultMap="BaseResultMap">
 		select
 		    <include refid="Base_Column_List" />
 		from category
 		where 1=1
-		    <if test="name != '' and name != null">
-				and name like concat('%', #{name}, '%')
+		    <if test="categoryName != '' and categoryName != null">
+				and name like concat('%', #{categoryName}, '%')
 			</if>
 			<if test="type != '' and type != null">
 				and type like concat('%', #{type}, '%')
 			</if>
-		and is_delete=0;
+		and is_delete=0
+	</select>
+
+	<select id="selectCategoryById" parameterType="long" resultMap="BaseResultMap">
+		select
+		    <include refid="Base_Column_List" />
+		from category
+		where id=#{id} and is_delete=0
+	</select>
+
+	<select id="selectCategoryByNameAndType" resultMap="BaseResultMap">
+		select
+		    <include refid="Base_Column_List" />
+		from category
+		where name=#{name} and type=#{type} and is_delete=0
 	</select>
 
 	<insert id="insertCategory" parameterType="com.zch.label.domain.po.Category">
 		insert into
 		category(id, name, type, created_by, created_time, updated_by, updated_time)
-		values (#{id}, #{name}, #{type}, #{createdBy}, #{createdTime}, #{updatedBy}, #{updatedTime});
+		values (#{id}, #{name}, #{type}, #{createdBy}, #{createdTime}, #{updatedBy}, #{updatedTime})
 	</insert>
 
 	<update id="deleteCategory" parameterType="com.zch.label.domain.po.Category">
 		update category
 		set is_delete=1, updated_by=#{updatedBy}, updated_time=#{updatedTime}
-		where id=#{id} and is_delete=0;
+		where id=#{id} and is_delete=0
 	</update>
 
 	<update id="updateCategory" parameterType="com.zch.label.domain.po.Category">
@@ -58,7 +72,7 @@
 				type=#{type},
 			</if>
 				updated_by=#{updatedBy}, updated_time=#{updatedTime}
-		where id=#{id} and is_delete=0;
+		where id=#{id} and is_delete=0
 	</update>
 
 </mapper>

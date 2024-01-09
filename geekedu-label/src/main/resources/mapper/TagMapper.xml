@@ -21,6 +21,17 @@
 		where is_delete=0
 	</select>
 
+	<select id="selectTagAll" parameterType="com.zch.label.domain.vo.CategoryReqVO" resultMap="BaseResultMap">
+		select
+		    <include refid="Base_Column_List" />
+		from tag
+		where id in
+		<foreach collection="ids" open="(" close=")" separator="," item="id">
+			#{id}
+		</foreach>
+		and is_delete=0
+	</select>
+
 	<select id="selectTagByCondition" parameterType="com.zch.label.domain.query.CategoryTagQuery" resultMap="BaseResultMap">
 		select
 		    <include refid="Base_Column_List" />
@@ -56,6 +67,16 @@
 		update tag
 		set is_delete=1, updated_by=#{updatedBy}, updated_time=#{updatedTime}
 		where id=#{id} and is_delete=0
+	</update>
+
+	<update id="deleteTagBatch" parameterType="list">
+		update tag
+		set is_delete=1, updated_by=#{updatedBy}, updated_time=#{updatedTime}
+		where id in
+		<foreach collection="ids" open="(" close=")" separator="," item="id">
+			#{id}
+		</foreach>
+		and is_delete=0
 	</update>
 
 	<update id="updateTag" >

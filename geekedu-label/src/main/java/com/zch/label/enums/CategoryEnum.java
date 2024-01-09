@@ -2,6 +2,8 @@ package com.zch.label.enums;
 
 import lombok.Getter;
 
+import java.util.Objects;
+
 /**
  * @author Poison02
  * @date 2024/1/7
@@ -30,5 +32,15 @@ public enum CategoryEnum {
             }
         }
         return null;
+    }
+
+    public static Short returnCode(String value) {
+        for (CategoryEnum enums :
+                CategoryEnum.values()) {
+            if (Objects.equals(enums.getDesc(), value)) {
+                return (short) enums.getValue();
+            }
+        }
+        return -1;
     }
 }

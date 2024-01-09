@@ -3,6 +3,7 @@ package com.zch.label.mapper;
 import com.zch.common.domain.vo.PageReqVO;
 import com.zch.label.domain.po.Tag;
 import com.zch.label.domain.query.CategoryTagQuery;
+import com.zch.label.domain.vo.CategoryReqVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -15,6 +16,13 @@ public interface TagMapper {
      * @return
      */
     List<Tag> selectTagList(PageReqVO req);
+
+    /**
+     * 查找某分类下的所有 tag
+     * @param req
+     * @return
+     */
+    List<Tag> selectTagAll(CategoryReqVO req);
 
     /**
      * 条件查询 tag
@@ -50,6 +58,13 @@ public interface TagMapper {
      * @return
      */
     int deleteTag(Tag tag);
+
+    /**
+     * 批量删除标签
+     * @param ids
+     * @return
+     */
+    int deleteTagBatch(List<Long> ids);
 
     /**
      * 更新 tag

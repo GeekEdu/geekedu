@@ -8,7 +8,6 @@ import com.zch.common.domain.vo.PageVO;
 import com.zch.common.exceptions.CommonException;
 import com.zch.common.utils.CollUtils;
 import com.zch.common.utils.IdUtils;
-import com.zch.common.utils.ObjectUtils;
 import com.zch.common.utils.StringUtils;
 import com.zch.label.domain.dto.TagDTO;
 import com.zch.label.domain.po.CategoryTag;
@@ -25,7 +24,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -47,12 +45,8 @@ public class TagServiceImpl implements ITagService {
     public PageVO<TagDTO> getTagList(PageReqVO req) {
         PageHelper.startPage(req.getPageNum(), req.getPageSize());
         List<TagDTO> result = tagMapper.selectTagList(req).stream()
-                .map(item -> {
-                    TagDTO tagDTO = new TagDTO();
-                    tagDTO.setId(item.getId());
-                    tagDTO.setName(item.getName());
-                    return tagDTO;
-                }).collect(Collectors.toList());
+                .map(item -> TagDTO.of(item.getId(), item.getName()))
+                .collect(Collectors.toList());
         PageInfo<TagDTO> pageInfo = new PageInfo<>(result);
         PageVO<TagDTO> vo = new PageVO<>();
         vo.setTotal(pageInfo.getTotal());
@@ -70,12 +64,8 @@ public class TagServiceImpl implements ITagService {
         }
         PageHelper.startPage(query.getPageNum(), query.getPageSize());
         List<TagDTO> result = tagMapper.selectTagByCondition(query).stream()
-                .map(item -> {
-                    TagDTO tagDTO = new TagDTO();
-                    tagDTO.setId(item.getId());
-                    tagDTO.setName(item.getName());
-                    return tagDTO;
-                }).collect(Collectors.toList());
+                .map(item -> TagDTO.of(item.getId(), item.getName()))
+                .collect(Collectors.toList());
         PageInfo<TagDTO> pageInfo = new PageInfo<>(result);
         PageVO<TagDTO> vo = new PageVO<>();
         vo.setTotal(pageInfo.getTotal());
@@ -88,7 +78,7 @@ public class TagServiceImpl implements ITagService {
 
     @Override
     public Tag addTag(TagForm form) {
-        if (form.getCategoryId()== null || form.getName() == null) {
+        if (form.getCategoryId() == null || StringUtils.isBlank(form.getName())) {
             throw new CommonException("请选择对应分类下或者输入更改后的标签名！");
         }
         Date time = new Date();
@@ -134,7 +124,7 @@ public class TagServiceImpl implements ITagService {
         int row = tagMapper.insertTag(tag);
         int row1 = categoryTagMapper.insertCategoryTag(categoryTag);
         if (row != 1 || row1 != 1) {
-            return new Tag();
+            throw new CommonException("服务器新增标签错误，请联系管理员！");
         }
         return tag;
     }
@@ -142,7 +132,7 @@ public class TagServiceImpl implements ITagService {
     @Override
     public Tag deleteTag(Long id) {
         if (id == null) {
-            throw new CommonException("请选择要修改的标签！");
+            throw new CommonException("请选择要删除的标签！");
         }
         Date time = new Date();
         Tag tag = new Tag();
@@ -151,14 +141,14 @@ public class TagServiceImpl implements ITagService {
         tag.setUpdatedTime(time);
         int row = tagMapper.deleteTag(tag);
         if (row != 1) {
-            return new Tag();
+            throw new CommonException("服务器删除标签错误，请联系管理员！");
         }
         return tag;
     }
 
     @Override
     public Tag updateTag(TagForm form) {
-        if (form.getId() == null || form.getName() == null) {
+        if (form.getId() == null || StringUtils.isBlank(form.getName())) {
             throw new CommonException("请选择需要更改的标签或输入更改后的标签名！");
         }
         Date time = new Date();
@@ -166,6 +156,8 @@ public class TagServiceImpl implements ITagService {
         tag.setId(form.getId());
         tag.setName(form.getName());
         tag.setCreatedBy(1484844949L);
+        tag.setCreatedTime(time);
+        tag.setUpdatedBy(1484844949L);
         tag.setUpdatedTime(time);
         int row = tagMapper.updateTag(tag);
         if (row != 1) {
