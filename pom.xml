@@ -42,6 +42,10 @@
 		<druid.version>1.2.15</druid.version>
 		<pagehelper.version>1.4.6</pagehelper.version>
 
+		<!--Redis-->
+		<redisson.version>3.24.3</redisson.version>
+		<lock4j.version>2.2.5</lock4j.version>
+
 		<!--常用工具类依赖-->
 		<hutool.version>5.8.16</hutool.version>
 		<satoken.version>1.34.0</satoken.version>
@@ -112,6 +116,18 @@
 				<groupId>com.github.pagehelper</groupId>
 				<artifactId>pagehelper-spring-boot-starter</artifactId>
 				<version>${pagehelper.version}</version>
+			</dependency>
+
+			<!--Redis-->
+			<dependency>
+				<groupId>org.redisson</groupId>
+				<artifactId>redisson-spring-boot-starter</artifactId>
+				<version>${redisson.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>lock4j-redisson-spring-boot-starter</artifactId>
+				<version>${lock4j.version}</version>
 			</dependency>
 
 			<!--常用工具类依赖-->

@@ -1,3 +1,7 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.zch.common.autoConfigure.swagger.Knife4jConfig,\
-  com.zch.common.autoConfigure.mybatis.MybatisConfig
+  com.zch.common.autoConfigure.mybatis.MybatisConfig,\
+  com.zch.common.autoConfigure.threadpool.ThreadPoolConfig,\
+  com.zch.common.autoConfigure.threadpool.AsyncConfig,\
+  com.zch.common.autoConfigure.redis.RedisConfig,\
+  com.zch.common.utils.SpringUtils
