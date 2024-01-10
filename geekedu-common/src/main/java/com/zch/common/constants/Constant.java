@@ -6,18 +6,18 @@ package com.zch.common.constants;
  */
 public interface Constant {
 
-    // 数据字段 - creater
-    String DATA_FIELD_NAME_CREATEBY = "createBy";
+    // 数据字段 - createBy
+    String DATA_FIELD_NAME_CREATEBY = "createdBy";
 
-    // 数据字段 - updater
-    String DATA_FIELD_NAME_UPDATEBY = "updateBy";
+    // 数据字段 - updateBy
+    String DATA_FIELD_NAME_UPDATEBY = "updatedBy";
 
     // 数据字段 - create_time
-    String DATA_FIELD_NAME_CREATE_TIME = "create_time";
-    String DATA_FIELD_NAME_CREATE_TIME_CAMEL = "createTime";
+    String DATA_FIELD_NAME_CREATE_TIME = "created_time";
+    String DATA_FIELD_NAME_CREATE_TIME_CAMEL = "createdTime";
 
     // 数据字段 - update_time
-    String DATA_FIELD_NAME_UPDATE_TIME = "update_time";
-    String DATA_FIELD_NAME_UPDATE_TIME_CAMEL = "updateTime";
+    String DATA_FIELD_NAME_UPDATE_TIME = "updated_time";
+    String DATA_FIELD_NAME_UPDATE_TIME_CAMEL = "updatedTime";
 
 }

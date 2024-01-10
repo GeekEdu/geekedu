@@ -28,15 +28,5 @@ spring:
           - data-id: shared-feign.yaml # 共享feign配置
             refresh: false
 geekedu:
-  swagger:
-    enable: true
-    package-path: com.geekedu.label.controller
-    title: GeekEdu - 分类标签中心接口文档
-    description: 该服务包含图片管理、媒资管理等
-    contact-name: 成大20软工2班-郑才华
-    contact-url: 192.168.150.101
-    contact-email: Z2069820192@163.com
-    version: v1.0
-    enableResponseWrap: true
   jdbc:
     database: geekedu-course

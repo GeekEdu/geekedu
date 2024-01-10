@@ -28,15 +28,5 @@ spring:
           - data-id: shared-feign.yaml # 共享feign配置
             refresh: false
 geekedu:
-  swagger:
-    enable: true
-    package-path: com.geekedu.user.controller
-    title: GeekEdu - 用户中心接口文档
-    description: 该服务是用户相关操作
-    contact-name: 成大20软工2班-郑才华
-    contact-url: 192.168.150.101
-    contact-email: Z2069820192@163.com
-    version: v1.0
-    enableResponseWrap: true
   jdbc:
     database: geekedu-user

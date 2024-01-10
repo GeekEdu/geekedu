@@ -1,8 +1,9 @@
 package com.zch.oss.domain.po;
 
-// import com.baomidou.mybatisplus.annotation.TableField;
-// import com.baomidou.mybatisplus.annotation.TableId;
-// import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.zch.oss.enums.FileStatus;
 import com.zch.oss.enums.Platform;
 import lombok.Data;
@@ -19,7 +20,7 @@ import java.time.LocalDateTime;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-// @TableName("file")
+@TableName("file_resource")
 public class File implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -27,13 +28,13 @@ public class File implements Serializable {
     /**
      * 主键，文件id
      */
-    // @TableId(value = "id")
+    @TableId(value = "id")
     private Long id;
 
     /**
      * 文件在云端的唯一标示，例如：aaa.jpg
      */
-    // @TableField("`key_id`")
+    @TableField("`key_id`")
     private String keyId;
 
     /**
@@ -49,14 +50,12 @@ public class File implements Serializable {
     /**
      * 状态：1-待上传 2-已上传,未使用 3-已使用
      */
-    // private FileStatus status;
-    private int status;
+    private FileStatus status;
 
     /**
      * 状态：1-腾讯 2-阿里
      */
-    // private Platform platform;
-    private int platform;
+    private Platform platform;
 
     /**
      * 创建者
@@ -67,7 +66,8 @@ public class File implements Serializable {
     /**
      * 创建时间
      */
-    private LocalDateTime createTime;
+    @TableField(value = "created_time", fill = FieldFill.INSERT)
+    private LocalDateTime createdTime;
 
     /**
      * 更新者
@@ -78,7 +78,8 @@ public class File implements Serializable {
     /**
      * 更新时间
      */
-    private LocalDateTime updateTime;
+    @TableField(value = "updated_time", fill = FieldFill.INSERT_UPDATE)
+    private LocalDateTime updatedTime;
 
 
     /**

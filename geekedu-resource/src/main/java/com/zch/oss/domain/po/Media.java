@@ -1,7 +1,9 @@
 package com.zch.oss.domain.po;
 
-// import com.baomidou.mybatisplus.annotation.TableId;
-// import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.zch.oss.enums.FileStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,7 +19,7 @@ import java.time.LocalDateTime;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-// @TableName("media")
+@TableName("media_resource")
 public class Media implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -25,7 +27,7 @@ public class Media implements Serializable {
     /**
      * 主键
      */
-    // @TableId(value = "id")
+    @TableId(value = "id")
     private Long id;
 
     /**
@@ -71,23 +73,25 @@ public class Media implements Serializable {
     /**
      * 创建者
      */
-    private Long createBy;
+    private Long createdBy;
 
     /**
      * 创建时间
      */
-    private LocalDateTime createTime;
+    @TableField(value = "created_time", fill = FieldFill.INSERT)
+    private LocalDateTime createdTime;
 
     /**
      * 更新者
      */
 
-    private Long updateBy;
+    private Long updatedBy;
 
     /**
      * 更新时间
      */
-    private LocalDateTime updateTime;
+    @TableField(value = "updated_time", fill = FieldFill.INSERT_UPDATE)
+    private LocalDateTime updatedTime;
 
     /**
      * 逻辑删除

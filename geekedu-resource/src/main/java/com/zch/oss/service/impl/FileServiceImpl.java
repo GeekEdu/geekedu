@@ -1,6 +1,7 @@
 package com.zch.oss.service.impl;
 
 import cn.hutool.core.lang.UUID;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.common.exceptions.CommonException;
 import com.zch.common.exceptions.DbException;
 import com.zch.common.utils.StringUtils;
@@ -28,8 +29,7 @@ import java.io.InputStream;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-// public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IFileService {
-public class FileServiceImpl implements IFileService {
+public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IFileService {
 
     private final FileStorageAdapter fileStorageAdapter;
 
@@ -58,11 +58,11 @@ public class FileServiceImpl implements IFileService {
             fileInfo = new File();
             fileInfo.setFileName(originalFileName);
             fileInfo.setKeyId(newFileName);
-            fileInfo.setStatus(FileStatus.UPLOADED.getValue());
+            fileInfo.setStatus(FileStatus.UPLOADED);
             fileInfo.setRequestId(requestId);
-            fileInfo.setPlatform(properties.getFile().getValue());
-            // save(fileInfo);
-            fileMapper.insertFileInfo(fileInfo);
+            fileInfo.setPlatform(properties.getFile());
+            save(fileInfo);
+            // fileMapper.insertFileInfo(fileInfo);
         } catch (Exception e) {
             log.error("文件信息保存异常", e);
             fileStorageAdapter.deleteFile(newFileName);
@@ -71,7 +71,7 @@ public class FileServiceImpl implements IFileService {
         // 6. 返回
         FileDTO fileDTO = new FileDTO();
         fileDTO.setId(fileInfo.getId());
-        fileDTO.setPath(FilePlatform.returnPath(fileInfo.getPlatform()) + newFileName);
+        fileDTO.setPath(FilePlatform.returnPath(fileInfo.getPlatform().getValue()) + newFileName);
         fileDTO.setFileName(originalFileName);
         return fileDTO;
     }
@@ -82,7 +82,7 @@ public class FileServiceImpl implements IFileService {
         if (file == null) {
             return null;
         }
-        return FileDTO.of(file.getId(), file.getFileName(), FilePlatform.returnPath(file.getPlatform()) + file.getKeyId());
+        return FileDTO.of(file.getId(), file.getFileName(), FilePlatform.returnPath(file.getPlatform().getValue()) + file.getKeyId());
     }
 
     @Override
@@ -95,7 +95,7 @@ public class FileServiceImpl implements IFileService {
         if (file == null) {
             return null;
         }
-        return FileDTO.of(file.getId(), file.getFileName(), FilePlatform.returnPath(file.getPlatform()) + file.getKeyId());
+        return FileDTO.of(file.getId(), file.getFileName(), FilePlatform.returnPath(file.getPlatform().getValue()) + file.getKeyId());
     }
 
     /**

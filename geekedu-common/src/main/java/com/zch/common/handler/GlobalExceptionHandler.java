@@ -1,6 +1,6 @@
 package com.zch.common.handler;
 
-import com.zch.common.domain.Response;
+import com.zch.common.domain.result.Response;
 import com.zch.common.exceptions.CommonException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -15,7 +15,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CommonException.class)
     public Response handleCommonException(CommonException e) {
-        return Response.error(e.getMessage());
+        return Response.failed(e.getMessage());
     }
 
 }
