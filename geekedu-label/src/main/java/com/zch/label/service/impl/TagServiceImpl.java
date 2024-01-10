@@ -1,11 +1,13 @@
 package com.zch.label.service.impl;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.label.TagForm;
-import com.zch.common.domain.vo.PageReqVO;
+import com.zch.common.domain.result.PageResult;
 import com.zch.common.domain.vo.PageVO;
 import com.zch.common.exceptions.CommonException;
+import com.zch.common.utils.BeanUtils;
 import com.zch.common.utils.CollUtils;
 import com.zch.common.utils.IdUtils;
 import com.zch.common.utils.StringUtils;
@@ -13,6 +15,7 @@ import com.zch.label.domain.dto.TagDTO;
 import com.zch.label.domain.po.CategoryTag;
 import com.zch.label.domain.po.Tag;
 import com.zch.label.domain.query.CategoryTagQuery;
+import com.zch.label.domain.vo.TagPageVO;
 import com.zch.label.mapper.CategoryMapper;
 import com.zch.label.mapper.CategoryTagMapper;
 import com.zch.label.mapper.TagMapper;
@@ -33,7 +36,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class TagServiceImpl implements ITagService {
+public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements ITagService {
 
     private final TagMapper tagMapper;
 
@@ -42,42 +45,49 @@ public class TagServiceImpl implements ITagService {
     private final CategoryTagMapper categoryTagMapper;
 
     @Override
-    public PageVO<TagDTO> getTagList(PageReqVO req) {
-        PageHelper.startPage(req.getPageNum(), req.getPageSize());
-        List<TagDTO> result = tagMapper.selectTagList(req).stream()
-                .map(item -> TagDTO.of(item.getId(), item.getName()))
-                .collect(Collectors.toList());
-        PageInfo<TagDTO> pageInfo = new PageInfo<>(result);
-        PageVO<TagDTO> vo = new PageVO<>();
-        vo.setTotal(pageInfo.getTotal());
-        vo.setPageNum(req.getPageNum());
-        vo.setPageSize(req.getPageSize());
-        vo.setPageCount(pageInfo.getPages());
-        vo.setList(result);
-        return vo;
+    public Page<TagPageVO> getTagList(CategoryTagQuery query) {
+        // 取出查询参数
+        int pageNum = query.getPageNum();
+        int pageSize = query.getPageSize();
+
+        // 查询数据
+        Page<Tag> page = this.page(
+                new Page<>(pageNum, pageSize),
+                new LambdaQueryWrapper<Tag>()
+                        .select(Tag::getId, Tag::getName)
+                        .eq(Tag::getIsDelete, 0)
+        );
+        Page<TagPageVO> result = new Page<>();
+        BeanUtils.copyProperties(page, result);
+        return result;
     }
 
     @Override
-    public PageVO<TagDTO> getTagByCondition(CategoryTagQuery query) {
+    public Page<TagPageVO> getTagByCondition(CategoryTagQuery query) {
         if (StringUtils.isBlank(query.getTagName())) {
             throw new CommonException("请输入标签名！");
         }
-        PageHelper.startPage(query.getPageNum(), query.getPageSize());
-        List<TagDTO> result = tagMapper.selectTagByCondition(query).stream()
-                .map(item -> TagDTO.of(item.getId(), item.getName()))
-                .collect(Collectors.toList());
-        PageInfo<TagDTO> pageInfo = new PageInfo<>(result);
-        PageVO<TagDTO> vo = new PageVO<>();
-        vo.setTotal(pageInfo.getTotal());
-        vo.setPageNum(query.getPageNum());
-        vo.setPageSize(query.getPageSize());
-        vo.setPageCount(pageInfo.getPages());
-        vo.setList(result);
-        return vo;
+        // 取出查询参数
+        int pageNum = query.getPageNum();
+        int pageSize = query.getPageSize();
+        String tagName = query.getTagName();
+
+        // 查询数据
+        Page<Tag> page = this.page(
+                new Page<>(pageNum, pageSize),
+                new LambdaQueryWrapper<Tag>()
+                        .like(StringUtils.isNotBlank(tagName), Tag::getName, tagName)
+                        .eq(Tag::getIsDelete, 0)
+                        .select(Tag::getId, Tag::getName)
+
+        );
+        Page<TagPageVO> result = new Page<>();
+        BeanUtils.copyProperties(page, result);
+        return result;
     }
 
     @Override
-    public Tag addTag(TagForm form) {
+    public boolean addTag(TagForm form) {
         if (form.getCategoryId() == null || StringUtils.isBlank(form.getName())) {
             throw new CommonException("请选择对应分类下或者输入更改后的标签名！");
         }
@@ -126,11 +136,11 @@ public class TagServiceImpl implements ITagService {
         if (row != 1 || row1 != 1) {
             throw new CommonException("服务器新增标签错误，请联系管理员！");
         }
-        return tag;
+        return true;
     }
 
     @Override
-    public Tag deleteTag(Long id) {
+    public boolean deleteTag(Long id) {
         if (id == null) {
             throw new CommonException("请选择要删除的标签！");
         }
@@ -143,7 +153,7 @@ public class TagServiceImpl implements ITagService {
         if (row != 1) {
             throw new CommonException("服务器删除标签错误，请联系管理员！");
         }
-        return tag;
+        return true;
     }
 
     @Override

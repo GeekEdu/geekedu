@@ -11,14 +11,14 @@ public class BadRequestException extends CommonException{
     private final int status = 400;
 
     public BadRequestException(String message) {
-        super(400, message);
+        super(message);
     }
 
     public BadRequestException(int code, String message) {
-        super(code, message);
+        super(message);
     }
 
     public BadRequestException(int code, String message, Throwable cause) {
-        super(code, message, cause);
+        super(message, cause);
     }
 }

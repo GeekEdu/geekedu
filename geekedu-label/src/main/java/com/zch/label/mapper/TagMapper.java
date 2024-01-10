@@ -1,5 +1,6 @@
 package com.zch.label.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.zch.common.domain.vo.PageReqVO;
 import com.zch.label.domain.po.Tag;
 import com.zch.label.domain.query.CategoryTagQuery;
@@ -8,8 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
-@Mapper
-public interface TagMapper {
+public interface TagMapper extends BaseMapper<Tag> {
 
     /**
      * 查找所有 tag

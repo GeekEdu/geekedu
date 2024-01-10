@@ -3,6 +3,7 @@ package com.zch.common.domain.result;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author Poison02
@@ -17,6 +18,8 @@ public class Response<T> implements Serializable {
 
     private String msg;
 
+    private long timestamp;
+
     public static <T> Response<T> success() {
         return success(null);
     }
@@ -26,6 +29,7 @@ public class Response<T> implements Serializable {
         Response.setCode(ResponseCode.SUCCESS.getCode());
         Response.setMsg(ResponseCode.SUCCESS.getMsg());
         Response.setData(data);
+        Response.setTimestamp(new Date().getTime());
         return Response;
     }
 
@@ -62,6 +66,7 @@ public class Response<T> implements Serializable {
         Response.setCode(code);
         Response.setData(data);
         Response.setMsg(msg);
+        Response.setTimestamp(new Date().getTime());
         return Response;
     }
 

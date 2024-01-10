@@ -1,7 +1,5 @@
 package com.zch.label.service.impl;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.zch.api.dto.label.CategoryForm;
 import com.zch.common.domain.vo.PageReqVO;
 import com.zch.common.domain.vo.PageVO;
@@ -48,37 +46,12 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     public PageVO<CategoryDTO> getCategoryList(PageReqVO req) {
-        PageHelper.startPage(req.getPageNum(), req.getPageSize());
-        List<CategoryDTO> result = categoryMapper.selectCategoryList().stream()
-                .map(item -> CategoryDTO.of(item.getId(), item.getName(), item.getType()))
-                .collect(Collectors.toList());
-        PageInfo pageInfo = new PageInfo(result);
-        PageVO<CategoryDTO> vo = new PageVO<>();
-        vo.setTotal(pageInfo.getTotal());
-        vo.setPageNum(req.getPageNum());
-        vo.setPageSize(req.getPageSize());
-        vo.setPageCount(pageInfo.getPages());
-        vo.setList(result);
-        return vo;
+        return null;
     }
 
     @Override
     public PageVO<CategoryDTO> getCategoryByCondition(CategoryTagQuery query) {
-        if (StringUtils.isBlank(query.getCategoryName())) {
-            throw new CommonException("请输入分类名！");
-        }
-        PageHelper.startPage(query.getPageNum(), query.getPageSize());
-        List<CategoryDTO> result = categoryMapper.selectCategoryByCondition(query).stream()
-                .map(item -> CategoryDTO.of(item.getId(), item.getName(), item.getType()))
-                .collect(Collectors.toList());
-        PageInfo<CategoryDTO> pageInfo = new PageInfo<>(result);
-        PageVO<CategoryDTO> vo = new PageVO<>();
-        vo.setTotal(pageInfo.getTotal());
-        vo.setPageNum(query.getPageNum());
-        vo.setPageSize(query.getPageSize());
-        vo.setPageCount(pageInfo.getPages());
-        vo.setList(result);
-        return vo;
+        return null;
     }
 
     @Override
@@ -194,7 +167,7 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     public PageVO<TagDTO> getTagsCategoryId(CategoryReqVO req) {
-        if (req.getId() == null) {
+        /*if (req.getId() == null) {
             throw new CommonException("请输入或选择正确的分类！");
         }
         List<CategoryTag> categoryTags = categoryTagMapper.selectTagByCategoryId(req.getId());
@@ -216,6 +189,7 @@ public class CategoryServiceImpl implements ICategoryService {
         vo.setPageSize(req.getPageSize());
         vo.setPageCount(pageInfo.getPages());
         vo.setList(result);
-        return vo;
+        return vo;*/
+        return null;
     }
 }

@@ -9,14 +9,14 @@ import lombok.Getter;
 @Getter
 public class ForbiddenException extends CommonException{
     public ForbiddenException(String message) {
-        super(403, message);
+        super(message);
     }
 
     public ForbiddenException(int code, String message) {
-        super(code, message);
+        super(message);
     }
 
     public ForbiddenException(int code, String message, Throwable cause) {
-        super(code, message, cause);
+        super(message, cause);
     }
 }

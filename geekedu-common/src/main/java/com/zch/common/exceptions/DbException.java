@@ -10,10 +10,10 @@ public class DbException extends CommonException{
     }
 
     public DbException(int code, String message) {
-        super(code, message);
+        super(message);
     }
 
     public DbException(int code, String message, Throwable cause) {
-        super(code, message, cause);
+        super(message, cause);
     }
 }
