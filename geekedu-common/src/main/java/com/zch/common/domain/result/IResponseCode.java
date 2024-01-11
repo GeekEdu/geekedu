@@ -6,7 +6,7 @@ package com.zch.common.domain.result;
  */
 public interface IResponseCode {
 
-    String getCode();
+    Integer getCode();
 
     String getMsg();
 

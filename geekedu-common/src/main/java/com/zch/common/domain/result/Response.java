@@ -12,11 +12,11 @@ import java.util.Date;
 @Data
 public class Response<T> implements Serializable {
 
-    private String code;
+    private Integer status;
 
     private T data;
 
-    private String msg;
+    private String message;
 
     private long timestamp;
 
@@ -26,8 +26,8 @@ public class Response<T> implements Serializable {
 
     public static <T> Response<T> success(T data) {
         Response<T> Response = new Response<>();
-        Response.setCode(ResponseCode.SUCCESS.getCode());
-        Response.setMsg(ResponseCode.SUCCESS.getMsg());
+        Response.setStatus(0);
+        Response.setMessage(ResponseCode.SUCCESS.getMsg());
         Response.setData(data);
         Response.setTimestamp(new Date().getTime());
         return Response;
@@ -61,17 +61,17 @@ public class Response<T> implements Serializable {
         return Response(ResponseCode.getCode(), ResponseCode.getMsg(), data);
     }
 
-    private static <T> Response<T> Response(String code, String msg, T data) {
+    private static <T> Response<T> Response(Integer code, String msg, T data) {
         Response<T> Response = new Response<>();
-        Response.setCode(code);
+        Response.setStatus(code);
         Response.setData(data);
-        Response.setMsg(msg);
+        Response.setMessage(msg);
         Response.setTimestamp(new Date().getTime());
         return Response;
     }
 
     public static boolean isSuccess(Response<?> Response) {
-        return Response != null && ResponseCode.SUCCESS.getCode().equals(Response.getCode());
+        return Response != null && ResponseCode.SUCCESS.getCode().equals(Response.getStatus());
     }
 
 }

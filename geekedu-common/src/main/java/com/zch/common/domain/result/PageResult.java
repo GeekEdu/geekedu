@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 public class PageResult<T> implements Serializable {
 
-    private String code;
+    private Integer code;
 
     private Data data;
 
@@ -21,7 +21,7 @@ public class PageResult<T> implements Serializable {
 
     public static <T> PageResult<T> success(IPage<T> page) {
         PageResult<T> result = new PageResult<>();
-        result.setCode(ResponseCode.SUCCESS.getCode());
+        result.setCode(0);
 
         Data data = new Data<T>();
         data.setList(page.getRecords());

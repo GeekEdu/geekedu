@@ -13,16 +13,16 @@ import java.io.Serializable;
 @NoArgsConstructor
 public enum ResponseCode implements IResponseCode, Serializable {
 
-    SUCCESS("00000", "成功！"),
-    SYSTEM_ERROR("99999", "系统异常！")
+    SUCCESS(0, "成功！"),
+    SYSTEM_ERROR(400, "系统异常！")
     ;
 
-    private String code;
+    private Integer code;
 
     private String msg;
 
     @Override
-    public String getCode() {
+    public Integer getCode() {
         return code;
     }
 
@@ -39,7 +39,7 @@ public enum ResponseCode implements IResponseCode, Serializable {
                 '}';
     }
 
-    public static ResponseCode getValue(String code){
+    public static ResponseCode getValue(Integer code){
         for (ResponseCode value : values()) {
             if (value.getCode().equals(code)) {
                 return value;
