@@ -2,7 +2,6 @@ package com.zch.common.utils;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.IterUtil;
-import com.zch.common.validate.Checker;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 
@@ -82,7 +81,7 @@ public class CollUtils extends CollectionUtil {
      * @param checker 校验器
      * @param <T> 集合元素类型
      */
-    public static  <T> void  check(List<T> data, Checker<T> checker){
+    /*public static  <T> void  check(List<T> data, Checker<T> checker){
         if(data == null){
             return;
         }
@@ -91,12 +90,12 @@ public class CollUtils extends CollectionUtil {
         }
     }
 
-    /**
+    *//**
      * 集合校验逻辑
      *
      * @param data 要校验的集合
      * @param <T> 集合元素类型
-     */
+     *//*
     public static  <T extends Checker<T>> void  check(List<T> data){
         if(data == null){
             return;
@@ -104,7 +103,7 @@ public class CollUtils extends CollectionUtil {
         for (T t : data){
             t.check();
         }
-    }
+    }*/
 
     /**
      * 将元素加入到集合中，为null的过滤掉
