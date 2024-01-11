@@ -1,7 +1,6 @@
 package com.zch.user.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import com.zch.api.dto.user.LoginFormDTO;
 import com.zch.common.domain.dto.LoginUserDTO;
 import com.zch.common.exceptions.BadRequestException;
 import com.zch.common.exceptions.ForbiddenException;
@@ -33,31 +32,8 @@ public class UserServiceImpl implements IUserService {
     private final UserMapper userMapper;
 
     @Override
-    public LoginUserDTO login(LoginFormDTO loginFormDTO, boolean isAdmin) {
-        // 1. 判断登录方式
-        Integer type = loginFormDTO.getType();
-        User user = null;
-        // 2. 用户名密码登录
-        if (type == 1) {
-            user = loginByPassword(loginFormDTO);
-        }
-        // 3. 手机号登录
-        if (type == 2) {
-            user = loginByPhone(loginFormDTO.getPhone(), loginFormDTO.getPassword());
-        }
-        // 4. 登录方式错误
-        if (user == null) {
-            throw new BadRequestException(ILLEGAL_LOGIN_TYPE);
-        }
-        // 5. 判断是否管理端或者用户端
-        if (isAdmin ^ user.getType() != ADMIN.getValue()) {
-            throw new BadRequestException(isAdmin ? "非管理端用户" : "非用户端用户");
-        }
-        // 6. 封装返回
-        LoginUserDTO userDTO = new LoginUserDTO();
-        userDTO.setUserId(user.getId());
-        userDTO.setRoleId(handleRoleId(user));
-        return userDTO;
+    public LoginUserDTO login() {
+        return null;
     }
 
     @Override
@@ -78,7 +54,7 @@ public class UserServiceImpl implements IUserService {
      * @param loginFormDTO
      * @return
      */
-    private User loginByPassword(LoginFormDTO loginFormDTO) {
+    /*private User loginByPassword(LoginFormDTO loginFormDTO) {
         // 1. 校验用户名和手机号
         String userName = loginFormDTO.getUserName();
         String phone = loginFormDTO.getPhone();
@@ -93,7 +69,7 @@ public class UserServiceImpl implements IUserService {
         }
         // 4. 校验密码 TODO
         return user;
-    }
+    }*/
 
     /**
      * 通过手机号登录

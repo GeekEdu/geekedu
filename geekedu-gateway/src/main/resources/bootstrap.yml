@@ -1,58 +1,14 @@
 server:
-  port: 9000
-  tomcat:
-    uri-encoding: UTF-8
-
+  port: 80
 spring:
-  profiles:
-    active: dev
   application:
     name: gateway-service
-  cloud:
-    nacos:
-      config:
-        file-extension: yaml
-        server-addr: 192.168.150.101:8848
-        shared-configs: # 共享配置
-          - data-id: shared-spring.yaml # 共享spring配置
-            refresh: false
-          - data-id: shared-redis.yaml # 共享redis配置
-            refresh: false
-          - data-id: shared-logs.yaml # 共享日志配置
-            refresh: false
-          - data-id: shared-mybatis.yaml # 共享mybatis配置
-            refresh: false
-          - data-id: shared-feign.yaml # 共享feign配置
-            refresh: false
-    gateway:
-      routes:
-        - id: label
-          uri: lb://label-service
-          predicates:
-            - Path=/label/**
-        - id: resource
-          uri: lb://resource-service
-          predicates:
-            - Path=/resource/**
-        - id: course
-          uri: lb://course-service
-          predicates:
-            - Path=/course/**
 
-      default-filters:
-        - StripPrefix=1
-      globalcors: # 全局跨域配置
-        add-to-simple-url-handler-mapping: true
-        cors-configurations:
-          '[/**]':
-            allowedOriginPatterns: # 允许哪些网站的跨域请求
-              - "*"
-            allowedMethods: # 允许的跨域ajax的请求方式
-              - "GET"
-              - "POST"
-              - "DELETE"
-              - "PUT"
-              - "OPTIONS"
-            allowedHeaders: "*" # 允许在请求中携带的头信息
-            allowCredentials: true # 是否允许携带cookie
-            maxAge: 360000 # 这次跨域检测的有效期
+  cloud:
+    gateway:
+      enabled: true
+      routes:
+        - id: label-service-route
+          uri: http://localhost:8086
+          predicates:
+            - Path=/label

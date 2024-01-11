@@ -1,6 +1,5 @@
 package com.zch.user.service;
 
-import com.zch.api.dto.user.LoginFormDTO;
 import com.zch.common.domain.dto.LoginUserDTO;
 import com.zch.user.domain.po.User;
 
@@ -16,7 +15,7 @@ public interface IUserService {
      * @param isAdmin 是否管理员 0-是 1-否
      * @return
      */
-    LoginUserDTO login(LoginFormDTO loginFormDTO, boolean isAdmin);
+    LoginUserDTO login();
 
     int insertUser(User user);
 
