@@ -1,22 +1,23 @@
 package com.zch.user.service;
 
-import com.zch.common.domain.dto.LoginUserDTO;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.zch.user.domain.form.LoginForm;
 import com.zch.user.domain.po.User;
+
+import java.util.Map;
 
 /**
  * @author Poison02
- * @date 2024/1/6
+ * @date 2024/1/11
  */
-public interface IUserService {
+public interface IUserService extends IService<User> {
 
     /**
-     * 登录
-     * @param loginFormDTO 登录表单实体
-     * @param isAdmin 是否管理员 0-是 1-否
+     * 生成验证码
      * @return
      */
-    LoginUserDTO login();
+    Map<String, Object> getCaptcha();
 
-    int insertUser(User user);
+    Map<String, Object> login(LoginForm form);
 
 }

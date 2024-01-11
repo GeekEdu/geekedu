@@ -2,9 +2,16 @@ package com.zch.common.autoConfigure.redis;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
+import org.redisson.client.codec.StringCodec;
+import org.redisson.codec.CompositeCodec;
+import org.redisson.codec.TypedJsonJacksonCodec;
 import org.redisson.config.Config;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -13,6 +20,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.Resource;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +38,14 @@ public class RedissonConfig {
     private static final String REDIS_PROTOCOL_PREFIX = "redis://";
     private static final String REDISS_PROTOCOL_PREFIX = "rediss://";
 
+    @Resource
+    private ObjectMapper objectMapper;
+
     @Bean
     @ConditionalOnMissingBean
     public RedissonClient redissonClient(RedisProperties properties){
         log.debug("尝试初始化RedissonClient");
-        // 1.读取Redis配置
+        // 读取Redis配置
         RedisProperties.Cluster cluster = properties.getCluster();
         RedisProperties.Sentinel sentinel = properties.getSentinel();
         String password = properties.getPassword();
@@ -43,7 +54,7 @@ public class RedissonConfig {
         if(d != null){
             timeout = Long.valueOf(d.toMillis()).intValue();
         }
-        // 2.设置Redisson配置
+        // 设置Redisson配置
         Config config = new Config();
         if(cluster != null && !CollectionUtil.isEmpty(cluster.getNodes())){
             // 集群模式
@@ -67,7 +78,17 @@ public class RedissonConfig {
                     .setDatabase(0)
                     .setPassword(password);
         }
-        // 3.创建Redisson客户端
+        // 配置Redis序列化
+        ObjectMapper om = objectMapper.copy();
+        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        // 指定序列化输入的类型，类必须是非final修饰的，序列化时将对象全类名一起保存下来
+        om.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL);
+        TypedJsonJacksonCodec jsonJacksonCodec = new TypedJsonJacksonCodec(Object.class, om);
+        // 组合序列化 key 使用 String 内容使用通用json格式
+        CompositeCodec codec = new CompositeCodec(StringCodec.INSTANCE, jsonJacksonCodec, jsonJacksonCodec);
+        // 缓存 lua 脚本
+        config.setUseScriptCache(true).setCodec(codec);
+        // 创建Redisson客户端
         return Redisson.create(config);
     }
 
