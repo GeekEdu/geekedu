@@ -1,5 +1,7 @@
 package com.zch.label.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.label.CategoryForm;
 import com.zch.common.domain.vo.PageReqVO;
 import com.zch.common.domain.vo.PageVO;
@@ -7,41 +9,43 @@ import com.zch.label.domain.dto.CategoryDTO;
 import com.zch.label.domain.dto.TagDTO;
 import com.zch.label.domain.po.Category;
 import com.zch.label.domain.query.CategoryTagQuery;
+import com.zch.label.domain.vo.CategoryPageVO;
 import com.zch.label.domain.vo.CategoryReqVO;
+import com.zch.label.domain.vo.TagPageVO;
 
 /**
  * @author Poison02
  * @date 2024/1/7
  */
-public interface ICategoryService {
+public interface ICategoryService extends IService<Category> {
 
     /**
      * 查找所有分类
-     * @param req
+     * @param query
      * @return
      */
-    PageVO<CategoryDTO> getCategoryList(PageReqVO req);
+    Page<CategoryPageVO> getCategoryList(CategoryTagQuery query);
 
     /**
      * 条件查询分类
      * @param query
      * @return
      */
-    PageVO<CategoryDTO> getCategoryByCondition(CategoryTagQuery query);
+    Page<CategoryPageVO> getCategoryByCondition(CategoryTagQuery query);
 
     /**
      * 新增分类
      * @param form
      * @return
      */
-    Category addCategory(CategoryForm form);
+    boolean addCategory(CategoryForm form);
 
     /**
      * 删除分类
      * @param id
      * @return
      */
-    Category deleteCategory(Long id);
+    boolean deleteCategory(Long id);
 
     /**
      * 更新分类
@@ -52,9 +56,9 @@ public interface ICategoryService {
 
     /**
      * 查找某一分类下的所有标签
-     * @param req
+     * @param query
      * @return
      */
-    PageVO<TagDTO> getTagsCategoryId(CategoryReqVO req);
+    Page<TagPageVO> getTagsCategoryId(CategoryTagQuery query);
 
 }

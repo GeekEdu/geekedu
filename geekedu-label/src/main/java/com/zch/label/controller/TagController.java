@@ -31,17 +31,17 @@ public class TagController {
 
     @GetMapping("/getTagByCondition")
     public PageResult<TagPageVO> getTagByCondition(@RequestBody CategoryTagQuery query) {
-        Page<TagPageVO> result = tagService.getTagList(query);
+        Page<TagPageVO> result = tagService.getTagByCondition(query);
         return PageResult.success(result);
     }
 
     @PostMapping("/add")
-    public Response<Tag> addTag(@RequestBody TagForm form) {
+    public Response addTag(@RequestBody TagForm form) {
         return Response.judge(tagService.addTag(form));
     }
 
     @PostMapping("/delete/{id}")
-    public Response<Tag> deleteTag(@PathVariable("id") Long id) {
+    public Response deleteTag(@PathVariable("id") Long id) {
         return Response.judge(tagService.deleteTag(id));
     }
 

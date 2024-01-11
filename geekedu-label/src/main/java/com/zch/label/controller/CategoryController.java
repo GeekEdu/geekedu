@@ -1,13 +1,18 @@
 package com.zch.label.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zch.api.dto.label.CategoryForm;
+import com.zch.common.domain.result.PageResult;
+import com.zch.common.domain.result.Response;
 import com.zch.common.domain.vo.PageReqVO;
 import com.zch.common.domain.vo.PageVO;
 import com.zch.label.domain.dto.CategoryDTO;
 import com.zch.label.domain.dto.TagDTO;
 import com.zch.label.domain.po.Category;
 import com.zch.label.domain.query.CategoryTagQuery;
+import com.zch.label.domain.vo.CategoryPageVO;
 import com.zch.label.domain.vo.CategoryReqVO;
+import com.zch.label.domain.vo.TagPageVO;
 import com.zch.label.service.ICategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -25,33 +30,36 @@ public class CategoryController {
     private final ICategoryService categoryService;
 
     @GetMapping("/getCategoryList")
-    public PageVO<CategoryDTO> getCategoryList(@RequestBody PageReqVO req) {
-        return categoryService.getCategoryList(req);
+    public PageResult<CategoryPageVO> getCategoryList(@RequestBody CategoryTagQuery query) {
+        Page<CategoryPageVO> result = categoryService.getCategoryList(query);
+        return PageResult.success(result);
     }
 
     @GetMapping("/getCategoryByCondition")
-    public PageVO<CategoryDTO> getCategoryByCondition(@RequestBody CategoryTagQuery query) {
-        return categoryService.getCategoryByCondition(query);
+    public PageResult<CategoryPageVO> getCategoryByCondition(@RequestBody CategoryTagQuery query) {
+        Page<CategoryPageVO> result = categoryService.getCategoryByCondition(query);
+        return PageResult.success(result);
     }
 
     @PostMapping("/add")
-    public Category addCategory(@RequestBody CategoryForm form) {
-        return categoryService.addCategory(form);
+    public Response addCategory(@RequestBody CategoryForm form) {
+        return Response.judge(categoryService.addCategory(form));
     }
 
     @PostMapping("/delete/{id}")
-    public Category deleteCategory(@PathVariable("id") Long id) {
-        return categoryService.deleteCategory(id);
+    public Response deleteCategory(@PathVariable("id") Long id) {
+        return Response.judge(categoryService.deleteCategory(id));
     }
 
     @PostMapping("/update")
-    public Category updateCategory(@RequestBody CategoryForm form) {
-        return categoryService.updateCategory(form);
+    public Response<Category> updateCategory(@RequestBody CategoryForm form) {
+        return Response.success(categoryService.updateCategory(form));
     }
 
     @GetMapping("/getTagsByCategoryId")
-    public PageVO<TagDTO> getTagsByCategoryId(@RequestBody CategoryReqVO req) {
-        return categoryService.getTagsCategoryId(req);
+    public PageResult<TagPageVO> getTagsByCategoryId(@RequestBody CategoryTagQuery query) {
+        Page<TagPageVO> result = categoryService.getTagsCategoryId(query);
+        return PageResult.success(result);
     }
 
 }

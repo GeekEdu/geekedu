@@ -1,5 +1,5 @@
 server:
-  port: 8084  #端口
+  port: 80  #端口
   tomcat:
     uri-encoding: UTF-8   #服务编码
 spring:
@@ -20,12 +20,11 @@ spring:
           - data-id: shared-logs.yaml # 共享日志配置
             refresh: false
     gateway:
-      enabled: true
       routes:
-        - id: label-service-route
-          uri: lb://localhost:8086
+        - id: label-service
+          uri: lb://label-service
           predicates:
-            - Path=/label
+            - Path=/label/**
       default-filters:
         - StripPrefix=1
       globalcors: # 全局的跨域处理

@@ -1,20 +1,22 @@
 package com.zch.label.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.label.CategoryForm;
 import com.zch.common.domain.vo.PageReqVO;
 import com.zch.common.domain.vo.PageVO;
 import com.zch.common.exceptions.CommonException;
-import com.zch.common.utils.CollUtils;
-import com.zch.common.utils.IdUtils;
-import com.zch.common.utils.ObjectUtils;
-import com.zch.common.utils.StringUtils;
+import com.zch.common.utils.*;
 import com.zch.label.domain.dto.CategoryDTO;
 import com.zch.label.domain.dto.TagDTO;
 import com.zch.label.domain.po.Category;
 import com.zch.label.domain.po.CategoryTag;
 import com.zch.label.domain.po.Tag;
 import com.zch.label.domain.query.CategoryTagQuery;
+import com.zch.label.domain.vo.CategoryPageVO;
 import com.zch.label.domain.vo.CategoryReqVO;
+import com.zch.label.domain.vo.TagPageVO;
 import com.zch.label.enums.CategoryEnum;
 import com.zch.label.mapper.CategoryMapper;
 import com.zch.label.mapper.CategoryTagMapper;
@@ -36,7 +38,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class CategoryServiceImpl implements ICategoryService {
+public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> implements ICategoryService {
 
     private final CategoryMapper categoryMapper;
 
@@ -45,17 +47,47 @@ public class CategoryServiceImpl implements ICategoryService {
     private final TagMapper tagMapper;
 
     @Override
-    public PageVO<CategoryDTO> getCategoryList(PageReqVO req) {
-        return null;
+    public Page<CategoryPageVO> getCategoryList(CategoryTagQuery query) {
+        int pageNum = query.getPageNum();
+        int pageSize = query.getPageSize();
+
+         Page<Category> page = this.page(
+                new Page<>(pageNum, pageSize),
+                new LambdaQueryWrapper<Category>()
+                        .select(Category::getId, Category::getName)
+                        .eq(Category::getIsDelete, 0)
+        );
+        Page<CategoryPageVO> result = new Page<>();
+        BeanUtils.copyProperties(page, result);
+        return result;
     }
 
     @Override
-    public PageVO<CategoryDTO> getCategoryByCondition(CategoryTagQuery query) {
-        return null;
+    public  Page<CategoryPageVO> getCategoryByCondition(CategoryTagQuery query) {
+        if (StringUtils.isBlank(query.getCategoryName())) {
+            throw new CommonException("请输入分类名！");
+        }
+        // 取出查询参数
+        int pageNum = query.getPageNum();
+        int pageSize = query.getPageSize();
+        String categoryName = query.getCategoryName();
+
+        // 查询数据
+        Page<Category> page = this.page(
+                new Page<>(pageNum, pageSize),
+                new LambdaQueryWrapper<Category>()
+                        .like(StringUtils.isNotBlank(categoryName), Category::getName, categoryName)
+                        .eq(Category::getIsDelete, 0)
+                        .select(Category::getId, Category::getName)
+
+        );
+        Page<CategoryPageVO> result = new Page<>();
+        BeanUtils.copyProperties(page, result);
+        return result;
     }
 
     @Override
-    public Category addCategory(CategoryForm form) {
+    public boolean addCategory(CategoryForm form) {
         if (StringUtils.isBlank(form.getName()) || StringUtils.isBlank(form.getType())) {
             throw new CommonException("请选择对应类型或者输入分类名！");
         }
@@ -90,11 +122,11 @@ public class CategoryServiceImpl implements ICategoryService {
         if (row != 1 || row1 != 1) {
             throw new CommonException("服务器新增分类错误，请联系管理员！");
         }
-        return category;
+        return true;
     }
 
     @Override
-    public Category deleteCategory(Long id) {
+    public boolean deleteCategory(Long id) {
         if (id == null) {
             throw new CommonException("请选择要删除的分类！");
         }
@@ -132,7 +164,7 @@ public class CategoryServiceImpl implements ICategoryService {
         if (row != 1 || row1 != 1) {
             throw new CommonException("服务器删除分类错误，请联系管理员！");
         }
-        return category;
+        return true;
     }
 
     @Override
@@ -166,30 +198,32 @@ public class CategoryServiceImpl implements ICategoryService {
     }
 
     @Override
-    public PageVO<TagDTO> getTagsCategoryId(CategoryReqVO req) {
-        /*if (req.getId() == null) {
-            throw new CommonException("请输入或选择正确的分类！");
+    public Page<TagPageVO> getTagsCategoryId(CategoryTagQuery query) {
+        int pageNum = query.getPageNum();
+        int pageSize = query.getPageSize();
+        Long categoryId = query.getCategoryId();
+        if (categoryId == null) {
+            throw new CommonException("请输入正确的分类ID！");
         }
-        List<CategoryTag> categoryTags = categoryTagMapper.selectTagByCategoryId(req.getId());
+        List<CategoryTag> categoryTags = categoryTagMapper.selectTagByCategoryId(categoryId);
         if (CollUtils.isEmpty(categoryTags)) {
             throw new CommonException("该分类下没有任何标签！");
         }
         List<Long> ids = categoryTags.stream()
                 .map(CategoryTag::getTagId)
                 .toList();
-        PageHelper.startPage(req.getPageNum(), req.getPageSize());
-        req.setIds(ids);
-        List<TagDTO> result = tagMapper.selectTagAll(req).stream()
-                .map(item -> TagDTO.of(item.getId(), item.getName()))
-                .toList();
-        PageInfo pageInfo = new PageInfo(result);
-        PageVO<TagDTO> vo = new PageVO<>();
-        vo.setTotal(pageInfo.getTotal());
-        vo.setPageNum(req.getPageNum());
-        vo.setPageSize(req.getPageSize());
-        vo.setPageCount(pageInfo.getPages());
-        vo.setList(result);
-        return vo;*/
-        return null;
+        LambdaQueryWrapper<Tag> lambdaQueryWrapper = new LambdaQueryWrapper<Tag>().in(Tag::getId, ids);
+        Page<Tag> tagPage = tagMapper.selectPage(new Page<>(pageNum, pageSize), lambdaQueryWrapper);
+        /*List<Tag> records = tagPage.getRecords();
+        List<TagPageVO> result = records.stream()
+                .map(item -> {
+                    TagPageVO tagPageVO = new TagPageVO();
+                    tagPageVO.setId(item.getId());
+                    tagPageVO.setName(item.getName());
+                    return tagPageVO;
+                }).collect(Collectors.toList());*/
+        Page<TagPageVO> result = new Page<>();
+        BeanUtils.copyProperties(tagPage, result);
+        return result;
     }
 }

@@ -12,6 +12,7 @@ import com.zch.common.utils.CollUtils;
 import com.zch.common.utils.IdUtils;
 import com.zch.common.utils.StringUtils;
 import com.zch.label.domain.dto.TagDTO;
+import com.zch.label.domain.po.Category;
 import com.zch.label.domain.po.CategoryTag;
 import com.zch.label.domain.po.Tag;
 import com.zch.label.domain.query.CategoryTagQuery;
@@ -122,11 +123,14 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements ITagS
         if (isSameName) {
             throw new CommonException("不允许同一分类下有相同标签名！");
         }
+        // 查询该标签的类型
+        Category category = categoryMapper.selectCategoryById(form.getCategoryId());
 
         CategoryTag categoryTag = new CategoryTag();
         categoryTag.setId(IdUtils.getId());
         categoryTag.setCategoryId(form.getCategoryId());
         categoryTag.setTagId(tag.getId());
+        categoryTag.setType(category.getType());
         categoryTag.setCreatedBy(1484844949L);
         categoryTag.setCreatedTime(time);
         categoryTag.setUpdatedBy(1484844949L);
