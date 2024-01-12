@@ -1,15 +1,12 @@
 package com.zch.user.controller;
 
-import cn.dev33.satoken.stp.StpUtil;
-import cn.dev33.satoken.util.SaResult;
+import com.zch.api.dto.user.LoginForm;
+import com.zch.api.vo.user.CaptchaVO;
 import com.zch.common.domain.result.Response;
-import com.zch.user.domain.form.LoginForm;
+import com.zch.user.domain.po.User;
 import com.zch.user.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Poison02
@@ -23,16 +20,19 @@ public class UserController {
     private final IUserService userService;
 
     @CrossOrigin
-    @PostMapping("/login")
-    public Response doLogin(@RequestBody LoginForm form) {
-        userService.login(form);
-        return Response.success();
+    @GetMapping("/captcha/image")
+    public Response<CaptchaVO> getCaptcha() {
+        return Response.success(userService.getCaptcha());
     }
 
-    @CrossOrigin
-    @GetMapping("/captcha/image")
-    public Response getCaptcha() {
-        return Response.success(userService.getCaptcha());
+    @PostMapping("/login")
+    public Response login(@RequestBody LoginForm form) {
+        return Response.judge(userService.login(form));
+    }
+
+    @PostMapping("/add")
+    public Response addUser(@RequestBody User user) {
+        return Response.judge(userService.addUser(user));
     }
 
 }

@@ -38,6 +38,11 @@ public class User extends BaseEntity implements Serializable {
     private String phone;
 
     /**
+     * 盐值
+     */
+    private String salt;
+
+    /**
      * 密码
      */
     private String password;
