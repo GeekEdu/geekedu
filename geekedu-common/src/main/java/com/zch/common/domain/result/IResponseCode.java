@@ -8,6 +8,6 @@ public interface IResponseCode {
 
     Integer getCode();
 
-    String getMsg();
+    String getMessage();
 
 }

@@ -29,7 +29,7 @@ public interface ErrorInfo {
     }
 
     interface Code {
-        int SUCCESS = 200;
+        int SUCCESS = 0;
         int FAILED = 400;
     }
 

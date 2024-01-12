@@ -4,14 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.label.TagForm;
-import com.zch.common.domain.result.PageResult;
-import com.zch.common.domain.vo.PageVO;
 import com.zch.common.exceptions.CommonException;
+import com.zch.common.exceptions.DbException;
 import com.zch.common.utils.BeanUtils;
 import com.zch.common.utils.CollUtils;
 import com.zch.common.utils.IdUtils;
 import com.zch.common.utils.StringUtils;
-import com.zch.label.domain.dto.TagDTO;
 import com.zch.label.domain.po.Category;
 import com.zch.label.domain.po.CategoryTag;
 import com.zch.label.domain.po.Tag;
@@ -28,7 +26,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.zch.common.constants.ErrorInfo.Msg.*;
 
 /**
  * @author Poison02
@@ -138,7 +137,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements ITagS
         int row = tagMapper.insertTag(tag);
         int row1 = categoryTagMapper.insertCategoryTag(categoryTag);
         if (row != 1 || row1 != 1) {
-            throw new CommonException("服务器新增标签错误，请联系管理员！");
+            throw new DbException(DB_SAVE_EXCEPTION);
         }
         return true;
     }
@@ -155,7 +154,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements ITagS
         tag.setUpdatedTime(time);
         int row = tagMapper.deleteTag(tag);
         if (row != 1) {
-            throw new CommonException("服务器删除标签错误，请联系管理员！");
+            throw new DbException(DB_DELETE_EXCEPTION);
         }
         return true;
     }
@@ -180,7 +179,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements ITagS
         // 查询出来最新的 tag 返回给前端
         Tag res = tagMapper.selectTagById(form.getId());
         if (res == null) {
-            throw new CommonException("未找到对应标签，请输入正确的标签名！");
+            throw new DbException(DB_UPDATE_EXCEPTION);
         }
         return res;
     }

@@ -13,13 +13,13 @@ import java.io.Serializable;
 @NoArgsConstructor
 public enum ResponseCode implements IResponseCode, Serializable {
 
-    SUCCESS(0, "成功！"),
+    SUCCESS(0, "操作成功！"),
     SYSTEM_ERROR(400, "系统异常！")
     ;
 
     private Integer code;
 
-    private String msg;
+    private String Message;
 
     @Override
     public Integer getCode() {
@@ -27,15 +27,15 @@ public enum ResponseCode implements IResponseCode, Serializable {
     }
 
     @Override
-    public String getMsg() {
-        return msg;
+    public String getMessage() {
+        return Message;
     }
 
     @Override
     public String toString() {
         return "ResponseCode{" +
                 "code='" + code + '\'' +
-                ", msg='" + msg + '\'' +
+                ", msg='" + Message + '\'' +
                 '}';
     }
 

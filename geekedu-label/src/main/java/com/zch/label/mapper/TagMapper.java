@@ -1,28 +1,13 @@
 package com.zch.label.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.zch.common.domain.vo.PageReqVO;
 import com.zch.label.domain.po.Tag;
 import com.zch.label.domain.query.CategoryTagQuery;
 import com.zch.label.domain.vo.CategoryReqVO;
-import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
 public interface TagMapper extends BaseMapper<Tag> {
-
-    /**
-     * 查找所有 tag
-     * @return
-     */
-    List<Tag> selectTagList(PageReqVO req);
-
-    /**
-     * 查找某分类下的所有 tag
-     * @param req
-     * @return
-     */
-    List<Tag> selectTagAll(CategoryReqVO req);
 
     /**
      * 条件查询 tag

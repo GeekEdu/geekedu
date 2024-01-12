@@ -17,7 +17,7 @@ public class PageResult<T> implements Serializable {
 
     private Data data;
 
-    private String msg;
+    private String message;
 
     public static <T> PageResult<T> success(IPage<T> page) {
         PageResult<T> result = new PageResult<>();
@@ -28,7 +28,7 @@ public class PageResult<T> implements Serializable {
         data.setTotal(page.getTotal());
 
         result.setData(data);
-        result.setMsg(ResponseCode.SUCCESS.getMsg());
+        result.setMessage(ResponseCode.SUCCESS.getMessage());
         return result;
     }
 

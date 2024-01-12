@@ -27,14 +27,14 @@ public class Response<T> implements Serializable {
     public static <T> Response<T> success(T data) {
         Response<T> Response = new Response<>();
         Response.setStatus(0);
-        Response.setMessage(ResponseCode.SUCCESS.getMsg());
+        Response.setMessage(ResponseCode.SUCCESS.getMessage());
         Response.setData(data);
         Response.setTimestamp(new Date().getTime());
         return Response;
     }
 
     public static <T> Response<T> failed() {
-        return Response(ResponseCode.SYSTEM_ERROR.getCode(), ResponseCode.SYSTEM_ERROR.getMsg(), null);
+        return Response(ResponseCode.SYSTEM_ERROR.getCode(), ResponseCode.SYSTEM_ERROR.getMessage(), null);
     }
 
     public static <T> Response<T> failed(String msg) {
@@ -50,7 +50,7 @@ public class Response<T> implements Serializable {
     }
 
     public static <T> Response<T> failed(IResponseCode ResponseCode) {
-        return Response(ResponseCode.getCode(), ResponseCode.getMsg(), null);
+        return Response(ResponseCode.getCode(), ResponseCode.getMessage(), null);
     }
 
     public static <T> Response<T> failed(IResponseCode ResponseCode, String msg) {
@@ -58,7 +58,7 @@ public class Response<T> implements Serializable {
     }
 
     private static <T> Response<T> Response(IResponseCode ResponseCode, T data) {
-        return Response(ResponseCode.getCode(), ResponseCode.getMsg(), data);
+        return Response(ResponseCode.getCode(), ResponseCode.getMessage(), data);
     }
 
     private static <T> Response<T> Response(Integer code, String msg, T data) {

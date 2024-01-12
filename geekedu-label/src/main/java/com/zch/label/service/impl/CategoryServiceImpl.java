@@ -4,18 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.label.CategoryForm;
-import com.zch.common.domain.vo.PageReqVO;
-import com.zch.common.domain.vo.PageVO;
 import com.zch.common.exceptions.CommonException;
+import com.zch.common.exceptions.DbException;
 import com.zch.common.utils.*;
-import com.zch.label.domain.dto.CategoryDTO;
-import com.zch.label.domain.dto.TagDTO;
 import com.zch.label.domain.po.Category;
 import com.zch.label.domain.po.CategoryTag;
 import com.zch.label.domain.po.Tag;
 import com.zch.label.domain.query.CategoryTagQuery;
 import com.zch.label.domain.vo.CategoryPageVO;
-import com.zch.label.domain.vo.CategoryReqVO;
 import com.zch.label.domain.vo.TagPageVO;
 import com.zch.label.enums.CategoryEnum;
 import com.zch.label.mapper.CategoryMapper;
@@ -29,7 +25,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.zch.common.constants.ErrorInfo.Msg.*;
 
 /**
  * @author Poison02
@@ -120,7 +117,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         int row = categoryMapper.insertCategory(category);
         int row1 = categoryTagMapper.insertCategoryTag(categoryTag);
         if (row != 1 || row1 != 1) {
-            throw new CommonException("服务器新增分类错误，请联系管理员！");
+            throw new DbException(DB_SAVE_EXCEPTION);
         }
         return true;
     }
@@ -162,7 +159,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         int row = categoryMapper.deleteCategory(category);
         int row1 = categoryTagMapper.deleteCategory(categoryTag);
         if (row != 1 || row1 != 1) {
-            throw new CommonException("服务器删除分类错误，请联系管理员！");
+            throw new DbException(DB_DELETE_EXCEPTION);
         }
         return true;
     }
@@ -187,12 +184,12 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         category.setUpdatedTime(time);
         int row = categoryMapper.updateCategory(category);
         if (row != 1) {
-            throw new CommonException("服务器更新分类出错，请联系管理员！");
+            throw new DbException(DB_UPDATE_EXCEPTION);
         }
         // 查询出来最新的 tag 返回给前端
         Category res = categoryMapper.selectCategoryById(form.getId());
         if (res == null) {
-            throw new CommonException("未找到对应对应，请输入正确的分类名！");
+            throw new CommonException("未找到对应分类，请输入正确的分类名！");
         }
         return res;
     }

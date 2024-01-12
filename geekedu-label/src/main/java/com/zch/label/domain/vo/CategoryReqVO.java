@@ -1,8 +1,6 @@
 package com.zch.label.domain.vo;
 
-import com.zch.common.domain.vo.PageReqVO;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
@@ -10,13 +8,8 @@ import java.util.List;
  * @author Poison02
  * @date 2024/1/9
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class CategoryReqVO extends PageReqVO {
-
-    public CategoryReqVO() {
-        super();
-    }
+public class CategoryReqVO {
 
     private Long id;
 

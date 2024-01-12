@@ -14,24 +14,6 @@
 		id, `name`, created_by, created_time, updated_by, updated_time, is_delete
 	</sql>
 
-	<select id="selectTagList" parameterType="com.zch.common.domain.vo.PageReqVO" resultMap="BaseResultMap">
-		select
-		    <include refid="Base_Column_List" />
-		from tag
-		where is_delete=0
-	</select>
-
-	<select id="selectTagAll" parameterType="com.zch.label.domain.vo.CategoryReqVO" resultMap="BaseResultMap">
-		select
-		    <include refid="Base_Column_List" />
-		from tag
-		where id in
-		<foreach collection="ids" open="(" close=")" separator="," item="id">
-			#{id}
-		</foreach>
-		and is_delete=0
-	</select>
-
 	<select id="selectTagByCondition" parameterType="com.zch.label.domain.query.CategoryTagQuery" resultMap="BaseResultMap">
 		select
 		    <include refid="Base_Column_List" />
