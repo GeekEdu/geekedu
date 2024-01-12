@@ -16,7 +16,7 @@ import java.util.Map;
  * @date 2024/1/6
  */
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class UserController {
 

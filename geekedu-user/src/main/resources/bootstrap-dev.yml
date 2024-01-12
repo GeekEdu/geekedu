@@ -5,7 +5,7 @@ spring:
       discovery:
         namespace: 706ae883-21cc-41b8-9f75-9d01311c9dcc
         group: DEFAULT_GROUP
-        ip: 192.168.150.101
+        ip: 127.0.0.1
 logging:
   level:
     com.zch: debug

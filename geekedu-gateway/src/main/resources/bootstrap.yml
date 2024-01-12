@@ -1,5 +1,5 @@
 server:
-  port: 80  #端口
+  port: 8080  #端口
   tomcat:
     uri-encoding: UTF-8   #服务编码
 spring:
@@ -25,8 +25,13 @@ spring:
           uri: lb://label-service
           predicates:
             - Path=/label/**
-      default-filters:
-        - StripPrefix=1
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/user/**
+          filters:
+            - StripPrefix=1
+
       globalcors: # 全局的跨域处理
         add-to-simple-url-handler-mapping: true # 解决options请求被拦截问题
         corsConfigurations:
