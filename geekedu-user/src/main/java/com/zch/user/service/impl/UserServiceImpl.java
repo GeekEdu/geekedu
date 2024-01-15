@@ -2,6 +2,8 @@ package com.zch.user.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zch.api.dto.user.LoginForm;
 import com.zch.api.vo.user.CaptchaVO;
 import com.zch.common.utils.*;
@@ -14,6 +16,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -36,8 +41,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         String img = captcha.get("img");
         String key = captcha.get("key");
         // 存入 redis 中，过期时间为 60 秒
-        RedisUtils.setCacheObject(CAPTCHA_KEY + key, captcha);
-        // RedisUtils.setCacheMap(CAPTCHA_KEY + key, captcha);
+        RedisUtils.setCacheMap(CAPTCHA_MAP, captcha);
         RedisUtils.expire(CAPTCHA_KEY + key, CAPTCHA_KEY_TTL);
         CaptchaVO vo = new CaptchaVO();
         vo.setImg(img);
@@ -53,7 +57,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         String imageCaptcha = form.getImageCaptcha();
         String imageKey = form.getImageKey();
         // 从redis中取出来验证码相关
-        Object cacheObject = RedisUtils.getCacheObject(CAPTCHA_KEY + imageKey);
+        Map<String, String> cacheObject = RedisUtils.getCacheMap(CAPTCHA_MAP);
         if (ObjectUtils.isEmpty(cacheObject)) {
             return false;
         }
@@ -86,9 +90,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
      * @param cacheObject
      * @return
      */
-    private boolean checkCaptcha(String imageCaptcha, String imageKey, Object cacheObject) {
-        String redisCaptcha = "";
-        String redisKey = "";
+    private boolean checkCaptcha(String imageCaptcha, String imageKey, Map<String, String> cacheObject) {
+        String redisCaptcha = cacheObject.get("code");
+        String redisKey = cacheObject.get("key");
         if (Objects.equals(imageCaptcha, redisCaptcha)
             && Objects.equals(imageKey, redisKey)) {
             return true;

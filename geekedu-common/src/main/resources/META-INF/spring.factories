@@ -1,6 +1,5 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.zch.common.autoConfigure.mybatis.MybatisConfig,\
-  com.zch.common.autoConfigure.mvc.CorsConfig,\
   com.zch.common.autoConfigure.mvc.JsonConfig,\
   com.zch.common.autoConfigure.redis.RedissonConfig,\
   com.zch.common.autoConfigure.threadpool.ThreadPoolConfig,\

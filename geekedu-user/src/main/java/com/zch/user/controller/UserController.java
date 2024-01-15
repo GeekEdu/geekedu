@@ -19,7 +19,6 @@ public class UserController {
 
     private final IUserService userService;
 
-    @CrossOrigin
     @GetMapping("/captcha/image")
     public Response<CaptchaVO> getCaptcha() {
         return Response.success(userService.getCaptcha());

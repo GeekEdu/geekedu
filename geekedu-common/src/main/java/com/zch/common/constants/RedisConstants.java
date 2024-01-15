@@ -15,6 +15,8 @@ public interface RedisConstants {
 
     String CAPTCHA_KEY = "captcha:";
 
+    String CAPTCHA_MAP = "captchaMap";
+
     /**
      * 验证码过期时间 单位 秒
      */

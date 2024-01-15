@@ -37,6 +37,7 @@ public class CaptchaUtils {
         System.out.println("key: " + key);
         result.put("img", lineCaptchaBase64);
         result.put("key", key);
+        result.put("code", lineCaptchaCode);
         return result;
     }
 
