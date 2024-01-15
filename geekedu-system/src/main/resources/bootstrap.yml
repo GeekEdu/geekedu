@@ -23,8 +23,11 @@ spring:
             refresh: false
           - data-id: shared-logs.yaml # 共享日志配置
             refresh: false
-          # - data-id: shared-mybatis.yaml # 共享mybatis配置
-          #  refresh: false
+          - data-id: shared-mybatis.yaml # 共享mybatis配置
+            refresh: false
           - data-id: shared-feign.yaml # 共享feign配置
             refresh: false
 
+geekedu:
+  jdbc:
+    database: geekedu-system
