@@ -26,3 +26,5 @@ sa-token:
   token-style: random-64
   # 是否输出操作日志
   is-log: true
+  # 配置 jwt 的密钥
+  jwt-secret-key: zchzch666666zchzch

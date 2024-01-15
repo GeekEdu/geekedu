@@ -10,6 +10,7 @@ public interface ErrorInfo {
         String OK = "OK";
         String INVALID_VERIFY_CODE = "验证码错误";
 
+        String EXPIRE_CAPTCHA_CODE = "验证码已过期";
 
         String SERVER_INTER_ERROR = "服务器内部错误";
 

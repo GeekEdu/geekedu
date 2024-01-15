@@ -26,7 +26,7 @@ public class UserController {
 
     @PostMapping("/login")
     public Response login(@RequestBody LoginForm form) {
-        return Response.judge(userService.login(form));
+        return Response.success(userService.login(form));
     }
 
     @PostMapping("/add")

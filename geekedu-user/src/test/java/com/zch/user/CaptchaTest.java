@@ -3,6 +3,7 @@ package com.zch.user;
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.LineCaptcha;
 import cn.hutool.captcha.generator.RandomGenerator;
+import com.zch.common.utils.StringUtils;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -24,6 +25,13 @@ public class CaptchaTest {
         System.out.println(lineCaptchaCode);
         // base64编码
         System.out.println(lineCaptcha.getImageBase64Data());
+    }
+
+    @Test
+    public void testCode2() {
+        String str = "2EaN";
+        boolean isOk = StringUtils.isSameStringByUpperToLower(str, "2ean");
+        System.out.println(isOk);
     }
 
 }
