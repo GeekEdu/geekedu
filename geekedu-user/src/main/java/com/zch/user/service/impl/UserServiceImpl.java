@@ -3,8 +3,6 @@ package com.zch.user.service.impl;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zch.api.dto.user.LoginForm;
 import com.zch.api.vo.user.CaptchaVO;
 import com.zch.api.vo.user.LoginVO;
@@ -19,9 +17,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
