@@ -2,8 +2,11 @@ package com.zch.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zch.system.domain.po.VersionInfo;
+import com.zch.system.domain.po.*;
+import com.zch.system.domain.po.System;
+import com.zch.system.domain.vo.ConfigVO;
 import com.zch.system.domain.vo.VersionInfoVO;
+import com.zch.system.mapper.AddonsMapper;
 import com.zch.system.mapper.VersionInfoMapper;
 import com.zch.system.service.IVersionInfoService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,22 +28,15 @@ public class VersionInfoServiceImpl extends ServiceImpl<VersionInfoMapper, Versi
 
     private final VersionInfoMapper versionInfoMapper;
 
+    private final AddonsMapper addonsMapper;
+
     @Override
-    public Map<String, Object> getConfig() {
-        Map<String, Object> result = new HashMap<>(2);
-        Map<String, Object> system = new HashMap<>(3);
-        system.put("logo", "https://meedu-cos.meedu.xyz/images/FgY3kh3IdDhrJfb5NGueOVgol2WWeKRtwFP4lYUz.png");
-        system.put("version", "v1.0.0");
-        Map<String, String> url = new HashMap<>(3);
-        url.put("api", "https://demo-api.meedu.xyz");
-        url.put("h5", "https://h5.meedu.xyz");
-        url.put("pc", "https://demo.meedu.xyz");
-        system.put("url", url);
-        Map<String, String> video = new HashMap<>(1);
-        video.put("default_service", "tencent");
-        result.put("video", video);
-        result.put("system", system);
-        return result;
+    public ConfigVO getConfig() {
+        Url url = new Url("https://demo-api.meedu.xyz", "https://demo.meedu.xyz", "https://h5.meedu.xyz");
+        Video video = new Video("tencent");
+        System system = new System("https://meedu-cos.meedu.xyz/images/FgY3kh3IdDhrJfb5NGueOVgol2WWeKRtwFP4lYUz.png", "v1.0.0", url);
+        ConfigVO vo = new ConfigVO(system, video);
+        return vo;
     }
 
     @Override
@@ -49,4 +46,5 @@ public class VersionInfoServiceImpl extends ServiceImpl<VersionInfoMapper, Versi
                 .select(VersionInfo::getSpringbootVersion, VersionInfo::getGeekeduVersion, VersionInfo::getJdkVersion));
         return VersionInfoVO.of(versionInfo.getSpringbootVersion(), versionInfo.getGeekeduVersion(), versionInfo.getJdkVersion());
     }
+
 }

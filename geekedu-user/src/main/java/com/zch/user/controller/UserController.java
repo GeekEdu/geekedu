@@ -19,6 +19,11 @@ public class UserController {
 
     private final IUserService userService;
 
+    @GetMapping("/test")
+    public Response test() {
+        return Response.success();
+    }
+
     @GetMapping("/captcha/image")
     public Response<CaptchaVO> getCaptcha() {
         return Response.success(userService.getCaptcha());
