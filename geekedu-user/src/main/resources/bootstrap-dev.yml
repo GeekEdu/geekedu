@@ -28,3 +28,7 @@ sa-token:
   is-log: true
   # 配置 jwt 的密钥
   jwt-secret-key: zchzch666666zchzch
+  # 能从header中读取
+  is-read-header: true
+  # 能从cookie读取
+  is-read-cookie: true
