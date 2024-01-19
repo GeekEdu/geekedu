@@ -12,6 +12,7 @@ spring:
       config:
         file-extension: yaml
         server-addr: 192.168.150.101:8848
+        # server-addr: 127.0.0.1:8848
         shared-configs: # 共享配置
           - data-id: shared-spring.yaml # 共享spring配置
             refresh: false
