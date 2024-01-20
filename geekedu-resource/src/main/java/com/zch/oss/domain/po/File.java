@@ -1,9 +1,9 @@
 package com.zch.oss.domain.po;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.zch.common.domain.entity.BaseEntity;
 import com.zch.oss.enums.FileStatus;
 import com.zch.oss.enums.Platform;
 import lombok.Data;
@@ -11,7 +11,6 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * @author Poison02
@@ -21,7 +20,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("file_resource")
-public class File implements Serializable {
+public class File extends BaseEntity implements Serializable{
 
     private static final long serialVersionUID = 1L;
 
@@ -60,26 +59,12 @@ public class File implements Serializable {
     /**
      * 创建者
      */
-
-    private Long createBy;
-
-    /**
-     * 创建时间
-     */
-    @TableField(value = "created_time", fill = FieldFill.INSERT)
-    private LocalDateTime createdTime;
+    private Long createdBy;
 
     /**
      * 更新者
      */
-
-    private Long updateBy;
-
-    /**
-     * 更新时间
-     */
-    @TableField(value = "updated_time", fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime updatedTime;
+    private Long updatedBy;
 
 
     /**

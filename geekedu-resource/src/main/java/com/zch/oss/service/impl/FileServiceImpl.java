@@ -1,6 +1,7 @@
 package com.zch.oss.service.impl;
 
 import cn.hutool.core.lang.UUID;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.common.exceptions.CommonException;
 import com.zch.common.exceptions.DbException;
@@ -61,7 +62,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
             fileInfo.setStatus(FileStatus.UPLOADED);
             fileInfo.setRequestId(requestId);
             fileInfo.setPlatform(properties.getFile());
-            save(fileInfo);
+            fileMapper.insert(fileInfo);
             // fileMapper.insertFileInfo(fileInfo);
         } catch (Exception e) {
             log.error("文件信息保存异常", e);
@@ -78,7 +79,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
 
     @Override
     public FileDTO getFileInfo(Long id) {
-        File file = fileMapper.selectFileInfoById(id);
+        File file = fileMapper.selectById(id);
         if (file == null) {
             return null;
         }
@@ -87,11 +88,15 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
 
     @Override
     public FileDTO deleteFileInfo(Long id) {
-        int row = fileMapper.deleteFileInfo(id);
+        LambdaUpdateWrapper<File> wrapper = new LambdaUpdateWrapper<File>()
+                .eq(File::getId, id)
+                .eq(File::getIsDelete, 0)
+                .set(File::getIsDelete, 1);
+        int row = fileMapper.update(null, wrapper);
         if (row != 1) {
             return null;
         }
-        File file = fileMapper.selectFileInfoById(id);
+        File file = fileMapper.selectById(id);
         if (file == null) {
             return null;
         }
