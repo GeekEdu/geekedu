@@ -4,15 +4,15 @@ server:
     uri-encoding: UTF-8   #服务编码
 spring:
   profiles:
-    active: dev
+    active: local
   application:
     name: gateway-service
   cloud:
     nacos:
       config:
         file-extension: yaml
-        server-addr: 192.168.150.101:8848
-        # server-addr: 127.0.0.1:8848
+        # server-addr: 192.168.150.101:8848
+        server-addr: 127.0.0.1:8848
         shared-configs: # 共享配置
           - data-id: shared-spring.yaml # 共享spring配置
             refresh: false

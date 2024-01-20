@@ -1,5 +1,9 @@
 package com.zch.common.context;
 
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * 使用 ThreadLocal 保存的用户信息
  * @author Poison02
@@ -7,29 +11,33 @@ package com.zch.common.context;
  */
 public class UserContext {
 
-    private static final ThreadLocal<Long> TL = new ThreadLocal<>();
+    private static final InheritableThreadLocal<Map<String, Long>> THREAD_LOCAL = new InheritableThreadLocal<>();
 
-    /**
-     * 保存用户id
-     * @param userId 用户id
-     */
-    public static void setUser(Long userId) {
-        TL.set(userId);
+    public static void set(String key, Long val) {
+        Map<String, Long> map = getThreadLocalMap();
+        map.put(key, val);
     }
 
-    /**
-     * 获取用户id
-     * @return 用户id
-     */
-    public static Long getUser() {
-        return TL.get();
+    public static Long get(String key) {
+        Map<String, Long> map = getThreadLocalMap();
+        return map.get(key);
     }
 
-    /**
-     * 移除用户id
-     */
-    public static void removeUser() {
-        TL.remove();
+    public static Long getLoginId() {
+        return (Long) getThreadLocalMap().get("loginId");
+    }
+
+    public static void remove() {
+        THREAD_LOCAL.remove();
+    }
+
+    public static Map<String, Long> getThreadLocalMap() {
+        Map<String, Long> map = THREAD_LOCAL.get();
+        if (Objects.isNull(map)) {
+            map = new ConcurrentHashMap<>();
+            THREAD_LOCAL.set(map);
+        }
+        return map;
     }
 
 }

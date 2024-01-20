@@ -32,12 +32,12 @@ public class MyBatisAutoFillInterceptor implements InnerInterceptor {
         if (ms.getSqlCommandType().compareTo(SqlCommandType.INSERT) == 0) {
             // 2. 判断是否有 updateBy 字段，若
             if (ReflectUtils.containField(DATA_FIELD_NAME_CREATEBY, parameter.getClass())) {
-                Long userId = UserContext.getUser();
-                // 3. 有userId也存在并设置updateBy
-                if (userId != null) {
-                    // 4. 当前操作人设置到创建人字段
-                    ReflectUtils.setFieldValue(parameter, DATA_FIELD_NAME_CREATEBY, userId);
-                }
+//                Long userId = UserContext.getUser();
+//                // 3. 有userId也存在并设置updateBy
+//                if (userId != null) {
+//                    // 4. 当前操作人设置到创建人字段
+//                    ReflectUtils.setFieldValue(parameter, DATA_FIELD_NAME_CREATEBY, userId);
+//                }
             }
         }
     }
@@ -45,12 +45,12 @@ public class MyBatisAutoFillInterceptor implements InnerInterceptor {
     private void updateExe(MappedStatement ms, Object parameter) {
         // 1. 判断是否有 updateBy 字段，若
         if (ReflectUtils.containField(DATA_FIELD_NAME_UPDATEBY, parameter.getClass())) {
-            Long userId = UserContext.getUser();
-            // 2. 有userId也存在并设置updateBy
-            if (userId != null) {
-                // 3. 当前操作人设置到创建人字段
-                ReflectUtils.setFieldValue(parameter, DATA_FIELD_NAME_UPDATEBY, userId);
-            }
+//            Long userId = UserContext.getUser();
+//            // 2. 有userId也存在并设置updateBy
+//            if (userId != null) {
+//                // 3. 当前操作人设置到创建人字段
+//                ReflectUtils.setFieldValue(parameter, DATA_FIELD_NAME_UPDATEBY, userId);
+//            }
         }
     }
 }
