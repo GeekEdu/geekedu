@@ -1,5 +1,7 @@
 package com.zch.system.controller;
 
+import com.zch.api.feignClient.user.UserFeignClient;
+import com.zch.api.vo.user.CaptchaVO;
 import com.zch.common.domain.result.Response;
 import com.zch.system.service.IAddonsService;
 import com.zch.system.service.IVersionInfoService;
@@ -20,6 +22,14 @@ public class ConfigController {
     private final IVersionInfoService versionInfoService;
 
     private final IAddonsService addonsService;
+
+    private final UserFeignClient userFeignClient;
+
+    @GetMapping("/test")
+    public String test() {
+        Response<CaptchaVO> captcha = userFeignClient.getCaptcha();
+        return captcha.getMessage();
+    }
 
     @GetMapping("/config")
     public Response getConfig() {

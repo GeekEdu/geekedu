@@ -22,7 +22,7 @@
 		<!--项目公共依赖-->
 		<dependency>
 			<groupId>com.zch</groupId>
-			<artifactId>geekedu-common</artifactId>
+			<artifactId>geekedu-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
