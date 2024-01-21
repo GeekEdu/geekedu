@@ -24,7 +24,7 @@ public class UserContext {
     }
 
     public static Long getLoginId() {
-        return (Long) getThreadLocalMap().get("loginId");
+        return getThreadLocalMap().get("loginId");
     }
 
     public static void remove() {
