@@ -1,7 +1,7 @@
 package com.zch.api.feignClient.user;
 
 import com.zch.api.vo.user.CaptchaVO;
-import com.zch.common.domain.result.Response;
+import com.zch.common.mvc.result.Response;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 

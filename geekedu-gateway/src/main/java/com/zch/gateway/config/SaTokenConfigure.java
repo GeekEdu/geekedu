@@ -8,6 +8,7 @@ import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.util.SaResult;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.server.ServerWebExchange;
 
@@ -17,7 +18,7 @@ import org.springframework.web.server.ServerWebExchange;
  * @author Poison02
  * @date 2024/1/16
  */
-// @Configuration
+@Configuration
 public class SaTokenConfigure {
 
     @Bean
@@ -31,10 +32,10 @@ public class SaTokenConfigure {
                     SaRouter.notMatch("/user/api/captcha/image")
                             .notMatch("/user/api/login")
                             .check(r -> {
-                                StpUtil.checkLogin();
                                 ServerHttpRequest request = SaReactorSyncHolder.getContext().getRequest();
-                                String token = request.getHeaders().getFirst("Bearer");
+                                String token = request.getHeaders().getFirst("Authorization");
                                 System.out.println("======token======为" + token);
+                                StpUtil.checkLogin();
                             });
                 })
                 .setError(e -> {

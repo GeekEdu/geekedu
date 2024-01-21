@@ -1,8 +1,9 @@
 package com.zch.system.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.vo.user.CaptchaVO;
-import com.zch.common.domain.result.Response;
+import com.zch.common.mvc.result.Response;
 import com.zch.system.service.IAddonsService;
 import com.zch.system.service.IVersionInfoService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class ConfigController {
     @GetMapping("/test")
     public String test() {
         Response<CaptchaVO> captcha = userFeignClient.getCaptcha();
+        System.out.println("是否登录： = " + StpUtil.isLogin());
         return captcha.getMessage();
     }
 

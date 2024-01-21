@@ -2,8 +2,8 @@ package com.zch.label.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zch.api.dto.label.TagForm;
-import com.zch.common.domain.result.PageResult;
-import com.zch.common.domain.result.Response;
+import com.zch.common.mvc.result.PageResult;
+import com.zch.common.mvc.result.Response;
 import com.zch.label.domain.po.Tag;
 import com.zch.label.domain.query.CategoryTagQuery;
 import com.zch.label.domain.vo.TagPageVO;

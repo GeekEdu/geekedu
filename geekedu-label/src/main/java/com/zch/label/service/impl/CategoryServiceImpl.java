@@ -4,9 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.label.CategoryForm;
-import com.zch.common.exceptions.CommonException;
-import com.zch.common.exceptions.DbException;
-import com.zch.common.utils.*;
+import com.zch.common.core.utils.*;
+import com.zch.common.mvc.exception.CommonException;
+import com.zch.common.mvc.exception.DbException;
 import com.zch.label.domain.po.Category;
 import com.zch.label.domain.po.CategoryTag;
 import com.zch.label.domain.po.Tag;
@@ -26,7 +26,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.zch.common.constants.ErrorInfo.Msg.*;
+import static com.zch.common.core.constants.ErrorInfo.Msg.*;
+
 
 /**
  * @author Poison02

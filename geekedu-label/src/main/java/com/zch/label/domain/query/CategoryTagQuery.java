@@ -1,6 +1,6 @@
 package com.zch.label.domain.query;
 
-import com.zch.common.domain.entity.BasePageQuery;
+import com.zch.common.core.domain.entity.BasePageQuery;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

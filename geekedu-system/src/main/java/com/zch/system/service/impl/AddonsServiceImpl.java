@@ -2,7 +2,7 @@ package com.zch.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zch.common.utils.BeanUtils;
+import com.zch.common.core.utils.BeanUtils;
 import com.zch.system.domain.po.Addons;
 import com.zch.system.domain.vo.AddonsVO;
 import com.zch.system.mapper.AddonsMapper;

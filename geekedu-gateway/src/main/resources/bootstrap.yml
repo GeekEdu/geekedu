@@ -55,3 +55,6 @@ spring:
             maxAge: 360000 # 这次跨域检测的有效期
       default-filters:
         - StripPrefix=1
+geekedu:
+  redis:
+    host: 127.0.0.1

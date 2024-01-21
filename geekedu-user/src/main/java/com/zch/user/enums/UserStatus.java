@@ -1,6 +1,6 @@
 package com.zch.user.enums;
 
-import com.zch.common.exceptions.BadRequestException;
+import com.zch.common.mvc.exception.BadRequestException;
 import com.zch.user.constants.UserErrorInfo;
 import lombok.Getter;
 

@@ -1,6 +1,6 @@
 package com.zch.label.domain.vo;
 
-import com.zch.common.domain.entity.BaseVO;
+import com.zch.common.mvc.entity.BaseVO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

@@ -2,7 +2,7 @@ package com.zch.user.controller;
 
 import com.zch.api.dto.user.LoginForm;
 import com.zch.api.vo.user.CaptchaVO;
-import com.zch.common.domain.result.Response;
+import com.zch.common.mvc.result.Response;
 import com.zch.user.domain.po.User;
 import com.zch.user.service.IUserService;
 import lombok.RequiredArgsConstructor;

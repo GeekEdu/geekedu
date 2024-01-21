@@ -6,10 +6,13 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.user.LoginForm;
 import com.zch.api.vo.user.CaptchaVO;
 import com.zch.api.vo.user.LoginVO;
-import com.zch.common.exceptions.CommonException;
-import com.zch.common.utils.*;
-import com.zch.common.utils.encrypt.EncryptUtils;
-import com.zch.common.utils.redis.RedisUtils;
+import com.zch.common.core.utils.CaptchaUtils;
+import com.zch.common.core.utils.IdUtils;
+import com.zch.common.core.utils.ObjectUtils;
+import com.zch.common.core.utils.StringUtils;
+import com.zch.common.core.utils.encrypt.EncryptUtils;
+import com.zch.common.mvc.exception.CommonException;
+import com.zch.common.redis.utils.RedisUtils;
 import com.zch.user.domain.po.User;
 import com.zch.user.mapper.UserMapper;
 import com.zch.user.service.IUserService;
@@ -20,9 +23,8 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.zch.common.constants.ErrorInfo.Msg.EXPIRE_CAPTCHA_CODE;
-import static com.zch.common.constants.ErrorInfo.Msg.INVALID_VERIFY_CODE;
-import static com.zch.common.constants.RedisConstants.*;
+import static com.zch.common.core.constants.ErrorInfo.Msg.*;
+import static com.zch.common.redis.constants.RedisConstants.*;
 
 /**
  * @author Poison02
@@ -75,8 +77,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (userId > 0 && checkCaptcha) {
             // 登录成功，将token写入
             StpUtil.login(userId);
+            String token = StpUtil.getTokenValue();
             LoginVO vo = new LoginVO();
-            vo.setToken(StpUtil.getTokenValue());
+            vo.setToken(token);
+            // 将 token 写入 redis 中
+            RedisUtils.setCacheObject(LOGIN_USER_TOKEN + userId, token);
             return vo;
         }
         return new LoginVO();
