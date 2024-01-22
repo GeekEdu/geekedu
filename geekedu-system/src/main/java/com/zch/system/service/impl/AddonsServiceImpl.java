@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.common.core.utils.BeanUtils;
 import com.zch.system.domain.po.Addons;
-import com.zch.system.domain.vo.AddonsVO;
+import com.zch.api.vo.system.AddonsVO;
 import com.zch.system.mapper.AddonsMapper;
 import com.zch.system.service.IAddonsService;
 import lombok.RequiredArgsConstructor;

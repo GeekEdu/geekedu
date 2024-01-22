@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.user.LoginForm;
 import com.zch.api.vo.user.CaptchaVO;
 import com.zch.api.vo.user.LoginVO;
+import com.zch.api.vo.user.UserRoleVO;
 import com.zch.user.domain.po.User;
 
 
@@ -27,5 +28,7 @@ public interface IUserService extends IService<User> {
     LoginVO login(LoginForm form);
 
     boolean addUser(User user);
+
+    UserRoleVO getUsers();
 
 }

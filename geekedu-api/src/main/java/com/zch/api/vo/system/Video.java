@@ -1,4 +1,4 @@
-package com.zch.system.domain.po;
+package com.zch.api.vo.system;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,14 +13,10 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class System implements Serializable {
+public class Video implements Serializable {
 
     private static final Long serialVersionUID = 1L;
 
-    private String logo;
-
-    private String version;
-
-    private Url url;
+    private String default_service;
 
 }

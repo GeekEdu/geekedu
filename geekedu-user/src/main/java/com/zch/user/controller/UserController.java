@@ -19,9 +19,9 @@ public class UserController {
 
     private final IUserService userService;
 
-    @GetMapping("/test")
-    public Response test() {
-        return Response.success();
+    @GetMapping("/users")
+    public Response getUsers() {
+        return Response.success(userService.getUsers());
     }
 
     @GetMapping("/captcha/image")

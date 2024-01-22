@@ -1,7 +1,5 @@
-package com.zch.system.domain.vo;
+package com.zch.api.vo.system;
 
-import com.zch.system.domain.po.System;
-import com.zch.system.domain.po.Video;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,12 +13,14 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConfigVO implements Serializable {
+public class Url implements Serializable {
 
     private static final Long serialVersionUID = 1L;
 
-    private System system;
+    private String api;
 
-    private Video video;
+    private String pc;
+
+    private String wx;
 
 }

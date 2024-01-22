@@ -1,4 +1,4 @@
-package com.zch.system.domain.vo;
+package com.zch.api.vo.system;
 
 import com.zch.common.mvc.entity.BaseVO;
 import lombok.AllArgsConstructor;

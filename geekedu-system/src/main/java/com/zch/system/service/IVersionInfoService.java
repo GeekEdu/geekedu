@@ -1,13 +1,10 @@
 package com.zch.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zch.system.domain.po.Addons;
+import com.zch.api.vo.system.DashboardVO;
 import com.zch.system.domain.po.VersionInfo;
-import com.zch.system.domain.vo.ConfigVO;
-import com.zch.system.domain.vo.VersionInfoVO;
-
-import java.util.List;
-import java.util.Map;
+import com.zch.api.vo.system.ConfigVO;
+import com.zch.api.vo.system.VersionInfoVO;
 
 /**
  * @author Poison02
@@ -27,5 +24,7 @@ public interface IVersionInfoService extends IService<VersionInfo> {
      */
     VersionInfoVO getInfo();
 
+
+    DashboardVO getDashboard();
 
 }

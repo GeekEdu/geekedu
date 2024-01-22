@@ -4,8 +4,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.user.LoginForm;
-import com.zch.api.vo.user.CaptchaVO;
-import com.zch.api.vo.user.LoginVO;
+import com.zch.api.vo.user.*;
 import com.zch.common.core.utils.CaptchaUtils;
 import com.zch.common.core.utils.IdUtils;
 import com.zch.common.core.utils.ObjectUtils;
@@ -13,17 +12,26 @@ import com.zch.common.core.utils.StringUtils;
 import com.zch.common.core.utils.encrypt.EncryptUtils;
 import com.zch.common.mvc.exception.CommonException;
 import com.zch.common.redis.utils.RedisUtils;
+import com.zch.user.domain.po.SysPermission;
+import com.zch.user.domain.po.SysRole;
 import com.zch.user.domain.po.User;
 import com.zch.user.mapper.UserMapper;
+import com.zch.user.service.ISysPermissionService;
+import com.zch.user.service.ISysRoleService;
 import com.zch.user.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
-import static com.zch.common.core.constants.ErrorInfo.Msg.*;
+import static com.zch.common.core.constants.ErrorInfo.Msg.EXPIRE_CAPTCHA_CODE;
+import static com.zch.common.core.constants.ErrorInfo.Msg.INVALID_VERIFY_CODE;
 import static com.zch.common.redis.constants.RedisConstants.*;
 
 /**
@@ -36,6 +44,10 @@ import static com.zch.common.redis.constants.RedisConstants.*;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
     private final UserMapper userMapper;
+
+    private final ISysRoleService sysRoleService;
+
+    private final ISysPermissionService sysPermissionService;
 
     @Override
     public CaptchaVO getCaptcha() {
@@ -80,8 +92,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             String token = StpUtil.getTokenValue();
             LoginVO vo = new LoginVO();
             vo.setToken(token);
-            // 将 token 写入 redis 中
-            RedisUtils.setCacheObject(LOGIN_USER_TOKEN + userId, token);
             return vo;
         }
         return new LoginVO();
@@ -96,6 +106,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setId(IdUtils.getId());
         userMapper.insert(user);
         return true;
+    }
+
+    @Override
+    public UserRoleVO getUsers() {
+        // 获取用户Id
+        Object userId = StpUtil.getLoginId();
+        // 从redis中查找对应用户的信息
+        UserRoleVO vo = RedisUtils.getCacheObject(USERINFO + userId);
+        return vo;
     }
 
     /**
@@ -145,6 +164,66 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (! encrypt.equals(user.getPassword())) {
             return -1L;
         }
+        // 查找当前用户的权限，存入redis中
+        handleRP2Redis(user);
         return user.getId();
+    }
+
+    /**
+     * 处理角色和权限 存入redis中
+     * @param user
+     */
+    private void handleRP2Redis(User user) {
+        // 角色信息
+        List<SysRole> roleByUserId = sysRoleService.getRoleByUserId(user.getId());
+        List<Integer> permissionIds = new ArrayList<>();
+        List<RoleVO> roles = new ArrayList<>();
+        Map<String, Integer> permissionMap = new ConcurrentHashMap<>();
+        RoleVO role = new RoleVO();
+        List<Integer> roleId = new ArrayList<>();
+        for (SysRole item : roleByUserId) {
+            List<SysPermission> permissions = sysPermissionService.getPermissionByRoleId(item.getId());
+            for (SysPermission e : permissions) {
+                permissionMap.put(e.getSlug(), e.getId());
+                permissionIds.add(e.getId());
+            }
+            roleId.add(item.getId());
+            role.setId(item.getId());
+            role.setDescription(item.getDescription());
+            role.setDisPlayName(item.getDisplayName());
+            role.setSlug(item.getSlug());
+            role.setCreatedTime(item.getCreatedTime());
+            role.setUpdatedTime(item.getUpdatedTime());
+            role.setPermissionIds(permissionIds);
+            PivotVO pivotVO = new PivotVO();
+            pivotVO.setAdministratorId(1745747394693820416L);
+            pivotVO.setRoleId(item.getId());
+            role.setPivot(pivotVO);
+            roles.add(role);
+        }
+        if (! RedisUtils.hasKey(ROLE_LIST + user.getId())) {
+            // 将角色存入redis中
+            RedisUtils.setCacheObject(ROLE_LIST + user.getId(), roles);
+        }
+        if (! RedisUtils.hasKey(PERMISSION_MAP + user.getId())) {
+            // 将权限存入redis中
+            RedisUtils.setCacheMap(PERMISSION_MAP + user.getId(), permissionMap);
+        }
+        if (! RedisUtils.hasKey(USERINFO + user.getId())) {
+            // 组装用户信息 存入redis
+            UserRoleVO vo = new UserRoleVO();
+            vo.setCreatedTime(user.getCreatedTime());
+            vo.setUpdatedTime(user.getUpdatedTime());
+            vo.setEmail(user.getEmail());
+            vo.setId(user.getId());
+            vo.setLastLoginDate(LocalDateTime.now());
+            vo.setLastLoginIp("127.0.0.1");
+            vo.setLoginCount(111);
+            vo.setName(user.getUserName());
+            vo.setPermissions(permissionMap);
+            vo.setRoles(roles);
+            vo.setRoleId(roleId);
+            RedisUtils.setCacheObject(USERINFO + user.getId(), vo);
+        }
     }
 }

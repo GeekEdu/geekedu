@@ -2,20 +2,15 @@ package com.zch.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zch.api.vo.system.*;
+import com.zch.api.vo.system.System;
 import com.zch.system.domain.po.*;
-import com.zch.system.domain.po.System;
-import com.zch.system.domain.vo.ConfigVO;
-import com.zch.system.domain.vo.VersionInfoVO;
 import com.zch.system.mapper.AddonsMapper;
 import com.zch.system.mapper.VersionInfoMapper;
 import com.zch.system.service.IVersionInfoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Poison02
@@ -45,6 +40,20 @@ public class VersionInfoServiceImpl extends ServiceImpl<VersionInfoMapper, Versi
                 .eq(VersionInfo::getIsDelete, 0)
                 .select(VersionInfo::getSpringbootVersion, VersionInfo::getGeekeduVersion, VersionInfo::getJdkVersion));
         return VersionInfoVO.of(versionInfo.getSpringbootVersion(), versionInfo.getGeekeduVersion(), versionInfo.getJdkVersion());
+    }
+
+    @Override
+    public DashboardVO getDashboard() {
+        DashboardVO vo = new DashboardVO();
+        vo.setLastMonthPaidSum(0);
+        vo.setThisMonthPaidSum(0);
+        vo.setTodayPaidSum(0);
+        vo.setTodayPaidUserNum(0);
+        vo.setTodayRegisterUserCount(0);
+        vo.setUserCount(1);
+        vo.setYesterdayPaidSum(0);
+        vo.setYesterdayPaidUserNum(0);
+        return vo;
     }
 
 }

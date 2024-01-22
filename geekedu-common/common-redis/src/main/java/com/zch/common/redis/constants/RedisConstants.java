@@ -15,11 +15,17 @@ public interface RedisConstants {
 
     String CAPTCHA_KEY = "captcha:";
 
-    String CAPTCHA_MAP = "captchaMap";
+    String CAPTCHA_MAP = "captchaMap:";
 
     /**
      * 验证码过期时间 单位 秒
      */
     Long CAPTCHA_KEY_TTL = 60L;
+
+    String PERMISSION_MAP = "permissionMap:";
+
+    String ROLE_LIST = "roleList:";
+
+    String USERINFO = "userInfo:";
 
 }
