@@ -19,6 +19,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         Long loginId = (Long) StpUtil.getLoginIdByToken(request.getHeader("Authorization"));
         // 存入 ThreadLocal
         UserContext.set("loginId", loginId);
+        System.out.println("========拦截器拦截器=========");
         return true;
     }
 

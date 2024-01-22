@@ -5,13 +5,10 @@ import com.zch.common.mvc.result.Response;
 import com.zch.system.service.IAddonsService;
 import com.zch.system.service.IVersionInfoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.time.LocalDateTime;
 
 /**
  * @author Poison02
@@ -49,8 +46,8 @@ public class ConfigController {
     }
 
     @GetMapping("/dashboard/graph")
-    public Response getGraph(@RequestParam("start_at") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDateTime startAt,
-                             @RequestParam("end_at") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDateTime endAt) {
+    public Response getGraph(@RequestParam("start_at") String startAt,
+                             @RequestParam("end_at") String endAt) {
         return Response.success();
     }
 

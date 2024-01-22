@@ -34,7 +34,6 @@ public class SaTokenConfigure {
                             .check(r -> {
                                 ServerHttpRequest request = SaReactorSyncHolder.getContext().getRequest();
                                 String token = request.getHeaders().getFirst("Authorization");
-                                System.out.println("======token======为" + token);
                                 StpUtil.checkLogin();
                             });
                 })
