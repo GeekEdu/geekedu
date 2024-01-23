@@ -6,7 +6,7 @@ package com.zch.common.redis.constants;
  */
 public interface RedisConstants {
 
-    String LOGIN_USER_TOKEN = "login:user:token:";
+    String LOGIN_USER_TOKEN = "Authorization:login:token:";
 
     /**
      * token 过期时间 单位 秒

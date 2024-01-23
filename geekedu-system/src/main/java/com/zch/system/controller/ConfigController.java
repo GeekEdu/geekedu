@@ -2,6 +2,7 @@ package com.zch.system.controller;
 
 import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.common.mvc.result.Response;
+import com.zch.common.satoken.context.UserContext;
 import com.zch.system.service.IAddonsService;
 import com.zch.system.service.IVersionInfoService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,11 @@ public class ConfigController {
     private final IAddonsService addonsService;
 
     private final UserFeignClient userFeignClient;
+
+    @GetMapping("/test")
+    public Response test() {
+        return Response.success(UserContext.getLoginId());
+    }
 
     @GetMapping("/config")
     public Response getConfig() {

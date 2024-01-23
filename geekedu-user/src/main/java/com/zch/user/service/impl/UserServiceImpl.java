@@ -12,6 +12,7 @@ import com.zch.common.core.utils.StringUtils;
 import com.zch.common.core.utils.encrypt.EncryptUtils;
 import com.zch.common.mvc.exception.CommonException;
 import com.zch.common.redis.utils.RedisUtils;
+import com.zch.common.satoken.context.UserContext;
 import com.zch.user.domain.po.SysPermission;
 import com.zch.user.domain.po.SysRole;
 import com.zch.user.domain.po.User;
@@ -90,6 +91,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             // 登录成功，将token写入
             StpUtil.login(userId);
             String token = StpUtil.getTokenValue();
+            // 且将用户id写入到ThreadLocal中
+            UserContext.set("userId", userId);
             LoginVO vo = new LoginVO();
             vo.setToken(token);
             return vo;

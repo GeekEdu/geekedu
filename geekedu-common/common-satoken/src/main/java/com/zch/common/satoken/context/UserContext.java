@@ -16,6 +16,7 @@ public class UserContext {
     public static void set(String key, Long val) {
         Map<String, Long> map = getThreadLocalMap();
         map.put(key, val);
+        THREAD_LOCAL.set(map);
     }
 
     public static Long get(String key) {
@@ -24,7 +25,7 @@ public class UserContext {
     }
 
     public static Long getLoginId() {
-        return getThreadLocalMap().get("loginId");
+        return getThreadLocalMap().get("userId");
     }
 
     public static void remove() {
