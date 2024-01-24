@@ -1,9 +1,8 @@
 package com.zch.system.controller;
 
-import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.common.mvc.result.Response;
-import com.zch.common.satoken.context.UserContext;
 import com.zch.system.service.IAddonsService;
+import com.zch.system.service.IPcConfigService;
 import com.zch.system.service.IVersionInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,11 +23,41 @@ public class ConfigController {
 
     private final IAddonsService addonsService;
 
-    private final UserFeignClient userFeignClient;
+    private final IPcConfigService pcConfigService;
 
-    @GetMapping("/test")
-    public Response test() {
-        return Response.success(UserContext.getLoginId());
+    @GetMapping("/v2/config")
+    public Response getV2Config() {
+        return Response.success(pcConfigService.getPcConfig());
+    }
+
+    @GetMapping("/v2/navs")
+    public Response getV2Navs() {
+        return Response.success(pcConfigService.getNavs());
+    }
+
+    @GetMapping("/v2/links")
+    public Response getV2Links() {
+        return Response.success(pcConfigService.getLinks());
+    }
+
+    @GetMapping("/v2/sliders")
+    public Response getSliders(@RequestParam("platform") String platform) {
+        return Response.success(pcConfigService.getSliders(platform));
+    }
+
+    @GetMapping("/v2/announcement/{id}")
+    public Response getOneAnnouncement(@RequestParam(value = "id", required = false) Integer id) {
+        return Response.success(pcConfigService.getOneNotice(id));
+    }
+
+    @GetMapping("/v2/announcement")
+    public Response getAnnouncement() {
+        return Response.success(pcConfigService.getAllNotice());
+    }
+
+    @GetMapping("/v2/announcement/latest")
+    public Response getLatestAnnouncement() {
+        return Response.success(pcConfigService.getLatestNotice());
     }
 
     @GetMapping("/config")
