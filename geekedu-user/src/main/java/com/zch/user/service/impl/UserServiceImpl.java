@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,6 +92,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             // 登录成功，将token写入
             StpUtil.login(userId);
             String token = StpUtil.getTokenValue();
+            RedisUtils.setCacheObject(LOGIN_USER_TOKEN + token, userId, Duration.ofSeconds(LOGIN_USER_TOKEN_TTL));
             // 且将用户id写入到ThreadLocal中
             UserContext.set("userId", userId);
             LoginVO vo = new LoginVO();

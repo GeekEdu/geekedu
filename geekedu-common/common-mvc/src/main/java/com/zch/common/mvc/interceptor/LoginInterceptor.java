@@ -20,7 +20,6 @@ public class LoginInterceptor implements HandlerInterceptor {
              response.setStatus(401);
             return false;
         }
-        System.out.println("========拦截器拦截器=========");
         return true;
     }
 

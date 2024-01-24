@@ -19,16 +19,19 @@ public class RefreshTokenInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // 获取token
-        String token = request.getHeader("Authorization");
+        String BearerToken = request.getHeader("Authorization");
         // 为空不用拦截
-        if (StringUtils.isBlank(token)) {
+        if (StringUtils.isBlank(BearerToken)) {
             return true;
         }
+        String token = BearerToken.substring(7);
         // 保存userId
-        Long userId = RedisUtils.getCacheObject(RedisConstants.LOGIN_USER_TOKEN + token);
+        Long userId = Long.valueOf(RedisUtils.getCacheObject(RedisConstants.LOGIN_USER_TOKEN + token));
         UserContext.set("userId", userId);
-        // 刷新token
+        // 刷新redis中的所有token和session
         RedisUtils.expire(RedisConstants.LOGIN_USER_TOKEN + token, RedisConstants.LOGIN_USER_TOKEN_TTL);
+        RedisUtils.expire(RedisConstants.AUTHORIZATION_LOGIN_TOKEN + token, RedisConstants.LOGIN_USER_TOKEN_TTL);
+        RedisUtils.expire(RedisConstants.AUTHORIZATION_LOGIN_SESSION + userId, RedisConstants.LOGIN_USER_TOKEN_TTL);
         return true;
     }
 
