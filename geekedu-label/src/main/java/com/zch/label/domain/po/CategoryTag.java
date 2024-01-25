@@ -1,19 +1,23 @@
 package com.zch.label.domain.po;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.zch.common.mvc.entity.BaseEntity;
 import lombok.Data;
-
-import java.io.Serializable;
-import java.util.Date;
+import lombok.EqualsAndHashCode;
 
 /**
  * category_tag
  * @author Poison02
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class CategoryTag implements Serializable {
+@TableName("category_tag")
+public class CategoryTag extends BaseEntity {
     /**
      * 主键
      */
+    @TableId("id")
     private Long id;
 
     /**
@@ -27,7 +31,7 @@ public class CategoryTag implements Serializable {
     private Long tagId;
 
     /**
-     * 类型;属于哪种类型的分类，1-课程，2-图文，3-问答
+     * 类型;属于哪种类型的分类，1-录播课，2-直播课，3-图文，4-电子书，5-学习路线
      */
     private Short type;
 
@@ -37,25 +41,13 @@ public class CategoryTag implements Serializable {
     private Long createdBy;
 
     /**
-     * 创建时间
-     */
-    private Date createdTime;
-
-    /**
      * 更新人
      */
     private Long updatedBy;
 
     /**
-     * 更新时间
-     */
-    private Date updatedTime;
-
-    /**
      * 是否删除;0-未删除，1-删除
      */
     private Short isDelete;
-
-    private static final long serialVersionUID = 1L;
 
 }

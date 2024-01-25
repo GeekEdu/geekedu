@@ -34,6 +34,11 @@ public class UserController {
         return Response.success(userService.login(form));
     }
 
+    @GetMapping("/logout")
+    public Response logout() {
+        return Response.success();
+    }
+
     @PostMapping("/add")
     public Response addUser(@RequestBody User user) {
         return Response.judge(userService.addUser(user));

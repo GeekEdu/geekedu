@@ -1,5 +1,6 @@
-package com.zch.label.domain.po;
+package com.zch.course.domain.po;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zch.common.mvc.entity.BaseEntity;
@@ -7,37 +8,26 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * tag
  * @author Poison02
+ * @date 2024/1/25
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("tag")
-public class Tag extends BaseEntity {
-    /**
-     * 主键;标签id
-     */
-    @TableId("id")
-    private Long id;
+@TableName("course_chapter")
+public class CourseChapter extends BaseEntity {
+
+    @TableId(value = "id", type = IdType.AUTO)
+    private Integer id;
 
     /**
-     * 标签名
+     * 章节名
      */
     private String name;
 
-    /**
-     * 创建人
-     */
     private Long createdBy;
 
-    /**
-     * 更新人
-     */
     private Long updatedBy;
 
-    /**
-     * 是否删除
-     */
-    private Short isDelete;
+    private Boolean isDelete;
 
 }

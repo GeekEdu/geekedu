@@ -16,7 +16,9 @@
 		<module>geekedu-course</module>
 		<module>geekedu-gateway</module>
         <module>geekedu-system</module>
-    </modules>
+        <module>geekedu-book</module>
+		<module>geekedu-exam</module>
+	</modules>
 	<packaging>pom</packaging>
     <!-- 继承SpringBoot父类 -->
     <parent>
