@@ -17,12 +17,12 @@ import static com.zch.common.mybatis.constant.Constants.*;
 public class MyMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
-        this.strictInsertFill(metaObject, DATA_FIELD_NAME_CREATE_TIME, LocalDateTime::now, LocalDateTime.class);
-        this.strictInsertFill(metaObject, DATA_FIELD_NAME_UPDATE_TIME, LocalDateTime::now, LocalDateTime.class);
+        this.strictInsertFill(metaObject, DATA_FIELD_NAME_CREATE_TIME_CAMEL, LocalDateTime::now, LocalDateTime.class);
+        this.strictInsertFill(metaObject, DATA_FIELD_NAME_UPDATE_TIME_CAMEL, LocalDateTime::now, LocalDateTime.class);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        this.strictInsertFill(metaObject, DATA_FIELD_NAME_UPDATE_TIME, LocalDateTime::now, LocalDateTime.class);
+        this.strictInsertFill(metaObject, DATA_FIELD_NAME_UPDATE_TIME_CAMEL, LocalDateTime::now, LocalDateTime.class);
     }
 }

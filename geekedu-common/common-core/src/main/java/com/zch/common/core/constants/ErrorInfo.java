@@ -14,6 +14,8 @@ public interface ErrorInfo {
 
         String SERVER_INTER_ERROR = "服务器内部错误";
 
+        String DATE_SELECT_IS_EXISTS = "数据已存在,请重新键入!";
+
         String DB_SAVE_EXCEPTION = "数据新增失败";
         String DB_DELETE_EXCEPTION = "数据删除失败";
         String DB_BATCH_DELETE_EXCEPTION = "数据批量删除失败";
