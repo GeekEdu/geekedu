@@ -51,4 +51,9 @@ public class Tag extends BaseEntity {
     @TableLogic
     private Boolean isDelete;
 
+    /**
+     * 排序字段
+     */
+    private Integer sort;
+
 }

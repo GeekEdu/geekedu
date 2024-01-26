@@ -1,7 +1,9 @@
 package com.zch.label.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.label.CategoryForm;
+import com.zch.api.vo.label.CategoryVO;
 import com.zch.label.domain.po.Category;
 
 /**
@@ -11,5 +13,7 @@ import com.zch.label.domain.po.Category;
 public interface ICategoryService extends IService<Category> {
 
     Boolean addCategory(CategoryForm form);
+
+    Page<CategoryVO> getCourseCategory(Integer pageNum, Integer pageSize);
 
 }

@@ -13,18 +13,18 @@ import java.util.List;
 @Data
 public class PageResult<T> implements Serializable {
 
-    private Integer code;
+    private Integer status;
 
-    private Data data;
+    private Data<T> data;
 
     private String message;
 
     public static <T> PageResult<T> success(IPage<T> page) {
         PageResult<T> result = new PageResult<>();
-        result.setCode(0);
+        result.setStatus(0);
 
-        Data data = new Data<T>();
-        data.setList(page.getRecords());
+        Data<T> data = new Data<T>();
+        data.setData(page.getRecords());
         data.setTotal(page.getTotal());
 
         result.setData(data);
@@ -35,7 +35,7 @@ public class PageResult<T> implements Serializable {
     @lombok.Data
     public static class Data<T> {
 
-        private List<T> list;
+        private List<T> data;
 
         private long total;
 

@@ -1,12 +1,12 @@
 package com.zch.label.domain.po;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+import com.zch.api.vo.label.TagVO;
 import com.zch.common.mvc.entity.BaseEntity;
 import com.zch.label.enums.CategoryEnum;
 import lombok.*;
+
+import java.util.List;
 
 /**
  * category
@@ -50,5 +50,13 @@ public class Category extends BaseEntity {
      */
     @TableLogic
     private Boolean isDelete;
+
+    /**
+     * 排序字段
+     */
+    private Integer sort;
+
+    @TableField(exist = false)
+    private List<TagVO> children;
 
 }

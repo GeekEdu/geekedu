@@ -16,12 +16,22 @@ public class CategoryForm {
     private Integer categoryId;
 
     /**
+     * 排序字段 越小展示越靠前
+     */
+    private Integer sort;
+
+    /**
      * 分类名
      */
     private String name;
 
     /**
-     * 分类类型，传对应的类型的文本即可 1-录播课，2-直播课，3-图文，4-电子书，5-学习路线
+     * 分类类型
+     * REPLAY_COURSE
+     * LIVE_COURSE
+     * IMAGE_TEXT
+     * E_BOOK
+     * LEARN_PATH
      */
     private String type;
 

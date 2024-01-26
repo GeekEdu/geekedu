@@ -1,8 +1,13 @@
 package com.zch.label.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.label.CategoryForm;
+import com.zch.api.vo.label.CategoryVO;
+import com.zch.api.vo.label.TagVO;
+import com.zch.common.core.utils.BeanUtils;
+import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.mvc.exception.CommonException;
 import com.zch.common.mvc.exception.DbException;
@@ -19,7 +24,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import static com.zch.common.core.constants.ErrorInfo.Msg.*;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.zch.common.core.constants.ErrorInfo.Msg.DATE_SELECT_IS_EXISTS;
+import static com.zch.common.core.constants.ErrorInfo.Msg.DB_SAVE_EXCEPTION;
 
 
 /**
@@ -58,6 +67,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
                     .type(CategoryEnum.valueOf(form.getType()))
                     .createdBy(1745747394693820416L)
                     .updatedBy(1745747394693820416L)
+                    .sort(form.getSort())
                     .build();
             int row = categoryMapper.insert(category);
             if (row != 1) {
@@ -76,6 +86,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
                     .type(CategoryEnum.valueOf(form.getType()))
                     .createdBy(1745747394693820416L)
                     .updatedBy(1745747394693820416L)
+                    .sort(form.getSort())
                     .build();
             int row1 = tagMapper.insert(tag);
             if (row1 != 1) {
@@ -92,9 +103,52 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
                     .type(CategoryEnum.valueOf(form.getType()))
                     .createdBy(1745747394693820416L)
                     .updatedBy(1745747394693820416L)
+                    .sort(form.getSort())
                     .build();
             categoryTagMapper.insert(categoryTag);
         }
         return true;
+    }
+
+    @Override
+    public Page<CategoryVO> getCourseCategory(Integer pageNum, Integer pageSize) {
+        // 查出一级分类
+        Page<Category> page = this.page(new Page<>(pageNum, pageSize),
+                new LambdaQueryWrapper<Category>()
+                        .select(Category::getId, Category::getSort, Category::getName, Category::getType)
+                        .eq(Category::getIsDelete, 0)
+                        .eq(Category::getType, CategoryEnum.valueOf("REPLAY_COURSE")));
+        Page<CategoryVO> result = new Page<>();
+        BeanUtils.copyProperties(page, result);
+        // 尝试去查询二级分类
+        List<CategoryVO> categoryVOs = result.getRecords();
+        if (CollUtils.isEmpty(categoryVOs)) {
+            return new Page<>();
+        }
+        List<Category> records = page.getRecords();
+        for (Category item : records) {
+            // 查找一级分类和二级分类对应关系
+            List<CategoryTag> categoryTags = categoryTagMapper.selectList(new LambdaQueryWrapper<CategoryTag>()
+                    .eq(CategoryTag::getCategoryId, item.getId())
+                    .eq(CategoryTag::getIsDelete, 0)
+                    .eq(CategoryTag::getType, CategoryEnum.valueOf("REPLAY_COURSE"))
+                    .select(CategoryTag::getCategoryId, CategoryTag::getTagId));
+            if (CollUtils.isEmpty(categoryTags)) {
+                return result;
+            }
+            // 查找对应的二级分类
+            List<Integer> tagIds = categoryTags.stream().map(CategoryTag::getTagId).collect(Collectors.toList());
+            List<Tag> tags = tagMapper.selectBatchIds(tagIds);
+            List<TagVO> vos = tags.stream().map(e -> {
+                TagVO vo = new TagVO();
+                vo.setId(e.getId());
+                vo.setName(e.getName());
+                vo.setSort(e.getSort());
+                vo.setParentId(item.getId());
+                return vo;
+            }).collect(Collectors.toList());
+            item.setChildren(vos);
+        }
+        return result;
     }
 }

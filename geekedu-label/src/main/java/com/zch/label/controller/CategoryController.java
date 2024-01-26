@@ -1,13 +1,13 @@
 package com.zch.label.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zch.api.dto.label.CategoryForm;
+import com.zch.api.vo.label.CategoryVO;
+import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import com.zch.label.service.ICategoryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 /**
@@ -24,6 +24,12 @@ public class CategoryController {
     @PostMapping("/add")
     public Response addCategory(@RequestBody CategoryForm form) {
         return Response.success(categoryService.addCategory(form));
+    }
+
+    @GetMapping("/courseCategory")
+    public PageResult<CategoryVO> courseCategory(@RequestParam("pageNum") Integer pageNum, @RequestParam("pageSize") Integer pageSize) {
+        Page<CategoryVO> result = categoryService.getCourseCategory(pageNum, pageSize);
+        return PageResult.success(result);
     }
 
 }
