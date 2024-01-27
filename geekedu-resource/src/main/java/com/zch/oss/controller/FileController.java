@@ -22,7 +22,7 @@ public class FileController {
         return fileService.uploadFile(file);
     }
 
-    @GetMapping("/getFIle/{id}")
+    @GetMapping("/getFile/{id}")
     public FileDTO getFileInfo(@PathVariable("id") Long id) {
         return fileService.getFileInfo(id);
     }

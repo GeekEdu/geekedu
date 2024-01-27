@@ -1,0 +1,21 @@
+package com.zch.api.vo.user;
+
+import com.zch.common.mvc.entity.BaseVO;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+/**
+ * @author Poison02
+ * @date 2024/1/27
+ */
+@EqualsAndHashCode(callSuper = true)
+@Data
+public class UserSimpleVO extends BaseVO {
+
+    private Long userId;
+
+    private String userName;
+
+    private String avatar;
+
+}
