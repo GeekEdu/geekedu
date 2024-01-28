@@ -2,8 +2,9 @@ package com.zch.oss.domain.po;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.zch.common.domain.entity.BaseEntity;
+import com.zch.common.mvc.entity.BaseEntity;
 import com.zch.oss.enums.FileStatus;
 import com.zch.oss.enums.Platform;
 import lombok.Data;
@@ -21,8 +22,6 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @TableName("file_resource")
 public class File extends BaseEntity implements Serializable{
-
-    private static final long serialVersionUID = 1L;
 
     /**
      * 主键，文件id
@@ -70,5 +69,6 @@ public class File extends BaseEntity implements Serializable{
     /**
      * 逻辑删除
      */
+    @TableLogic
     private Integer isDelete;
 }

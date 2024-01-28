@@ -43,6 +43,7 @@ public class TencentProperties {
     }
     @Data
     public static class CosProperties{
+        private boolean enable;
         /*区域*/
         private String region;
 

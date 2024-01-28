@@ -1,7 +1,7 @@
 package com.zch.oss.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
-import com.zch.common.exceptions.BadRequestException;
+import com.zch.common.mvc.exception.BadRequestException;
 import lombok.Getter;
 
 import static com.zch.oss.enums.FileErrorInfo.Msg.INVALID_FILE_STATUS;
@@ -13,8 +13,8 @@ public enum FileStatus {
     PROCESSED(3, "已处理"),
     ;
     @EnumValue
-    private int value;
-    private String desc;
+    private final int value;
+    private final String desc;
 
     FileStatus(int value, String desc) {
         this.value = value;

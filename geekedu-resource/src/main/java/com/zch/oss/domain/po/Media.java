@@ -1,16 +1,15 @@
 package com.zch.oss.domain.po;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.zch.common.mvc.entity.BaseEntity;
 import com.zch.oss.enums.FileStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * @author Poison02
@@ -20,9 +19,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("media_resource")
-public class Media implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Media extends BaseEntity implements Serializable {
 
     /**
      * 主键
@@ -76,25 +73,14 @@ public class Media implements Serializable {
     private Long createdBy;
 
     /**
-     * 创建时间
-     */
-    @TableField(value = "created_time", fill = FieldFill.INSERT)
-    private LocalDateTime createdTime;
-
-    /**
      * 更新者
      */
 
     private Long updatedBy;
 
     /**
-     * 更新时间
-     */
-    @TableField(value = "updated_time", fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime updatedTime;
-
-    /**
      * 逻辑删除
      */
+    @TableLogic
     private Integer isDelete;
 }

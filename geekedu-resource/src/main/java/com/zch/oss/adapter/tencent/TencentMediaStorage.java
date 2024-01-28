@@ -20,15 +20,13 @@ import com.qcloud.vod.common.StringUtil;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.tencentcloudapi.vod.v20180717.VodClient;
 import com.tencentcloudapi.vod.v20180717.models.*;
-import com.zch.common.exceptions.CommonException;
-import com.zch.common.utils.RandomUtils;
-import com.zch.common.utils.StringUtils;
+import com.zch.common.core.utils.RandomUtils;
+import com.zch.common.core.utils.StringUtils;
+import com.zch.common.mvc.exception.CommonException;
 import com.zch.oss.adapter.MediaStorageAdapter;
 import com.zch.oss.adapter.MediaUploadResult;
 import com.zch.oss.config.properties.TencentProperties;
 import com.zch.oss.domain.po.Media;
-import static com.zch.oss.enums.FileErrorInfo.Msg.*;
-
 import com.zch.oss.enums.FileStatus;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,6 +37,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.zch.oss.enums.FileErrorInfo.Msg.*;
 
 /**
  * @author Poison02

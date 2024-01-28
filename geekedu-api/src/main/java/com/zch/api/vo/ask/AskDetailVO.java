@@ -1,4 +1,4 @@
-package com.zch.api.vo.aask;
+package com.zch.api.vo.ask;
 
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.api.vo.user.UserSimpleVO;

@@ -10,4 +10,6 @@ public interface FileErrorInfo {
 
     String MEDIA_QUOTE_NOT_EXISTS = "媒资引用信息查询异常";
 
+    String FILE_NOT_EXISTS = "文件不存在或者已删除！";
+
 }

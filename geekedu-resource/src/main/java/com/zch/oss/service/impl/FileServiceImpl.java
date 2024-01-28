@@ -1,17 +1,16 @@
 package com.zch.oss.service.impl;
 
 import cn.hutool.core.lang.UUID;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zch.api.vo.resources.FileUploadVO;
+import com.zch.api.vo.resources.FileVO;
 import com.zch.common.core.utils.StringUtils;
 import com.zch.common.mvc.exception.CommonException;
 import com.zch.common.mvc.exception.DbException;
 import com.zch.oss.adapter.FileStorageAdapter;
 import com.zch.oss.config.properties.PlatformProperties;
-import com.zch.oss.domain.dto.FileDTO;
 import com.zch.oss.domain.po.File;
 import com.zch.oss.enums.FileErrorInfo;
-import com.zch.oss.enums.FilePlatform;
 import com.zch.oss.enums.FileStatus;
 import com.zch.oss.mapper.FileMapper;
 import com.zch.oss.service.IFileService;
@@ -22,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import static com.zch.oss.constants.FileErrorInfo.FILE_NOT_EXISTS;
 
 /**
  * @author Poison02
@@ -38,8 +39,10 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
 
     private final FileMapper fileMapper;
 
+    private static final String TENCENT_LINK = "https://geekedu-1315662121.cos.ap-chengdu.myqcloud.com/";
+
     @Override
-    public FileDTO uploadFile(MultipartFile file) {
+    public FileUploadVO uploadFile(MultipartFile file) {
         // 1. 获取文件名称
         String originalFileName = file.getOriginalFilename();
         // 2. 生成新文件名
@@ -63,44 +66,38 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
             fileInfo.setRequestId(requestId);
             fileInfo.setPlatform(properties.getFile());
             fileMapper.insert(fileInfo);
-            // fileMapper.insertFileInfo(fileInfo);
         } catch (Exception e) {
             log.error("文件信息保存异常", e);
             fileStorageAdapter.deleteFile(newFileName);
             throw new DbException(FileErrorInfo.Msg.FILE_UPLOAD_ERROR);
         }
         // 6. 返回
-        FileDTO fileDTO = new FileDTO();
-        fileDTO.setId(fileInfo.getId());
-        fileDTO.setPath(FilePlatform.returnPath(fileInfo.getPlatform().getValue()) + newFileName);
-        fileDTO.setFileName(originalFileName);
-        return fileDTO;
+        FileUploadVO vo = new FileUploadVO();
+        vo.setId(fileInfo.getId());
+        vo.setRequestId(requestId);
+        vo.setKeyId(newFileName);
+        vo.setPlatform("TENCENT");
+        vo.setLink(TENCENT_LINK + newFileName);
+        return vo;
     }
 
     @Override
-    public FileDTO getFileInfo(Long id) {
+    public FileVO getFileInfo(Long id) {
         File file = fileMapper.selectById(id);
         if (file == null) {
-            return null;
+            throw new DbException(FILE_NOT_EXISTS);
         }
-        return FileDTO.of(file.getId(), file.getFileName(), FilePlatform.returnPath(file.getPlatform().getValue()) + file.getKeyId());
+        FileVO vo = new FileVO();
+        vo.setId(file.getId());
+        vo.setFileName(file.getKeyId());
+        vo.setLink(TENCENT_LINK + file.getKeyId());
+        return vo;
     }
 
     @Override
-    public FileDTO deleteFileInfo(Long id) {
-        LambdaUpdateWrapper<File> wrapper = new LambdaUpdateWrapper<File>()
-                .eq(File::getId, id)
-                .eq(File::getIsDelete, 0)
-                .set(File::getIsDelete, 1);
-        int row = fileMapper.update(null, wrapper);
-        if (row != 1) {
-            return null;
-        }
-        File file = fileMapper.selectById(id);
-        if (file == null) {
-            return null;
-        }
-        return FileDTO.of(file.getId(), file.getFileName(), FilePlatform.returnPath(file.getPlatform().getValue()) + file.getKeyId());
+    public Boolean deleteFileInfo(Long id) {
+        int row = fileMapper.deleteById(id);
+        return row == 1;
     }
 
     /**

@@ -3,10 +3,10 @@ package com.zch.oss.adapter.ali;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.common.comm.ResponseMessage;
 import com.aliyun.oss.model.*;
-import com.zch.common.exceptions.BadRequestException;
-import com.zch.common.exceptions.CommonException;
-import com.zch.common.utils.AssertUtils;
-import com.zch.common.utils.CollUtils;
+import com.zch.common.core.utils.AssertUtils;
+import com.zch.common.core.utils.CollUtils;
+import com.zch.common.mvc.exception.BadRequestException;
+import com.zch.common.mvc.exception.CommonException;
 import com.zch.oss.adapter.FileStorageAdapter;
 import lombok.extern.slf4j.Slf4j;
 
