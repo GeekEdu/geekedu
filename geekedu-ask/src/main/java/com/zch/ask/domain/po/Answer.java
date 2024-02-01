@@ -14,8 +14,8 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("ask_detail")
-public class AskDetail extends BaseEntity {
+@TableName("answer")
+public class Answer extends BaseEntity {
 
     /**
      * 问题id

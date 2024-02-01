@@ -1,7 +1,7 @@
 package com.zch.ask.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zch.ask.domain.po.AskDetail;
+import com.zch.ask.domain.po.Answer;
 import com.zch.ask.mapper.AskMapper;
 import com.zch.ask.service.IAskService;
 import lombok.RequiredArgsConstructor;
@@ -15,5 +15,5 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class AskServiceImpl extends ServiceImpl<AskMapper, AskDetail> implements IAskService {
+public class AskServiceImpl extends ServiceImpl<AskMapper, Answer> implements IAskService {
 }
