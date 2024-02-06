@@ -16,4 +16,6 @@ public class CategorySimpleVO extends BaseVO {
 
     private String name;
 
+    private Integer sort;
+
 }

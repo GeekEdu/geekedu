@@ -1,9 +1,11 @@
 package com.zch.api.vo.course;
 
-import com.zch.api.vo.label.CategoryVO;
+import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.common.mvc.entity.BaseVO;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -14,6 +16,8 @@ import java.time.LocalDateTime;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class CourseVO extends BaseVO {
 
     /**
@@ -97,8 +101,11 @@ public class CourseVO extends BaseVO {
     private Boolean type;
 
     /**
-     * 所有课程分类
+     * 课程所属分类
      */
-    private CategoryVO category;
+    private CategorySimpleVO category;
 
+    public static CourseVO of(Integer id, String title, Boolean sellType, Boolean status, BigDecimal price, Long duration, Integer sectionNum, Long teacher, String intro, String pictureLink, Integer sellNum, LocalDateTime createdTime, LocalDateTime updatedTime, LocalDateTime groundingTime, Boolean isShow, Boolean type, CategorySimpleVO category) {
+        return new CourseVO(id, title, sellType, status, price, duration, sectionNum, teacher, intro, pictureLink, sellNum, createdTime, updatedTime, groundingTime, isShow, type, category);
+    }
 }

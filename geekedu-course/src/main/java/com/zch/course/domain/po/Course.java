@@ -75,7 +75,7 @@ public class Course extends BaseEntity {
     /**
      * 课程描述
      */
-    private String desc;
+    private String description;
 
     /**
      * 课程封面
@@ -116,5 +116,10 @@ public class Course extends BaseEntity {
      * 课程类型，0-录播课，1-直播课
      */
     private Boolean type;
+
+    /**
+     * 分类id
+     */
+    private Integer categoryId;
 
 }

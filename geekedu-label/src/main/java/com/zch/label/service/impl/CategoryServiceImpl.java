@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.label.CategoryForm;
+import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.api.vo.label.CategoryVO;
 import com.zch.api.vo.label.TagVO;
 import com.zch.common.core.utils.BeanUtils;
@@ -69,7 +70,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     }
 
     @Override
-    public Page<CategoryVO> getCourseCategory(Integer pageNum, Integer pageSize, String type) {
+    public Page<CategoryVO> getCategoryPage(Integer pageNum, Integer pageSize, String type) {
         // 查出一级分类
         Page<Category> page = this.page(new Page<>(pageNum, pageSize),
                 new LambdaQueryWrapper<Category>()
@@ -117,5 +118,47 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         }).collect(Collectors.toList());
         result.setRecords(vos);
         return result;
+    }
+
+    @Override
+    public CategorySimpleVO getCategoryById(Integer id, String type) {
+        if (ObjectUtils.isNull(id) || ObjectUtils.isNull(type)) {
+            throw new CommonException("请输入正确的分类id或分类类型！");
+        }
+        Category category = categoryMapper.selectOne(new LambdaQueryWrapper<Category>()
+                .eq(Category::getId, id)
+                .eq(Category::getType, CategoryEnum.valueOf(type))
+                .eq(Category::getIsDelete, 0)
+                .select(Category::getId, Category::getName, Category::getSort));
+        if (ObjectUtils.isNull(category)) {
+            return new CategorySimpleVO();
+        }
+        CategorySimpleVO vo = new CategorySimpleVO();
+        vo.setId(category.getId());
+        vo.setName(category.getName());
+        vo.setSort(category.getSort());
+        return vo;
+    }
+
+    @Override
+    public List<CategorySimpleVO> getCategory(String type) {
+        if (ObjectUtils.isNull(type)) {
+            throw new CommonException("请输入正确的分类类型！");
+        }
+        List<Category> categories = categoryMapper.selectList(new LambdaQueryWrapper<Category>()
+                .eq(Category::getIsDelete, 0)
+                .eq(Category::getType, CategoryEnum.valueOf(type))
+                .select(Category::getId, Category::getName, Category::getSort));
+        if (CollUtils.isEmpty(categories)) {
+            return new ArrayList<>(0);
+        }
+        List<CategorySimpleVO> list = categories.stream().map(item -> {
+            CategorySimpleVO vo = new CategorySimpleVO();
+            vo.setId(item.getId());
+            vo.setName(item.getName());
+            vo.setSort(item.getSort());
+            return vo;
+        }).collect(Collectors.toList());
+        return list;
     }
 }

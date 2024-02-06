@@ -1,9 +1,12 @@
 package com.zch.common.mvc.result;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,11 +36,13 @@ public class PageResult<T> implements Serializable {
     }
 
     @lombok.Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Data<T> {
 
-        private List<T> data;
+        private List<T> data = new ArrayList<>(0);
 
-        private long total;
+        private long total = 0;
 
     }
 

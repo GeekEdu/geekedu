@@ -38,6 +38,10 @@ spring:
           uri: lb://resource-service
           predicates:
             - Path=/res/**
+        - id: course-service
+          uri: lb://course-service
+          predicates:
+            - Path=/course/**
       globalcors: # 全局的跨域处理
         add-to-simple-url-handler-mapping: true # 解决options请求被拦截问题
         corsConfigurations:
