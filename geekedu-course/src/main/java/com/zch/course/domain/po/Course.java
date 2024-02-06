@@ -1,5 +1,6 @@
 package com.zch.course.domain.po;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zch.common.mvc.entity.BaseEntity;
@@ -18,8 +19,8 @@ import java.time.LocalDateTime;
 @TableName(value = "course")
 public class Course extends BaseEntity {
 
-    @TableId("id")
-    private Long id;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Integer id;
 
     /**
      * 课程标题
