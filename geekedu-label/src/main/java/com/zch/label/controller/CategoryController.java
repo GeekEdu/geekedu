@@ -27,8 +27,10 @@ public class CategoryController {
     }
 
     @GetMapping("/courseCategory")
-    public PageResult<CategoryVO> courseCategory(@RequestParam("pageNum") Integer pageNum, @RequestParam("pageSize") Integer pageSize) {
-        Page<CategoryVO> result = categoryService.getCourseCategory(pageNum, pageSize);
+    public PageResult<CategoryVO> courseCategory(@RequestParam("pageNum") Integer pageNum,
+                                                 @RequestParam("pageSize") Integer pageSize,
+                                                 @RequestParam("type") String type) {
+        Page<CategoryVO> result = categoryService.getCourseCategory(pageNum, pageSize, type);
         return PageResult.success(result);
     }
 

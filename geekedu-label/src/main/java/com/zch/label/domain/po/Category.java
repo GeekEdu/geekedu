@@ -56,6 +56,11 @@ public class Category extends BaseEntity {
      */
     private Integer sort;
 
+    /**
+     * 父级id 一级分类都是0
+     */
+    private Integer parentId;
+
     @TableField(exist = false)
     private List<TagVO> children;
 

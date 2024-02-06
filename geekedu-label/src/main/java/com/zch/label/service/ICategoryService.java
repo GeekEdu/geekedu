@@ -14,6 +14,6 @@ public interface ICategoryService extends IService<Category> {
 
     Boolean addCategory(CategoryForm form);
 
-    Page<CategoryVO> getCourseCategory(Integer pageNum, Integer pageSize);
+    Page<CategoryVO> getCourseCategory(Integer pageNum, Integer pageSize, String type);
 
 }

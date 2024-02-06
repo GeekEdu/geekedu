@@ -13,7 +13,7 @@ public class CategoryForm {
     /**
      * 若选择了父级id，则传对应的分类id即可
      */
-    private Integer categoryId;
+    private Integer categoryId = 0;
 
     /**
      * 排序字段 越小展示越靠前
