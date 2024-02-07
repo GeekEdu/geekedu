@@ -1,6 +1,7 @@
 package com.zch.api.feignClient.label;
 
 import com.zch.api.dto.label.CategoryForm;
+import com.zch.api.interceptor.FeignInterceptor;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.api.vo.label.CategoryVO;
 import com.zch.common.mvc.result.PageResult;
@@ -17,7 +18,7 @@ import java.util.List;
  * @author Poison02
  * @date 2024/1/9
  */
-@FeignClient(contextId = "label", value = "label-service")
+@FeignClient(contextId = "label", value = "label-service",  configuration = FeignInterceptor.class)
 public interface LabelFeignClient {
     /**
      * 分页返回分类列表

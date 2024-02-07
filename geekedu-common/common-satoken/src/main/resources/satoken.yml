@@ -22,3 +22,5 @@ sa-token:
   is-read-header: true
   # 能从cookie读取
   is-read-cookie: true
+  # 开启 same token
+  check-same-token: true
