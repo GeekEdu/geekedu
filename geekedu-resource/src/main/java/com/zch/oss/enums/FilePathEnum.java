@@ -4,21 +4,24 @@ import com.baomidou.mybatisplus.annotation.EnumValue;
 import lombok.Getter;
 
 @Getter
-public enum FilePlatform {
-    TENCENT(1, "/img-tx/"),
-    ALI(2, "/img-ali/"),
+public enum FilePathEnum {
+    ALL(0, "/all/"),
+    PPT(1, "/ppt/"),
+    COURSE_COVER(2, "/course_cover/"),
+    COURSE_DESC(3, "/course_desc"),
+    ARTICLE(4, "/article/")
     ;
     @EnumValue
     final int value;
     final String path;
 
-    FilePlatform(int value, String path) {
+    FilePathEnum(int value, String path) {
         this.value = value;
         this.path = path;
     }
 
     public static String returnPath(int value) {
-        for (FilePlatform platform : FilePlatform.values()) {
+        for (FilePathEnum platform : FilePathEnum.values()) {
             if (platform.getValue() == value) {
                 return platform.getPath();
             }

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zch.oss.mapper.FileMapper">
+
+	<resultMap id="fileResultMap" type="com.zch.oss.domain.po.File">
+		<id property="id" column="id"/>
+		<result property="keyId" column="key_id"/>
+		<result property="fileName" column="file_name"/>
+		<result property="requestId" column="request_id"/>
+		<result property="fileFrom" column="file_from" javaType="com.zch.oss.enums.FileFromEnum"/>
+		<result property="filePath" column="file_path"/>
+		<result property="platform" column="platform" javaType="com.zch.oss.enums.Platform"/>
+		<result property="createdBy" column="created_by"/>
+		<result property="createdTime" column="created_time"/>
+		<result property="updatedTime" column="updated_time"/>
+		<result property="updatedBy" column="updated_by"/>
+		<result property="isDelete" column="is_delete"/>
+	</resultMap>
+
+	<sql id="fileColumns">
+		id, key_id, file_name, request_id, file_from, file_path, platform, created_by, created_time, updated_time, updated_by, is_delete
+	</sql>
+
+	<select id="selectCount" resultType="long">
+		select count(*) from file_resource
+		where is_delete=0
+	</select>
+
+	<select id="selectFileByPageCondition" resultMap="fileResultMap">
+		select
+		<include refid="fileColumns" />
+		from file_resource
+		where is_delete=0
+		<if test="pageNum == null or pageSize == null">
+			limit 0, 10
+		</if>
+		<if test="pageNum != null and pageSize != null">
+			limit #{pageNum}, #{pageSize}
+		</if>
+	</select>
+
+</mapper>

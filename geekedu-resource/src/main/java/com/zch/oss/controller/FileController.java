@@ -2,6 +2,7 @@ package com.zch.oss.controller;
 
 import com.zch.api.vo.resources.FileUploadVO;
 import com.zch.api.vo.resources.FileVO;
+import com.zch.api.vo.resources.ImageListVO;
 import com.zch.common.mvc.result.Response;
 import com.zch.oss.service.IFileService;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +20,14 @@ public class FileController {
 
     private final IFileService fileService;
 
+    @GetMapping("/images")
+    public Response<ImageListVO> getImages(@RequestParam("pageNum") Integer pageNum, @RequestParam("pageSize") Integer pageSize) {
+        return Response.success(fileService.getImagesList(pageNum, pageSize));
+    }
+
     @PostMapping("/upload")
-    public Response<FileUploadVO> uploadFile(@RequestParam("file") MultipartFile file) {
-        return Response.success(fileService.uploadFile(file));
+    public Response<FileUploadVO> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("from") Integer from) {
+        return Response.success(fileService.uploadFile(file, from));
     }
 
     @GetMapping("/getFile/{id}")

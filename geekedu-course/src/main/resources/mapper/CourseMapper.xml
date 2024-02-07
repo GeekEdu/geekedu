@@ -38,6 +38,7 @@
 
 	<select id="selectCount" resultType="_integer">
 		select count(*) from course
+		where is_delete=0
 	</select>
 
 	<select id="getCoursePageByCondition" resultMap="CourseResultMap">

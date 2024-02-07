@@ -17,7 +17,7 @@ public class ImageVO extends BaseVO {
     /**
      * 图片id
      */
-    private Integer id;
+    private Long id;
 
     /**
      * 图片从哪儿上传

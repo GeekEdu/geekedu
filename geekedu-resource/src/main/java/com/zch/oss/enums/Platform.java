@@ -5,18 +5,16 @@ import lombok.Getter;
 
 @Getter
 public enum Platform {
-    TENCENT(1, "腾讯云", "/tx/"),
-    ALI(2, "阿里云", "/ali/"),
-    QI_NIU(3, "七牛云", "/qn/"),
+    TENCENT(1, "cos"),
+    ALI(2, "oss"),
+    QI_NIU(3, "qos"),
     ;
     @EnumValue
     private final int value;
     private final String desc;
-    private final String path;
 
-    Platform(int value, String desc, String path) {
+    Platform(int value, String desc) {
         this.value = value;
         this.desc = desc;
-        this.path = path;
     }
 }

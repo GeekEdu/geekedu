@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zch.common.mvc.entity.BaseEntity;
-import com.zch.oss.enums.FileStatus;
+import com.zch.oss.enums.FileFromEnum;
 import com.zch.oss.enums.Platform;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -46,9 +46,14 @@ public class File extends BaseEntity implements Serializable{
     private String requestId;
 
     /**
-     * 状态：1-待上传 2-已上传,未使用 3-已使用
+     * 图片上传来源 0-全部，1-ppt，2-课程封面，3-课程详情页，4-文章配图
      */
-    private FileStatus status;
+    private FileFromEnum fileFrom;
+
+    /**
+     * 图片在云端的路径 不带 url 的
+     */
+    private String filePath;
 
     /**
      * 状态：1-腾讯 2-阿里
