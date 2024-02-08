@@ -29,7 +29,7 @@ public class CategoryController {
         return Response.success(categoryService.addCategory(form));
     }
 
-    @GetMapping("/courseCategory")
+    @GetMapping("/getCategoryPage")
     public PageResult<CategoryVO> getCategory(@RequestParam("pageNum") Integer pageNum,
                                                  @RequestParam("pageSize") Integer pageSize,
                                                  @RequestParam("type") String type) {
@@ -43,7 +43,7 @@ public class CategoryController {
     }
 
     @GetMapping("/getCategoryList")
-    public Response<List<CategorySimpleVO>> getCategoryList(@RequestParam("type") String type) {
+    public Response<List<CategoryVO>> getCategoryList(@RequestParam("type") String type) {
         return Response.success(categoryService.getCategory(type));
     }
 

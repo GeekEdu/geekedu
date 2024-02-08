@@ -21,6 +21,6 @@ public interface ICategoryService extends IService<Category> {
 
     CategorySimpleVO getCategoryById(Integer id, String type);
 
-    List<CategorySimpleVO> getCategory(String type);
+    List<CategoryVO> getCategory(String type);
 
 }

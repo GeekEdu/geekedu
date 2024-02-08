@@ -141,24 +141,50 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     }
 
     @Override
-    public List<CategorySimpleVO> getCategory(String type) {
+    public List<CategoryVO> getCategory(String type) {
         if (ObjectUtils.isNull(type)) {
             throw new CommonException("请输入正确的分类类型！");
         }
+        // 查询一级分类
         List<Category> categories = categoryMapper.selectList(new LambdaQueryWrapper<Category>()
+                .select(Category::getId, Category::getSort, Category::getName, Category::getType, Category::getParentId)
                 .eq(Category::getIsDelete, 0)
-                .eq(Category::getType, CategoryEnum.valueOf(type))
-                .select(Category::getId, Category::getName, Category::getSort));
+                .eq(Category::getParentId, 0)
+                .eq(Category::getType, CategoryEnum.valueOf(type)));
         if (CollUtils.isEmpty(categories)) {
             return new ArrayList<>(0);
         }
-        List<CategorySimpleVO> list = categories.stream().map(item -> {
-            CategorySimpleVO vo = new CategorySimpleVO();
+        for (Category item : categories) {
+            // 查找二级分类，二级分类的 parentId == 父级分类的id
+            List<Category> secondCategories = categoryMapper.selectList(new LambdaQueryWrapper<Category>()
+                    .select(Category::getId, Category::getSort, Category::getName, Category::getType, Category::getParentId)
+                    .eq(Category::getIsDelete, 0)
+                    .eq(Category::getParentId, item.getId())
+                    .eq(Category::getType, CategoryEnum.valueOf(type)));
+            if (CollUtils.isEmpty(secondCategories)) {
+                item.setChildren(new ArrayList<>(0));
+            }
+            // 将二级分类转为 TagVO
+            List<TagVO> children = secondCategories.stream().map(e -> {
+                TagVO vo = new TagVO();
+                vo.setId(e.getId());
+                vo.setName(e.getName());
+                vo.setSort(e.getSort());
+                vo.setParentId(item.getId());
+                return vo;
+            }).collect(Collectors.toList());
+            // 将二级分类放入结果集中
+            item.setChildren(children);
+        }
+        List<CategoryVO> vos = categories.stream().map(item -> {
+            CategoryVO vo = new CategoryVO();
             vo.setId(item.getId());
             vo.setName(item.getName());
             vo.setSort(item.getSort());
+            vo.setParentId(item.getParentId());
+            vo.setChildren(item.getChildren());
             return vo;
         }).collect(Collectors.toList());
-        return list;
+        return vos;
     }
 }
