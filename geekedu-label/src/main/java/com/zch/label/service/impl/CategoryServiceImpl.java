@@ -25,8 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.zch.common.core.constants.ErrorInfo.Msg.DATE_SELECT_IS_EXISTS;
-import static com.zch.common.core.constants.ErrorInfo.Msg.DB_SAVE_EXCEPTION;
+import static com.zch.common.core.constants.ErrorInfo.Msg.*;
 
 
 /**
@@ -57,7 +56,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         Category category = Category.builder()
                 .name(form.getName())
                 .type(CategoryEnum.valueOf(form.getType()))
-                .parentId(form.getCategoryId())
+                .parentId(form.getParentId())
                 .createdBy(1745747394693820416L)
                 .updatedBy(1745747394693820416L)
                 .sort(form.getSort())
@@ -129,7 +128,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
                 .eq(Category::getId, id)
                 .eq(Category::getType, CategoryEnum.valueOf(type))
                 .eq(Category::getIsDelete, 0)
-                .select(Category::getId, Category::getName, Category::getSort));
+                .select(Category::getId, Category::getName, Category::getSort, Category::getParentId));
         if (ObjectUtils.isNull(category)) {
             return new CategorySimpleVO();
         }
@@ -137,6 +136,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         vo.setId(category.getId());
         vo.setName(category.getName());
         vo.setSort(category.getSort());
+        vo.setParentId(category.getParentId());
         return vo;
     }
 
@@ -186,5 +186,44 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
             return vo;
         }).collect(Collectors.toList());
         return vos;
+    }
+
+    @Override
+    public Boolean updateCategory(Integer id, CategoryForm form) {
+        if (ObjectUtils.isNull(id)) {
+            throw new CommonException("请传入正确的分类id！");
+        }
+        // 先查看修改后的分类名是否存在过，存在过则不能修改
+        Category one = categoryMapper.selectOne(new LambdaQueryWrapper<Category>()
+                .eq(Category::getName, form.getName())
+                .eq(Category::getIsDelete, 0)
+                .eq(Category::getType, CategoryEnum.valueOf(form.getType()))
+                .eq(Category::getParentId, form.getParentId()));
+        if (ObjectUtils.isNotNull(one)) {
+            throw new CommonException(DATE_SELECT_IS_EXISTS);
+        }
+        // 更新分类
+        Category category = Category.builder()
+                .id(id)
+                .name(form.getName())
+                .parentId(form.getParentId())
+                .sort(form.getSort()).build();
+        int row = categoryMapper.updateById(category);
+        if (row != 1) {
+            throw new DbException(DB_UPDATE_EXCEPTION);
+        }
+        return true;
+    }
+
+    @Override
+    public Boolean deleteCategory(Integer id) {
+        if (ObjectUtils.isNull(id)) {
+            throw new CommonException("请传入正确的分类id！");
+        }
+        int row = categoryMapper.deleteById(id);
+        if (row != 1) {
+            throw new DbException(DB_DELETE_EXCEPTION);
+        }
+        return true;
     }
 }

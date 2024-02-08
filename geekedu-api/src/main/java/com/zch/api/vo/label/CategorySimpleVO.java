@@ -18,4 +18,6 @@ public class CategorySimpleVO extends BaseVO {
 
     private Integer sort;
 
+    private Integer parentId;
+
 }

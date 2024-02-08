@@ -47,4 +47,14 @@ public class CategoryController {
         return Response.success(categoryService.getCategory(type));
     }
 
+    @PostMapping("/update/{id}")
+    public Response<Boolean> updateCategoryById(@PathVariable("id") Integer id, @RequestBody CategoryForm form) {
+        return Response.success(categoryService.updateCategory(id, form));
+    }
+
+    @PostMapping("/delete/{id}")
+    public Response<Boolean> deleteCategoryById(@PathVariable("id") Integer id) {
+        return Response.success(categoryService.deleteCategory(id));
+    }
+
 }
