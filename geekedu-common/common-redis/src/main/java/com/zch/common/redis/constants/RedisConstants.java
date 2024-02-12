@@ -12,6 +12,8 @@ public interface RedisConstants {
 
     String AUTHORIZATION_LOGIN_SESSION = "Authorization:login:session:";
 
+    String AUTHORIZATION_SAME_TOKEN = "Authorization:var:same-token";
+
     /**
      * token 过期时间 单位 秒
      */

@@ -25,7 +25,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(new SaInterceptor()).addPathPatterns("/**");
         // 自定义拦截器
         registry.addInterceptor(new LoginInterceptor())
-                .excludePathPatterns("/api/captcha/image", "/api/login")
+                .excludePathPatterns("/api/captcha/image", "/api/login", "/api/v2/**")
                 .order(1);
         // 刷新token拦截器
         registry.addInterceptor(new RefreshTokenInterceptor())

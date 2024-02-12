@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,6 +33,6 @@ public class Navs {
 
     private Integer blank;
 
-    private List<Integer> children;
+    private List<Integer> children = new ArrayList<>(0);
 
 }

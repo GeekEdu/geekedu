@@ -33,6 +33,7 @@ public class RefreshTokenInterceptor implements HandlerInterceptor {
         RedisUtils.expire(LOGIN_USER_TOKEN + token, LOGIN_USER_TOKEN_TTL);
         RedisUtils.expire(AUTHORIZATION_LOGIN_TOKEN + token, LOGIN_USER_TOKEN_TTL);
         RedisUtils.expire(AUTHORIZATION_LOGIN_SESSION + userId, LOGIN_USER_TOKEN_TTL);
+        RedisUtils.expire(AUTHORIZATION_SAME_TOKEN, LOGIN_USER_TOKEN_TTL);
         return true;
     }
 
