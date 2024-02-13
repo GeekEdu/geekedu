@@ -13,8 +13,9 @@ public enum CategoryEnum {
     REPLAY_COURSE(1, "录播课"),
     LIVE_COURSE(2, "直播课"),
     IMAGE_TEXT(3, "图文"),
-    E_BOOK(3, "电子书"),
-    LEARN_PATH(3, "学习路线")
+    E_BOOK(4, "电子书"),
+    LEARN_PATH(5, "学习路线"),
+    ASK_QUESTION(6, "问答")
     ;
 
     @EnumValue
