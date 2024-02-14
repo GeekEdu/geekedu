@@ -150,7 +150,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
                 .select(Category::getId, Category::getSort, Category::getName, Category::getType, Category::getParentId)
                 .eq(Category::getIsDelete, 0)
                 .eq(Category::getParentId, 0)
-                .eq(Category::getType, CategoryEnum.valueOf(type)));
+                .eq(Category::getType, CategoryEnum.valueOf(type))
+                .orderByAsc(Category::getSort));
         if (CollUtils.isEmpty(categories)) {
             return new ArrayList<>(0);
         }
@@ -160,7 +161,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
                     .select(Category::getId, Category::getSort, Category::getName, Category::getType, Category::getParentId)
                     .eq(Category::getIsDelete, 0)
                     .eq(Category::getParentId, item.getId())
-                    .eq(Category::getType, CategoryEnum.valueOf(type)));
+                    .eq(Category::getType, CategoryEnum.valueOf(type))
+                    .orderByAsc(Category::getSort));
             if (CollUtils.isEmpty(secondCategories)) {
                 item.setChildren(new ArrayList<>(0));
             }
