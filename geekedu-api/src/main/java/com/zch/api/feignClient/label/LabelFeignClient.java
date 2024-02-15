@@ -18,7 +18,7 @@ import java.util.List;
  * @author Poison02
  * @date 2024/1/9
  */
-@FeignClient(contextId = "label", value = "label-service",  configuration = FeignInterceptor.class)
+@FeignClient(contextId = "label", value = "label-service", configuration = FeignInterceptor.class)
 public interface LabelFeignClient {
     /**
      * 分页返回分类列表

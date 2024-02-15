@@ -2,6 +2,7 @@ package com.zch.user.controller;
 
 import com.zch.api.dto.user.LoginForm;
 import com.zch.api.vo.user.CaptchaVO;
+import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.common.mvc.result.Response;
 import com.zch.user.domain.po.User;
 import com.zch.user.service.IUserService;
@@ -42,6 +43,11 @@ public class UserController {
     @PostMapping("/add")
     public Response addUser(@RequestBody User user) {
         return Response.judge(userService.addUser(user));
+    }
+
+    @GetMapping("/getUserById")
+    public Response<UserSimpleVO> getUserById(@RequestParam("id") Long userId) {
+        return Response.success(userService.getUserById(userId));
     }
 
 }

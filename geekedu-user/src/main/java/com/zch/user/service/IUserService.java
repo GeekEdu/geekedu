@@ -5,6 +5,7 @@ import com.zch.api.dto.user.LoginForm;
 import com.zch.api.vo.user.CaptchaVO;
 import com.zch.api.vo.user.LoginVO;
 import com.zch.api.vo.user.UserRoleVO;
+import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.user.domain.po.User;
 
 
@@ -31,6 +32,11 @@ public interface IUserService extends IService<User> {
 
     UserRoleVO getUsers();
 
-
+    /**
+     * 通过 userId 查询用户
+     * @param userId
+     * @return
+     */
+    UserSimpleVO getUserById(Long userId);
 
 }

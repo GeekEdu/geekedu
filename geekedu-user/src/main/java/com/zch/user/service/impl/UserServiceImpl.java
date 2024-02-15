@@ -5,10 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.user.LoginForm;
 import com.zch.api.vo.user.*;
-import com.zch.common.core.utils.CaptchaUtils;
-import com.zch.common.core.utils.IdUtils;
-import com.zch.common.core.utils.ObjectUtils;
-import com.zch.common.core.utils.StringUtils;
+import com.zch.common.core.utils.*;
 import com.zch.common.core.utils.encrypt.EncryptUtils;
 import com.zch.common.mvc.exception.CommonException;
 import com.zch.common.redis.utils.RedisUtils;
@@ -119,6 +116,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         Object userId = StpUtil.getLoginId();
         // 从redis中查找对应用户的信息
         UserRoleVO vo = RedisUtils.getCacheObject(USERINFO + userId);
+        return vo;
+    }
+
+    @Override
+    public UserSimpleVO getUserById(Long userId) {
+        User user = userMapper.selectById(userId);
+        UserSimpleVO vo = new UserSimpleVO();
+        BeanUtils.copyProperties(user, vo);
         return vo;
     }
 
