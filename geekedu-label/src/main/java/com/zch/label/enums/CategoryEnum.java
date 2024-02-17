@@ -15,7 +15,8 @@ public enum CategoryEnum {
     IMAGE_TEXT(3, "图文"),
     E_BOOK(4, "电子书"),
     LEARN_PATH(5, "学习路线"),
-    ASK_QUESTION(6, "问答")
+    ASK_QUESTION(6, "问答"),
+    MEMBERS(7, "学员标签")
     ;
 
     @EnumValue

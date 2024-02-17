@@ -26,8 +26,9 @@ public class RefreshTokenInterceptor implements HandlerInterceptor {
             return true;
         }
         String token = BearerToken.substring(7);
+        String redisToken = RedisUtils.getCacheObject(LOGIN_USER_TOKEN + token);
         // 保存userId
-        Long userId = Long.valueOf(RedisUtils.getCacheObject(LOGIN_USER_TOKEN + token));
+        Long userId = Long.valueOf(redisToken);
         UserContext.set("userId", userId);
         // 刷新redis中的所有token和session
         RedisUtils.expire(LOGIN_USER_TOKEN + token, LOGIN_USER_TOKEN_TTL);

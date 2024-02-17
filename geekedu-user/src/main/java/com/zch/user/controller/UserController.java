@@ -50,4 +50,9 @@ public class UserController {
         return Response.success(userService.getUserById(userId));
     }
 
+    @GetMapping("/member/list")
+    public Response getMemberList() {
+        return Response.success();
+    }
+
 }
