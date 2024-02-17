@@ -12,6 +12,7 @@ import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.mvc.exception.CommonException;
 import com.zch.common.mvc.exception.DbException;
+import com.zch.common.satoken.context.UserContext;
 import com.zch.label.domain.po.Category;
 import com.zch.label.enums.CategoryEnum;
 import com.zch.label.mapper.CategoryMapper;
@@ -57,8 +58,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
                 .name(form.getName())
                 .type(CategoryEnum.valueOf(form.getType()))
                 .parentId(form.getParentId())
-                .createdBy(1745747394693820416L)
-                .updatedBy(1745747394693820416L)
+                .createdBy(UserContext.getLoginId())
+                .updatedBy(UserContext.getLoginId())
                 .sort(form.getSort())
                 .build();
         int row = categoryMapper.insert(category);
