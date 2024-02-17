@@ -18,7 +18,7 @@ public interface UserFeignClient {
     @GetMapping("/api/captcha/image")
     Response<CaptchaVO> getCaptcha();
 
-    @GetMapping("/api/user/getUserById")
-    Response<UserSimpleVO> getUserById(@RequestParam("id") Long userId);
+    @GetMapping("/api/getUserById")
+    Response<UserSimpleVO> getUserById(@RequestParam("id") String userId);
 
 }

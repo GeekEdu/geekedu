@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @GetMapping("/getUserById")
-    public Response<UserSimpleVO> getUserById(@RequestParam("id") Long userId) {
+    public Response<UserSimpleVO> getUserById(@RequestParam("id") String userId) {
         return Response.success(userService.getUserById(userId));
     }
 

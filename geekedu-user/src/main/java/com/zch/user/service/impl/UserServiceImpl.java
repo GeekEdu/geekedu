@@ -120,10 +120,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public UserSimpleVO getUserById(Long userId) {
+    public UserSimpleVO getUserById(String userId) {
         User user = userMapper.selectById(userId);
         UserSimpleVO vo = new UserSimpleVO();
         BeanUtils.copyProperties(user, vo);
+        vo.setUserId(user.getId());
         return vo;
     }
 

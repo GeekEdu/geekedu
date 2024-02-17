@@ -1,7 +1,6 @@
 package com.zch.ask.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.feignClient.label.LabelFeignClient;
 import com.zch.api.feignClient.user.UserFeignClient;
@@ -80,7 +79,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         List<QuestionVO> questions = new ArrayList<>(list.size());
         for (Question item : list) {
             Response<CategorySimpleVO> response = labelFeignClient.getCategoryById(item.getCategoryId(), "ASK_QUESTION");
-            Response<UserSimpleVO> res2 = userFeignClient.getUserById(item.getUserId());
+            Response<UserSimpleVO> res2 = userFeignClient.getUserById(item.getUserId() + "");
             if (response == null || response.getData() == null || res2 == null || res2.getData() == null) {
                 vo.getData().setData(new ArrayList<>(0));
                 vo.setCategories(new ArrayList<>(0));
@@ -91,6 +90,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
             BeanUtils.copyProperties(item, vo1);
             vo1.setCategory(data);
             vo1.setUser(res2.getData());
+            vo1.setStatusText(item.getQuestionStatus() ? "已解决" : "未解决");
             questions.add(vo1);
         }
         vo.setCategories(res.getData());

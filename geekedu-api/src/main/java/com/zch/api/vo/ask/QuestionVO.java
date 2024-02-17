@@ -52,6 +52,9 @@ public class QuestionVO extends BaseVO {
      */
     private Boolean questionStatus;
 
+    /**
+     * 根据 questionStatus 判断的文本
+     */
     private String statusText;
 
     private LocalDateTime createdTime;
