@@ -24,11 +24,23 @@ public class CategoryController {
 
     private final ICategoryService categoryService;
 
+    /**
+     * 新增分类
+     * @param form
+     * @return
+     */
     @PostMapping("/add")
     public Response addCategory(@RequestBody CategoryForm form) {
         return Response.success(categoryService.addCategory(form));
     }
 
+    /**
+     * 分页查找分类列表
+     * @param pageNum
+     * @param pageSize
+     * @param type
+     * @return
+     */
     @GetMapping("/getCategoryPage")
     public PageResult<CategoryVO> getCategory(@RequestParam("pageNum") Integer pageNum,
                                                  @RequestParam("pageSize") Integer pageSize,
@@ -37,21 +49,43 @@ public class CategoryController {
         return PageResult.success(result);
     }
 
+    /**
+     * 根据分类id查找分类
+     * @param id
+     * @param type
+     * @return
+     */
     @GetMapping("/getCategoryById")
     public Response<CategorySimpleVO> getCategoryById(@RequestParam("id") Integer id, @RequestParam("type") String type) {
         return Response.success(categoryService.getCategoryById(id, type));
     }
 
+    /**
+     * 返回分类列表 不分页
+     * @param type
+     * @return
+     */
     @GetMapping("/getCategoryList")
     public Response<List<CategoryVO>> getCategoryList(@RequestParam("type") String type) {
         return Response.success(categoryService.getCategory(type));
     }
 
+    /**
+     * 根据分类id更新分类
+     * @param id
+     * @param form
+     * @return
+     */
     @PostMapping("/update/{id}")
     public Response<Boolean> updateCategoryById(@PathVariable("id") Integer id, @RequestBody CategoryForm form) {
         return Response.success(categoryService.updateCategory(id, form));
     }
 
+    /**
+     * 根据分类id删除分类
+     * @param id
+     * @return
+     */
     @PostMapping("/delete/{id}")
     public Response<Boolean> deleteCategoryById(@PathVariable("id") Integer id) {
         return Response.success(categoryService.deleteCategory(id));

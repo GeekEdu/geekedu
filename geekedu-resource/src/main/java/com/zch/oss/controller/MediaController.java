@@ -20,6 +20,11 @@ public class MediaController {
 
     private final IMediaService mediaService;
 
+    /**
+     * 根据视频在云端的视频id获取预览播放签名
+     * @param mediaId
+     * @return
+     */
     @GetMapping("/signature/preview")
     public Response<VideoPlayVO> getPreviewSignature(@RequestParam("mediaId") Long mediaId) {
         return Response.success(mediaService.getPreviewSignatureByMediaId(mediaId));

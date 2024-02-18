@@ -19,6 +19,18 @@ public class QuestionController {
 
     private final IQuestionService questionService;
 
+    /**
+     * 分页查找问题列表
+     * @param pageNum
+     * @param pageSize
+     * @param sort
+     * @param order
+     * @param keywords
+     * @param userId
+     * @param categoryId
+     * @param status
+     * @return
+     */
     @GetMapping("/getQuestionPage")
     public Response getQuestionPage(@RequestParam("pageNum") Integer pageNum, @RequestParam("pageSize") Integer pageSize, @RequestParam("sort") String sort, @RequestParam("order") String order,
                                     @RequestParam("keywords") String keywords, @RequestParam(value = "userId", required = false) Long userId, @RequestParam(value = "categoryId", required = false) Integer categoryId,

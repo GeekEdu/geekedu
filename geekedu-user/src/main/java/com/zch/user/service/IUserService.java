@@ -30,6 +30,10 @@ public interface IUserService extends IService<User> {
 
     boolean addUser(User user);
 
+    /**
+     * 获取用户所有权限
+     * @return
+     */
     UserRoleVO getUsers();
 
     /**

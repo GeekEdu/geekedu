@@ -19,6 +19,17 @@ public class CourseController {
 
     private final ICourseService courseService;
 
+    /**
+     * 分页查找课程列表
+     * @param pageNum
+     * @param pageSize
+     * @param sort
+     * @param order
+     * @param keywords
+     * @param cid
+     * @param id
+     * @return
+     */
     @GetMapping("/courses")
     public Response getCourses(@RequestParam(value = "pageNum", required = true) Integer pageNum, @RequestParam(value = "pageSize", required = true) Integer pageSize,
                                @RequestParam(value = "sort", required = false) String sort, @RequestParam(value = "order", required = false) String order, @RequestParam(value = "keywords", required = false) String keywords,
