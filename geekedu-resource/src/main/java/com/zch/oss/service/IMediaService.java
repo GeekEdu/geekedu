@@ -1,10 +1,8 @@
 package com.zch.oss.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zch.oss.domain.dto.MediaDTO;
-import com.zch.oss.domain.dto.MediaUploadResultDTO;
+import com.zch.api.vo.resources.VideoPlayVO;
 import com.zch.oss.domain.po.Media;
-import com.zch.oss.domain.vo.VideoPlayVO;
 
 /**
  * @author Poison02
@@ -12,16 +10,12 @@ import com.zch.oss.domain.vo.VideoPlayVO;
  */
 public interface IMediaService extends IService<Media> {
 
-    String getUploadSignature();
+    /**
+     * 获取预览播放视频的签名
+     * @param mediaId
+     * @return
+     */
+    VideoPlayVO getPreviewSignatureByMediaId(Long mediaId);
 
-    VideoPlayVO getPlaySignatureBySectionId(Long mediaId);
-
-    MediaDTO save(MediaUploadResultDTO mediaUploadResultDTO);
-
-    void updateMediaProcedureResult(Media media);
-
-    void deleteMedia(String mediaId);
-
-    VideoPlayVO getPlaySignatureByMediaId(Long mediaId);
 
 }
