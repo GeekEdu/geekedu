@@ -1,6 +1,8 @@
 package com.zch.oss.controller;
 
 import com.zch.api.vo.resources.VideoPlayVO;
+import com.zch.api.vo.resources.VideoVO;
+import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import com.zch.oss.service.IMediaService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,13 @@ public class MediaController {
     @GetMapping("/signature/preview")
     public Response<VideoPlayVO> getPreviewSignature(@RequestParam("mediaId") Long mediaId) {
         return Response.success(mediaService.getPreviewSignatureByMediaId(mediaId));
+    }
+
+    @GetMapping("/getVideoPage")
+    public PageResult<VideoVO> getVideoPage(@RequestParam("pageNum") Integer pageNum,
+                                            @RequestParam("pageSize") Integer pageSize,
+                                            @RequestParam("keywords") String keywords) {
+        return PageResult.success(mediaService.getVideoPage(pageNum, pageSize, keywords));
     }
 
 }

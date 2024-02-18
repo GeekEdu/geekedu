@@ -1,10 +1,10 @@
 package com.zch.oss.domain.po;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zch.common.mvc.entity.BaseEntity;
-import com.zch.oss.enums.FileStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -24,8 +24,8 @@ public class Media extends BaseEntity implements Serializable {
     /**
      * 主键
      */
-    @TableId(value = "id")
-    private Long id;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Integer id;
 
     /**
      * 文件在云端的唯一标示，例如：387702302659783576
@@ -48,9 +48,14 @@ public class Media extends BaseEntity implements Serializable {
     private String coverLink;
 
     /**
+     * 媒体来源 tencent aliyun
+     */
+    private String mediaSource;
+
+    /**
      * 视频时长，单位秒
      */
-    private Float duration;
+    private Double duration;
 
     /**
      * 请求id
@@ -58,14 +63,14 @@ public class Media extends BaseEntity implements Serializable {
     private String requestId;
 
     /**
-     * 状态：1-上传中，2-已上传
-     */
-    private FileStatus status;
-
-    /**
      * 媒资大小，单位字节
      */
     private Long size;
+
+    /**
+     * 媒体大小，单位MB
+     */
+    private Double sizeMb;
 
     /**
      * 创建者

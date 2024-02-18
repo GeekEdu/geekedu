@@ -1,7 +1,9 @@
 package com.zch.oss.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.vo.resources.VideoPlayVO;
+import com.zch.api.vo.resources.VideoVO;
 import com.zch.oss.domain.po.Media;
 
 /**
@@ -17,5 +19,13 @@ public interface IMediaService extends IService<Media> {
      */
     VideoPlayVO getPreviewSignatureByMediaId(Long mediaId);
 
+    /**
+     * 分页查找视频列表
+     * @param pageNum
+     * @param pageSize
+     * @param keywords
+     * @return
+     */
+    Page<VideoVO> getVideoPage(Integer pageNum, Integer pageSize, String keywords);
 
 }

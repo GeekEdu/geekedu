@@ -27,7 +27,6 @@ import com.zch.oss.adapter.MediaStorageAdapter;
 import com.zch.oss.adapter.MediaUploadResult;
 import com.zch.oss.config.properties.TencentProperties;
 import com.zch.oss.domain.po.Media;
-import com.zch.oss.enums.FileStatus;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.InputStream;
@@ -180,8 +179,7 @@ public class TencentMediaStorage implements MediaStorageAdapter {
             media.setMediaLink(basicInfo.getMediaUrl());
             media.setMediaName(basicInfo.getName());
             media.setSize(mediaMetaData.getSize());
-            media.setDuration(mediaMetaData.getDuration());
-            media.setStatus(FileStatus.UPLOADED);
+            media.setDuration(Double.valueOf(mediaMetaData.getDuration()));
             list.add(media);
         }
         return list;
