@@ -10,6 +10,7 @@ import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
 import com.zch.common.mvc.exception.CommonException;
 import com.zch.common.mvc.exception.DbException;
+import com.zch.common.satoken.context.UserContext;
 import com.zch.oss.adapter.FileStorageAdapter;
 import com.zch.oss.config.properties.PlatformProperties;
 import com.zch.oss.domain.po.File;
@@ -111,6 +112,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
         String newFileName = generateNewFileName(originalFileName, from);
         // 3. 获取文件流
         InputStream inputStream;
+        Long userId = UserContext.getLoginId();
         try {
             inputStream = file.getInputStream();
         } catch (IOException e) {
@@ -128,6 +130,8 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
             fileInfo.setFilePath(newFileName);
             fileInfo.setRequestId(requestId);
             fileInfo.setPlatform(properties.getFile());
+            fileInfo.setCreatedBy(userId);
+            fileInfo.setUpdatedBy(userId);
             fileMapper.insert(fileInfo);
         } catch (Exception e) {
             log.error("文件信息保存异常", e);

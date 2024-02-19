@@ -7,10 +7,10 @@ package com.zch.common.mybatis.constant;
 public interface Constants {
 
     // 数据字段 - createBy
-    String DATA_FIELD_NAME_CREATEBY = "createdBy";
+    String DATA_FIELD_NAME_CREATEDBY = "createdBy";
 
     // 数据字段 - updateBy
-    String DATA_FIELD_NAME_UPDATEBY = "updatedBy";
+    String DATA_FIELD_NAME_UPDATEDBY = "updatedBy";
 
     // 数据字段 - create_time
     String DATA_FIELD_NAME_CREATE_TIME = "created_time";

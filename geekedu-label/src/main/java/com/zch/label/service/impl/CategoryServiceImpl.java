@@ -193,6 +193,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Override
     public Boolean updateCategory(Integer id, CategoryForm form) {
+        // 获取用户id
+        Long userId = UserContext.getLoginId();
         if (ObjectUtils.isNull(id)) {
             throw new CommonException("请传入正确的分类id！");
         }
@@ -210,7 +212,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
                 .id(id)
                 .name(form.getName())
                 .parentId(form.getParentId())
-                .sort(form.getSort()).build();
+                .sort(form.getSort())
+                .updatedBy(userId)
+                .build();
         int row = categoryMapper.updateById(category);
         if (row != 1) {
             throw new DbException(DB_UPDATE_EXCEPTION);
