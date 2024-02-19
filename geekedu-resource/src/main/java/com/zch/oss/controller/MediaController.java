@@ -1,15 +1,13 @@
 package com.zch.oss.controller;
 
+import com.zch.api.dto.resource.VideoAddForm;
 import com.zch.api.vo.resources.VideoPlayVO;
 import com.zch.api.vo.resources.VideoVO;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import com.zch.oss.service.IMediaService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Poison02
@@ -44,6 +42,20 @@ public class MediaController {
                                             @RequestParam("pageSize") Integer pageSize,
                                             @RequestParam("keywords") String keywords) {
         return PageResult.success(mediaService.getVideoPage(pageNum, pageSize, keywords));
+    }
+
+    /**
+     * 获取上传视频签名
+     * @return
+     */
+    @GetMapping("/getUploadSignature")
+    public Response<String> getUploadSignature() {
+        return Response.success(mediaService.getUploadSignature());
+    }
+
+    @PostMapping("/video/add")
+    public Response addVideo(@RequestBody VideoAddForm form) {
+        return Response.success(mediaService.saveVideo(form));
     }
 
 }

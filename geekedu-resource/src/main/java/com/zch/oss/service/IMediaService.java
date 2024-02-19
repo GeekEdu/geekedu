@@ -2,6 +2,7 @@ package com.zch.oss.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zch.api.dto.resource.VideoAddForm;
 import com.zch.api.vo.resources.VideoPlayVO;
 import com.zch.api.vo.resources.VideoVO;
 import com.zch.oss.domain.po.Media;
@@ -27,5 +28,13 @@ public interface IMediaService extends IService<Media> {
      * @return
      */
     Page<VideoVO> getVideoPage(Integer pageNum, Integer pageSize, String keywords);
+
+    /**
+     * 获取上传签名
+     * @return
+     */
+    String getUploadSignature();
+
+    VideoVO saveVideo(VideoAddForm form);
 
 }

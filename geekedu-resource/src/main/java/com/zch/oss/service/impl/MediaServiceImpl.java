@@ -3,6 +3,7 @@ package com.zch.oss.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zch.api.dto.resource.VideoAddForm;
 import com.zch.api.vo.resources.VideoPlayVO;
 import com.zch.api.vo.resources.VideoVO;
 import com.zch.common.core.utils.BeanUtils;
@@ -74,6 +75,30 @@ public class MediaServiceImpl extends ServiceImpl<MediaMapper, Media> implements
             vo.setRecords(vos);
             vo.setTotal(mediaPage.getTotal());
         }
+        return vo;
+    }
+
+    @Override
+    public String getUploadSignature() {
+        return mediaStorageAdapter.getUploadSignature();
+    }
+
+    @Override
+    public VideoVO saveVideo(VideoAddForm form) {
+        Media media = new Media();
+        media.setMediaId(form.getMediaId());
+        media.setCoverLink(form.getCoverLink());
+        media.setMediaName(form.getMediaName());
+        media.setDuration(form.getDuration());
+        media.setSize(form.getSize());
+        media.setMediaSource(form.getMediaSource());
+        media.setSizeMb(form.getSize() / 1024.00 / 1024);
+        mediaMapper.insert(media);
+        VideoVO vo = new VideoVO();
+        Media one = mediaMapper.selectOne(new LambdaQueryWrapper<Media>()
+                .eq(Media::getIsDelete, 0)
+                .eq(Media::getMediaId, form.getMediaId()));
+        BeanUtils.copyProperties(one, vo);
         return vo;
     }
 }
