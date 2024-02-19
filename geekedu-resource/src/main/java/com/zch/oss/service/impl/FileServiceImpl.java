@@ -2,6 +2,7 @@ package com.zch.oss.service.impl;
 
 import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.vo.resources.*;
 import com.zch.common.core.utils.CollUtils;
@@ -56,16 +57,17 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
         }
         // 构造返回值
         ImageListVO vo = new ImageListVO();
-        Integer page = (pageNum - 1) * pageSize;
-        long total = fileMapper.selectCount();
+        long count = count();
         // 没有图片则直接返回
-        if (total == 0) {
+        if (count == 0) {
             vo.getData().setData(new ArrayList<>(0));
             vo.getData().setTotal(0);
             vo.setFrom(new ArrayList<>(0));
             return vo;
         }
-        List<File> files = fileMapper.selectFileByPageCondition(page, pageSize);
+        LambdaQueryWrapper<File> wrapper = new LambdaQueryWrapper<>();
+        Page<File> page = page(new Page<>(pageNum, pageSize), wrapper);
+        List<File> files = page.getRecords();
         if (CollUtils.isEmpty(files)) {
             vo.getData().setData(new ArrayList<>(0));
             vo.getData().setTotal(0);
@@ -84,7 +86,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
             imageVO.setCreatedTime(file.getCreatedTime());
             imageVOS.add(imageVO);
         }
-        vo.getData().setTotal(total);
+        vo.getData().setTotal(count);
         vo.getData().setData(imageVOS);
         // 查询所有种类的图片来源
         List<File> list = fileMapper.selectList(new LambdaQueryWrapper<File>()

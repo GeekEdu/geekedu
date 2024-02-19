@@ -21,19 +21,20 @@ public class CourseController {
 
     /**
      * 分页查找课程列表
-     * @param pageNum
-     * @param pageSize
-     * @param sort
-     * @param order
-     * @param keywords
-     * @param cid
-     * @param id
+     * @param pageNum 当前页码
+     * @param pageSize 每页记录数
+     * @param sort 排序字段
+     * @param order 排序方式 desc asc
+     * @param keywords 课程名称关键字
+     * @param cid 分类id
+     * @param id 课程id
      * @return
      */
     @GetMapping("/courses")
-    public Response getCourses(@RequestParam(value = "pageNum", required = true) Integer pageNum, @RequestParam(value = "pageSize", required = true) Integer pageSize,
-                               @RequestParam(value = "sort", required = false) String sort, @RequestParam(value = "order", required = false) String order, @RequestParam(value = "keywords", required = false) String keywords,
-                               @RequestParam(value = "cid", required = false) Integer cid, @RequestParam(value = "id", required = false) Integer id) {
+    public Response getCourses(@RequestParam("pageNum") Integer pageNum, @RequestParam("pageSize") Integer pageSize, @RequestParam("sort") String sort, @RequestParam("order") String order,
+                               @RequestParam(value = "keywords", required = false) String keywords,
+                               @RequestParam(value = "cid", required = false) Integer cid,
+                               @RequestParam(value = "id", required = false) Integer id) {
         return Response.success(courseService.getCoursePage(pageNum, pageSize, sort, order, keywords, cid, id));
     }
 
