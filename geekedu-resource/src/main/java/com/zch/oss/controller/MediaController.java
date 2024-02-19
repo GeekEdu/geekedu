@@ -32,6 +32,13 @@ public class MediaController {
         return Response.success(mediaService.getPreviewSignatureByMediaId(mediaId));
     }
 
+    /**
+     * 分页返回视频列表
+     * @param pageNum
+     * @param pageSize
+     * @param keywords
+     * @return
+     */
     @GetMapping("/getVideoPage")
     public PageResult<VideoVO> getVideoPage(@RequestParam("pageNum") Integer pageNum,
                                             @RequestParam("pageSize") Integer pageSize,

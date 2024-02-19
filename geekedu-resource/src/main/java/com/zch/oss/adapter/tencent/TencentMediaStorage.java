@@ -98,14 +98,22 @@ public class TencentMediaStorage implements MediaStorageAdapter {
 
         HashMap<String, Object> urlAccessInfo = new HashMap<>(2);
         if (freeExpire != null) {
-            urlAccessInfo.put("expire", freeExpire * 60);
+            // 试看时间 秒
+            urlAccessInfo.put("exper", freeExpire * 60);
         }
+        HashMap<String, Object> contentInfo = new HashMap<>(2);
+        // contentInfo为自适应码流
+        contentInfo.put("audioVideoType", "RawAdaptive");
+        contentInfo.put("rawAdaptiveDefinition", 10);
         return JWT.create()
+                .setHeader("alg", "HS256")
+                .setHeader("typ", "JWT")
                 .setKey(tencentProperties.getVod().getUrlKey().getBytes(StandardCharsets.UTF_8))
                 .setPayload("appId", tencentProperties.getAppId())
-                .setPayload("mediaId", mediaId)
+                .setPayload("fileId", mediaId)
+                .setPayload("contentInfo", contentInfo)
                 .setPayload("currentTimeStamp", currentTime)
-                .setPayload("pcfg", tencentProperties.getVod().getPfcg())
+                // .setPayload("pcfg", tencentProperties.getVod().getPfcg())
                 .setPayload("urlAccessInfo", urlAccessInfo)
                 .sign();
     }

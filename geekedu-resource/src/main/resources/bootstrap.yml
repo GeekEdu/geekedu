@@ -47,11 +47,11 @@ geekedu:
     secretKey: zpmgTL9sumQGtHQM5JOIzUls54rW1Lat
     vod:
       enable: true
-      vodValidSeconds: 7776000
-      region: "ap-shanghai"
-      procedure: "wisehub-base"
-      urlKey: "HZFlxjPYoOm5AfShupOx"
-      pfcg: "basicDrmPreset"
+      vodValidSeconds: 7776000 # 签名有效期 默认90天
+      region: "ap-chongqing" # 存储地域
+      procedure: "geekedu-hub" # 任务模版流
+      urlKey: "wHrNZ3ihG2Eq1gfDN3vG" # 播放秘钥
+      pfcg: "basicDrmPreset" # 播放器配置
     cos:
       enable: true
       region: "ap-chengdu"
