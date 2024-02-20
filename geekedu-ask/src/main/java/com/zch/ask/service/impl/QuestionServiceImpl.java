@@ -166,6 +166,9 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         // 修改该问题下的回答数
         Question question = questionMapper.selectById(questionId);
         question.setAnswerCount(question.getAnswerCount() - 1);
+        // 查看此时要删除的回答是否是正确答案，若是，则更新该问题为未解决
+        Boolean isCorrect = answerService.isCorrectAnswer(answerId);
+        question.setQuestionStatus(!isCorrect);
         updateById(question);
         return answerService.deleteAnswerByAnswerId(questionId, answerId);
     }

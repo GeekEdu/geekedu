@@ -100,5 +100,11 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
         return true;
     }
 
+    @Override
+    public Boolean isCorrectAnswer(Integer answerId) {
+        Answer answer = answerMapper.selectById(answerId);
+        return answer.getIsCorrect();
+    }
+
 
 }

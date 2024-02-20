@@ -50,4 +50,11 @@ public interface IAnswerService extends IService<Answer> {
      */
     Boolean setAnswerCorrectByAnswerId(Integer answerId);
 
+    /**
+     * 查看是否正确答案
+     * @param answerId
+     * @return
+     */
+    Boolean isCorrectAnswer(Integer answerId);
+
 }
