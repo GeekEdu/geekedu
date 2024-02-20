@@ -95,7 +95,7 @@ public class MediaServiceImpl extends ServiceImpl<MediaMapper, Media> implements
         media.setDuration(form.getDuration());
         media.setSize(form.getSize());
         media.setMediaSource(form.getMediaSource());
-        media.setSizeMb(form.getSize() / 1024.00 / 1024);
+        media.setSizeMb(form.getSize() / 1000000.00);
         mediaMapper.insert(media);
         VideoVO vo = new VideoVO();
         Media one = mediaMapper.selectOne(new LambdaQueryWrapper<Media>()
