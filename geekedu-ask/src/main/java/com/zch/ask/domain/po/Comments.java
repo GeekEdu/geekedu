@@ -4,29 +4,22 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.zch.ask.enums.CommentsEnum;
 import com.zch.common.mvc.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
  * @author Poison02
- * @date 2024/1/27
+ * @date 2024/2/20
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("answer")
-public class Answer extends BaseEntity {
+@TableName("comments")
+public class Comments extends BaseEntity {
 
-    /**
-     * 问题id
-     */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-
-    /**
-     * 问题id
-     */
-    private Integer questionId;
 
     /**
      * 回答内容
@@ -34,29 +27,19 @@ public class Answer extends BaseEntity {
     private String content;
 
     /**
-     * 点赞数
+     * 回答id
      */
-    private Long thumbCount;
+    private Integer answerId;
 
     /**
-     * 评论数
-     */
-    private Long commentCount;
-
-    /**
-     * 回答人
+     * 用户id
      */
     private Long userId;
 
     /**
-     * 是否正确答案
+     * 评论类型
      */
-    private Boolean isCorrect;
-
-    /**
-     * 答案的图片链接，使用 , 隔开
-     */
-    private String images;
+    private CommentsEnum cType;
 
     private Long createdBy;
 

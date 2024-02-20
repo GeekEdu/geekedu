@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @date 2024/1/27
  */
 @Mapper
-public interface AskMapper extends BaseMapper<Answer> {
+public interface AnswerMapper extends BaseMapper<Answer> {
 }

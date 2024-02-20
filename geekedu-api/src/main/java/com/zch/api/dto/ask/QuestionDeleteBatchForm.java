@@ -1,4 +1,4 @@
-package com.zch.api.dto.resource;
+package com.zch.api.dto.ask;
 
 import lombok.Data;
 
@@ -11,13 +11,10 @@ import java.util.List;
  * @date 2024/2/20
  */
 @Data
-public class BatchDelVideoForm implements Serializable {
+public class QuestionDeleteBatchForm implements Serializable {
 
     private static final Long serialVersionUID = 1L;
 
-    /**
-     * id列表
-     */
     private List<Integer> ids = new ArrayList<>(0);
 
 }

@@ -202,6 +202,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         Category one = categoryMapper.selectOne(new LambdaQueryWrapper<Category>()
                 .eq(Category::getName, form.getName())
                 .eq(Category::getIsDelete, 0)
+                .eq(Category::getSort, form.getSort())
                 .eq(Category::getType, CategoryEnum.valueOf(form.getType()))
                 .eq(Category::getParentId, form.getParentId()));
         if (ObjectUtils.isNotNull(one)) {

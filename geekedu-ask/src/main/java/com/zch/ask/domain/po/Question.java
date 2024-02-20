@@ -41,9 +41,9 @@ public class Question extends BaseEntity {
     private Long viewCount;
 
     /**
-     * 评论数
+     * 回答数
      */
-    private Long commentCount;
+    private Long answerCount;
 
     /**
      * 提问人

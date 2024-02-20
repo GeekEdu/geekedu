@@ -33,9 +33,9 @@ public class QuestionVO extends BaseVO {
     private Long viewCount;
 
     /**
-     * 评论个数
+     * 回答个数
      */
-    private Long commentCount;
+    private Long answerCount;
 
     /**
      * 提问用户简单信息

@@ -3,14 +3,17 @@ package com.zch.ask.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zch.api.dto.ask.QuestionDeleteBatchForm;
 import com.zch.api.feignClient.label.LabelFeignClient;
 import com.zch.api.feignClient.user.UserFeignClient;
+import com.zch.api.vo.ask.AnswersVO;
 import com.zch.api.vo.ask.QuestionAndCategoryVO;
 import com.zch.api.vo.ask.QuestionVO;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.ask.domain.po.Question;
 import com.zch.ask.mapper.QuestionMapper;
+import com.zch.ask.service.IAnswerService;
 import com.zch.ask.service.IQuestionService;
 import com.zch.common.core.utils.BeanUtils;
 import com.zch.common.core.utils.CollUtils;
@@ -20,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -43,6 +47,8 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     private final LabelFeignClient labelFeignClient;
 
     private final UserFeignClient userFeignClient;
+
+    private final IAnswerService answerService;
 
     @Override
     public QuestionAndCategoryVO getQuestionPage(Integer pageNum, Integer pageSize, String sort, String order,
@@ -135,5 +141,41 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         vo.getData().setData(questions);
         vo.getData().setTotal(count);
         return vo;
+    }
+
+    @Transactional
+    @Override
+    public Boolean deleteQuestionBatchIds(QuestionDeleteBatchForm form) {
+        if (ObjectUtils.isNull(form) || CollUtils.isEmpty(form.getIds())) {
+            return false;
+        }
+        return removeBatchByIds(form.getIds());
+    }
+
+    @Override
+    public List<AnswersVO> getAnswersById(Integer id) {
+        Question question = getById(id);
+        if (question.getAnswerCount() == 0) {
+            return new ArrayList<>(0);
+        }
+        return answerService.getAnswersByQuestionId(id);
+    }
+
+    @Override
+    public Boolean deleteAnswerById(Integer questionId, Integer answerId) {
+        // 修改该问题下的回答数
+        Question question = questionMapper.selectById(questionId);
+        question.setAnswerCount(question.getAnswerCount() - 1);
+        updateById(question);
+        return answerService.deleteAnswerByAnswerId(questionId, answerId);
+    }
+
+    @Override
+    public Boolean setCorrectAnswer(Integer questionId, Integer answerId) {
+        // 设置问题状态为已解决
+        Question question = questionMapper.selectById(questionId);
+        question.setQuestionStatus(true);
+        updateById(question);
+        return answerService.setAnswerCorrectByAnswerId(answerId);
     }
 }

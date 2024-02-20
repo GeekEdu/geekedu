@@ -32,6 +32,7 @@ public class CategoryForm {
      * IMAGE_TEXT
      * E_BOOK
      * LEARN_PATH
+     * ASK_QUESTION
      */
     private String type;
 

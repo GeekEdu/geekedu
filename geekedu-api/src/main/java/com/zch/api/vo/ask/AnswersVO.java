@@ -1,34 +1,39 @@
 package com.zch.api.vo.ask;
 
-import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.common.mvc.entity.BaseVO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Poison02
- * @date 2024/1/27
+ * @date 2024/2/20
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class AskDetailVO extends BaseVO {
+public class AnswersVO extends BaseVO {
 
     private Integer id;
 
-    private UserSimpleVO userInfo;
+    private Integer questionId;
 
-    private String title;
+    private Long userId;
 
     private String content;
 
-    private Long viewCount;
+    private String images = "";
 
-    private Long answerCount;
+    private List<String> imageList = new ArrayList<>(0);
 
-    private CategorySimpleVO category;
+    private Long thumbCount;
+
+    private Boolean isCorrect;
+
+    private UserSimpleVO user;
 
     private LocalDateTime createdTime;
 

@@ -1,6 +1,8 @@
 package com.zch.ask.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zch.api.dto.ask.QuestionDeleteBatchForm;
+import com.zch.api.vo.ask.AnswersVO;
 import com.zch.api.vo.ask.QuestionAndCategoryVO;
 import com.zch.ask.domain.po.Question;
 
@@ -31,4 +33,34 @@ public interface IQuestionService extends IService<Question> {
                                           Integer categoryId,
                                           Integer status,
                                           List<String> createdTimes);
+
+    /**
+     * 批量删除问题
+     * @param form
+     * @return
+     */
+    Boolean deleteQuestionBatchIds(QuestionDeleteBatchForm form);
+
+    /**
+     * 获取某个问题下的所有回答
+     * @param id
+     * @return
+     */
+    List<AnswersVO> getAnswersById(Integer id);
+
+    /**
+     * 根据id删除回答
+     * @param questionId
+     * @param answerId
+     * @return
+     */
+    Boolean deleteAnswerById(Integer questionId, Integer answerId);
+
+    /**
+     * 设置正确答案
+     * @param questionId
+     * @param answerId
+     * @return
+     */
+    Boolean setCorrectAnswer(Integer questionId, Integer answerId);
 }
