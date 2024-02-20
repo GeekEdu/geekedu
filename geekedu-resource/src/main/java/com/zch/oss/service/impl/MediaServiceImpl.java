@@ -3,11 +3,13 @@ package com.zch.oss.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zch.api.dto.resource.BatchDelVideoForm;
 import com.zch.api.dto.resource.VideoAddForm;
 import com.zch.api.vo.resources.VideoPlayVO;
 import com.zch.api.vo.resources.VideoVO;
 import com.zch.common.core.utils.BeanUtils;
 import com.zch.common.core.utils.CollUtils;
+import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
 import com.zch.common.satoken.context.UserContext;
 import com.zch.oss.adapter.MediaStorageAdapter;
@@ -17,6 +19,7 @@ import com.zch.oss.service.IMediaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -100,5 +103,20 @@ public class MediaServiceImpl extends ServiceImpl<MediaMapper, Media> implements
                 .eq(Media::getMediaId, form.getMediaId()));
         BeanUtils.copyProperties(one, vo);
         return vo;
+    }
+
+    @Transactional
+    @Override
+    public Boolean deleteVideo(BatchDelVideoForm form) {
+        if (ObjectUtils.isNull(form.getIds()) || CollUtils.isEmpty(form.getIds())) {
+            return false;
+        }
+        // 根据这些id查找出视频id
+        List<Media> media = mediaMapper.selectBatchIds(form.getIds());
+        List<String> ids = media.stream().map(Media::getMediaId).collect(Collectors.toList());
+        // 删除云端的视频
+        mediaStorageAdapter.deleteFiles(ids);
+        // 删除数据库的视频
+        return removeBatchByIds(form.getIds());
     }
 }

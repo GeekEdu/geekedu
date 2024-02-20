@@ -1,5 +1,6 @@
 package com.zch.oss.controller;
 
+import com.zch.api.dto.resource.BatchDelVideoForm;
 import com.zch.api.dto.resource.VideoAddForm;
 import com.zch.api.vo.resources.VideoPlayVO;
 import com.zch.api.vo.resources.VideoVO;
@@ -53,9 +54,19 @@ public class MediaController {
         return Response.success(mediaService.getUploadSignature());
     }
 
+    /**
+     * 新增视频到数据库
+     * @param form
+     * @return
+     */
     @PostMapping("/video/add")
-    public Response addVideo(@RequestBody VideoAddForm form) {
+    public Response<VideoVO> addVideo(@RequestBody VideoAddForm form) {
         return Response.success(mediaService.saveVideo(form));
+    }
+
+    @PostMapping("/video/delete")
+    public Response<Boolean> deleteVideo(@RequestBody BatchDelVideoForm form) {
+        return Response.success(mediaService.deleteVideo(form));
     }
 
 }

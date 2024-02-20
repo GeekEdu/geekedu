@@ -2,6 +2,7 @@ package com.zch.oss.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zch.api.dto.resource.BatchDelVideoForm;
 import com.zch.api.dto.resource.VideoAddForm;
 import com.zch.api.vo.resources.VideoPlayVO;
 import com.zch.api.vo.resources.VideoVO;
@@ -35,6 +36,18 @@ public interface IMediaService extends IService<Media> {
      */
     String getUploadSignature();
 
+    /**
+     * 新增视频
+     * @param form
+     * @return
+     */
     VideoVO saveVideo(VideoAddForm form);
+
+    /**
+     * 批量删除视频
+     * @param form
+     * @return
+     */
+    Boolean deleteVideo(BatchDelVideoForm form);
 
 }
