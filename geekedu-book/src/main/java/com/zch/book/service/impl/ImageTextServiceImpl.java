@@ -3,6 +3,7 @@ package com.zch.book.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zch.api.dto.book.ImageTextForm;
 import com.zch.api.feignClient.label.LabelFeignClient;
 import com.zch.api.vo.book.ImageTextAndCategoryVO;
 import com.zch.api.vo.book.ImageTextVO;
@@ -15,10 +16,12 @@ import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
 import com.zch.common.mvc.result.Response;
+import com.zch.common.satoken.context.UserContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,9 +83,9 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
             vo.setCategories(new ArrayList<>(0));
         }
         List<ImageText> records = page.getRecords();
-        ImageTextVO vo1 = new ImageTextVO();
         List<ImageTextVO> list = new ArrayList<>(records.size());
         for (ImageText item : records) {
+            ImageTextVO vo1 = new ImageTextVO();
             BeanUtils.copyProperties(item, vo1);
             Response<CategorySimpleVO> res = labelFeignClient.getCategoryById(item.getCategoryId(), IMAGE_TEXT);
             if (ObjectUtils.isNull(res) || ObjectUtils.isNull(res.getData())) {
@@ -105,5 +108,62 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
         ImageTextVO vo = new ImageTextVO();
         BeanUtils.copyProperties(imageText, vo);
         return vo;
+    }
+
+    @Override
+    public Boolean deleteImageTextById(Integer id) {
+        if (ObjectUtils.isNull(id)) {
+            return false;
+        }
+        return removeById(id);
+    }
+
+    @Override
+    public Boolean updateImageTextById(Integer id, ImageTextForm form) {
+        if (ObjectUtils.isNull(form) || ObjectUtils.isNull(id)) {
+            return false;
+        }
+        // 先查询，若有则继续
+        ImageText getOne = getById(id);
+        if (ObjectUtils.isNull(getOne)) {
+            return false;
+        }
+        // 用户id
+        Long userId = UserContext.getLoginId();
+        // 构造参数
+        ImageText imageText = new ImageText();
+        BeanUtils.copyProperties(form, imageText);
+        imageText.setId(getOne.getId());
+        imageText.setSellType(form.getIsFree());
+        imageText.setPrice(new BigDecimal(form.getPrice()));
+        imageText.setUpdatedBy(userId);
+        // 更新操作
+        return updateById(imageText);
+    }
+
+    @Override
+    public Boolean insertImageText(ImageTextForm form) {
+        if (ObjectUtils.isNull(form)) {
+            return false;
+        }
+        //  先查询同意分类下标题是否有重复的
+        LambdaQueryWrapper<ImageText> wrapper = new LambdaQueryWrapper<ImageText>()
+                .eq(ImageText::getCategoryId, form.getCategoryId())
+                .eq(ImageText::getTitle, form.getTitle())
+                .eq(ImageText::getIsDelete, 0);
+        ImageText one = getOne(wrapper);
+        if (ObjectUtils.isNotNull(one)) {
+            return false;
+        }
+        // 用户id
+        Long userId = UserContext.getLoginId();
+        ImageText imageText = new ImageText();
+        BeanUtils.copyProperties(form, imageText);
+        // 注意 数据库定义是 0-免费 1-收费
+        imageText.setSellType(! form.getIsFree());
+        imageText.setPrice(new BigDecimal(form.getPrice()));
+        imageText.setCreatedBy(userId);
+        imageText.setUpdatedBy(userId);
+        return save(imageText);
     }
 }
