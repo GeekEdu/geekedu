@@ -1,5 +1,6 @@
 package com.zch.oss.controller;
 
+import com.zch.api.dto.resource.BatchDelFileForm;
 import com.zch.api.vo.resources.FileUploadVO;
 import com.zch.api.vo.resources.FileVO;
 import com.zch.api.vo.resources.ImageListVO;
@@ -27,8 +28,10 @@ public class FileController {
      * @return
      */
     @GetMapping("/images")
-    public Response<ImageListVO> getImages(@RequestParam("pageNum") Integer pageNum, @RequestParam("pageSize") Integer pageSize) {
-        return Response.success(fileService.getImagesList(pageNum, pageSize));
+    public Response<ImageListVO> getImages(@RequestParam("pageNum") Integer pageNum,
+                                           @RequestParam("pageSize") Integer pageSize,
+                                           @RequestParam(value = "from", required = false) Integer from) {
+        return Response.success(fileService.getImagesList(pageNum, pageSize, from));
     }
 
     /**
@@ -57,9 +60,19 @@ public class FileController {
      * @param id
      * @return
      */
-    @GetMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     public Response<Boolean> deleteFileInfo(@PathVariable("id") Long id) {
         return Response.judge(fileService.deleteFileInfo(id));
+    }
+
+    /**
+     * 批量删除图片
+     * @param form
+     * @return
+     */
+    @PostMapping("/delete/batch")
+    public Response<Boolean> deleteImagesBatchByIds(@RequestBody BatchDelFileForm form) {
+        return Response.success(fileService.deleteImagesBatch(form));
     }
 
 }

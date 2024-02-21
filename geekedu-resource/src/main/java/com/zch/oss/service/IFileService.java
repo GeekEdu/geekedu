@@ -1,6 +1,7 @@
 package com.zch.oss.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zch.api.dto.resource.BatchDelFileForm;
 import com.zch.api.vo.resources.FileUploadVO;
 import com.zch.api.vo.resources.FileVO;
 import com.zch.api.vo.resources.ImageListVO;
@@ -17,9 +18,10 @@ public interface IFileService extends IService<File> {
      * 获得图片列表
      * @param pageNum
      * @param pageSize
+     * @param from
      * @return
      */
-    ImageListVO getImagesList(Integer pageNum, Integer pageSize);
+    ImageListVO getImagesList(Integer pageNum, Integer pageSize, Integer from);
 
     /**
      * 上传文件
@@ -41,5 +43,12 @@ public interface IFileService extends IService<File> {
      * @return
      */
     Boolean deleteFileInfo(Long id);
+
+    /**
+     * 批量删除图片
+     * @param form
+     * @return
+     */
+    Boolean deleteImagesBatch(BatchDelFileForm form);
 
 }

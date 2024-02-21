@@ -4,6 +4,7 @@ import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zch.api.dto.resource.BatchDelFileForm;
 import com.zch.api.vo.resources.*;
 import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
@@ -22,6 +23,7 @@ import com.zch.oss.service.IFileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -31,6 +33,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.zch.oss.constants.FileErrorInfo.FILE_NOT_EXISTS;
+import static com.zch.oss.constants.FileLinkConstants.TENCENT_LINK;
 
 /**
  * @author Poison02
@@ -47,11 +50,8 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
 
     private final FileMapper fileMapper;
 
-    // cos链接
-    private static final String TENCENT_LINK = "https://geekedu-1315662121.cos.ap-chengdu.myqcloud.com";
-
     @Override
-    public ImageListVO getImagesList(Integer pageNum, Integer pageSize) {
+    public ImageListVO getImagesList(Integer pageNum, Integer pageSize, Integer from) {
         if (ObjectUtils.isNull(pageNum) || ObjectUtils.isNull(pageSize)) {
             pageNum = 0;
             pageSize = 10;
@@ -67,6 +67,9 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
             return vo;
         }
         LambdaQueryWrapper<File> wrapper = new LambdaQueryWrapper<>();
+        if (ObjectUtils.isNotNull(from)) {
+            wrapper.eq(File::getFileFrom, FileFromEnum.fromCode(from));
+        }
         Page<File> page = page(new Page<>(pageNum, pageSize), wrapper);
         List<File> files = page.getRecords();
         if (CollUtils.isEmpty(files)) {
@@ -165,6 +168,23 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
     public Boolean deleteFileInfo(Long id) {
         int row = fileMapper.deleteById(id);
         return row == 1;
+    }
+
+    @Transactional
+    @Override
+    public Boolean deleteImagesBatch(BatchDelFileForm form) {
+        if (ObjectUtils.isNull(form) || CollUtils.isEmpty(form.getIds())) {
+            return false;
+        }
+        List<Long> ids = form.getIds().stream().map(Long::valueOf).collect(Collectors.toList());
+        // 根据id查询对应图片在云端的key_id
+        List<File> files = fileMapper.selectBatchIds(ids);
+        List<String> keyIds = files.stream().map(File::getKeyId).collect(Collectors.toList());
+        // 删除云端图片
+        fileStorageAdapter.deleteFiles(keyIds);
+        // 删除数据库图片
+        removeBatchByIds(ids);
+        return true;
     }
 
     /**
