@@ -64,7 +64,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
             wrapper.eq(Course::getId, id);
         }
         // 前端固定传入 id desc 后端还是简单做下兼容
-        wrapper.orderBy(true, "desc".equals(order), Course::getId);
+        wrapper.orderBy(true, "asc".equals(order), Course::getId);
         Page<Course> page = page(new Page<Course>(pageNum, pageSize), wrapper);
         // 查询课程列表
         List<Course> list = page.getRecords();

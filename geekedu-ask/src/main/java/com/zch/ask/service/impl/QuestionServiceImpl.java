@@ -103,7 +103,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
             wrapper.between(Question::getCreatedTime, startTime, endTime);
         }
         // 增加排序 前端固定使用 id 倒序 这里还是兼容一下排序方式 但排序字段暂时不变
-        wrapper.orderBy(true, "desc".equals(order), Question::getId);
+        wrapper.orderBy(true, "asc".equals(order), Question::getId);
         // 增加分页
         Page<Question> page = page(new Page<Question>(pageNum, pageSize), wrapper);
         List<Question> list = page.getRecords();
