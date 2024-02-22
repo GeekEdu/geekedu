@@ -3,6 +3,7 @@ package com.zch.ask.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.feignClient.user.UserFeignClient;
+import com.zch.api.utils.AddressUtils;
 import com.zch.api.vo.ask.AnswersVO;
 import com.zch.api.vo.ask.CommentsVO;
 import com.zch.api.vo.user.UserSimpleVO;
@@ -15,12 +16,15 @@ import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
 import com.zch.common.mvc.result.Response;
+import com.zch.common.mvc.utils.CommonServletUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Poison02
@@ -44,6 +48,13 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
         if (CollUtils.isEmpty(answers)) {
             return new ArrayList<>(0);
         }
+        // 获取请求信息
+        HttpServletRequest request = CommonServletUtils.getRequest();
+        Map<String, String> res1 = AddressUtils.getAddress(request);
+        String ip = res1.get("ip");
+        String province = res1.get("province");
+        String browser = res1.get("browser");
+        String os = res1.get("os");
         List<AnswersVO> vos = new ArrayList<>(answers.size());
         for (Answer answer : answers) {
             AnswersVO vo = new AnswersVO();
@@ -53,6 +64,10 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
             if (ObjectUtils.isNull(user.getData())) {
                 vo.setUser(null);
             }
+            user.getData().setIpAddress(ip);
+            user.getData().setProvince(province);
+            user.getData().setBrowser(browser);
+            user.getData().setOs(os);
             vo.setUser(user.getData());
             // 整理图片信息
             if (StringUtils.isNotBlank(answer.getImages())) {

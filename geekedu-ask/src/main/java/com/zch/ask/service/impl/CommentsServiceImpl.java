@@ -3,6 +3,7 @@ package com.zch.ask.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.feignClient.user.UserFeignClient;
+import com.zch.api.utils.AddressUtils;
 import com.zch.api.vo.ask.CommentsVO;
 import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.ask.domain.po.Comments;
@@ -13,12 +14,15 @@ import com.zch.common.core.utils.BeanUtils;
 import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.mvc.result.Response;
+import com.zch.common.mvc.utils.CommonServletUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Poison02
@@ -40,6 +44,12 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
         if (CollUtils.isEmpty(comments)) {
             return new ArrayList<>(0);
         }
+        HttpServletRequest request = CommonServletUtils.getRequest();
+        Map<String, String> res1 = AddressUtils.getAddress(request);
+        String ip = res1.get("ip");
+        String province = res1.get("province");
+        String browser = res1.get("browser");
+        String os = res1.get("os");
         List<CommentsVO> vos = new ArrayList<>(comments.size());
         for (Comments comment: comments) {
             CommentsVO vo = new CommentsVO();
@@ -48,6 +58,10 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
             if (ObjectUtils.isNull(user.getData())) {
                 vo.setUser(null);
             }
+            user.getData().setIpAddress(ip);
+            user.getData().setProvince(province);
+            user.getData().setBrowser(browser);
+            user.getData().setOs(os);
             vo.setCType(comment.getCType().getDesc());
             vo.setUser(user.getData());
             vos.add(vo);

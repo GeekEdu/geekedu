@@ -4,10 +4,12 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.user.LoginForm;
+import com.zch.api.utils.AddressUtils;
 import com.zch.api.vo.user.*;
 import com.zch.common.core.utils.*;
 import com.zch.common.core.utils.encrypt.EncryptUtils;
 import com.zch.common.mvc.exception.CommonException;
+import com.zch.common.mvc.utils.CommonServletUtils;
 import com.zch.common.redis.utils.RedisUtils;
 import com.zch.common.satoken.context.UserContext;
 import com.zch.user.domain.po.SysPermission;
@@ -21,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -121,9 +124,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public UserSimpleVO getUserById(String userId) {
+        // 获取请求 拿到该请求对应的信息
+        HttpServletRequest request = CommonServletUtils.getRequest();
+        Map<String, String> res = AddressUtils.getAddress(request);
+        String ip = res.get("ip");
+        String province = res.get("province");
+        String browser = res.get("browser");
+        String os = res.get("os");
         User user = userMapper.selectById(userId);
         UserSimpleVO vo = new UserSimpleVO();
         BeanUtils.copyProperties(user, vo);
+        vo.setIpAddress(ip);
+        vo.setProvince(province);
+        vo.setBrowser(browser);
+        vo.setOs(os);
         vo.setUserId(user.getId());
         return vo;
     }

@@ -18,4 +18,24 @@ public class UserSimpleVO extends BaseVO {
 
     private String avatar;
 
+    /**
+     * ip 地址
+     */
+    private String ipAddress;
+
+    /**
+     * ip 对应的省份
+     */
+    private String province;
+
+    /**
+     * 浏览器
+     */
+    private String browser;
+
+    /**
+     * 操作系统
+     */
+    private String os;
+
 }

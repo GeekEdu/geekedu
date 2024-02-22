@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.ask.QuestionDeleteBatchForm;
 import com.zch.api.feignClient.label.LabelFeignClient;
 import com.zch.api.feignClient.user.UserFeignClient;
+import com.zch.api.utils.AddressUtils;
 import com.zch.api.vo.ask.AnswersVO;
 import com.zch.api.vo.ask.QuestionAndCategoryVO;
 import com.zch.api.vo.ask.QuestionVO;
@@ -19,18 +20,21 @@ import com.zch.common.core.utils.BeanUtils;
 import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.mvc.result.Response;
+import com.zch.common.mvc.utils.CommonServletUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -65,6 +69,12 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
             sort = "id";
             order = "desc";
         }
+        HttpServletRequest request = CommonServletUtils.getRequest();
+        Map<String, String> res1 = AddressUtils.getAddress(request);
+        String ip = res1.get("ip");
+        String province = res1.get("province");
+        String browser = res1.get("browser");
+        String os = res1.get("os");
         // 查询问题个数
         long count = count();
         if (count == 0) {
@@ -133,6 +143,10 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
             QuestionVO vo1 = new QuestionVO();
             BeanUtils.copyProperties(item, vo1);
             vo1.setCategory(data);
+            res2.getData().setIpAddress(ip);
+            res2.getData().setProvince(province);
+            res2.getData().setBrowser(browser);
+            res2.getData().setOs(os);
             vo1.setUser(res2.getData());
             vo1.setStatusText(item.getQuestionStatus() ? "已解决" : "未解决");
             questions.add(vo1);
