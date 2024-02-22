@@ -1,6 +1,7 @@
 package com.zch.ask.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.utils.AddressUtils;
@@ -13,6 +14,7 @@ import com.zch.ask.service.ICommentsService;
 import com.zch.common.core.utils.BeanUtils;
 import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
+import com.zch.common.core.utils.StringUtils;
 import com.zch.common.mvc.result.Response;
 import com.zch.common.mvc.utils.CommonServletUtils;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -77,5 +83,73 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
         return remove(new LambdaQueryWrapper<Comments>()
                 .eq(Comments::getId, id)
                 .eq(Comments::getCType, CommentsEnum.valueOf(type)));
+    }
+
+    @Override
+    public Page<CommentsVO> getCommentsPage(Integer pageNum, Integer pageSize, String cType, List<String> createdTime) {
+        if (ObjectUtils.isNull(pageNum) || ObjectUtils.isNull(pageSize)) {
+            pageNum = 1;
+            pageSize = 10;
+        }
+        Page<CommentsVO> response = new Page<>();
+        HttpServletRequest request = CommonServletUtils.getRequest();
+        Map<String, String> res1 = AddressUtils.getAddress(request);
+        String ip = res1.get("ip");
+        String province = res1.get("province");
+        String browser = res1.get("browser");
+        String os = res1.get("os");
+        LambdaQueryWrapper<Comments> wrapper = new LambdaQueryWrapper<>();
+        if (StringUtils.isNotBlank(cType)) {
+            wrapper.eq(Comments::getCType, CommentsEnum.valueOf(cType));
+        }
+        // 时间处理
+        if (ObjectUtils.isNotNull(createdTime) && CollUtils.isNotEmpty(createdTime) && createdTime.size() > 1) {
+            List<LocalDateTime> times = timeHandle(createdTime);
+            // 增加条件
+            wrapper.between(Comments::getCreatedTime, times.get(0), times.get(1));
+        }
+        Page<Comments> page = page(new Page<Comments>(pageNum, pageSize), wrapper);
+        List<Comments> records = page.getRecords();
+        if (CollUtils.isEmpty(records)) {
+            return new Page<>();
+        }
+        List<CommentsVO> list = new ArrayList<>(records.size());
+        for (Comments comment : records) {
+            CommentsVO vo = new CommentsVO();
+            BeanUtils.copyProperties(comment, vo);
+            // 查询用户信息
+            Response<UserSimpleVO> user = userFeignClient.getUserById(comment.getUserId() + "");
+            if (ObjectUtils.isNull(user.getData())) {
+                vo.setUser(null);
+            }
+            user.getData().setIpAddress(ip);
+            user.getData().setProvince(province);
+            user.getData().setBrowser(browser);
+            user.getData().setOs(os);
+            vo.setUser(user.getData());
+            list.add(vo);
+        }
+        BeanUtils.copyProperties(page, response);
+        response.setRecords(list);
+        return response;
+    }
+
+    /**
+     * 对时间的处理
+     * @param time
+     * @return
+     */
+    public static List<LocalDateTime> timeHandle(List<String> time) {
+        List<LocalDateTime> res = new ArrayList<>(2);
+        String start = time.get(0);
+        String end = time.get(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDate startDate = LocalDate.parse(start, formatter);
+        LocalDate endDate = LocalDate.parse(end, formatter);
+        LocalDateTime startDateTime = LocalDateTime.of(startDate, LocalTime.MIN);
+        LocalDateTime endDateTime = LocalDateTime.of(endDate, LocalTime.MAX);
+        res.add(startDateTime);
+        res.add(endDateTime);
+        return res;
     }
 }

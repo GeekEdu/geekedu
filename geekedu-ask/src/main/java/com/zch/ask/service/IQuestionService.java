@@ -32,7 +32,7 @@ public interface IQuestionService extends IService<Question> {
                                           String userId,
                                           Integer categoryId,
                                           Integer status,
-                                          List<String> createdTimes);
+                                          List<String> createdTime);
 
     /**
      * 批量删除问题

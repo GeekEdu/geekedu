@@ -31,7 +31,7 @@ public class QuestionController {
      * @param userId 用户id
      * @param categoryId 分类id
      * @param status 问题状态 -1 || null 全部 0 未解决 1已解决
-     * @param createdTimes 时间区间 起始和结束
+     * @param createdTime 时间区间 起始和结束
      * @return
      */
     @GetMapping("/getQuestionPage")
@@ -41,8 +41,8 @@ public class QuestionController {
                                                            @RequestParam(value = "userId", required = false) String userId,
                                                            @RequestParam(value = "categoryId", required = false) Integer categoryId,
                                                            @RequestParam(value = "status", required = false) Integer status,
-                                                           @RequestParam(value = "createdTime", required = false) List<String> createdTimes) {
-        return Response.success(questionService.getQuestionPage(pageNum, pageSize, sort, order, keywords, userId, categoryId, status, createdTimes));
+                                                           @RequestParam(value = "createdTime", required = false) List<String> createdTime) {
+        return Response.success(questionService.getQuestionPage(pageNum, pageSize, sort, order, keywords, userId, categoryId, status, createdTime));
     }
 
     /**

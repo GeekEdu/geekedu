@@ -60,7 +60,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
                                                  String userId,
                                                  Integer categoryId,
                                                  Integer status,
-                                                 List<String> createdTimes) {
+                                                 List<String> createdTime) {
         QuestionAndCategoryVO vo = new QuestionAndCategoryVO();
         if (ObjectUtils.isNull(pageNum) || ObjectUtils.isNull(pageSize)
                 || ObjectUtils.isNull(sort) || ObjectUtils.isNull(order)) {
@@ -101,16 +101,9 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
             }
         }
         // 存在时间区间
-        if (ObjectUtils.isNotNull(createdTimes) && CollUtils.isNotEmpty(createdTimes) && createdTimes.size() > 1) {
-            String start = createdTimes.get(0);
-            String end = createdTimes.get(1);
-            // 格式化时间
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate startParse = LocalDate.parse(start, formatter);
-            LocalDate endParse = LocalDate.parse(end, formatter);
-            LocalDateTime startTime = LocalDateTime.of(startParse, LocalTime.MIN);
-            LocalDateTime endTime = LocalDateTime.of(endParse, LocalTime.MAX);
-            wrapper.between(Question::getCreatedTime, startTime, endTime);
+        if (ObjectUtils.isNotNull(createdTime) && CollUtils.isNotEmpty(createdTime) && createdTime.size() > 1) {
+            List<LocalDateTime> times = timeHandle(createdTime);
+            wrapper.between(Question::getCreatedTime, times.get(0), times.get(1));
         }
         // 增加排序 前端固定使用 id 倒序 这里还是兼容一下排序方式 但排序字段暂时不变
         wrapper.orderBy(true, "asc".equals(order), Question::getId);
@@ -194,5 +187,24 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         question.setQuestionStatus(true);
         updateById(question);
         return answerService.setAnswerCorrectByAnswerId(answerId);
+    }
+
+    /**
+     * 对时间的处理
+     * @param time
+     * @return
+     */
+    public static List<LocalDateTime> timeHandle(List<String> time) {
+        List<LocalDateTime> res = new ArrayList<>(2);
+        String start = time.get(0);
+        String end = time.get(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDate startDate = LocalDate.parse(start, formatter);
+        LocalDate endDate = LocalDate.parse(end, formatter);
+        LocalDateTime startDateTime = LocalDateTime.of(startDate, LocalTime.MIN);
+        LocalDateTime endDateTime = LocalDateTime.of(endDate, LocalTime.MAX);
+        res.add(startDateTime);
+        res.add(endDateTime);
+        return res;
     }
 }
