@@ -1,13 +1,13 @@
 package com.zch.ask.controller;
 
+import com.zch.api.dto.ask.CommentsBatchDelForm;
+import com.zch.api.dto.ask.CommentsForm;
 import com.zch.api.vo.ask.CommentsVO;
 import com.zch.ask.service.ICommentsService;
 import com.zch.common.mvc.result.PageResult;
+import com.zch.common.mvc.result.Response;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,6 +35,36 @@ public class CommentsController {
                                                   @RequestParam("cType") String cType,
                                                   @RequestParam(value = "createdTime", required = false) List<String> createdTime) {
         return PageResult.success(commentsService.getCommentsPage(pageNum, pageSize, cType, createdTime));
+    }
+
+    /**
+     * 根据id删除评论
+     * @param id
+     * @return
+     */
+    @PostMapping("/delete/{id}")
+    public Response deleteByIdAndType(@PathVariable("id") Integer id, @RequestParam("cType") String cType) {
+        return Response.success(commentsService.deleteComments(id, cType));
+    }
+
+    /**
+     * 批量删除评论
+     * @param form
+     * @return
+     */
+    @PostMapping("/delete/batch")
+    public Response deleteBatchComments(@RequestBody CommentsBatchDelForm form) {
+        return Response.success(commentsService.deleteCommentsBatch(form));
+    }
+
+    /**
+     * 新增评论
+     * @param form
+     * @return
+     */
+    @PostMapping("/add")
+    public Response addComments(CommentsForm form) {
+        return Response.success();
     }
 
 }

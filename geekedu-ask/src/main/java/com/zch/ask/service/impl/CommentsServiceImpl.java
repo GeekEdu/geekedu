@@ -3,6 +3,8 @@ package com.zch.ask.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zch.api.dto.ask.CommentsBatchDelForm;
+import com.zch.api.dto.ask.CommentsForm;
 import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.utils.AddressUtils;
 import com.zch.api.vo.ask.CommentsVO;
@@ -132,6 +134,25 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
         BeanUtils.copyProperties(page, response);
         response.setRecords(list);
         return response;
+    }
+
+    @Override
+    public Boolean deleteCommentsBatch(CommentsBatchDelForm form) {
+        if (ObjectUtils.isNull(form) || CollUtils.isEmpty(form.getIds()) || StringUtils.isBlank(form.getType())) {
+            return false;
+        }
+        for (Integer id : form.getIds()) {
+            remove(new LambdaQueryWrapper<Comments>()
+                    .eq(Comments::getId, id)
+                    .eq(Comments::getCType, CommentsEnum.valueOf(form.getType()))
+                    .eq(Comments::getIsDelete, 0));
+        }
+        return true;
+    }
+
+    @Override
+    public void insertComments(CommentsForm form) {
+
     }
 
     /**
