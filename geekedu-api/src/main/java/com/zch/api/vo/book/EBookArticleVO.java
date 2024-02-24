@@ -1,23 +1,19 @@
-package com.zch.book.domain.po;
+package com.zch.api.vo.book;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.zch.common.mvc.entity.BaseEntity;
+import com.zch.common.mvc.entity.BaseVO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.time.LocalDateTime;
+
 /**
  * @author Poison02
- * @date 2024/2/23
+ * @date 2024/2/24
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("e_book_article")
-public class EBookArticle extends BaseEntity {
+public class EBookArticleVO extends BaseVO {
 
-    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -76,15 +72,10 @@ public class EBookArticle extends BaseEntity {
     private Boolean isVipFree;
 
     /**
-     * 浏览次数
+     * 章节信息
      */
-    private Long readCount;
+    private EBookChapterVO chapter;
 
-    private Long createdBy;
-
-    private Long updatedBy;
-
-    @TableLogic
-    private Boolean isDelete;
+    private LocalDateTime createdTime;
 
 }

@@ -5,10 +5,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.feignClient.label.LabelFeignClient;
 import com.zch.api.vo.book.EBookAndCategoryVO;
+import com.zch.api.vo.book.EBookArticleFullVO;
+import com.zch.api.vo.book.EBookChapterVO;
 import com.zch.api.vo.book.EBookVO;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.book.domain.po.EBook;
 import com.zch.book.mapper.EBookMapper;
+import com.zch.book.service.IEBookArticleService;
+import com.zch.book.service.IEBookChapterService;
 import com.zch.book.service.IEBookService;
 import com.zch.common.core.utils.BeanUtils;
 import com.zch.common.core.utils.CollUtils;
@@ -34,6 +38,10 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
     private final EBookMapper bookMapper;
 
     private final LabelFeignClient labelFeignClient;
+
+    private final IEBookChapterService chapterService;
+
+    private final IEBookArticleService articleService;
 
     @Override
     public EBookAndCategoryVO getEBookPageByCondition(Integer pageNum, Integer pageSize, String sort, String order,
@@ -93,5 +101,27 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
         }
         vo.setCategories(response.getData());
         return vo;
+    }
+
+    @Override
+    public List<EBookChapterVO> getChapterList(Integer bookId) {
+        if (ObjectUtils.isNull(bookId)) {
+            return new ArrayList<>(0);
+        }
+        return chapterService.getChapterListByBookId(bookId);
+    }
+
+    @Override
+    public EBookArticleFullVO getArticlePage(Integer pageNum, Integer pageSize, String sort, String order,
+                                             Integer bookId,
+                                             Integer chapterId) {
+        if (ObjectUtils.isNull(pageNum) || ObjectUtils.isNull(pageSize)
+                || StringUtils.isBlank(sort) || StringUtils.isBlank(order)) {
+            pageNum = 1;
+            pageSize = 10;
+            sort = "groundingTime";
+            order = "desc";
+        }
+        return articleService.getArticlePageCondition(pageNum, pageSize, sort, order, bookId, chapterId);
     }
 }
