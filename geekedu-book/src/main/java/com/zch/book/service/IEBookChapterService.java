@@ -1,6 +1,7 @@
 package com.zch.book.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zch.api.dto.book.EBookChapterForm;
 import com.zch.api.vo.book.EBookChapterVO;
 import com.zch.book.domain.po.EBookChapter;
 
@@ -25,5 +26,11 @@ public interface IEBookChapterService extends IService<EBookChapter> {
      * @return
      */
     EBookChapterVO getChapterById(Integer cId);
+
+    Boolean deleteChapter(Integer id);
+
+    Boolean addChapter(EBookChapterForm form);
+
+    EBookChapterVO updateChapter(Integer id, EBookChapterForm form);
 
 }

@@ -1,18 +1,18 @@
-package com.zch.api.vo.book;
+package com.zch.api.dto.book;
 
-import com.zch.common.mvc.entity.BaseVO;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
  * @author Poison02
  * @date 2024/2/24
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class EBookArticleVO extends BaseVO {
+public class EBookArticleForm implements Serializable {
+
+    private static final Long serialVersionUID = 1L;
 
     private Integer id;
 
@@ -35,11 +35,6 @@ public class EBookArticleVO extends BaseVO {
      * 章节id
      */
     private Integer chapterId;
-
-    /**
-     * 阅读次数
-     */
-    private Long readCount;
 
     /**
      * 付费原内容
@@ -77,10 +72,13 @@ public class EBookArticleVO extends BaseVO {
     private Boolean isVipFree;
 
     /**
-     * 章节信息
+     * 浏览次数
      */
-    private EBookChapterVO chapter;
+    private Long readCount;
 
+    /**
+     * 上架时间
+     */
     private LocalDateTime groundingTime;
 
 }

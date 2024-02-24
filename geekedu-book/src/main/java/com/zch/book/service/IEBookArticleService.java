@@ -1,7 +1,9 @@
 package com.zch.book.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zch.api.dto.book.EBookArticleForm;
 import com.zch.api.vo.book.EBookArticleFullVO;
+import com.zch.api.vo.book.EBookArticleVO;
 import com.zch.book.domain.po.EBookArticle;
 
 /**
@@ -24,4 +26,31 @@ public interface IEBookArticleService extends IService<EBookArticle> {
                                                Integer bookId,
                                                Integer chapterId);
 
+    /**
+     * 根据id获取文章明细
+     * @param id
+     * @return
+     */
+    EBookArticleVO getEBookArticleById(Integer id);
+
+    /**
+     * 根据id删除文章
+     * @param id
+     * @return
+     */
+    Boolean deleteArticleById(Integer id);
+
+    /**
+     * 新建文章
+     * @return
+     */
+    Boolean addArticle(EBookArticleForm form);
+
+    /**
+     * 更新文章
+     * @param id
+     * @param form
+     * @return
+     */
+    EBookArticleVO updateArticle(Integer id, EBookArticleForm form);
 }

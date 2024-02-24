@@ -2,10 +2,7 @@ package com.zch.book.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.book.EBookForm;
-import com.zch.api.vo.book.EBookAndCategoryVO;
-import com.zch.api.vo.book.EBookArticleFullVO;
-import com.zch.api.vo.book.EBookChapterVO;
-import com.zch.api.vo.book.EBookVO;
+import com.zch.api.vo.book.*;
 import com.zch.book.domain.po.EBook;
 
 import java.util.List;
@@ -79,5 +76,12 @@ public interface IEBookService extends IService<EBook> {
      * @return
      */
     EBookVO getEBookById(Integer id);
+
+    /**
+     * 根据id获取电子书文章明细
+     * @param id
+     * @return
+     */
+    EBookArticleVO getEBookArticleById(Integer id);
 
 }

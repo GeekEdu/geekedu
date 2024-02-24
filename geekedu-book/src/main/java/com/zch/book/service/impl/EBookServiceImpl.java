@@ -5,10 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.book.EBookForm;
 import com.zch.api.feignClient.label.LabelFeignClient;
-import com.zch.api.vo.book.EBookAndCategoryVO;
-import com.zch.api.vo.book.EBookArticleFullVO;
-import com.zch.api.vo.book.EBookChapterVO;
-import com.zch.api.vo.book.EBookVO;
+import com.zch.api.vo.book.*;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.book.domain.po.EBook;
 import com.zch.book.mapper.EBookMapper;
@@ -210,5 +207,13 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
         }
         BeanUtils.copyProperties(eBook, vo);
         return vo;
+    }
+
+    @Override
+    public EBookArticleVO getEBookArticleById(Integer id) {
+        if (ObjectUtils.isNull(id)) {
+            return new EBookArticleVO();
+        }
+        return articleService.getEBookArticleById(id);
     }
 }

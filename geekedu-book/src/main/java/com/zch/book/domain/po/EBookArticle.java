@@ -8,6 +8,8 @@ import com.zch.common.mvc.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.time.LocalDateTime;
+
 /**
  * @author Poison02
  * @date 2024/2/23
@@ -79,6 +81,11 @@ public class EBookArticle extends BaseEntity {
      * 浏览次数
      */
     private Long readCount;
+
+    /**
+     * 上架时间
+     */
+    private LocalDateTime groundingTime;
 
     private Long createdBy;
 

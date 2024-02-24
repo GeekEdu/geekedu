@@ -3,6 +3,7 @@ package com.zch.book.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zch.api.dto.book.EBookArticleForm;
 import com.zch.api.vo.book.EBookArticleFullVO;
 import com.zch.api.vo.book.EBookArticleVO;
 import com.zch.api.vo.book.EBookChapterVO;
@@ -14,6 +15,7 @@ import com.zch.common.core.utils.BeanUtils;
 import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
+import com.zch.common.satoken.context.UserContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -60,7 +62,7 @@ public class EBookArticleServiceImpl extends ServiceImpl<EBookArticleMapper, EBo
             wrapper.eq(EBookArticle::getChapterId, chapterId);
         }
         // 增加排序
-        wrapper.orderBy(true, "asc".equals(order), EBookArticle::getCreatedTime);
+        wrapper.orderBy(true, "asc".equals(order), EBookArticle::getGroundingTime);
         Page<EBookArticle> page = page(new Page<>(pageNum, pageSize), wrapper);
         if (ObjectUtils.isNull(page) || ObjectUtils.isNull(page.getRecords())
                 || CollUtils.isEmpty(page.getRecords())) {
@@ -87,6 +89,86 @@ public class EBookArticleServiceImpl extends ServiceImpl<EBookArticleMapper, EBo
         vo.getData().setData(res);
         vo.getData().setTotal(count);
         vo.setChapters(chapters);
+        return vo;
+    }
+
+    @Override
+    public EBookArticleVO getEBookArticleById(Integer id) {
+        if (ObjectUtils.isNull(id)) {
+            return null;
+        }
+        EBookArticle eBookArticle = getById(id);
+        EBookArticleVO vo = new EBookArticleVO();
+        BeanUtils.copyProperties(eBookArticle, vo);
+        EBookChapterVO chapter = chapterService.getChapterById(eBookArticle.getChapterId());
+        if (ObjectUtils.isNull(chapter)) {
+            vo.setChapter(null);
+        }
+        vo.setChapter(chapter);
+        return vo;
+    }
+
+    @Override
+    public Boolean deleteArticleById(Integer id) {
+        if (ObjectUtils.isNull(id)) {
+            return false;
+        }
+        EBookArticle article = getById(id);
+        if (ObjectUtils.isNull(article)) {
+            return false;
+        }
+        return removeById(id);
+    }
+
+    @Override
+    public Boolean addArticle(EBookArticleForm form) {
+        if (ObjectUtils.isNull(form)) {
+            return false;
+        }
+        EBookArticle one = articleMapper.selectOne(new LambdaQueryWrapper<EBookArticle>()
+                .eq(EBookArticle::getTitle, form.getTitle())
+                .eq(EBookArticle::getBookId, form.getBookId())
+                .eq(EBookArticle::getChapterId, form.getChapterId()));
+        if (ObjectUtils.isNotNull(one)) {
+            return false;
+        }
+        Long userId = UserContext.getLoginId();
+        EBookArticle article = new EBookArticle();
+        article.setTitle(form.getTitle());
+        article.setBookId(form.getBookId());
+        article.setChapterId(form.getChapterId() == null ? 0 : form.getChapterId());
+        article.setEditor(form.getEditor());
+        article.setIsShow(form.getIsShow());
+        article.setIsFreeRead(form.getIsFreeRead());
+        article.setOriginalContent(form.getOriginalContent());
+        article.setRenderContent(form.getRenderContent());
+        article.setGroundingTime(form.getGroundingTime());
+        article.setCreatedBy(userId);
+        article.setUpdatedBy(userId);
+        return save(article);
+    }
+
+    @Override
+    public EBookArticleVO updateArticle(Integer id, EBookArticleForm form) {
+        if (ObjectUtils.isNull(id)) {
+            return null;
+        }
+        EBookArticle one = getById(id);
+        if (ObjectUtils.isNull(one)) {
+            return null;
+        }
+        EBookArticle article = new EBookArticle();
+        article.setId(one.getId());
+        article.setTitle(form.getTitle());
+        article.setChapterId(form.getChapterId());
+        article.setIsShow(form.getIsShow());
+        article.setIsFreeRead(form.getIsFreeRead());
+        article.setOriginalContent(form.getOriginalContent());
+        article.setRenderContent(form.getRenderContent());
+        article.setGroundingTime(form.getGroundingTime());
+        updateById(article);
+        EBookArticleVO vo = new EBookArticleVO();
+        BeanUtils.copyProperties(one, vo);
         return vo;
     }
 }

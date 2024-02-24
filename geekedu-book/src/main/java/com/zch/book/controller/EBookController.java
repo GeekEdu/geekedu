@@ -1,10 +1,11 @@
 package com.zch.book.controller;
 
+import com.zch.api.dto.book.EBookArticleForm;
+import com.zch.api.dto.book.EBookChapterForm;
 import com.zch.api.dto.book.EBookForm;
-import com.zch.api.vo.book.EBookAndCategoryVO;
-import com.zch.api.vo.book.EBookArticleFullVO;
-import com.zch.api.vo.book.EBookChapterVO;
-import com.zch.api.vo.book.EBookVO;
+import com.zch.api.vo.book.*;
+import com.zch.book.service.IEBookArticleService;
+import com.zch.book.service.IEBookChapterService;
 import com.zch.book.service.IEBookService;
 import com.zch.common.mvc.result.Response;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,10 @@ import java.util.List;
 public class EBookController {
 
     private final IEBookService eBookService;
+
+    private final IEBookChapterService chapterService;
+
+    private final IEBookArticleService articleService;
 
     /**
      * 条件分页查询电子书
@@ -112,6 +117,83 @@ public class EBookController {
     @GetMapping("/getEBookById/{id}")
     public Response<EBookVO> getEBookById(@PathVariable("id") Integer id) {
         return Response.success(eBookService.getEBookById(id));
+    }
+
+    /**
+     * 根据id获取文章明细
+     * @param id
+     * @return
+     */
+    @GetMapping("/getEBookArticleById/{id}")
+    public Response<EBookArticleVO> getEBookArticleById(@PathVariable("id") Integer id) {
+        return Response.success(eBookService.getEBookArticleById(id));
+    }
+
+    /**
+     * 新增文章
+     * @return
+     */
+    @PostMapping("/article/add")
+    public Response addArticle(@RequestBody EBookArticleForm form) {
+        return Response.success(articleService.addArticle(form));
+    }
+
+    /**
+     * 删除文章
+     * @param id
+     * @return
+     */
+    @PostMapping("/article/delete/{id}")
+    public Response deleteArticle(@PathVariable("id") Integer id) {
+        return Response.success(articleService.deleteArticleById(id));
+    }
+
+    /**
+     * 更新文章
+     * @param id
+     * @return
+     */
+    @PostMapping("/article/update/{id}")
+    public Response updatedArticle(@PathVariable("id") Integer id, @RequestBody EBookArticleForm form) {
+        return Response.success(articleService.updateArticle(id, form));
+    }
+
+    /**
+     * 删除章节
+     * @param id
+     * @return
+     */
+    @PostMapping("/chapter/delete/{id}")
+    public Response<Boolean> deleteChapter(@PathVariable("id") Integer id) {
+        return Response.success(chapterService.deleteChapter(id));
+    }
+
+    /**
+     * 新增章节
+     * @return
+     */
+    @PostMapping("/chapter/add")
+    public Response addChapter(@RequestBody EBookChapterForm form) {
+        return Response.success(chapterService.addChapter(form));
+    }
+
+    /**
+     * 根据id获取章节明细
+     * @param id
+     * @return
+     */
+    @GetMapping("/chapter/{id}")
+    public Response<EBookChapterVO> getChapterById(@PathVariable("id") Integer id) {
+        return Response.success(chapterService.getChapterById(id));
+    }
+
+    /**
+     * 更新章节
+     * @return
+     */
+    @PostMapping("/chapter/update/{id}")
+    public Response<EBookChapterVO> updateChapter(@PathVariable("id") Integer id, @RequestBody EBookChapterForm form) {
+        return Response.success(chapterService.updateChapter(id, form));
     }
 
 }
