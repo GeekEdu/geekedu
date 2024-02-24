@@ -3,6 +3,7 @@ package com.zch.book.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zch.api.dto.book.EBookForm;
 import com.zch.api.feignClient.label.LabelFeignClient;
 import com.zch.api.vo.book.EBookAndCategoryVO;
 import com.zch.api.vo.book.EBookArticleFullVO;
@@ -19,10 +20,12 @@ import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
 import com.zch.common.mvc.result.Response;
+import com.zch.common.satoken.context.UserContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,5 +126,89 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
             order = "desc";
         }
         return articleService.getArticlePageCondition(pageNum, pageSize, sort, order, bookId, chapterId);
+    }
+
+    @Override
+    public EBookVO insertEBook(EBookForm form) {
+        if (ObjectUtils.isNull(form)) {
+            return new EBookVO();
+        }
+        // 用户id
+        Long userId = UserContext.getLoginId();
+        // 查询是否有该数据
+        if (StringUtils.isBlank(form.getName())) {
+            return new EBookVO();
+        }
+        EBook one = bookMapper.selectOne(new LambdaQueryWrapper<EBook>()
+                .eq(EBook::getName, form.getName()));
+        if (ObjectUtils.isNotNull(one)) {
+            return new EBookVO();
+        }
+        EBook eBook = new EBook();
+        eBook.setName(form.getName());
+        eBook.setCoverLink(form.getCoverLink());
+        eBook.setCategoryId(form.getCategoryId());
+        eBook.setShortDesc(form.getShortDesc());
+        eBook.setFullDesc(form.getFullDesc());
+        eBook.setSellType(form.getSellType());
+        eBook.setGroundingTime(form.getGroundingTime());
+        eBook.setIsShow(form.getIsShow());
+        eBook.setPrice(new BigDecimal(form.getPrice()));
+        eBook.setIsVipFree(form.getIsVipFree());
+        eBook.setCreatedBy(userId);
+        eBook.setUpdatedBy(userId);
+        save(eBook);
+        EBookVO vo = new EBookVO();
+        EBook res = bookMapper.selectOne(new LambdaQueryWrapper<EBook>()
+                .eq(EBook::getName, form.getName()));
+        BeanUtils.copyProperties(res, vo);
+        return vo;
+    }
+
+    @Override
+    public Boolean deleteEBook(Integer id) {
+        if (ObjectUtils.isNull(id)) {
+            return false;
+        }
+        return removeById(id);
+    }
+
+    @Override
+    public Boolean updateEBook(Integer id, EBookForm form) {
+        if (ObjectUtils.isNull(id) || ObjectUtils.isNull(form)) {
+            return false;
+        }
+        // 用户id
+        Long userId = UserContext.getLoginId();
+        EBook one = bookMapper.selectById(id);
+        if (ObjectUtils.isNotNull(one)) {
+            return false;
+        }
+        one.setName(form.getName());
+        one.setCoverLink(form.getCoverLink());
+        one.setShortDesc(form.getShortDesc());
+        one.setFullDesc(form.getFullDesc());
+        one.setIsShow(form.getIsShow());
+        one.setSellType(form.getSellType());
+        one.setPrice(new BigDecimal(form.getPrice()));
+        one.setIsVipFree(form.getIsVipFree());
+        one.setGroundingTime(form.getGroundingTime());
+        one.setCategoryId(form.getCategoryId());
+        one.setUpdatedBy(userId);
+        return updateById(one);
+    }
+
+    @Override
+    public EBookVO getEBookById(Integer id) {
+        if (ObjectUtils.isNull(id)) {
+            return new EBookVO();
+        }
+        EBookVO vo = new EBookVO();
+        EBook eBook = getById(id);
+        if (ObjectUtils.isNull(eBook)) {
+            return new EBookVO();
+        }
+        BeanUtils.copyProperties(eBook, vo);
+        return vo;
     }
 }

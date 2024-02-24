@@ -1,15 +1,14 @@
 package com.zch.book.controller;
 
+import com.zch.api.dto.book.EBookForm;
 import com.zch.api.vo.book.EBookAndCategoryVO;
 import com.zch.api.vo.book.EBookArticleFullVO;
 import com.zch.api.vo.book.EBookChapterVO;
+import com.zch.api.vo.book.EBookVO;
 import com.zch.book.service.IEBookService;
 import com.zch.common.mvc.result.Response;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -72,6 +71,47 @@ public class EBookController {
                                                        @RequestParam("bookId") Integer bookId,
                                                        @RequestParam(value = "chapterId", required = false) Integer chapterId) {
         return Response.success(eBookService.getArticlePage(pageNum, pageSize, sort, order, bookId, chapterId));
+    }
+
+    /**
+     * 新增电子书
+     * @param form
+     * @return
+     */
+    @PostMapping("/add")
+    public Response addEBook(@RequestBody EBookForm form) {
+        return Response.success(eBookService.insertEBook(form));
+    }
+
+    /**
+     * 根据id删除电子书
+     * @param id
+     * @return
+     */
+    @PostMapping("/delete/{id}")
+    public Response<Boolean> deleteEBook(@PathVariable("id") Integer id) {
+        return Response.success(eBookService.deleteEBook(id));
+    }
+
+    /**
+     * 更新电子书
+     * @param id
+     * @param form
+     * @return
+     */
+    @PostMapping("/update/{id}")
+    public Response<Boolean> updateEBook(@PathVariable("id") Integer id, EBookForm form) {
+        return Response.success(eBookService.updateEBook(id, form));
+    }
+
+    /**
+     * 根据id获取电子书明细
+     * @param id
+     * @return
+     */
+    @GetMapping("/getEBookById/{id}")
+    public Response<EBookVO> getEBookById(@PathVariable("id") Integer id) {
+        return Response.success(eBookService.getEBookById(id));
     }
 
 }

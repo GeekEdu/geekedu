@@ -37,6 +37,11 @@ public class EBookArticleVO extends BaseVO {
     private Integer chapterId;
 
     /**
+     * 阅读次数
+     */
+    private Long readCount;
+
+    /**
      * 付费原内容
      */
     private String originalContent;
