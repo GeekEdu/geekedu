@@ -1,5 +1,6 @@
 package com.zch.exam.controller;
 
+import com.zch.api.dto.exam.DeleteBatchQuestions;
 import com.zch.api.dto.exam.TagForm;
 import com.zch.api.vo.exam.QuestionsFullVO;
 import com.zch.api.vo.exam.TagsVO;
@@ -35,6 +36,25 @@ public class QuestionsController {
                                                       @RequestParam(value = "type", required = false) Integer type,
                                                       @RequestParam(value = "level", required = false) Integer level) {
         return Response.success(questionsService.getQuestionPage(pageNum, pageSize, categoryId, type, level));
+    }
+
+    /**
+     * 批量删除题库
+     * @param form
+     * @return
+     */
+    @PostMapping("/deleteBatch")
+    public Response<Boolean> deleteQuestionsBatch(@RequestBody DeleteBatchQuestions form) {
+        return Response.success(questionsService.deleteBatchQuestions(form));
+    }
+
+    /**
+     * 返回题目数据中的类型、分类、等级
+     * @return
+     */
+    @GetMapping("/questionTypeList")
+    public Response<QuestionsFullVO> getQuestionsTypeList() {
+        return Response.success(questionsService.getQuestionsTypeList());
     }
 
     /**

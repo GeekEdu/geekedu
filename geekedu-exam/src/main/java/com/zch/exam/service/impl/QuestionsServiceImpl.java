@@ -3,6 +3,7 @@ package com.zch.exam.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zch.api.dto.exam.DeleteBatchQuestions;
 import com.zch.api.dto.exam.TagForm;
 import com.zch.api.vo.exam.*;
 import com.zch.common.core.utils.BeanUtils;
@@ -18,6 +19,7 @@ import com.zch.exam.service.ITypesService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,6 +107,27 @@ public class QuestionsServiceImpl extends ServiceImpl<QuestionsMapper, Questions
         vo.setTypes(typesList);
         vo.getData().setTotal(count);
         vo.getData().setData(qLists);
+        return vo;
+    }
+
+    @Transactional
+    @Override
+    public Boolean deleteBatchQuestions(DeleteBatchQuestions form) {
+        if (ObjectUtils.isNull(form) || ObjectUtils.isNull(form.getIds()) || CollUtils.isEmpty(form.getIds())) {
+            return false;
+        }
+        return removeBatchByIds(form.getIds());
+    }
+
+    @Override
+    public QuestionsFullVO getQuestionsTypeList() {
+        QuestionsFullVO vo = new QuestionsFullVO();
+        List<TagsVO> tagsList = tagsService.getTagsList("QUESTIONS");
+        List<TypesVO> typesList = typesService.getTypesList();
+        List<LevelsVO> levelsList = levelsService.getLevelsList();
+        vo.setTypes(typesList);
+        vo.setCategories(tagsList);
+        vo.setLevels(levelsList);
         return vo;
     }
 

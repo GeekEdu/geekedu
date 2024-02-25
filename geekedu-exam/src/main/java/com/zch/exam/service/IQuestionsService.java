@@ -2,6 +2,7 @@ package com.zch.exam.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zch.api.dto.exam.DeleteBatchQuestions;
 import com.zch.api.dto.exam.TagForm;
 import com.zch.api.vo.exam.QuestionsFullVO;
 import com.zch.api.vo.exam.QuestionsVO;
@@ -31,6 +32,19 @@ public interface IQuestionsService extends IService<Questions> {
      * @return
      */
     QuestionsFullVO getQuestionPage(Integer pageNum, Integer pageSize, Integer categoryId, Integer type, Integer level);
+
+    /**
+     * 批量删除题库
+     * @param form
+     * @return
+     */
+    Boolean deleteBatchQuestions(DeleteBatchQuestions form);
+
+    /**
+     * 返回题目数据中的类型、分类、等级
+     * @return
+     */
+    QuestionsFullVO getQuestionsTypeList();
 
     /**
      * 条件分页查找分类列表
