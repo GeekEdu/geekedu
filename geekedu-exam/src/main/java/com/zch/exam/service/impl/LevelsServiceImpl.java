@@ -31,7 +31,7 @@ public class LevelsServiceImpl extends ServiceImpl<LevelsMapper, Levels> impleme
     @Override
     public List<LevelsVO> getLevelsList() {
         List<Levels> levels = levelsMapper.selectList(new LambdaQueryWrapper<Levels>());
-        if (ObjectUtils.isNotNull(levels) || CollUtils.isEmpty(levels)) {
+        if (ObjectUtils.isNull(levels) || CollUtils.isEmpty(levels)) {
             return new ArrayList<>(0);
         }
         List<LevelsVO> vos = levels.stream().map(item -> {

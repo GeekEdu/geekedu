@@ -5,8 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Poison02
@@ -14,7 +12,7 @@ import java.util.List;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class TagsVO extends BaseVO {
+public class CTagsVO extends BaseVO {
 
     private Integer id;
 
@@ -23,8 +21,6 @@ public class TagsVO extends BaseVO {
     private String sort;
 
     private Integer parentId;
-
-    private List<CTagsVO> children = new ArrayList<>(0);
 
     private LocalDateTime createdTime;
 

@@ -32,7 +32,7 @@ public class Tags extends BaseEntity {
 
     private Integer parentId;
 
-    private Long createBy;
+    private Long createdBy;
 
     private Long updatedBy;
 

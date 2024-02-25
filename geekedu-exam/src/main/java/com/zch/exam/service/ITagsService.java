@@ -1,6 +1,8 @@
 package com.zch.exam.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zch.api.dto.exam.TagForm;
 import com.zch.api.vo.exam.TagsVO;
 import com.zch.exam.domain.po.Tags;
 
@@ -12,8 +14,50 @@ import java.util.List;
  */
 public interface ITagsService extends IService<Tags> {
 
+    /**
+     * 返回分类列表
+     * @param type
+     * @return
+     */
     List<TagsVO> getTagsList(String type);
 
+    /**
+     * 条件查找分类
+     * @param id
+     * @param type
+     * @return
+     */
     TagsVO getTagByCondition(Integer id, String type);
+
+    /**
+     * 条件分页查找分类列表
+     * @param pageNum
+     * @param pageSize
+     * @param type
+     * @return
+     */
+    Page<TagsVO> getCategoryList(Integer pageNum, Integer pageSize, String type);
+
+    /**
+     * 删除分类
+     * @param id
+     * @return
+     */
+    Boolean deleteTag(Integer id, String type);
+
+    /**
+     * 更新分类
+     * @param id
+     * @param form
+     * @return
+     */
+    Boolean updateTag(Integer id, TagForm form);
+
+    /**
+     * 新增分类
+     * @param form
+     * @return
+     */
+    Boolean addTag(TagForm form);
 
 }

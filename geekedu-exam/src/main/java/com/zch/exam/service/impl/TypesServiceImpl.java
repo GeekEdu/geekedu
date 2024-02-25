@@ -31,7 +31,7 @@ public class TypesServiceImpl extends ServiceImpl<TypesMapper, Types> implements
     @Override
     public List<TypesVO> getTypesList() {
         List<Types> types = typesMapper.selectList(new LambdaQueryWrapper<Types>());
-        if (ObjectUtils.isNotNull(types) || CollUtils.isEmpty(types)) {
+        if (ObjectUtils.isNull(types) || CollUtils.isEmpty(types)) {
             return new ArrayList<>(0);
         }
         List<TypesVO> vos = types.stream().map(item -> {
@@ -46,7 +46,7 @@ public class TypesServiceImpl extends ServiceImpl<TypesMapper, Types> implements
     public TypesVO getTypesById(Integer id) {
         Types types = typesMapper.selectOne(new LambdaQueryWrapper<Types>()
                 .eq(Types::getId, id));
-        if (ObjectUtils.isNotNull(types)) {
+        if (ObjectUtils.isNull(types)) {
             return null;
         }
         TypesVO vo = new TypesVO();
