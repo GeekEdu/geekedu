@@ -1,6 +1,8 @@
 package com.zch.course.controller;
 
 import com.zch.api.dto.ask.CommentsBatchDelForm;
+import com.zch.api.dto.course.ChapterForm;
+import com.zch.api.vo.course.CourseChapterVO;
 import com.zch.api.vo.course.CourseSimpleVO;
 import com.zch.common.mvc.result.Response;
 import com.zch.course.service.ICourseService;
@@ -70,9 +72,64 @@ public class CourseController {
      * @param form
      * @return
      */
-    @PostMapping("/delete/batch")
+    @PostMapping("/comments/delete/batch")
     public Response<Boolean> deleteCourseCommentsBatch(@RequestBody CommentsBatchDelForm form) {
         return Response.success(courseService.deleteBatchCourseComments(form));
+    }
+
+    /**
+     * 返回章节列表
+     * @param courseId
+     * @return
+     */
+    @GetMapping("/{id}/chapter/getChapterList")
+    public Response<List<CourseChapterVO>> getChapterList(@PathVariable("id") Integer courseId) {
+        return Response.success(courseService.getChapterList(courseId));
+    }
+
+    /**
+     * 获取章节明细
+     * @param courseId
+     * @param id
+     * @return
+     */
+    @GetMapping("/{cId}/chapter/getChapterById/{id}")
+    public Response<CourseChapterVO> getChapterById(@PathVariable("cId") Integer courseId, @PathVariable("id") Integer id) {
+        return Response.success(courseService.getChapterById(courseId, id));
+    }
+
+    /**
+     * 新增章节
+     * @param courseId
+     * @param form
+     * @return
+     */
+    @PostMapping("/{cId}/chapter/add")
+    public Response<Boolean> addChapter(@PathVariable("cId") Integer courseId, @RequestBody ChapterForm form) {
+        return Response.success(courseService.addChapter(courseId, form));
+    }
+
+    /**
+     * 更新章节
+     * @param courseId
+     * @param id
+     * @param form
+     * @return
+     */
+    @PostMapping("/{cId}/chapter/update/{id}")
+    public Response<Boolean> updateChapter(@PathVariable("cId") Integer courseId, @PathVariable("id") Integer id, @RequestBody ChapterForm form) {
+        return Response.success(courseService.updateChapter(courseId, id, form));
+    }
+
+    /**
+     * 删除章节
+     * @param courseId
+     * @param id
+     * @return
+     */
+    @PostMapping("/{cId}/chapter/delete/{id}")
+    public Response<Boolean> deleteChapter(@PathVariable("cId") Integer courseId, @PathVariable("id") Integer id) {
+        return Response.success(courseService.deleteChapterById(courseId, id));
     }
 
 }

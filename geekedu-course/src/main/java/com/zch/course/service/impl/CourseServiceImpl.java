@@ -4,14 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.ask.CommentsBatchDelForm;
+import com.zch.api.dto.course.ChapterForm;
 import com.zch.api.feignClient.comments.CommentsFeignClient;
 import com.zch.api.feignClient.label.LabelFeignClient;
 import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.vo.ask.CommentsVO;
-import com.zch.api.vo.course.CourseAndCategoryVO;
-import com.zch.api.vo.course.CourseCommentsVO;
-import com.zch.api.vo.course.CourseSimpleVO;
-import com.zch.api.vo.course.CourseVO;
+import com.zch.api.vo.course.*;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.common.core.utils.BeanUtils;
@@ -22,6 +20,7 @@ import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import com.zch.course.domain.po.Course;
 import com.zch.course.mapper.CourseMapper;
+import com.zch.course.service.ICourseChapterService;
 import com.zch.course.service.ICourseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +48,8 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     private final CommentsFeignClient commentsFeignClient;
 
     private final UserFeignClient userFeignClient;
+
+    private final ICourseChapterService chapterService;
 
     @Override
     public CourseAndCategoryVO getCoursePage(Integer pageNum, Integer pageSize, String sort, String order, String keywords, Integer cid, Integer id) {
@@ -160,6 +161,31 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
             return false;
         }
         return response.getData();
+    }
+
+    @Override
+    public List<CourseChapterVO> getChapterList(Integer courseId) {
+        return chapterService.getChapterList(courseId);
+    }
+
+    @Override
+    public Boolean deleteChapterById(Integer courseId, Integer id) {
+        return chapterService.deleteChapterById(courseId, id);
+    }
+
+    @Override
+    public Boolean addChapter(Integer courseId, ChapterForm form) {
+        return chapterService.addChapter(courseId, form);
+    }
+
+    @Override
+    public Boolean updateChapter(Integer courseId, Integer id, ChapterForm form) {
+        return chapterService.updateChapter(courseId, id, form);
+    }
+
+    @Override
+    public CourseChapterVO getChapterById(Integer courseId, Integer id) {
+        return chapterService.getChapterById(courseId, id);
     }
 
 

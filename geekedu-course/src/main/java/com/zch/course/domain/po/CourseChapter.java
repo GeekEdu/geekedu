@@ -24,6 +24,13 @@ public class CourseChapter extends BaseEntity {
      */
     private String name;
 
+    /**
+     * 课程id
+     */
+    private Integer courseId;
+
+    private Integer sort;
+
     private Long createdBy;
 
     private Long updatedBy;
