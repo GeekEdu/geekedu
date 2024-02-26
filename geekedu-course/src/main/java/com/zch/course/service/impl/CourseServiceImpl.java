@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.course.ChapterForm;
+import com.zch.api.dto.course.DelSectionBatchForm;
 import com.zch.api.feignClient.comments.CommentsFeignClient;
 import com.zch.api.feignClient.label.LabelFeignClient;
 import com.zch.api.feignClient.user.UserFeignClient;
@@ -21,6 +22,7 @@ import com.zch.common.mvc.result.Response;
 import com.zch.course.domain.po.Course;
 import com.zch.course.mapper.CourseMapper;
 import com.zch.course.service.ICourseChapterService;
+import com.zch.course.service.ICourseSectionService;
 import com.zch.course.service.ICourseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +52,8 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     private final UserFeignClient userFeignClient;
 
     private final ICourseChapterService chapterService;
+
+    private final ICourseSectionService sectionService;
 
     @Override
     public CourseAndCategoryVO getCoursePage(Integer pageNum, Integer pageSize, String sort, String order, String keywords, Integer cid, Integer id) {
@@ -114,6 +118,28 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         vo.getCourses().setData(courses);
         vo.getCourses().setTotal(courses.size());
         return vo;
+    }
+
+    @Override
+    public CourseVO getCourseById(Integer id) {
+        if (ObjectUtils.isNull(id)) {
+            return new CourseVO();
+        }
+        Course course = getById(id);
+        CourseVO vo = new CourseVO();
+        if (ObjectUtils.isNull(course)) {
+            return vo;
+        }
+        BeanUtils.copyProperties(course, vo);
+        return vo;
+    }
+
+    @Override
+    public Boolean deleteCourseById(Integer id) {
+        if (ObjectUtils.isNull(id)) {
+            return false;
+        }
+        return removeById(id);
     }
 
     @Override
@@ -186,6 +212,21 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Override
     public CourseChapterVO getChapterById(Integer courseId, Integer id) {
         return chapterService.getChapterById(courseId, id);
+    }
+
+    @Override
+    public Page<CourseSectionVO> getSectionList(Integer pageNum, Integer pageSize, String sort, String order, Integer courseId) {
+        return sectionService.getSectionsPage(pageNum, pageSize, sort, order, courseId);
+    }
+
+    @Override
+    public CourseSectionVO getSectionById(Integer id) {
+        return sectionService.getSectionById(id);
+    }
+
+    @Override
+    public Boolean deleteSectionBatch(DelSectionBatchForm form) {
+        return sectionService.deleteSectionBatch(form);
     }
 
 

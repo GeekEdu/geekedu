@@ -1,12 +1,11 @@
 package com.zch.course.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.course.ChapterForm;
-import com.zch.api.vo.course.CourseAndCategoryVO;
-import com.zch.api.vo.course.CourseChapterVO;
-import com.zch.api.vo.course.CourseCommentsVO;
-import com.zch.api.vo.course.CourseSimpleVO;
+import com.zch.api.dto.course.DelSectionBatchForm;
+import com.zch.api.vo.course.*;
 import com.zch.course.domain.po.Course;
 
 import java.util.List;
@@ -29,6 +28,20 @@ public interface ICourseService extends IService<Course> {
      * @return
      */
     CourseAndCategoryVO getCoursePage(Integer pageNum, Integer pageSize, String sort, String order, String keywords, Integer cid, Integer id);
+
+    /**
+     * 根据课程id获取课程明细
+     * @param id
+     * @return
+     */
+    CourseVO getCourseById(Integer id);
+
+    /**
+     * 根据id删除课程
+     * @param id
+     * @return
+     */
+    Boolean deleteCourseById(Integer id);
 
     /**
      * 条件分页查找评论列表
@@ -92,5 +105,30 @@ public interface ICourseService extends IService<Course> {
      * @return
      */
     CourseChapterVO getChapterById(Integer courseId, Integer id);
+
+    /**
+     * 分页查课时列表
+     * @param pageNum
+     * @param pageSize
+     * @param sort
+     * @param order
+     * @param courseId
+     * @return
+     */
+    Page<CourseSectionVO> getSectionList(Integer pageNum, Integer pageSize, String sort, String order, Integer courseId);
+
+    /**
+     * 根据id获取课时明细
+     * @param id
+     * @return
+     */
+    CourseSectionVO getSectionById(Integer id);
+
+    /**
+     * 批量删除课时
+     * @param form
+     * @return
+     */
+    Boolean deleteSectionBatch(DelSectionBatchForm form);
 
 }

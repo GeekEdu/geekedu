@@ -2,8 +2,9 @@ package com.zch.course.controller;
 
 import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.course.ChapterForm;
-import com.zch.api.vo.course.CourseChapterVO;
-import com.zch.api.vo.course.CourseSimpleVO;
+import com.zch.api.dto.course.DelSectionBatchForm;
+import com.zch.api.vo.course.*;
+import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import com.zch.course.service.ICourseService;
 import lombok.RequiredArgsConstructor;
@@ -34,11 +35,31 @@ public class CourseController {
      * @return
      */
     @GetMapping("/courses")
-    public Response getCourses(@RequestParam("pageNum") Integer pageNum, @RequestParam("pageSize") Integer pageSize, @RequestParam("sort") String sort, @RequestParam("order") String order,
-                               @RequestParam(value = "keywords", required = false) String keywords,
-                               @RequestParam(value = "cid", required = false) Integer cid,
-                               @RequestParam(value = "id", required = false) Integer id) {
+    public Response<CourseAndCategoryVO> getCourses(@RequestParam("pageNum") Integer pageNum, @RequestParam("pageSize") Integer pageSize, @RequestParam("sort") String sort, @RequestParam("order") String order,
+                                                    @RequestParam(value = "keywords", required = false) String keywords,
+                                                    @RequestParam(value = "cid", required = false) Integer cid,
+                                                    @RequestParam(value = "id", required = false) Integer id) {
         return Response.success(courseService.getCoursePage(pageNum, pageSize, sort, order, keywords, cid, id));
+    }
+
+    /**
+     * 根据课程id获取课程明细
+     * @param id
+     * @return
+     */
+    @GetMapping("/getCourseById/{id}")
+    public Response<CourseVO> getCourseById(@PathVariable("id") Integer id) {
+        return Response.success(courseService.getCourseById(id));
+    }
+
+    /**
+     * 根据id删除课程
+     * @param id
+     * @return
+     */
+    @PostMapping("/delete/{id}")
+    public Response<Boolean> deleteCourseById(@PathVariable("id") Integer id) {
+        return Response.success(courseService.deleteCourseById(id));
     }
 
     /**
@@ -130,6 +151,44 @@ public class CourseController {
     @PostMapping("/{cId}/chapter/delete/{id}")
     public Response<Boolean> deleteChapter(@PathVariable("cId") Integer courseId, @PathVariable("id") Integer id) {
         return Response.success(courseService.deleteChapterById(courseId, id));
+    }
+
+    /**
+     * 分页查找课时列表
+     * @param pageNum
+     * @param pageSize
+     * @param sort
+     * @param order
+     * @param courseId
+     * @return
+     */
+    @GetMapping("/section/getSectionList")
+    public PageResult<CourseSectionVO> getSectionList(@RequestParam("pageNum") Integer pageNum,
+                                                      @RequestParam("pageSize") Integer pageSize,
+                                                      @RequestParam("sort") String sort,
+                                                      @RequestParam("order") String order,
+                                                      @RequestParam("courseId") Integer courseId) {
+        return PageResult.success(courseService.getSectionList(pageNum, pageSize, sort, order, courseId));
+    }
+
+    /**
+     * 根据课时id获取课时明细
+     * @param id
+     * @return
+     */
+    @GetMapping("/section/getSectionById/{id}")
+    public Response<CourseSectionVO> getSectionBySectionId(@PathVariable("id") Integer id) {
+        return Response.success(courseService.getSectionById(id));
+    }
+
+    /**
+     * 批量删除课时
+     * @param form
+     * @return
+     */
+    @PostMapping("/section/delete/batch")
+    public Response<Boolean> deleteSectionBatch(@RequestBody DelSectionBatchForm form) {
+        return Response.success(courseService.deleteSectionBatch(form));
     }
 
 }

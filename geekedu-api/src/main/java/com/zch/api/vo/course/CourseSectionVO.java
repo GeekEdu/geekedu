@@ -1,10 +1,6 @@
-package com.zch.course.domain.po;
+package com.zch.api.vo.course;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.zch.common.mvc.entity.BaseEntity;
+import com.zch.common.mvc.entity.BaseVO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -12,14 +8,12 @@ import java.time.LocalDateTime;
 
 /**
  * @author Poison02
- * @date 2024/1/25
+ * @date 2024/2/26
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("course_section")
-public class CourseSection extends BaseEntity {
+public class CourseSectionVO extends BaseVO {
 
-    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -74,11 +68,8 @@ public class CourseSection extends BaseEntity {
 
     private LocalDateTime groundingTime;
 
-    private Long createdBy;
+    private CourseChapterVO chapter;
 
-    private Long updatedBy;
-
-    @TableLogic
-    private Boolean isDelete;
+    private CourseSimpleVO course;
 
 }

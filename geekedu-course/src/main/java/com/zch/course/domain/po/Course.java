@@ -2,6 +2,7 @@ package com.zch.course.domain.po;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zch.common.mvc.entity.BaseEntity;
 import lombok.Data;
@@ -28,14 +29,14 @@ public class Course extends BaseEntity {
     private String title;
 
     /**
-     * 课程名
+     * 课程售卖类型 1-免费 0-收费
      */
-    private String name;
+    private Boolean isFree;
 
     /**
-     * 课程售卖类型 0-免费 1-收费
+     * 是否vip免费
      */
-    private Boolean sellType;
+    private Boolean isVipFree;
 
     /**
      * 课程价格
@@ -43,44 +44,19 @@ public class Course extends BaseEntity {
     private BigDecimal price;
 
     /**
-     * 课程状态 1-待上架 2-已上架 3-已下架 4-已完结
-     */
-    private Boolean status;
-
-    /**
-     * 课程评分 最高50分
-     */
-    private Short score;
-
-    /**
-     * 课程总时长，单位 秒
-     */
-    private Long duration;
-
-    /**
-     * 课程总小节数
-     */
-    private Integer sectionNum;
-
-    /**
-     * 课程 教师id
-     */
-    private Long teacher;
-
-    /**
-     * 课程简介
-     */
-    private String intro;
-
-    /**
      * 课程描述
      */
     private String description;
 
     /**
+     * 详细介绍
+     */
+    private String intro;
+
+    /**
      * 课程封面
      */
-    private String pictureLink;
+    private String coverLink;
 
     /**
      * 课程卖出数量
@@ -88,19 +64,24 @@ public class Course extends BaseEntity {
     private Integer sellNum;
 
     /**
-     * 课程创建人
+     * 课时数量
      */
-    private Long createdBy;
+    private Integer sectionCount;
 
     /**
-     * 课程更新人
+     * 章节数量
      */
-    private Long updatedBy;
+    private Integer chapterCount;
 
     /**
-     * 课程是否被删除
+     * 评论数量
      */
-    private Boolean isDelete;
+    private Integer commentsCount;;
+
+    /**
+     * 学员数量
+     */
+    private Integer userCount;
 
     /**
      * 上架时间
@@ -121,5 +102,21 @@ public class Course extends BaseEntity {
      * 分类id
      */
     private Integer categoryId;
+
+    /**
+     * 课程创建人
+     */
+    private Long createdBy;
+
+    /**
+     * 课程更新人
+     */
+    private Long updatedBy;
+
+    /**
+     * 课程是否被删除
+     */
+    @TableLogic
+    private Boolean isDelete;
 
 }

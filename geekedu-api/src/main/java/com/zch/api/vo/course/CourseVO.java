@@ -31,14 +31,14 @@ public class CourseVO extends BaseVO {
     private String title;
 
     /**
-     * 售卖类型 0-免费 1-收费
+     * 课程售卖类型 1-免费 0-收费
      */
-    private Boolean sellType;
+    private Boolean isFree;
 
     /**
-     * 课程状态;1-待上架，2-已上架，3-已下架，4-已完结
+     * 是否vip免费
      */
-    private Boolean status;
+    private Boolean isVipFree;
 
     /**
      * 课程价格
@@ -46,44 +46,44 @@ public class CourseVO extends BaseVO {
     private BigDecimal price;
 
     /**
-     * 课程视频时长 秒为单位
+     * 课程描述
      */
-    private Long duration;
+    private String description;
 
     /**
-     * 课程章节数
-     */
-    private Integer sectionNum;
-
-    /**
-     * 授课教师
-     */
-    private Long teacher;
-
-    /**
-     * 课程简介
+     * 详细介绍
      */
     private String intro;
 
     /**
-     * 课程封面链接
+     * 课程封面
      */
-    private String pictureLink;
+    private String coverLink;
 
     /**
-     * 课程销售量
+     * 课程卖出数量
      */
     private Integer sellNum;
 
     /**
-     * 创建时间
+     * 课时数量
      */
-    private LocalDateTime createdTime;
+    private Integer sectionCount;
 
     /**
-     * 修改时间
+     * 章节数量
      */
-    private LocalDateTime updatedTime;
+    private Integer chapterCount;
+
+    /**
+     * 评论数量
+     */
+    private Integer commentsCount;;
+
+    /**
+     * 学员数量
+     */
+    private Integer userCount;
 
     /**
      * 上架时间
@@ -91,21 +91,22 @@ public class CourseVO extends BaseVO {
     private LocalDateTime groundingTime;
 
     /**
-     * 是否展示 0-不展示 1-展示
+     * 是否显示
      */
     private Boolean isShow;
 
     /**
-     * 课程类型 0-1录播 1-直播
+     * 课程类型，0-录播课，1-直播课
      */
     private Boolean type;
+
+    /**
+     * 分类id
+     */
+    private Integer categoryId;
 
     /**
      * 课程所属分类
      */
     private CategorySimpleVO category;
-
-    public static CourseVO of(Integer id, String title, Boolean sellType, Boolean status, BigDecimal price, Long duration, Integer sectionNum, Long teacher, String intro, String pictureLink, Integer sellNum, LocalDateTime createdTime, LocalDateTime updatedTime, LocalDateTime groundingTime, Boolean isShow, Boolean type, CategorySimpleVO category) {
-        return new CourseVO(id, title, sellType, status, price, duration, sectionNum, teacher, intro, pictureLink, sellNum, createdTime, updatedTime, groundingTime, isShow, type, category);
-    }
 }

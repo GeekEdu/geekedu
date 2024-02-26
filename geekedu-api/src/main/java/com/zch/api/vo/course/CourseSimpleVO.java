@@ -4,6 +4,8 @@ import com.zch.common.mvc.entity.BaseVO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
+
 /**
  * @author Poison02
  * @date 2024/2/26
@@ -16,4 +18,7 @@ public class CourseSimpleVO extends BaseVO {
 
     private String title;
 
+    private String coverLink;
+
+    private BigDecimal price;
 }
