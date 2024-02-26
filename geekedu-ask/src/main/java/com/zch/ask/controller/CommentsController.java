@@ -53,7 +53,7 @@ public class CommentsController {
      * @return
      */
     @PostMapping("/delete/batch")
-    public Response deleteBatchComments(@RequestBody CommentsBatchDelForm form) {
+    public Response<Boolean> deleteBatchComments(@RequestBody CommentsBatchDelForm form) {
         return Response.success(commentsService.deleteCommentsBatch(form));
     }
 

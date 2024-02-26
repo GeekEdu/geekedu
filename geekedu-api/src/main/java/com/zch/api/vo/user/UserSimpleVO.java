@@ -38,4 +38,6 @@ public class UserSimpleVO extends BaseVO {
      */
     private String os;
 
+
+
 }

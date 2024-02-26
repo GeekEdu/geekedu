@@ -1,12 +1,13 @@
 package com.zch.course.controller;
 
+import com.zch.api.dto.ask.CommentsBatchDelForm;
+import com.zch.api.vo.course.CourseSimpleVO;
 import com.zch.common.mvc.result.Response;
 import com.zch.course.service.ICourseService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author Poison02
@@ -36,6 +37,42 @@ public class CourseController {
                                @RequestParam(value = "cid", required = false) Integer cid,
                                @RequestParam(value = "id", required = false) Integer id) {
         return Response.success(courseService.getCoursePage(pageNum, pageSize, sort, order, keywords, cid, id));
+    }
+
+    /**
+     * 分页查找课程评论列表
+     * @param pageNum
+     * @param pageSize
+     * @param cType
+     * @param createdTime
+     * @return
+     */
+    @GetMapping("/getCommentsList")
+    public Response getCourseComments(@RequestParam("pageNum") Integer pageNum,
+                                      @RequestParam("pageSize") Integer pageSize,
+                                      @RequestParam("cType") String cType,
+                                      @RequestParam(value = "createdTime", required = false) List<String> createdTime) {
+        return Response.success(courseService.getCommentsList(pageNum, pageSize, cType, createdTime));
+    }
+
+    /**
+     * 根据课程id返回简单课程
+     * @param id
+     * @return
+     */
+    @GetMapping("/getCourseSimpleById/{id}")
+    public Response<CourseSimpleVO> getCourseSimpleById(@PathVariable("id") Integer id) {
+        return Response.success(courseService.getCourseSimpleById(id));
+    }
+
+    /**
+     * 批量删除课程评论
+     * @param form
+     * @return
+     */
+    @PostMapping("/delete/batch")
+    public Response<Boolean> deleteCourseCommentsBatch(@RequestBody CommentsBatchDelForm form) {
+        return Response.success(courseService.deleteBatchCourseComments(form));
     }
 
 }

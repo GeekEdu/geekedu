@@ -1,6 +1,7 @@
 package com.zch.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zch.api.vo.system.GraphVO;
 import com.zch.system.domain.po.*;
 import com.zch.system.domain.vo.NoticeVO;
 
@@ -25,5 +26,7 @@ public interface IPcConfigService extends IService<PcConfig> {
     Notice getOneNotice(Integer id);
 
     Notice getLatestNotice();
+
+    GraphVO getGraph(String startAt, String endAt);
 
 }

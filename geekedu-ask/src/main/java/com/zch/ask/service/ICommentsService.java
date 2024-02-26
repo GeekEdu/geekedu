@@ -40,6 +40,11 @@ public interface ICommentsService extends IService<Comments> {
      */
     Page<CommentsVO> getCommentsPage(Integer pageNum, Integer pageSize, String cType, List<String> createdTime);
 
+    /**
+     * 批量删除评论
+     * @param form
+     * @return
+     */
     Boolean deleteCommentsBatch(CommentsBatchDelForm form);
 
     void insertComments(CommentsForm form);

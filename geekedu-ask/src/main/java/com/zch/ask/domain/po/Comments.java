@@ -22,6 +22,11 @@ public class Comments extends BaseEntity {
     private Integer id;
 
     /**
+     * 关系id 如课程id、课时id等
+     */
+    private Integer relationId;
+
+    /**
      * 回答内容
      */
     private String content;

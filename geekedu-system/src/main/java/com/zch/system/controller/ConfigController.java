@@ -135,7 +135,7 @@ public class ConfigController {
     @GetMapping("/dashboard/graph")
     public Response getGraph(@RequestParam("start_at") String startAt,
                              @RequestParam("end_at") String endAt) {
-        return Response.success();
+        return Response.success(pcConfigService.getGraph(startAt, endAt));
     }
 
 }

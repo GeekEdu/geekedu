@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.ask.CommentsForm;
+import com.zch.api.feignClient.course.CourseFeignClient;
 import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.utils.AddressUtils;
 import com.zch.api.vo.ask.CommentsVO;
+import com.zch.api.vo.course.CourseSimpleVO;
 import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.ask.domain.po.Comments;
 import com.zch.ask.enums.CommentsEnum;
@@ -44,6 +46,8 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
     private final CommentsMapper commentsMapper;
 
     private final UserFeignClient userFeignClient;
+
+    private final CourseFeignClient courseFeignClient;
 
     @Override
     public List<CommentsVO> getCommentsByAnswerId(Integer id) {
@@ -129,6 +133,18 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
             user.getData().setBrowser(browser);
             user.getData().setOs(os);
             vo.setUser(user.getData());
+            // 判断类型，根据类型查找对应信息
+            if (StringUtils.isNotBlank(cType)) {
+                switch (cType) {
+                    case "REPLAY_COURSE":
+                        Response<CourseSimpleVO> res = courseFeignClient.getCourseSimpleById(comment.getRelationId());
+                        if (ObjectUtils.isNull(res) || ObjectUtils.isNull(res.getData())) {
+                            vo.setCourse(null);
+                        }
+                        vo.setCourse(res.getData());
+                        break;
+                }
+            }
             list.add(vo);
         }
         BeanUtils.copyProperties(page, response);

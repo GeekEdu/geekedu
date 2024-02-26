@@ -2,6 +2,7 @@ package com.zch.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zch.api.vo.system.GraphVO;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.mvc.exception.CommonException;
 import com.zch.system.domain.po.*;
@@ -12,10 +13,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 /**
  * @author Poison02
@@ -129,5 +129,38 @@ public class PcConfigServiceImpl extends ServiceImpl<PcConfigMapper, PcConfig> i
     public Notice getLatestNotice() {
         return noticeMapper.selectOne(new LambdaQueryWrapper<Notice>()
                 .orderByDesc(Notice::getCreatedTime));
+    }
+
+    @Override
+    public GraphVO getGraph(String startAt, String endAt) {
+        GraphVO vo = new GraphVO();
+//        vo.setOrderCreated(generateDate(startAt, endAt));
+//        vo.setOrderSum(generateDate(startAt, endAt));
+//        vo.setOrderPaid(generateDate(startAt, endAt));
+//        vo.setUserRegister(generateDate(startAt, endAt));
+        return vo;
+    }
+
+    /**
+     * 生成区间日期
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public static Map<String, Integer> generateDate(String startDate, String endDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDate start = LocalDate.parse(startDate, formatter);
+        LocalDate end = LocalDate.parse(endDate, formatter);
+
+        Map<String, Integer> map = new TreeMap<>();
+        LocalDate current = start;
+
+        while (!current.isAfter(end)) {
+            String formattedDate = current.format(formatter);
+            map.put(formattedDate, 0);
+            current = current.plusDays(1);
+        }
+
+        return map;
     }
 }
