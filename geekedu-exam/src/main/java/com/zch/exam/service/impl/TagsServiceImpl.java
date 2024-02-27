@@ -114,6 +114,34 @@ public class TagsServiceImpl extends ServiceImpl<TagsMapper, Tags> implements IT
     }
 
     @Override
+    public CTagsVO getSimpleTagById(Integer id, String type) {
+        Tags tags = tagsMapper.selectOne(new LambdaQueryWrapper<Tags>()
+                .eq(Tags::getId, id)
+                .eq(Tags::getType, ExamTagsEnum.valueOf(type)));
+        if (ObjectUtils.isNull(tags)) {
+            return null;
+        }
+        CTagsVO vo = new CTagsVO();
+        BeanUtils.copyProperties(tags, vo);
+        return vo;
+    }
+
+    @Override
+    public List<CTagsVO> getSTagsList(String type) {
+        List<Tags> tags = tagsMapper.selectList(new LambdaQueryWrapper<Tags>()
+                .eq(Tags::getType, ExamTagsEnum.valueOf(type)));
+        if (ObjectUtils.isNull(tags) || CollUtils.isEmpty(tags)) {
+            return new ArrayList<>(0);
+        }
+        List<CTagsVO> vos = tags.stream().map(item -> {
+            CTagsVO vo = new CTagsVO();
+            BeanUtils.copyProperties(item, vo);
+            return vo;
+        }).collect(Collectors.toList());
+        return vos;
+    }
+
+    @Override
     public Page<TagsVO> getCategoryList(Integer pageNum, Integer pageSize, String type) {
         Page<TagsVO> vo = new Page<>();
         Page<Tags> page = page(new Page<Tags>(pageNum, pageSize), new LambdaQueryWrapper<Tags>()
@@ -129,7 +157,7 @@ public class TagsServiceImpl extends ServiceImpl<TagsMapper, Tags> implements IT
             BeanUtils.copyProperties(item, vo1);
             // 查找子分类
             List<Tags> tags = tagsMapper.selectList(new LambdaQueryWrapper<Tags>()
-                    .eq(Tags::getType, type)
+                    .eq(Tags::getType, ExamTagsEnum.valueOf(type))
                     .eq(Tags::getParentId, item.getId()));
             if (ObjectUtils.isNull(tags)) {
                 vo1.setChildren(new ArrayList<>(0));

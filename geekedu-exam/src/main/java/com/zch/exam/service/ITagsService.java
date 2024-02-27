@@ -3,6 +3,7 @@ package com.zch.exam.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.exam.TagForm;
+import com.zch.api.vo.exam.CTagsVO;
 import com.zch.api.vo.exam.TagsVO;
 import com.zch.exam.domain.po.Tags;
 
@@ -36,6 +37,21 @@ public interface ITagsService extends IService<Tags> {
      * @return
      */
     TagsVO getTagByName(String name, String type);
+
+    /**
+     * 查找简单分类
+     * @param id
+     * @param type
+     * @return
+     */
+    CTagsVO getSimpleTagById(Integer id, String type);
+
+    /**
+     * 查找简单分类列表
+     * @param type
+     * @return
+     */
+    List<CTagsVO> getSTagsList(String type);
 
     /**
      * 条件分页查找分类列表
