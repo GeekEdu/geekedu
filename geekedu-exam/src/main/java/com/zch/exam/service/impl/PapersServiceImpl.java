@@ -108,6 +108,14 @@ public class PapersServiceImpl extends ServiceImpl<PapersMapper, Papers> impleme
     }
 
     @Override
+    public Boolean deletePaperById(Integer id) {
+        if (ObjectUtils.isNull(id)) {
+            return false;
+        }
+        return removeById(id);
+    }
+
+    @Override
     public List<CTagsVO> getCategoryList() {
         List<CTagsVO> list = tagsService.getSTagsList("PAPERS");
         if (ObjectUtils.isNull(list) || CollUtils.isEmpty(list)) {

@@ -44,9 +44,24 @@ public class PapersController {
         return Response.success(papersService.getPapersPage(pageNum, pageSize, sort, order, keywords, categoryId));
     }
 
+    /**
+     * 根据id查看试卷明细
+     * @param id
+     * @return
+     */
     @GetMapping("/getPaperById/{id}")
     public Response<PapersVO> getPaperById(@PathVariable("id") Integer id) {
         return Response.success(papersService.getPaperById(id));
+    }
+
+    /**
+     * 根据id删除试卷
+     * @param id
+     * @return
+     */
+    @PostMapping("/delete/{id}")
+    public Response<Boolean> deletePaperById(@PathVariable("id") Integer id) {
+        return Response.success(papersService.deletePaperById(id));
     }
 
     /**

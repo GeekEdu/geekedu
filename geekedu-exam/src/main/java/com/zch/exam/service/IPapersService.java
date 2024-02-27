@@ -37,6 +37,13 @@ public interface IPapersService extends IService<Papers> {
     PapersVO getPaperById(Integer id);
 
     /**
+     * 根据id删除试卷
+     * @param id
+     * @return
+     */
+    Boolean deletePaperById(Integer id);
+
+    /**
      * 返回分类列表
      * @return
      */
