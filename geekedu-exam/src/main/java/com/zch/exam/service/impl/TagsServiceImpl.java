@@ -88,6 +88,32 @@ public class TagsServiceImpl extends ServiceImpl<TagsMapper, Tags> implements IT
     }
 
     @Override
+    public TagsVO getTagByName(String name, String type) {
+        Tags tags = tagsMapper.selectOne(new LambdaQueryWrapper<Tags>()
+                .eq(Tags::getName, name)
+                .eq(Tags::getType, ExamTagsEnum.valueOf(type)));
+        if (ObjectUtils.isNull(tags)) {
+            return null;
+        }
+        TagsVO vo = new TagsVO();
+        BeanUtils.copyProperties(tags, vo);
+        // 查找子分类
+        List<Tags> list = tagsMapper.selectList(new LambdaQueryWrapper<Tags>()
+                .eq(Tags::getType, type)
+                .eq(Tags::getParentId, tags.getId()));
+        if (ObjectUtils.isNull(list)) {
+            vo.setChildren(new ArrayList<>(0));
+        }
+        List<CTagsVO> children = list.stream().map(e -> {
+            CTagsVO cTag = new CTagsVO();
+            BeanUtils.copyProperties(e, cTag);
+            return cTag;
+        }).collect(Collectors.toList());
+        vo.setChildren(children);
+        return vo;
+    }
+
+    @Override
     public Page<TagsVO> getCategoryList(Integer pageNum, Integer pageSize, String type) {
         Page<TagsVO> vo = new Page<>();
         Page<Tags> page = page(new Page<Tags>(pageNum, pageSize), new LambdaQueryWrapper<Tags>()

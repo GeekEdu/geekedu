@@ -3,6 +3,7 @@ package com.zch.exam.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.exam.DeleteBatchQuestions;
+import com.zch.api.dto.exam.ImportXlsxAddForm;
 import com.zch.api.dto.exam.TagForm;
 import com.zch.api.vo.exam.QuestionsFullVO;
 import com.zch.api.vo.exam.QuestionsVO;
@@ -32,6 +33,13 @@ public interface IQuestionsService extends IService<Questions> {
      * @return
      */
     QuestionsFullVO getQuestionPage(Integer pageNum, Integer pageSize, Integer categoryId, Integer type, Integer level);
+
+    /**
+     * 导入excel新增试题
+     * @param form
+     * @return
+     */
+    Boolean insertQuestionByImport(ImportXlsxAddForm form);
 
     /**
      * 批量删除题库

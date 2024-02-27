@@ -14,6 +14,13 @@ public interface ITypesService extends IService<Types> {
 
     List<TypesVO> getTypesList();
 
+    /**
+     * 根据name查找类型
+     * @param name
+     * @return
+     */
+    TypesVO getTypeByName(String name);
+
     TypesVO getTypesById(Integer id);
 
 }

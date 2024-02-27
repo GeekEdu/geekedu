@@ -6,6 +6,7 @@ import com.zch.api.vo.exam.TypesVO;
 import com.zch.common.core.utils.BeanUtils;
 import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
+import com.zch.common.core.utils.StringUtils;
 import com.zch.exam.domain.po.Types;
 import com.zch.exam.mapper.TypesMapper;
 import com.zch.exam.service.ITypesService;
@@ -40,6 +41,21 @@ public class TypesServiceImpl extends ServiceImpl<TypesMapper, Types> implements
             return vo;
         }).collect(Collectors.toList());
         return vos;
+    }
+
+    @Override
+    public TypesVO getTypeByName(String name) {
+        if (StringUtils.isBlank(name)) {
+            return null;
+        }
+        Types types = typesMapper.selectOne(new LambdaQueryWrapper<Types>()
+                .eq(Types::getName, name));
+        if (ObjectUtils.isNull(types)) {
+            return null;
+        }
+        TypesVO vo = new TypesVO();
+        BeanUtils.copyProperties(types, vo);
+        return vo;
     }
 
     @Override

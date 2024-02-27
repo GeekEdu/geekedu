@@ -22,12 +22,20 @@ public interface ITagsService extends IService<Tags> {
     List<TagsVO> getTagsList(String type);
 
     /**
-     * 条件查找分类
+     * 根据分类id查找分类
      * @param id
      * @param type
      * @return
      */
     TagsVO getTagByCondition(Integer id, String type);
+
+    /**
+     * 根据分类名查找分类
+     * @param name
+     * @param type
+     * @return
+     */
+    TagsVO getTagByName(String name, String type);
 
     /**
      * 条件分页查找分类列表

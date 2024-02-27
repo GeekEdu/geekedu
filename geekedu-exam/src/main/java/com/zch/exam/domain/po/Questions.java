@@ -60,6 +60,18 @@ public class Questions extends BaseEntity {
 
     private String option4;
 
+    private String option5;
+
+    private String option6;
+
+    private String option7;
+
+    private String option8;
+
+    private String option9;
+
+    private String option10;
+
     /**
      * 解析
      */

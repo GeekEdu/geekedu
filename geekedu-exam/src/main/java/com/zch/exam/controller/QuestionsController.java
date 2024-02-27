@@ -1,8 +1,10 @@
 package com.zch.exam.controller;
 
 import com.zch.api.dto.exam.DeleteBatchQuestions;
+import com.zch.api.dto.exam.ImportXlsxAddForm;
 import com.zch.api.dto.exam.TagForm;
 import com.zch.api.vo.exam.QuestionsFullVO;
+import com.zch.api.vo.exam.QuestionsVO;
 import com.zch.api.vo.exam.TagsVO;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
@@ -36,6 +38,25 @@ public class QuestionsController {
                                                       @RequestParam(value = "type", required = false) Integer type,
                                                       @RequestParam(value = "level", required = false) Integer level) {
         return Response.success(questionsService.getQuestionPage(pageNum, pageSize, categoryId, type, level));
+    }
+
+    /**
+     * 根据id获取试题明细
+     * @param id
+     * @return
+     */
+    @GetMapping("/getQuestionById/{id}")
+    public Response<QuestionsVO> getQuestionById(@PathVariable("id") Integer id) {
+        return Response.success(questionsService.getQuestionsById(id));
+    }
+
+    /**
+     * 导入excel表格新增试题
+     * @return
+     */
+    @PostMapping("/import/add")
+    public Response<Boolean> addQuestion(@RequestBody ImportXlsxAddForm form) {
+        return Response.success(questionsService.insertQuestionByImport(form));
     }
 
     /**

@@ -14,6 +14,13 @@ public interface ILevelsService extends IService<Levels> {
 
     List<LevelsVO> getLevelsList();
 
+    /**
+     * 根据name查找Levels
+     * @param name
+     * @return
+     */
+    LevelsVO getLevelsByName(String name);
+
     LevelsVO getLevelsById(Integer id);
 
 }

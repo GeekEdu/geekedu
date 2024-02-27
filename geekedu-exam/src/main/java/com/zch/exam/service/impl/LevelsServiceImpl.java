@@ -6,6 +6,7 @@ import com.zch.api.vo.exam.LevelsVO;
 import com.zch.common.core.utils.BeanUtils;
 import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
+import com.zch.common.core.utils.StringUtils;
 import com.zch.exam.domain.po.Levels;
 import com.zch.exam.mapper.LevelsMapper;
 import com.zch.exam.service.ILevelsService;
@@ -40,6 +41,21 @@ public class LevelsServiceImpl extends ServiceImpl<LevelsMapper, Levels> impleme
             return vo;
         }).collect(Collectors.toList());
         return vos;
+    }
+
+    @Override
+    public LevelsVO getLevelsByName(String name) {
+        if (StringUtils.isBlank(name)) {
+            return null;
+        }
+        Levels levels = levelsMapper.selectOne(new LambdaQueryWrapper<Levels>()
+                .eq(Levels::getName, name));
+        if (ObjectUtils.isNull(levels)) {
+            return null;
+        }
+        LevelsVO vo = new LevelsVO();
+        BeanUtils.copyProperties(levels, vo);
+        return vo;
     }
 
     @Override
