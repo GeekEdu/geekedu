@@ -1,5 +1,6 @@
 package com.zch.user.controller;
 
+import com.zch.api.dto.user.ChangePwdForm;
 import com.zch.api.dto.user.LoginForm;
 import com.zch.api.vo.user.CaptchaVO;
 import com.zch.api.vo.user.UserSimpleVO;
@@ -55,6 +56,11 @@ public class UserController {
     @GetMapping("/logout")
     public Response logout() {
         return Response.success();
+    }
+
+    @PostMapping("/changePwd")
+    public Response editPwd(@RequestBody ChangePwdForm form) {
+        return Response.success(userService.changePwd(form));
     }
 
     /**

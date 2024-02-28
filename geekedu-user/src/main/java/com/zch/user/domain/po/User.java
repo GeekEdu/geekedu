@@ -6,7 +6,6 @@ import com.zch.common.mvc.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -16,7 +15,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("user")
-public class User extends BaseEntity implements Serializable {
+public class User extends BaseEntity {
 
 
     private static final long serialVersionUID = 1L;
@@ -121,6 +120,10 @@ public class User extends BaseEntity implements Serializable {
      * 角色id
      */
     private Boolean roleId;
+
+    private Long createdBy;
+
+    private Long updatedBy;
 
     /**
      * 是否删除;0-未删除，1-删除

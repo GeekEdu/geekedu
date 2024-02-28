@@ -1,6 +1,7 @@
 package com.zch.user.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zch.api.dto.user.ChangePwdForm;
 import com.zch.api.dto.user.LoginForm;
 import com.zch.api.vo.user.CaptchaVO;
 import com.zch.api.vo.user.LoginVO;
@@ -27,6 +28,13 @@ public interface IUserService extends IService<User> {
      * @return
      */
     LoginVO login(LoginForm form);
+
+    /**
+     * 修改密码
+     * @param form
+     * @return
+     */
+    Boolean changePwd(ChangePwdForm form);
 
     boolean addUser(User user);
 

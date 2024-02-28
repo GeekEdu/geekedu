@@ -3,6 +3,7 @@ package com.zch.user.service.impl;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zch.api.dto.user.ChangePwdForm;
 import com.zch.api.dto.user.LoginForm;
 import com.zch.api.utils.AddressUtils;
 import com.zch.api.vo.user.*;
@@ -100,6 +101,35 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return vo;
         }
         return new LoginVO();
+    }
+
+    @Override
+    public Boolean changePwd(ChangePwdForm form) {
+        if (ObjectUtils.isNull(form)) {
+            return false;
+        }
+        Long userId = UserContext.getLoginId();
+        User user = userMapper.selectById(userId);
+        if (ObjectUtils.isNull(user)) {
+            return false;
+        }
+        String salt = user.getSalt();
+        // 得到原来的密码和数据库中相比
+        String oldPwd = form.getOldPassword();
+        String decrypt = EncryptUtils.md5Encrypt(oldPwd, salt);
+        if (! user.getPassword().equals(decrypt)) {
+            return false;
+        }
+        String newPwd = form.getNewPassword();
+        String newPwdConfirm = form.getNewPasswordConfirm();
+        if (StringUtils.isNotBlank(newPwd) && StringUtils.isNotBlank(newPwdConfirm) && ! newPwd.equals(newPwdConfirm)) {
+            return false;
+        }
+        // 加密之后存储
+        String encrypt = EncryptUtils.md5Encrypt(newPwdConfirm, salt);
+        user.setPassword(encrypt);
+        user.setUpdatedBy(userId);
+        return updateById(user);
     }
 
     @Override
