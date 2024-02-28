@@ -1,7 +1,10 @@
 package com.zch.exam.controller;
 
+import com.zch.api.dto.exam.ChapterForm;
+import com.zch.api.dto.exam.DelChapterForm;
 import com.zch.api.dto.exam.DelPracticeForm;
 import com.zch.api.vo.exam.CTagsVO;
+import com.zch.api.vo.exam.ChapterVO;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import com.zch.exam.service.IPracticeService;
@@ -97,6 +100,57 @@ public class PracticeController {
     @GetMapping("/tag/list")
     public Response<List<CTagsVO>> getTagList() {
         return Response.success(practiceService.getTagList());
+    }
+
+    /**
+     * 返回章节列表
+     * @param practiceId
+     * @return
+     */
+    @GetMapping("/chapter/list")
+    public Response<List<ChapterVO>> getChapterList(@RequestParam("pid") Integer practiceId) {
+        return Response.success(practiceService.getChapterList(practiceId));
+    }
+
+    /**
+     * 根据id查找章节明细
+     * @param id
+     * @return
+     */
+    @GetMapping("/chapter/getChapterById/{id}")
+    public Response getChapterById(@PathVariable("id") Integer id) {
+        return Response.success(practiceService.getChapterById(id));
+    }
+
+    /**
+     * 新增章节
+     * @param form
+     * @return
+     */
+    @PostMapping("/chapter/add")
+    public Response addChapter(@RequestBody ChapterForm form) {
+        return Response.success(practiceService.addChapter(form));
+    }
+
+    /**
+     * 批量删除章节
+     * @param form
+     * @return
+     */
+    @PostMapping("/chapter/delete/batch")
+    public Response deleteBatchChapter(@RequestBody DelChapterForm form) {
+        return Response.success(practiceService.deleteChapterBatch(form));
+    }
+
+    /**
+     * 更新章节
+     * @param id
+     * @param form
+     * @return
+     */
+    @PostMapping("/chapter/update/{id}")
+    public Response updateChapter(@PathVariable("id") Integer id, @RequestBody ChapterForm form) {
+        return Response.success(practiceService.updateChapter(id, form));
     }
 
 }

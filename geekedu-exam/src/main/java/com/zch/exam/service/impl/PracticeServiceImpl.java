@@ -3,7 +3,10 @@ package com.zch.exam.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zch.api.dto.exam.ChapterForm;
+import com.zch.api.dto.exam.DelChapterForm;
 import com.zch.api.vo.exam.CTagsVO;
+import com.zch.api.vo.exam.ChapterVO;
 import com.zch.api.vo.exam.PracticeVO;
 import com.zch.common.core.utils.BeanUtils;
 import com.zch.common.core.utils.CollUtils;
@@ -11,6 +14,7 @@ import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
 import com.zch.exam.domain.po.Practice;
 import com.zch.exam.mapper.PracticeMapper;
+import com.zch.exam.service.IChapterService;
 import com.zch.exam.service.IPracticeService;
 import com.zch.exam.service.ITagsService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +34,8 @@ import java.util.List;
 public class PracticeServiceImpl extends ServiceImpl<PracticeMapper, Practice> implements IPracticeService {
 
     private final ITagsService tagsService;
+
+    private final IChapterService chapterService;
 
     @Override
     public Page<PracticeVO> getPracticePage(Integer pageNum, Integer pageSize, String sort, String order, String keywords, Integer categoryId) {
@@ -105,5 +111,30 @@ public class PracticeServiceImpl extends ServiceImpl<PracticeMapper, Practice> i
             return new ArrayList<>(0);
         }
         return list;
+    }
+
+    @Override
+    public List<ChapterVO> getChapterList(Integer practiceId) {
+        return chapterService.getChapterList(practiceId);
+    }
+
+    @Override
+    public ChapterVO getChapterById(Integer id) {
+        return chapterService.getChapterById(id);
+    }
+
+    @Override
+    public Boolean deleteChapterBatch(DelChapterForm form) {
+        return chapterService.deleteChapterBatch(form);
+    }
+
+    @Override
+    public Boolean addChapter(ChapterForm form) {
+        return chapterService.addChapter(form);
+    }
+
+    @Override
+    public Boolean updateChapter(Integer id, ChapterForm form) {
+        return chapterService.updateChapter(id, form);
     }
 }
