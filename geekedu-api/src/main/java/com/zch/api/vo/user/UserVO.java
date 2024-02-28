@@ -1,27 +1,21 @@
-package com.zch.user.domain.po;
+package com.zch.api.vo.user;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.zch.common.mvc.entity.BaseEntity;
+import com.zch.common.mvc.entity.BaseVO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
- * user
  * @author Poison02
+ * @date 2024/2/28
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("user")
-public class User extends BaseEntity {
+public class UserVO extends BaseVO {
 
-    /**
-     * 主键
-     */
-    @TableId("id")
     private Long id;
 
     /**
@@ -120,22 +114,19 @@ public class User extends BaseEntity {
     private BigDecimal inviteAmount;
 
     /**
-     * 标签
-     */
-    private String tagId;
-
-    /**
      * 是否被冻结 0-否 1-是
      */
     private Boolean isFrozen;
 
-    private Long createdBy;
-
-    private Long updatedBy;
+    private LocalDateTime createdTime;
 
     /**
-     * 是否删除;0-未删除，1-删除
+     * 标签
      */
-    private Boolean isDelete;
+    private Integer tagId;
+
+    private List<TagVO> tag;
+
+    private VipVO vip;
 
 }

@@ -2,6 +2,7 @@ package com.zch.user.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.user.ChangePwdForm;
 import com.zch.api.dto.user.LoginForm;
@@ -17,20 +18,18 @@ import com.zch.user.domain.po.SysPermission;
 import com.zch.user.domain.po.SysRole;
 import com.zch.user.domain.po.User;
 import com.zch.user.mapper.UserMapper;
-import com.zch.user.service.ISysPermissionService;
-import com.zch.user.service.ISysRoleService;
-import com.zch.user.service.IUserService;
+import com.zch.user.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.zch.common.core.constants.ErrorInfo.Msg.EXPIRE_CAPTCHA_CODE;
@@ -51,6 +50,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private final ISysRoleService sysRoleService;
 
     private final ISysPermissionService sysPermissionService;
+
+    private final ITagService tagService;
+
+    private final IVipInfoService vipInfoService;
 
     @Override
     public CaptchaVO getCaptcha() {
@@ -172,6 +175,117 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return vo;
     }
 
+    @Override
+    public MemberFullVO getMemberPage(Integer pageNum, Integer pageSize, String sort, String order,
+                                      String keywords, Integer vipId, Integer tagId, List<String> createdTime) {
+        if (ObjectUtils.isNull(pageNum) || ObjectUtils.isNull(pageSize)
+        || StringUtils.isBlank(sort) || StringUtils.isBlank(order)) {
+            pageNum = 1;
+            pageSize = 10;
+            sort = "id";
+            order = "desc";
+        }
+        MemberFullVO vo = new MemberFullVO();
+        // 查找所有标签和vip信息
+        List<TagVO> tagList = tagService.getTagList();
+        List<VipVO> vipList = vipInfoService.getVipList();
+        vo.setVip(vipList);
+        vo.setTags(tagList);
+        long count = count();
+        if (count == 0) {
+            vo.getData().setTotal(0);
+            vo.getData().setData(new ArrayList<>(0));
+            return vo;
+        }
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        if (StringUtils.isNotBlank(keywords)) {
+            wrapper.like(User::getName, keywords);
+        }
+        if (ObjectUtils.isNotNull(vipId)) {
+            wrapper.eq(User::getVipId, vipId);
+        }
+        if (ObjectUtils.isNotNull(tagId)) {
+            wrapper.eq(User::getTagId, tagId);
+        }
+        // 时间处理
+        if (ObjectUtils.isNotNull(createdTime) && CollUtils.isNotEmpty(createdTime) && createdTime.size() > 1
+            && StringUtils.isNotBlank(createdTime.get(0)) && StringUtils.isNotBlank(createdTime.get(0))) {
+            List<LocalDateTime> times = timeHandle(createdTime);
+            // 增加条件
+            wrapper.between(User::getCreatedTime, times.get(0), times.get(1));
+        }
+        // 排序
+        wrapper.orderBy(true, "asc".equals(order), User::getId);
+        // 分页查找
+        Page<User> page = page(new Page<User>(pageNum, pageSize), wrapper);
+        if (ObjectUtils.isNull(page) || ObjectUtils.isNull(page.getRecords()) || CollUtils.isEmpty(page.getRecords())) {
+            vo.getData().setTotal(0);
+            vo.getData().setData(new ArrayList<>(0));
+            return vo;
+        }
+        List<User> records = page.getRecords();
+        List<UserVO> list = new ArrayList<>(records.size());
+        for (User item : records) {
+            UserVO vo1 = new UserVO();
+            BeanUtils.copyProperties(item, vo1);
+            // 查找相关的标签和vip
+            String[] tagIds = item.getTagId().split(",");
+            if (tagIds.length < 1) {
+                vo1.setTag(new ArrayList<>(0));
+            } else if (tagIds.length == 1 && "".equals(tagIds[0])) {
+                vo1.setTag(new ArrayList<>(0));
+            } else {
+                List<TagVO> tags = new ArrayList<>(tagIds.length);
+                for (String e : tagIds) {
+                    TagVO tag = tagService.getTagById(Integer.valueOf(e));
+                    tags.add(tag);
+                }
+                vo1.setTag(tags);
+            }
+            VipVO vip = vipInfoService.getVipById(item.getVipId());
+            vo1.setVip(vip);
+            list.add(vo1);
+        }
+        vo.getData().setTotal(count);
+        vo.getData().setData(list);
+        return vo;
+    }
+
+    @Override
+    public List<VipVO> getVipList() {
+        return vipInfoService.getVipList();
+    }
+
+    @Override
+    public UserVO getUserById(Long id) {
+        if (ObjectUtils.isNull(id)) {
+            return new UserVO();
+        }
+        User user = userMapper.selectById(id);
+        if (ObjectUtils.isNull(user)) {
+            return new UserVO();
+        }
+        UserVO vo = new UserVO();
+        BeanUtils.copyProperties(user, vo);
+        // 查找相关的标签和vip
+        String[] tagIds = user.getTagId().split(",");
+        if (tagIds.length < 1) {
+            vo.setTag(new ArrayList<>(0));
+        } else if (tagIds.length == 1 && "".equals(tagIds[0])) {
+            vo.setTag(new ArrayList<>(0));
+        } else {
+            List<TagVO> tags = new ArrayList<>(tagIds.length);
+            for (String e : tagIds) {
+                TagVO tag = tagService.getTagById(Integer.valueOf(e));
+                tags.add(tag);
+            }
+            vo.setTag(tags);
+        }
+        VipVO vip = vipInfoService.getVipById(user.getVipId());
+        vo.setVip(vip);
+        return vo;
+    }
+
     /**
      * 校验验证码是否相同
      * @param imageCaptcha
@@ -280,5 +394,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             vo.setRoleId(roleId);
             RedisUtils.setCacheObject(USERINFO + user.getId(), vo);
         }
+    }
+
+    /**
+     * 对时间的处理
+     * @param time
+     * @return
+     */
+    public static List<LocalDateTime> timeHandle(List<String> time) {
+        List<LocalDateTime> res = new ArrayList<>(2);
+        String start = time.get(0);
+        String end = time.get(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDate startDate = LocalDate.parse(start, formatter);
+        LocalDate endDate = LocalDate.parse(end, formatter);
+        LocalDateTime startDateTime = LocalDateTime.of(startDate, LocalTime.MIN);
+        LocalDateTime endDateTime = LocalDateTime.of(endDate, LocalTime.MAX);
+        res.add(startDateTime);
+        res.add(endDateTime);
+        return res;
+    }
+
+    public static void main(String[] args) {
+        String[] list = "1,2,3,4,5".split(",");
+        System.out.println(Arrays.toString(list));
     }
 }

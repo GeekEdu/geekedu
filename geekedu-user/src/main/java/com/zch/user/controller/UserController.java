@@ -83,13 +83,4 @@ public class UserController {
         return Response.success(userService.getUserById(userId));
     }
 
-    /**
-     * 后台返回学员列表
-     * @return
-     */
-    @GetMapping("/member/list")
-    public Response getMemberList() {
-        return Response.success();
-    }
-
 }
