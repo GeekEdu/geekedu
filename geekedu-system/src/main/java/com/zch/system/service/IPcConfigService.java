@@ -2,8 +2,10 @@ package com.zch.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.vo.system.GraphVO;
-import com.zch.system.domain.po.*;
-import com.zch.system.domain.vo.NoticeVO;
+import com.zch.system.domain.po.Links;
+import com.zch.system.domain.po.Navs;
+import com.zch.system.domain.po.PcConfig;
+import com.zch.system.domain.po.Sliders;
 
 import java.util.List;
 
@@ -20,12 +22,6 @@ public interface IPcConfigService extends IService<PcConfig> {
     List<Links> getLinks();
 
     List<Sliders> getSliders(String platform);
-
-    NoticeVO getAllNotice();
-
-    Notice getOneNotice(Integer id);
-
-    Notice getLatestNotice();
 
     GraphVO getGraph(String startAt, String endAt);
 

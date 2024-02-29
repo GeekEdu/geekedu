@@ -4,9 +4,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zch.api.dto.user.ChangePwdForm;
-import com.zch.api.dto.user.LoginForm;
-import com.zch.api.dto.user.VipForm;
+import com.zch.api.dto.user.*;
 import com.zch.api.utils.AddressUtils;
 import com.zch.api.vo.order.OrderVO;
 import com.zch.api.vo.user.*;
@@ -106,6 +104,54 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return vo;
         }
         return new LoginVO();
+    }
+
+    @Override
+    public LoginVO passwordLogin(PwdLoginForm form) {
+        if (ObjectUtils.isNull(form)) {
+            return null;
+        }
+        String mobile = form.getPhone();
+        String password = form.getPassword();
+        User user = userMapper.selectOne(new LambdaQueryWrapper<User>()
+                .eq(User::getPhone, mobile));
+        if (ObjectUtils.isNull(user)) {
+            return null;
+        }
+        String salt = user.getSalt();
+        String encrypt = EncryptUtils.md5Encrypt(password, salt);
+        if (! encrypt.equals(user.getPassword())) {
+            return null;
+        }
+        Long userId = user.getId();
+        StpUtil.login(userId);
+        String token = StpUtil.getTokenValue();
+        RedisUtils.setCacheObject(LOGIN_USER_TOKEN + token, userId, Duration.ofSeconds(LOGIN_USER_TOKEN_TTL));
+        // 且将用户id写入到ThreadLocal中
+        UserContext.set("userId", userId);
+        LoginVO vo = new LoginVO();
+        vo.setToken(token);
+        return vo;
+    }
+
+    @Override
+    public LoginVO codeLogin(CodeLoginForm form) {
+        return null;
+    }
+
+    @Override
+    public UserVO getLoginUserDetail() {
+        Long userId = UserContext.getLoginId();
+        if (ObjectUtils.isNull(userId)) {
+            return null;
+        }
+        User user = userMapper.selectById(userId);
+        if (ObjectUtils.isNull(user)) {
+            return null;
+        }
+        UserVO vo = new UserVO();
+        BeanUtils.copyProperties(user, vo);
+        return vo;
     }
 
     @Override
@@ -360,7 +406,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         // 从数据库中使用username查找对应用户信息
         User user = userMapper.selectOne(new LambdaQueryWrapper<User>()
                 .eq(StringUtils.isNotBlank(username), User::getUserName, username)
-                .eq(User::getIsDelete, 0)
                 .select(User::getId, User::getUserName, User::getPassword, User::getSalt));
         if (ObjectUtils.isNull(user)) {
             return -1L;

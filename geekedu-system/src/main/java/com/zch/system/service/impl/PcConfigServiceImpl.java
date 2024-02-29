@@ -3,10 +3,7 @@ package com.zch.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.vo.system.GraphVO;
-import com.zch.common.core.utils.ObjectUtils;
-import com.zch.common.mvc.exception.CommonException;
 import com.zch.system.domain.po.*;
-import com.zch.system.domain.vo.NoticeVO;
 import com.zch.system.mapper.*;
 import com.zch.system.service.IPcConfigService;
 import lombok.RequiredArgsConstructor;
@@ -103,32 +100,6 @@ public class PcConfigServiceImpl extends ServiceImpl<PcConfigMapper, PcConfig> i
                 .eq(Sliders::getPlatform, platform)
                 .select(Sliders::getThumb, Sliders::getUrl, Sliders::getPlatform, Sliders::getSort,
                         Sliders::getCreatedTime, Sliders::getUpdatedTime, Sliders::getId));
-    }
-
-    @Override
-    public NoticeVO getAllNotice() {
-        List<Notice> notices = noticeMapper.selectList(new LambdaQueryWrapper<Notice>()
-                .select(Notice::getId, Notice::getAdminId, Notice::getTitle, Notice::getAnnouncement, Notice::getViewCount,
-                        Notice::getUpdatedTime, Notice::getCreatedTime));
-        Long total = noticeMapper.selectCount(new LambdaQueryWrapper<Notice>());
-        NoticeVO vo = new NoticeVO();
-        vo.setData(notices);
-        vo.setTotal(total);
-        return vo;
-    }
-
-    @Override
-    public Notice getOneNotice(Integer id) {
-        if (ObjectUtils.isNull(id)) {
-            throw new CommonException("请传入对应id！");
-        }
-        return noticeMapper.selectById(id);
-    }
-
-    @Override
-    public Notice getLatestNotice() {
-        return noticeMapper.selectOne(new LambdaQueryWrapper<Notice>()
-                .orderByDesc(Notice::getCreatedTime));
     }
 
     @Override

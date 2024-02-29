@@ -2,9 +2,7 @@ package com.zch.user.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zch.api.dto.user.ChangePwdForm;
-import com.zch.api.dto.user.LoginForm;
-import com.zch.api.dto.user.VipForm;
+import com.zch.api.dto.user.*;
 import com.zch.api.vo.order.OrderVO;
 import com.zch.api.vo.user.*;
 import com.zch.user.domain.po.User;
@@ -32,6 +30,26 @@ public interface IUserService extends IService<User> {
      * @return
      */
     LoginVO login(LoginForm form);
+
+    /**
+     * 前台 手机号-密码登录
+     * @param form
+     * @return
+     */
+    LoginVO passwordLogin(PwdLoginForm form);
+
+    /**
+     * 前台 手机号-短信验证码登录
+     * @param form
+     * @return
+     */
+    LoginVO codeLogin(CodeLoginForm form);
+
+    /**
+     * 获取登录用户的明细
+     * @return
+     */
+    UserVO getLoginUserDetail();
 
     /**
      * 修改密码

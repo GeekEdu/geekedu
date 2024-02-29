@@ -8,7 +8,6 @@ import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
 import com.zch.gateway.result.SaResult;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.server.ServerWebExchange;
 
@@ -18,7 +17,7 @@ import org.springframework.web.server.ServerWebExchange;
  * @author Poison02
  * @date 2024/1/16
  */
-@Configuration
+// @Configuration
 public class SaTokenConfigure {
 
     @Bean
@@ -31,10 +30,13 @@ public class SaTokenConfigure {
                     // 登录校验 -- 拦截所有路由，并排除 登录和验证码 接口
                     SaRouter.notMatch("/user/api/captcha/image")
                             .notMatch("/user/api/login")
-                            .notMatch("/system/api/**")
+                            .notMatch("/user/api/v2/login/password")
+                            .notMatch("/user/api/v2/login/code")
+                            .notMatch("/system/api/v2/**")
                             .check(r -> {
                                 ServerHttpRequest request = SaReactorSyncHolder.getContext().getRequest();
                                 String token = request.getHeaders().getFirst("Authorization");
+                                System.out.println(token);
                                 StpUtil.checkLogin();
                             });
                 })

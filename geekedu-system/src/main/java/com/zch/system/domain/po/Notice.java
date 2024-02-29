@@ -2,6 +2,7 @@ package com.zch.system.domain.po;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zch.common.mvc.entity.BaseEntity;
 import lombok.Data;
@@ -26,5 +27,8 @@ public class Notice extends BaseEntity {
     private String announcement;
 
     private Integer viewCount;
+
+    @TableLogic
+    private Boolean isDelete;
 
 }

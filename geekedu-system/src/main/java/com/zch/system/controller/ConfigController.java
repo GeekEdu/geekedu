@@ -1,7 +1,9 @@
 package com.zch.system.controller;
 
+import com.zch.api.vo.system.notice.NoticeVO;
 import com.zch.common.mvc.result.Response;
 import com.zch.system.service.IAddonsService;
+import com.zch.system.service.INoticeService;
 import com.zch.system.service.IPcConfigService;
 import com.zch.system.service.IVersionInfoService;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author Poison02
@@ -25,8 +29,10 @@ public class ConfigController {
 
     private final IPcConfigService pcConfigService;
 
+    private final INoticeService noticeService;
+
     /**
-     * 后台获取配置信息
+     * 前台获取配置信息
      * @return
      */
     @GetMapping("/v2/config")
@@ -35,7 +41,7 @@ public class ConfigController {
     }
 
     /**
-     * 后台获取导航栏信息
+     * 前台获取导航栏信息
      * @return
      */
     @GetMapping("/v2/navs")
@@ -44,7 +50,7 @@ public class ConfigController {
     }
 
     /**
-     * 后台获取链接
+     * 前台获取链接 底部友情链接
      * @return
      */
     @GetMapping("/v2/links")
@@ -68,8 +74,8 @@ public class ConfigController {
      * @return
      */
     @GetMapping("/v2/announcement/{id}")
-    public Response getOneAnnouncement(@RequestParam(value = "id", required = false) Integer id) {
-        return Response.success(pcConfigService.getOneNotice(id));
+    public Response<NoticeVO> getOneAnnouncement(@RequestParam(value = "id", required = false) Integer id) {
+        return Response.success(noticeService.getNoticeById(id));
     }
 
     /**
@@ -77,8 +83,8 @@ public class ConfigController {
      * @return
      */
     @GetMapping("/v2/announcement")
-    public Response getAnnouncement() {
-        return Response.success(pcConfigService.getAllNotice());
+    public Response<List<NoticeVO>> getAnnouncement() {
+        return Response.success(noticeService.getNoticeList());
     }
 
     /**
@@ -86,12 +92,12 @@ public class ConfigController {
      * @return
      */
     @GetMapping("/v2/announcement/latest")
-    public Response getLatestAnnouncement() {
-        return Response.success(pcConfigService.getLatestNotice());
+    public Response<NoticeVO> getLatestAnnouncement() {
+        return Response.success(noticeService.getLatestNotice());
     }
 
     /**
-     * 前台获取配置信息
+     * 后台获取配置信息
      * @return
      */
     @GetMapping("/config")

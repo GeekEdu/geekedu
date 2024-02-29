@@ -1,9 +1,13 @@
 package com.zch.user.controller;
 
 import com.zch.api.dto.user.ChangePwdForm;
+import com.zch.api.dto.user.CodeLoginForm;
 import com.zch.api.dto.user.LoginForm;
+import com.zch.api.dto.user.PwdLoginForm;
 import com.zch.api.vo.user.CaptchaVO;
+import com.zch.api.vo.user.LoginVO;
 import com.zch.api.vo.user.UserSimpleVO;
+import com.zch.api.vo.user.UserVO;
 import com.zch.common.mvc.result.Response;
 import com.zch.user.domain.po.User;
 import com.zch.user.service.IUserService;
@@ -47,6 +51,35 @@ public class UserController {
     @PostMapping("/login")
     public Response login(@RequestBody LoginForm form) {
         return Response.success(userService.login(form));
+    }
+
+    /**
+     * 前台 手机号-密码登录
+     * @param form
+     * @return
+     */
+    @PostMapping("/v2/login/password")
+    public Response<LoginVO> passwordLogin(@RequestBody PwdLoginForm form) {
+        return Response.success(userService.passwordLogin(form));
+    }
+
+    /**
+     * 前台 手机号-短信验证码登录
+     * @param form
+     * @return
+     */
+    @PostMapping("/v2/login/sms")
+    public Response codeLogin(@RequestBody CodeLoginForm form) {
+        return Response.success();
+    }
+
+    /**
+     * 获取登录用户的明细
+     * @return
+     */
+    @GetMapping("/v2/detail")
+    public Response<UserVO> getUserDetail() {
+        return Response.success(userService.getLoginUserDetail());
     }
 
     /**
