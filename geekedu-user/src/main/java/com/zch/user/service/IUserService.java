@@ -1,8 +1,10 @@
 package com.zch.user.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.user.ChangePwdForm;
 import com.zch.api.dto.user.LoginForm;
+import com.zch.api.vo.order.OrderVO;
 import com.zch.api.vo.user.*;
 import com.zch.user.domain.po.User;
 
@@ -80,8 +82,23 @@ public interface IUserService extends IService<User> {
      * 获取VIP列表
      * @return
      */
-    List<VipVO> getVipList();
+    VipAndTagVO getVipAndTagList();
 
+    /**
+     * 根据用户id获取用户详情
+     * @param id
+     * @return
+     */
     UserVO getUserById(Long id);
+
+    /**
+     * TODO
+     * 获取某个用户的订单数据
+     * @param id
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    Page<OrderVO> getMemberOrderList(Long id, Integer pageNum, Integer pageSize);
 
 }

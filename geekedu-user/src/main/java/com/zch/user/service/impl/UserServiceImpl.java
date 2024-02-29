@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.user.ChangePwdForm;
 import com.zch.api.dto.user.LoginForm;
 import com.zch.api.utils.AddressUtils;
+import com.zch.api.vo.order.OrderVO;
 import com.zch.api.vo.user.*;
 import com.zch.common.core.utils.*;
 import com.zch.common.core.utils.encrypt.EncryptUtils;
@@ -252,8 +253,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public List<VipVO> getVipList() {
-        return vipInfoService.getVipList();
+    public VipAndTagVO getVipAndTagList() {
+        List<VipVO> vips = vipInfoService.getVipList();
+        List<TagVO> tags = tagService.getTagList();
+        VipAndTagVO vo = new VipAndTagVO();
+        vo.setTag(tags);
+        vo.setVip(vips);
+        return vo;
     }
 
     @Override
@@ -284,6 +290,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         VipVO vip = vipInfoService.getVipById(user.getVipId());
         vo.setVip(vip);
         return vo;
+    }
+
+    @Override
+    public Page<OrderVO> getMemberOrderList(Long id, Integer pageNum, Integer pageSize) {
+        return new Page<>();
     }
 
     /**

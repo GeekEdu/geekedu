@@ -120,6 +120,8 @@ public class UserVO extends BaseVO {
 
     private LocalDateTime createdTime;
 
+    private LocalDateTime updatedTime;
+
     /**
      * 标签
      */

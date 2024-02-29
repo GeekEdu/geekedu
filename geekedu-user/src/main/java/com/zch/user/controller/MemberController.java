@@ -1,8 +1,10 @@
 package com.zch.user.controller;
 
+import com.zch.api.vo.order.OrderVO;
 import com.zch.api.vo.user.MemberFullVO;
 import com.zch.api.vo.user.UserVO;
-import com.zch.api.vo.user.VipVO;
+import com.zch.api.vo.user.VipAndTagVO;
+import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import com.zch.user.service.IUserService;
 import lombok.RequiredArgsConstructor;
@@ -46,12 +48,12 @@ public class MemberController {
     }
 
     /**
-     * 获取vip列表
+     * 获取vip列表和用户标签
      * @return
      */
-    @GetMapping("/vip/list")
-    public Response<List<VipVO>> getVipList() {
-        return Response.success(userService.getVipList());
+    @GetMapping("/vipAndTag/list")
+    public Response<VipAndTagVO> getVipList() {
+        return Response.success(userService.getVipAndTagList());
     }
 
     /**
@@ -62,6 +64,21 @@ public class MemberController {
     @GetMapping("/detail/{id}")
     public Response<UserVO> getMemberById(@PathVariable("id") Long id) {
         return Response.success(userService.getUserById(id));
+    }
+
+    /**
+     * TODO
+     * 获取某个学员详情的订单数据
+     * @param id
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/detail/{id}/order/list")
+    public PageResult<OrderVO> getMemberOrderList(@PathVariable("id") Long id,
+                                                  @RequestParam("pageNum") Integer pageNum,
+                                                  @RequestParam("pageSize") Integer pageSize) {
+        return PageResult.success(userService.getMemberOrderList(id, pageNum, pageSize));
     }
 
 }
