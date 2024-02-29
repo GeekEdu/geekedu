@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.user.ChangePwdForm;
 import com.zch.api.dto.user.LoginForm;
+import com.zch.api.dto.user.VipForm;
 import com.zch.api.vo.order.OrderVO;
 import com.zch.api.vo.user.*;
 import com.zch.user.domain.po.User;
@@ -100,5 +101,40 @@ public interface IUserService extends IService<User> {
      * @return
      */
     Page<OrderVO> getMemberOrderList(Long id, Integer pageNum, Integer pageSize);
+
+    /**
+     * VIP相关操作
+     * @return
+     */
+    List<VipVO> getVipList();
+
+    /**
+     * VIP相关操作
+     * @param id
+     * @return
+     */
+    VipVO getVipById(Integer id);
+
+    /**
+     * VIP相关操作
+     * @param form
+     * @return
+     */
+    Boolean addVip(VipForm form);
+
+    /**
+     * VIP相关操作
+     * @param id
+     * @return
+     */
+    Boolean deleteVip(Integer id);
+
+    /**
+     * VIP相关操作
+     * @param id
+     * @param form
+     * @return
+     */
+    Boolean updateVip(Integer id, VipForm form);
 
 }

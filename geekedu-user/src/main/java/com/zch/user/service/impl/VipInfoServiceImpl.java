@@ -2,6 +2,7 @@ package com.zch.user.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zch.api.dto.user.VipForm;
 import com.zch.api.vo.user.VipVO;
 import com.zch.common.core.utils.BeanUtils;
 import com.zch.common.core.utils.CollUtils;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,5 +56,41 @@ public class VipInfoServiceImpl extends ServiceImpl<VipInfoMapper, VipInfo> impl
         VipVO vo = new VipVO();
         BeanUtils.copyProperties(vipInfo, vo);
         return vo;
+    }
+
+    @Override
+    public Boolean addVip(VipForm form) {
+        VipInfo vip = new VipInfo();
+        VipInfo info = vipInfoMapper.selectOne(new LambdaQueryWrapper<VipInfo>()
+                .eq(VipInfo::getName, form.getName()));
+        if (ObjectUtils.isNotNull(info)) {
+            return false;
+        }
+        vip.setName(form.getName());
+        vip.setDay(form.getDay());
+        vip.setPrice(new BigDecimal(form.getPrice()));
+        vip.setIntro(form.getIntro());
+        return save(vip);
+    }
+
+    @Override
+    public Boolean deleteVip(Integer id) {
+        return removeById(id);
+    }
+
+    @Override
+    public Boolean updateVip(Integer id, VipForm form) {
+        VipInfo info = vipInfoMapper.selectOne(new LambdaQueryWrapper<VipInfo>()
+                .eq(VipInfo::getId, id)
+                .eq(VipInfo::getName, form.getName()));
+        if (ObjectUtils.isNotNull(info)) {
+            return false;
+        }
+        VipInfo vip = new VipInfo();
+        vip.setName(form.getName());
+        vip.setPrice(new BigDecimal(form.getPrice()));
+        vip.setIntro(form.getIntro());
+        vip.setDay(form.getDay());
+        return save(vip);
     }
 }

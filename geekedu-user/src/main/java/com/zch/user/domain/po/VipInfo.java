@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 /**
  * @author Poison02
  * @date 2024/2/28
@@ -19,5 +21,9 @@ public class VipInfo {
     private String name;
 
     private String intro;
+
+    private Integer day;
+
+    private BigDecimal price;
 
 }

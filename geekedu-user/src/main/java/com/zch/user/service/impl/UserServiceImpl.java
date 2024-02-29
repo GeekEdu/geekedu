@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.user.ChangePwdForm;
 import com.zch.api.dto.user.LoginForm;
+import com.zch.api.dto.user.VipForm;
 import com.zch.api.utils.AddressUtils;
 import com.zch.api.vo.order.OrderVO;
 import com.zch.api.vo.user.*;
@@ -295,6 +296,31 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public Page<OrderVO> getMemberOrderList(Long id, Integer pageNum, Integer pageSize) {
         return new Page<>();
+    }
+
+    @Override
+    public List<VipVO> getVipList() {
+        return vipInfoService.getVipList();
+    }
+
+    @Override
+    public VipVO getVipById(Integer id) {
+        return vipInfoService.getVipById(id);
+    }
+
+    @Override
+    public Boolean addVip(VipForm form) {
+        return vipInfoService.addVip(form);
+    }
+
+    @Override
+    public Boolean deleteVip(Integer id) {
+        return vipInfoService.deleteVip(id);
+    }
+
+    @Override
+    public Boolean updateVip(Integer id, VipForm form) {
+        return vipInfoService.updateVip(id, form);
     }
 
     /**

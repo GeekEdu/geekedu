@@ -1,6 +1,7 @@
 package com.zch.user.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zch.api.dto.user.VipForm;
 import com.zch.api.vo.user.VipVO;
 import com.zch.user.domain.po.VipInfo;
 
@@ -24,5 +25,27 @@ public interface IVipInfoService extends IService<VipInfo> {
      * @return
      */
     VipVO getVipById(Integer id);
+
+    /**
+     * VIP相关操作
+     * @param form
+     * @return
+     */
+    Boolean addVip(VipForm form);
+
+    /**
+     * VIP相关操作
+     * @param id
+     * @return
+     */
+    Boolean deleteVip(Integer id);
+
+    /**
+     * VIP相关操作
+     * @param id
+     * @param form
+     * @return
+     */
+    Boolean updateVip(Integer id, VipForm form);
 
 }

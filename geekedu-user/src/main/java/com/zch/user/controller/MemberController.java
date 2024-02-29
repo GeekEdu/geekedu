@@ -1,9 +1,11 @@
 package com.zch.user.controller;
 
+import com.zch.api.dto.user.VipForm;
 import com.zch.api.vo.order.OrderVO;
 import com.zch.api.vo.user.MemberFullVO;
 import com.zch.api.vo.user.UserVO;
 import com.zch.api.vo.user.VipAndTagVO;
+import com.zch.api.vo.user.VipVO;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import com.zch.user.service.IUserService;
@@ -52,7 +54,7 @@ public class MemberController {
      * @return
      */
     @GetMapping("/vipAndTag/list")
-    public Response<VipAndTagVO> getVipList() {
+    public Response<VipAndTagVO> getVipAndTagList() {
         return Response.success(userService.getVipAndTagList());
     }
 
@@ -79,6 +81,55 @@ public class MemberController {
                                                   @RequestParam("pageNum") Integer pageNum,
                                                   @RequestParam("pageSize") Integer pageSize) {
         return PageResult.success(userService.getMemberOrderList(id, pageNum, pageSize));
+    }
+
+    /**
+     * vip列表
+     * @return
+     */
+    @GetMapping("/vip/list")
+    public Response<List<VipVO>> getVipList() {
+        return Response.success(userService.getVipList());
+    }
+
+    /**
+     * vip明细
+     * @param id
+     * @return
+     */
+    @GetMapping("/vip/{id}")
+    public Response<VipVO> getVipById(@PathVariable("id") Integer id) {
+        return Response.success(userService.getVipById(id));
+    }
+
+    /**
+     * 新增vip
+     * @return
+     */
+    @PostMapping("/vip/add")
+    public Response<Boolean> addVip(@RequestBody VipForm form) {
+        return Response.success(userService.addVip(form));
+    }
+
+    /**
+     * 删除vip
+     * @param id
+     * @return
+     */
+    @PostMapping("/vip/delete/{id}")
+    public Response<Boolean> deleteVip(@PathVariable("id") Integer id) {
+        return Response.success(userService.deleteVip(id));
+    }
+
+    /**
+     * 更新vip
+     * @param id
+     * @return
+     */
+    @PostMapping("/vip/update/{id}")
+    public Response<Boolean> updateVip(@PathVariable("id") Integer id, @RequestBody VipForm form) {
+        return Response.success(userService.updateVip(id, form));
+
     }
 
 }
