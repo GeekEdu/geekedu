@@ -71,6 +71,16 @@ public class CategoryController {
     }
 
     /**
+     * 返回简单分类列表 不分页
+     * @param type
+     * @return
+     */
+    @GetMapping("/getCategorySimpleList")
+    public Response<List<CategorySimpleVO>> getCategorySimpleList(@RequestParam("type") String type) {
+        return Response.success(categoryService.getCategorySimpleList(type));
+    }
+
+    /**
      * 根据分类id更新分类
      * @param id
      * @param form

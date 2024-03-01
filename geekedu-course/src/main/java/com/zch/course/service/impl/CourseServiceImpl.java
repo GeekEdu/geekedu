@@ -28,10 +28,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -108,7 +105,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
             vo1.setCategory(data);
             courses.add(vo1);
         }
-        Response<List<CategorySimpleVO>> res = labelFeignClient.getCategoryList("REPLAY_COURSE");
+        Response<List<CategorySimpleVO>> res = labelFeignClient.getCategorySimpleList("REPLAY_COURSE");
         if (res == null || res.getData() == null) {
             vo.getCourses().setData(new ArrayList<>(0));
             vo.setCategories(new ArrayList<>(0));
@@ -227,6 +224,65 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Override
     public Boolean deleteSectionBatch(DelSectionBatchForm form) {
         return sectionService.deleteSectionBatch(form);
+    }
+
+    @Override
+    public List<CategorySimpleVO> getCategorySimpleList() {
+        Response<List<CategorySimpleVO>> response = labelFeignClient.getCategorySimpleList("REPLAY_COURSE");
+        if (ObjectUtils.isNull(response) || ObjectUtils.isNull(response.getData()) || CollUtils.isEmpty(response.getData())) {
+            return new ArrayList<>(0);
+        }
+        return response.getData();
+    }
+
+    @Override
+    public Page<CourseVO> getCourseCondition(Integer pageNum, Integer pageSize, String scene, Integer categoryId) {
+        if (ObjectUtils.isNull(pageNum) || ObjectUtils.isNull(pageSize) || ObjectUtils.isNull(categoryId)) {
+            pageNum = 1;
+            pageSize = 10;
+            categoryId = 0; // 在前台表示全部分类，这里自定义按照课程id升序
+        }
+        Page<CourseVO> vo = new Page<>();
+        long count = count();
+        if (count == 0) {
+            vo.setTotal(0);
+            vo.setRecords(new ArrayList<>(0));
+            return vo;
+        }
+        LambdaQueryWrapper<Course> wrapper = new LambdaQueryWrapper<>();
+        if (StringUtils.isNotBlank(scene)) {
+            if ("free".equals(scene)) {
+                // 免费
+                wrapper.eq(Course::getPrice, 0);
+            } else if ("sub".equals(scene)) {
+                // 热门 根据销量降序排列
+                wrapper.orderBy(true, false, Course::getSellNum);
+            }
+        }
+        if (! Objects.equals(categoryId, 0)) {
+            wrapper.eq(Course::getCategoryId, categoryId);
+        }
+        Page<Course> page = page(new Page<Course>(pageNum, pageSize), wrapper);
+        if (ObjectUtils.isNull(page) || ObjectUtils.isNull(page.getRecords()) || CollUtils.isEmpty(page.getRecords())) {
+            vo.setTotal(0);
+            vo.setRecords(new ArrayList<>(0));
+            return vo;
+        }
+        List<Course> records = page.getRecords();
+        List<CourseVO> list = new ArrayList<>(records.size());
+        for (Course item : records) {
+            CourseVO vo1 = new CourseVO();
+            BeanUtils.copyProperties(item, vo1);
+            Response<CategorySimpleVO> res = labelFeignClient.getCategoryById(item.getCategoryId(), "REPLAY_COURSE");
+            if (ObjectUtils.isNull(res) || ObjectUtils.isNull(res.getData())) {
+                vo1.setCategory(null);
+            }
+            vo1.setCategory(res.getData());
+            list.add(vo1);
+        }
+        vo.setRecords(list);
+        vo.setTotal(count);
+        return vo;
     }
 
 

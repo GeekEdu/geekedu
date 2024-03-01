@@ -192,6 +192,26 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     }
 
     @Override
+    public List<CategorySimpleVO> getCategorySimpleList(String type) {
+        if (StringUtils.isBlank(type)) {
+            return new ArrayList<>(0);
+        }
+        List<Category> categories = categoryMapper.selectList(new LambdaQueryWrapper<Category>()
+                .select(Category::getId, Category::getSort, Category::getName, Category::getType, Category::getParentId)
+                .eq(Category::getType, CategoryEnum.valueOf(type))
+                .orderByAsc(Category::getSort));
+        if (CollUtils.isEmpty(categories)) {
+            return new ArrayList<>(0);
+        }
+        List<CategorySimpleVO> vos = categories.stream().map(item -> {
+            CategorySimpleVO vo = new CategorySimpleVO();
+            BeanUtils.copyProperties(item, vo);
+            return vo;
+        }).collect(Collectors.toList());
+        return vos;
+    }
+
+    @Override
     public Boolean updateCategory(Integer id, CategoryForm form) {
         // 获取用户id
         Long userId = UserContext.getLoginId();

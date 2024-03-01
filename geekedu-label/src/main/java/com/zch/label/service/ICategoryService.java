@@ -47,6 +47,13 @@ public interface ICategoryService extends IService<Category> {
     List<CategoryVO> getCategory(String type);
 
     /**
+     * 返回简单类型的分类列表 即使是子类型也不放在 children 里面
+     * @param type
+     * @return
+     */
+    List<CategorySimpleVO> getCategorySimpleList(String type);
+
+    /**
      * 更新分类
      * @param id
      * @param form

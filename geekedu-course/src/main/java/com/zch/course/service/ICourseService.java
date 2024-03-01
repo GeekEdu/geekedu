@@ -6,6 +6,7 @@ import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.course.ChapterForm;
 import com.zch.api.dto.course.DelSectionBatchForm;
 import com.zch.api.vo.course.*;
+import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.course.domain.po.Course;
 
 import java.util.List;
@@ -130,5 +131,23 @@ public interface ICourseService extends IService<Course> {
      * @return
      */
     Boolean deleteSectionBatch(DelSectionBatchForm form);
+
+// ================================================================================================
+// 前台
+    /**
+     * 获取简单分类列表
+     * @return
+     */
+    List<CategorySimpleVO> getCategorySimpleList();
+
+    /**
+     * 条件分页查找录播课列表
+     * @param pageNum
+     * @param pageSize
+     * @param scene
+     * @param categoryId
+     * @return
+     */
+    Page<CourseVO> getCourseCondition(Integer pageNum, Integer pageSize, String scene, Integer categoryId);
 
 }

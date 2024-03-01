@@ -8,7 +8,6 @@ import cn.dev33.satoken.util.SaResult;
 import com.zch.common.mvc.interceptor.LoginInterceptor;
 import com.zch.common.mvc.interceptor.RefreshTokenInterceptor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -16,7 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author Poison02
  * @date 2024/1/21
  */
-@Configuration
+// @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override

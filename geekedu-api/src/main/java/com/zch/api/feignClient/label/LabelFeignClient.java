@@ -54,5 +54,13 @@ public interface LabelFeignClient {
      * @return
      */
     @GetMapping("/api/category/getCategoryList")
-    public Response<List<CategorySimpleVO>> getCategoryList(@RequestParam("type") String type);
+    public Response<List<CategoryVO>> getCategoryList(@RequestParam("type") String type);
+
+    /**
+     * 查找简单分类列表
+     * @param type
+     * @return
+     */
+    @GetMapping("/api/category/getCategorySimpleList")
+    Response<List<CategorySimpleVO>> getCategorySimpleList(@RequestParam("type") String type);
 }

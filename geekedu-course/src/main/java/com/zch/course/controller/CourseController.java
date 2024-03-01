@@ -4,6 +4,7 @@ import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.course.ChapterForm;
 import com.zch.api.dto.course.DelSectionBatchForm;
 import com.zch.api.vo.course.*;
+import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import com.zch.course.service.ICourseService;
@@ -189,6 +190,31 @@ public class CourseController {
     @PostMapping("/section/delete/batch")
     public Response<Boolean> deleteSectionBatch(@RequestBody DelSectionBatchForm form) {
         return Response.success(courseService.deleteSectionBatch(form));
+    }
+
+    /**
+     * 前台获取录播课分类列表
+     * @return
+     */
+    @GetMapping("/v2/category/list")
+    public Response<List<CategorySimpleVO>> getCourseCategoryList() {
+        return Response.success(courseService.getCategorySimpleList());
+    }
+
+    /**
+     * 前台分页查找录播课列表
+     * @param pageNum
+     * @param pageSize
+     * @param scene 分为免费和热门，free
+     * @param categoryId
+     * @return
+     */
+    @GetMapping("/v2/courses")
+    public PageResult getCourseCondition(@RequestParam("pageNum") Integer pageNum,
+                                         @RequestParam("pageSize") Integer pageSize,
+                                         @RequestParam(value = "scene", required = false) String scene,
+                                         @RequestParam("categoryId") Integer categoryId) {
+        return PageResult.success(courseService.getCourseCondition(pageNum, pageSize, scene, categoryId));
     }
 
 }
