@@ -97,5 +97,5 @@ public interface IQuestionService extends IService<Question> {
      * @param form
      * @return
      */
-    Boolean addQuestion(QuestionForm form);
+    Integer addQuestion(QuestionForm form);
 }

@@ -307,9 +307,9 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     }
 
     @Override
-    public Boolean addQuestion(QuestionForm form) {
+    public Integer addQuestion(QuestionForm form) {
         if (ObjectUtils.isNull(form)) {
-            return false;
+            return 0;
         }
         Long userId = UserContext.getLoginId();
         Question question = new Question();
@@ -317,7 +317,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
                 .eq(Question::getTitle, form.getTitle())
                 .eq(Question::getCategoryId, form.getCategoryId()));
         if (ObjectUtils.isNotNull(one)) {
-            return false;
+            return 0;
         }
         question.setTitle(form.getTitle());
         question.setCategoryId(form.getCategoryId());
@@ -331,7 +331,11 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         question.setUserId(userId);
         question.setCreatedBy(userId);
         question.setUpdatedBy(userId);
-        return save(question);
+        save(question);
+        Question res = questionMapper.selectOne(new LambdaQueryWrapper<Question>()
+                .eq(Question::getTitle, form.getTitle())
+                .eq(Question::getCategoryId, form.getCategoryId()));
+        return res.getId();
     }
 
     /**

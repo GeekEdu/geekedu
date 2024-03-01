@@ -135,7 +135,7 @@ public class QuestionController {
      * @return
      */
     @PostMapping("/v2/add")
-    public Response<Boolean> addQuestion(@RequestBody QuestionForm form) {
+    public Response<Integer> addQuestion(@RequestBody QuestionForm form) {
         return Response.success(questionService.addQuestion(form));
     }
 
