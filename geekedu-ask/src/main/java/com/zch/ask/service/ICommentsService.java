@@ -2,6 +2,7 @@ package com.zch.ask.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zch.api.dto.ask.CommentAnswerForm;
 import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.ask.CommentsForm;
 import com.zch.api.vo.ask.CommentsVO;
@@ -48,5 +49,22 @@ public interface ICommentsService extends IService<Comments> {
     Boolean deleteCommentsBatch(CommentsBatchDelForm form);
 
     void insertComments(CommentsForm form);
+
+    /**
+     * 评论回答
+     * @param id
+     * @param form
+     * @return
+     */
+    Boolean commentAnswer(Integer id, CommentAnswerForm form);
+
+    /**
+     * 分页查找评论
+     * @param id
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    Page<CommentsVO> getCommentsPage(Integer id, Integer pageNum, Integer pageSize);
 
 }

@@ -3,6 +3,7 @@ package com.zch.ask.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zch.api.dto.ask.CommentAnswerForm;
 import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.ask.CommentsForm;
 import com.zch.api.feignClient.course.CourseFeignClient;
@@ -21,6 +22,7 @@ import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
 import com.zch.common.mvc.result.Response;
 import com.zch.common.mvc.utils.CommonServletUtils;
+import com.zch.common.satoken.context.UserContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Poison02
@@ -169,6 +172,55 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
     @Override
     public void insertComments(CommentsForm form) {
 
+    }
+
+    @Override
+    public Boolean commentAnswer(Integer id, CommentAnswerForm form) {
+        Long userId = UserContext.getLoginId();
+        Comments comments = new Comments();
+        comments.setAnswerId(id);
+        comments.setCType(CommentsEnum.ASK_QUESTION);
+        comments.setContent(form.getContent());
+        comments.setUserId(userId);
+        comments.setCreatedBy(userId);
+        comments.setUpdatedBy(userId);
+        return save(comments);
+    }
+
+    @Override
+    public Page<CommentsVO> getCommentsPage(Integer id, Integer pageNum, Integer pageSize) {
+        if (ObjectUtils.isNull(pageNum) || ObjectUtils.isNull(pageSize)) {
+            pageNum = 1;
+            pageSize = 10;
+        }
+        Page<CommentsVO> vo = new Page<>();
+        long count = count();
+        if (count == 0) {
+            vo.setTotal(0);
+            vo.setRecords(new ArrayList<>(0));
+            return vo;
+        }
+        Page<Comments> page = page(new Page<Comments>(pageNum, pageSize), new LambdaQueryWrapper<Comments>()
+                .eq(Comments::getAnswerId, id));
+        if (ObjectUtils.isNull(page) || ObjectUtils.isNull(page.getRecords()) || CollUtils.isEmpty(page.getRecords())) {
+            vo.setTotal(0);
+            vo.setRecords(new ArrayList<>(0));
+        }
+        List<Comments> records = page.getRecords();
+        List<CommentsVO> list = records.stream().map(item -> {
+            CommentsVO vo1 = new CommentsVO();
+            BeanUtils.copyProperties(item, vo1);
+            // 查询用户信息
+            Response<UserSimpleVO> user = userFeignClient.getUserById(item.getUserId() + "");
+            if (ObjectUtils.isNull(user.getData())) {
+                vo1.setUser(null);
+            }
+            vo1.setUser(user.getData());
+            return vo1;
+        }).collect(Collectors.toList());
+        vo.setRecords(list);
+        vo.setTotal(count);
+        return vo;
     }
 
     /**

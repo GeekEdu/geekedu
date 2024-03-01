@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.ask.QuestionDeleteBatchForm;
 import com.zch.api.dto.ask.QuestionForm;
+import com.zch.api.dto.ask.ReplyQuestionForm;
 import com.zch.api.feignClient.label.LabelFeignClient;
 import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.utils.AddressUtils;
@@ -336,6 +337,20 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
                 .eq(Question::getTitle, form.getTitle())
                 .eq(Question::getCategoryId, form.getCategoryId()));
         return res.getId();
+    }
+
+    @Override
+    public Boolean replyQuestion(Integer id, ReplyQuestionForm form) {
+        // 增加问题的回答数
+        Question question = questionMapper.selectById(id);
+        if (ObjectUtils.isNull(question)) {
+            return false;
+        }
+        question.setAnswerCount(question.getAnswerCount() + 1);
+        // 更新问题
+        updateById(question);
+        // 新增回答
+        return answerService.replyQuestion(id, form);
     }
 
     /**

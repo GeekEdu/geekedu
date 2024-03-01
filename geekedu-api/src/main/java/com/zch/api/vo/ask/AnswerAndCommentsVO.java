@@ -31,6 +31,8 @@ public class AnswerAndCommentsVO extends BaseVO {
 
     private Long thumbCount;
 
+    private Long commentCount;
+
     private Boolean isCorrect;
 
     private UserSimpleVO user;

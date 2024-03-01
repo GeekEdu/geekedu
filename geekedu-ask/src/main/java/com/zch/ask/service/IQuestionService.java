@@ -3,6 +3,7 @@ package com.zch.ask.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.ask.QuestionDeleteBatchForm;
 import com.zch.api.dto.ask.QuestionForm;
+import com.zch.api.dto.ask.ReplyQuestionForm;
 import com.zch.api.vo.ask.AnswersVO;
 import com.zch.api.vo.ask.QuestionAndCategoryVO;
 import com.zch.api.vo.ask.QuestionFullVO;
@@ -98,4 +99,13 @@ public interface IQuestionService extends IService<Question> {
      * @return
      */
     Integer addQuestion(QuestionForm form);
+
+    /**
+     * 回答问题
+     * @param id
+     * @param form
+     * @return
+     */
+    Boolean replyQuestion(Integer id, ReplyQuestionForm form);
+
 }

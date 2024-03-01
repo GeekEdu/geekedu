@@ -1,7 +1,10 @@
 package com.zch.ask.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zch.api.dto.ask.CommentAnswerForm;
+import com.zch.api.dto.ask.ReplyQuestionForm;
 import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.utils.AddressUtils;
 import com.zch.api.vo.ask.AnswerAndCommentsVO;
@@ -18,6 +21,7 @@ import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
 import com.zch.common.mvc.result.Response;
 import com.zch.common.mvc.utils.CommonServletUtils;
+import com.zch.common.satoken.context.UserContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -163,6 +167,49 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
     public Boolean isCorrectAnswer(Integer answerId) {
         Answer answer = answerMapper.selectById(answerId);
         return answer.getIsCorrect();
+    }
+
+    @Override
+    public Boolean replyQuestion(Integer id, ReplyQuestionForm form) {
+        Answer one = answerMapper.selectOne(new LambdaQueryWrapper<Answer>()
+                .eq(Answer::getQuestionId, id));
+        if (ObjectUtils.isNull(one)) {
+            return false;
+        }
+        Long userId = UserContext.getLoginId();
+        Answer answer = new Answer();
+        answer.setContent(form.getContent());
+        if (CollUtils.isNotEmpty(form.getImages())) {
+            String join = String.join(",", form.getImages());
+            answer.setImages(join);
+        }
+        answer.setQuestionId(id);
+        answer.setCreatedBy(userId);
+        answer.setUpdatedBy(userId);
+        answer.setUserId(userId);
+        return save(answer);
+    }
+
+    @Override
+    public Boolean commentAnswer(Integer id, CommentAnswerForm form) {
+        // 新增回答的评论数
+        Answer answer = answerMapper.selectOne(new LambdaQueryWrapper<Answer>()
+                .eq(Answer::getId, id)
+                .eq(Answer::getUserId, form.getUserId()));
+        if (ObjectUtils.isNull(answer)) {
+            return false;
+        }
+        // 新增评论
+        return commentsService.commentAnswer(id, form);
+    }
+
+    @Override
+    public Page<CommentsVO> getCommentsPage(Integer id, Integer pageNum, Integer pageSize) {
+        Answer answer = answerMapper.selectById(id);
+        if (ObjectUtils.isNull(answer)) {
+            return new Page<>();
+        }
+        return commentsService.getCommentsPage(id, pageNum, pageSize);
     }
 
 

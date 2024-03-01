@@ -2,6 +2,7 @@ package com.zch.ask.controller;
 
 import com.zch.api.dto.ask.QuestionDeleteBatchForm;
 import com.zch.api.dto.ask.QuestionForm;
+import com.zch.api.dto.ask.ReplyQuestionForm;
 import com.zch.api.vo.ask.AnswersVO;
 import com.zch.api.vo.ask.QuestionAndCategoryVO;
 import com.zch.api.vo.ask.QuestionFullVO;
@@ -137,6 +138,16 @@ public class QuestionController {
     @PostMapping("/v2/add")
     public Response<Integer> addQuestion(@RequestBody QuestionForm form) {
         return Response.success(questionService.addQuestion(form));
+    }
+
+    /**
+     * 回答问题
+     * @param form
+     * @return
+     */
+    @PostMapping("/v2/{id}/answer")
+    public Response<Boolean> replyQuestion(@PathVariable("id") Integer id, @RequestBody ReplyQuestionForm form) {
+        return Response.success(questionService.replyQuestion(id, form));
     }
 
 }
