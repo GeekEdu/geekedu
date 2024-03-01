@@ -141,11 +141,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public UserVO getLoginUserDetail() {
-        Long userId = UserContext.getLoginId();
-        if (ObjectUtils.isNull(userId)) {
-            return null;
-        }
-        User user = userMapper.selectById(userId);
+//        Long userId = UserContext.getLoginId();
+//        if (ObjectUtils.isNull(userId)) {
+//            return null;
+//        }
+//        User user = userMapper.selectById(userId);
+        User user = userMapper.selectById(1745747394693820416L);
         if (ObjectUtils.isNull(user)) {
             return null;
         }

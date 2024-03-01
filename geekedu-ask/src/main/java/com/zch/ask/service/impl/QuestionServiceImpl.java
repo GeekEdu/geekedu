@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.ask.QuestionDeleteBatchForm;
+import com.zch.api.dto.ask.QuestionForm;
 import com.zch.api.feignClient.label.LabelFeignClient;
 import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.utils.AddressUtils;
@@ -20,6 +21,7 @@ import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
 import com.zch.common.mvc.result.Response;
 import com.zch.common.mvc.utils.CommonServletUtils;
+import com.zch.common.satoken.context.UserContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -302,6 +304,34 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         }
         vo.setAnswer(res);
         return vo;
+    }
+
+    @Override
+    public Boolean addQuestion(QuestionForm form) {
+        if (ObjectUtils.isNull(form)) {
+            return false;
+        }
+        Long userId = UserContext.getLoginId();
+        Question question = new Question();
+        Question one = questionMapper.selectOne(new LambdaQueryWrapper<Question>()
+                .eq(Question::getTitle, form.getTitle())
+                .eq(Question::getCategoryId, form.getCategoryId()));
+        if (ObjectUtils.isNotNull(one)) {
+            return false;
+        }
+        question.setTitle(form.getTitle());
+        question.setCategoryId(form.getCategoryId());
+        question.setContent(form.getContent());
+        if (ObjectUtils.isNull(form) || CollUtils.isEmpty(form.getImages())) {
+            question.setImages("");
+        }
+        String join = String.join(",", form.getImages());
+        question.setImages(join);
+        question.setRewardScore(form.getRewardScore() == null ? 0 : form.getRewardScore());
+        question.setUserId(userId);
+        question.setCreatedBy(userId);
+        question.setUpdatedBy(userId);
+        return save(question);
     }
 
     /**
