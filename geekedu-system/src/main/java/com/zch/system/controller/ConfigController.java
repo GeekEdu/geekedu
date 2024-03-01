@@ -97,6 +97,15 @@ public class ConfigController {
     }
 
     /**
+     * 前台获取 问答配置
+     * @return
+     */
+    @GetMapping("/v2/ask/config")
+    public Response getAskConfigInfo() {
+        return Response.success(pcConfigService.getAskConfig());
+    }
+///////////////////////////////////////////////////////////////////////////////////////////////
+    /**
      * 后台获取配置信息
      * @return
      */

@@ -3,6 +3,8 @@ package com.zch.ask.controller;
 import com.zch.api.dto.ask.QuestionDeleteBatchForm;
 import com.zch.api.vo.ask.AnswersVO;
 import com.zch.api.vo.ask.QuestionAndCategoryVO;
+import com.zch.api.vo.ask.QuestionFullVO;
+import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.ask.service.IQuestionService;
 import com.zch.common.mvc.result.Response;
 import lombok.RequiredArgsConstructor;
@@ -87,6 +89,44 @@ public class QuestionController {
     public Response<Boolean> setCorrectAnswer(@PathVariable("questionId") Integer questionId,
                                               @PathVariable("answerId") Integer answerId) {
         return Response.success(questionService.setCorrectAnswer(questionId, answerId));
+    }
+
+// =====================================================================================================
+// 前台
+
+    /**
+     * 前台 返回问题列表
+     * @param pageNum
+     * @param pageSize
+     * @param scene
+     * @param categoryId
+     * @return
+     */
+    @GetMapping("/v2/list")
+    public Response<QuestionAndCategoryVO> getV2Questions(@RequestParam("pageNum") Integer pageNum,
+                                                          @RequestParam("pageSize") Integer pageSize,
+                                                          @RequestParam("scene") String scene,
+                                                          @RequestParam("categoryId") Integer categoryId) {
+        return Response.success(questionService.getV2Questions(pageNum, pageSize, scene, categoryId));
+    }
+
+    /**
+     * 返回问题-分类列表
+     * @return
+     */
+    @GetMapping("/v2/category/list")
+    public Response<List<CategorySimpleVO>> getV2QuestionTagList() {
+        return Response.success(questionService.getTagList());
+    }
+
+    /**
+     * 返回某个问题明细
+     * @param id
+     * @return
+     */
+    @GetMapping("/v2/detail/{id}")
+    public Response<QuestionFullVO> getQuestionDetail(@PathVariable("id") Integer id) {
+        return Response.success(questionService.getQuestionDetail(id));
     }
 
 }

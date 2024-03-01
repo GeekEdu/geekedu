@@ -7,9 +7,7 @@ import com.zch.api.dto.ask.QuestionDeleteBatchForm;
 import com.zch.api.feignClient.label.LabelFeignClient;
 import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.utils.AddressUtils;
-import com.zch.api.vo.ask.AnswersVO;
-import com.zch.api.vo.ask.QuestionAndCategoryVO;
-import com.zch.api.vo.ask.QuestionVO;
+import com.zch.api.vo.ask.*;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.ask.domain.po.Question;
@@ -19,11 +17,11 @@ import com.zch.ask.service.IQuestionService;
 import com.zch.common.core.utils.BeanUtils;
 import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
+import com.zch.common.core.utils.StringUtils;
 import com.zch.common.mvc.result.Response;
 import com.zch.common.mvc.utils.CommonServletUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author Poison02
@@ -88,7 +87,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         if (StringUtils.isNotBlank(keywords)) {
             wrapper.like(Question::getTitle, keywords);
         }
-        if (StringUtils.isNoneBlank(userId)) {
+        if (StringUtils.isNotBlank(userId)) {
             wrapper.eq(Question::getUserId, Double.valueOf(userId));
         }
         if (ObjectUtils.isNotNull(categoryId)) {
@@ -116,7 +115,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
             return vo;
         }
         // 查询问题分类
-        Response<List<CategorySimpleVO>> res = labelFeignClient.getCategoryList("ASK_QUESTION");
+        Response<List<CategorySimpleVO>> res = labelFeignClient.getCategorySimpleList("ASK_QUESTION");
         if (res == null || res.getData() == null) {
             vo.getData().setData(new ArrayList<>(0));
             vo.setCategories(new ArrayList<>(0));
@@ -189,6 +188,122 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         return answerService.setAnswerCorrectByAnswerId(answerId);
     }
 
+    @Override
+    public QuestionAndCategoryVO getV2Questions(Integer pageNum, Integer pageSize, String scene, Integer categoryId) {
+        QuestionAndCategoryVO vo = new QuestionAndCategoryVO();
+        if (ObjectUtils.isNull(pageNum) || ObjectUtils.isNull(pageSize) || StringUtils.isBlank(scene)) {
+            pageNum = 1;
+            pageSize = 10;
+            scene = "default";
+        }
+        Response<List<CategorySimpleVO>> res = labelFeignClient.getCategorySimpleList("ASK_QUESTION");
+        if (ObjectUtils.isNull(res) || ObjectUtils.isNull(res.getData()) || CollUtils.isEmpty(res.getData())) {
+            vo.setCategories(new ArrayList<>(0));
+        }
+        vo.setCategories(res.getData());
+        long count = count();
+        if (count == 0) {
+            vo.getData().setData(new ArrayList<>(0));
+            vo.getData().setTotal(0);
+            return vo;
+        }
+        LambdaQueryWrapper<Question> wrapper = new LambdaQueryWrapper<>();
+        if (! Objects.equals(categoryId, 0)) {
+            wrapper.eq(Question::getCategoryId, categoryId);
+        }
+        if (StringUtils.isNotBlank(scene)) {
+            if ("default".equals(scene)) {
+                // 默认 全部都要 这里为按照id升序
+                wrapper.orderBy(true, true, Question::getId);
+            } else if ("solved".equals(scene)) {
+                // 已解决
+                wrapper.eq(Question::getQuestionStatus, true);
+            } else if ("unsolved".equals(scene)) {
+                // 未解决
+                wrapper.eq(Question::getQuestionStatus, false);
+            } else if ("last_answer".equals(scene)) {
+                // 最新回答
+                wrapper.orderBy(true, false, Question::getCreatedTime);
+            }
+        }
+        Page<Question> page = page(new Page<Question>(pageNum, pageSize), wrapper);
+        if (ObjectUtils.isNull(page) || ObjectUtils.isNull(page.getRecords()) || CollUtils.isEmpty(page.getRecords())) {
+            vo.getData().setData(new ArrayList<>(0));
+            vo.getData().setTotal(0);
+            return vo;
+        }
+        List<Question> records = page.getRecords();
+        List<QuestionVO> list = records.stream().map(item -> {
+            QuestionVO vo1 = new QuestionVO();
+            BeanUtils.copyProperties(item, vo1);
+            Response<CategorySimpleVO> res2 = labelFeignClient.getCategoryById(item.getCategoryId(), "ASK_QUESTION");
+            if (ObjectUtils.isNull(res2) || ObjectUtils.isNull(res2.getData())) {
+                vo1.setCategory(res2.getData());
+            }
+            Response<UserSimpleVO> res3 = userFeignClient.getUserById(item.getUserId() + "");
+            if (ObjectUtils.isNull(res3) || ObjectUtils.isNull(res3.getData())) {
+                vo1.setUser(res3.getData());
+            }
+            // 状态文本
+            vo1.setStatusText(item.getQuestionStatus() ? "已解决" : "未解决");
+            // 图片集合
+            if (StringUtils.isNotBlank(item.getImages())) {
+                String[] split = item.getImages().split(",");
+                vo1.setImagesList(List.of(split));
+            }
+            return vo1;
+        }).collect(Collectors.toList());
+        vo.getData().setData(list);
+        vo.getData().setTotal(count);
+        return vo;
+    }
+
+    @Override
+    public List<CategorySimpleVO> getTagList() {
+        Response<List<CategorySimpleVO>> response = labelFeignClient.getCategorySimpleList("ASK_QUESTION");
+        if (ObjectUtils.isNull(response) || ObjectUtils.isNull(response.getData()) || CollUtils.isEmpty(response.getData())) {
+            return new ArrayList<>(0);
+        }
+        return response.getData();
+    }
+
+    @Override
+    public QuestionFullVO getQuestionDetail(Integer id) {
+        if (ObjectUtils.isNull(id)) {
+            return null;
+        }
+        Question question = questionMapper.selectById(id);
+        if (ObjectUtils.isNull(question)) {
+            return null;
+        }
+        QuestionFullVO vo = new QuestionFullVO();
+        QuestionVO vo1 = vo.getQuestion();
+        BeanUtils.copyProperties(question, vo1);
+        Response<CategorySimpleVO> res2 = labelFeignClient.getCategoryById(question.getCategoryId(), "ASK_QUESTION");
+        if (ObjectUtils.isNull(res2) || ObjectUtils.isNull(res2.getData())) {
+            vo1.setCategory(res2.getData());
+        }
+        Response<UserSimpleVO> res3 = userFeignClient.getUserById(question.getUserId() + "");
+        if (ObjectUtils.isNull(res3) || ObjectUtils.isNull(res3.getData())) {
+            vo1.setUser(res3.getData());
+        }
+        // 状态文本
+        vo1.setStatusText(question.getQuestionStatus() ? "已解决" : "未解决");
+        // 图片集合
+        if (StringUtils.isNotBlank(question.getImages())) {
+            String[] split = question.getImages().split(",");
+            vo1.setImagesList(List.of(split));
+        }
+        vo.setQuestion(vo1);
+        // 查找回答
+        List<AnswerAndCommentsVO> res = answerService.getAnswerAndComments(question.getId());
+        if (ObjectUtils.isNull(res) || CollUtils.isEmpty(res)) {
+            vo.setAnswer(new ArrayList<>(0));
+        }
+        vo.setAnswer(res);
+        return vo;
+    }
+
     /**
      * 对时间的处理
      * @param time
@@ -207,4 +322,5 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         res.add(endDateTime);
         return res;
     }
+
 }

@@ -3,6 +3,7 @@ package com.zch.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.vo.system.GraphVO;
+import com.zch.api.vo.system.ask.AskDiyConfigVO;
 import com.zch.system.domain.po.*;
 import com.zch.system.mapper.*;
 import com.zch.system.service.IPcConfigService;
@@ -109,6 +110,16 @@ public class PcConfigServiceImpl extends ServiceImpl<PcConfigMapper, PcConfig> i
 //        vo.setOrderSum(generateDate(startAt, endAt));
 //        vo.setOrderPaid(generateDate(startAt, endAt));
 //        vo.setUserRegister(generateDate(startAt, endAt));
+        return vo;
+    }
+
+    @Override
+    public AskDiyConfigVO getAskConfig() {
+        AskDiyConfigVO vo = new AskDiyConfigVO();
+        vo.setEnableRewardScore(true);
+        vo.setDiyContent("<p><b>（该内容后台可</b>自定义<b style=\"font-size: 1em;\">）</b></p><p><b>本站禁止发布以下内容，违者报警并提交相关IP等信息。" +
+                "</b></p><p>(一)反对宪法所确定的基本原则的<br/>(二)危害国家安全，泄露国家秘密，颠覆国家政权，破坏国家统一的<br/>(三)损害国家荣誉和利益的<br/>(四)煽动民族仇恨、民族歧视，破坏民族团结的<br/>(五)破坏国家宗教政策，" +
+                "宣扬邪教和封建迷信的<br/>(六)散布谣言，扰乱社会秩序，破坏社会稳定的<br/>(七)散布淫秽、色情、赌博、暴力、凶杀、恐怖或者教唆犯罪的<br/>(八)侮辱或者诽谤他人，侵害他人合法权益的<br/>(九)含有法律、行政法规禁止的其他内容的。</p>");
         return vo;
     }
 

@@ -11,11 +11,11 @@ import java.util.List;
 
 /**
  * @author Poison02
- * @date 2024/2/20
+ * @date 2024/3/1
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class AnswersVO extends BaseVO {
+public class AnswerAndCommentsVO extends BaseVO {
 
     private Integer id;
 
@@ -27,19 +27,16 @@ public class AnswersVO extends BaseVO {
 
     private String images = "";
 
-    private List<String> imageList = new ArrayList<>(0);
+    private List<String> imagesList = new ArrayList<>(0);
 
     private Long thumbCount;
-
-    /**
-     * 评论数
-     */
-    private Long commentCount;
 
     private Boolean isCorrect;
 
     private UserSimpleVO user;
 
     private LocalDateTime createdTime;
+
+    private List<CommentsVO> comments;
 
 }

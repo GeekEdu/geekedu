@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.ask.QuestionDeleteBatchForm;
 import com.zch.api.vo.ask.AnswersVO;
 import com.zch.api.vo.ask.QuestionAndCategoryVO;
+import com.zch.api.vo.ask.QuestionFullVO;
+import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.ask.domain.po.Question;
 
 import java.util.List;
@@ -24,7 +26,7 @@ public interface IQuestionService extends IService<Question> {
      * @param userId
      * @param categoryId
      * @param status
-     * @param createdTimes
+     * @param createdTime
      * @return
      */
     QuestionAndCategoryVO getQuestionPage(Integer pageNum, Integer pageSize, String sort, String order,
@@ -63,4 +65,29 @@ public interface IQuestionService extends IService<Question> {
      * @return
      */
     Boolean setCorrectAnswer(Integer questionId, Integer answerId);
+
+    ////////////////////////////////////////////////
+
+    /**
+     * 前台 返回问题列表
+     * @param pageNum
+     * @param pageSize
+     * @param scene
+     * @param categoryId
+     * @return
+     */
+    QuestionAndCategoryVO getV2Questions(Integer pageNum, Integer pageSize, String scene, Integer categoryId);
+
+    /**
+     * 返回问题-分类列表
+     * @return
+     */
+    List<CategorySimpleVO> getTagList();
+
+    /**
+     * 返回问题明细
+     * @param id
+     * @return
+     */
+    QuestionFullVO getQuestionDetail(Integer id);
 }

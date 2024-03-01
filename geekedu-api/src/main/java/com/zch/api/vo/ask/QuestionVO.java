@@ -25,6 +25,11 @@ public class QuestionVO extends BaseVO {
      */
     private String title;
 
+    /**
+     * 内容
+     */
+    private String content;
+
     private CategorySimpleVO category;
 
     /**
@@ -36,6 +41,11 @@ public class QuestionVO extends BaseVO {
      * 回答个数
      */
     private Long answerCount;
+
+    /**
+     * 点赞次数
+     */
+    private Long thumbCount;
 
     /**
      * 提问用户简单信息

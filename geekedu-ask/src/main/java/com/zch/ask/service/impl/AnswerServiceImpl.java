@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.utils.AddressUtils;
+import com.zch.api.vo.ask.AnswerAndCommentsVO;
 import com.zch.api.vo.ask.AnswersVO;
 import com.zch.api.vo.ask.CommentsVO;
 import com.zch.api.vo.user.UserSimpleVO;
@@ -73,6 +74,49 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
             if (StringUtils.isNotBlank(answer.getImages())) {
                 List<String> imageList = List.of(answer.getImages().split(","));
                 vo.setImageList(imageList);
+            }
+            vos.add(vo);
+        }
+        return vos;
+    }
+
+    @Override
+    public List<AnswerAndCommentsVO> getAnswerAndComments(Integer id) {
+        List<Answer> answers = answerMapper.selectList(new LambdaQueryWrapper<Answer>()
+                .eq(Answer::getQuestionId, id));
+        if (CollUtils.isEmpty(answers)) {
+            return new ArrayList<>(0);
+        }
+        // 获取请求信息
+        HttpServletRequest request = CommonServletUtils.getRequest();
+        Map<String, String> res1 = AddressUtils.getAddress(request);
+        String ip = res1.get("ip");
+        String province = res1.get("province");
+        String browser = res1.get("browser");
+        String os = res1.get("os");
+        List<AnswerAndCommentsVO> vos = new ArrayList<>(answers.size());
+        for (Answer answer : answers) {
+            AnswerAndCommentsVO vo = new AnswerAndCommentsVO();
+            BeanUtils.copyProperties(answer, vo);
+            // 查询用户信息
+            Response<UserSimpleVO> user = userFeignClient.getUserById(answer.getUserId() + "");
+            if (ObjectUtils.isNull(user.getData())) {
+                vo.setUser(null);
+            }
+            user.getData().setIpAddress(ip);
+            user.getData().setProvince(province);
+            user.getData().setBrowser(browser);
+            user.getData().setOs(os);
+            vo.setUser(user.getData());
+            // 整理图片信息
+            if (StringUtils.isNotBlank(answer.getImages())) {
+                List<String> imageList = List.of(answer.getImages().split(","));
+                vo.setImagesList(imageList);
+            }
+            // 评论
+            List<CommentsVO> res = commentsService.getCommentsByAnswerId(answer.getId());
+            if (ObjectUtils.isNull(res)) {
+                vo.setComments(res);
             }
             vos.add(vo);
         }

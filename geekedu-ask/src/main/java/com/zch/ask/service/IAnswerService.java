@@ -1,6 +1,7 @@
 package com.zch.ask.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zch.api.vo.ask.AnswerAndCommentsVO;
 import com.zch.api.vo.ask.AnswersVO;
 import com.zch.api.vo.ask.CommentsVO;
 import com.zch.ask.domain.po.Answer;
@@ -19,6 +20,13 @@ public interface IAnswerService extends IService<Answer> {
      * @return
      */
     List<AnswersVO> getAnswersByQuestionId(Integer id);
+
+    /**
+     * 查找某个问题下所有回答和评论
+     * @param id
+     * @return
+     */
+    List<AnswerAndCommentsVO> getAnswerAndComments(Integer id);
 
     /**
      * 查找某个回答下的所有评论

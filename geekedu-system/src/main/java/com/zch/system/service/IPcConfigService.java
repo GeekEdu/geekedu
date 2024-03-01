@@ -2,6 +2,7 @@ package com.zch.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.vo.system.GraphVO;
+import com.zch.api.vo.system.ask.AskDiyConfigVO;
 import com.zch.system.domain.po.Links;
 import com.zch.system.domain.po.Navs;
 import com.zch.system.domain.po.PcConfig;
@@ -24,5 +25,11 @@ public interface IPcConfigService extends IService<PcConfig> {
     List<Sliders> getSliders(String platform);
 
     GraphVO getGraph(String startAt, String endAt);
+
+    /**
+     * 前台 获取问答自定义配置
+     * @return
+     */
+    AskDiyConfigVO getAskConfig();
 
 }
