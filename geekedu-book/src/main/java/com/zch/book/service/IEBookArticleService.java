@@ -6,6 +6,8 @@ import com.zch.api.vo.book.EBookArticleFullVO;
 import com.zch.api.vo.book.EBookArticleVO;
 import com.zch.book.domain.po.EBookArticle;
 
+import java.util.List;
+
 /**
  * @author Poison02
  * @date 2024/2/23
@@ -53,4 +55,12 @@ public interface IEBookArticleService extends IService<EBookArticle> {
      * @return
      */
     EBookArticleVO updateArticle(Integer id, EBookArticleForm form);
+
+    /**
+     * 查找文章列表
+     * @param bookId
+     * @param chapterId
+     * @return
+     */
+    List<EBookArticleVO> getArticleList(Integer bookId, Integer chapterId);
 }

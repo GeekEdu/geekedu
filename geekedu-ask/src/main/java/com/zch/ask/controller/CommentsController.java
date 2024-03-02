@@ -2,6 +2,7 @@ package com.zch.ask.controller;
 
 import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.ask.CommentsForm;
+import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.ask.CommentsVO;
 import com.zch.ask.service.ICommentsService;
 import com.zch.common.mvc.result.PageResult;
@@ -65,6 +66,24 @@ public class CommentsController {
     @PostMapping("/add")
     public Response addComments(CommentsForm form) {
         return Response.success();
+    }
+
+    //===============================================================================================
+
+    /**
+     * 获取评论列表
+     * @param id
+     * @param cType
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/v2/list")
+    public Response<CommentsFullVO> getCommentsList(@RequestParam("id") Integer id,
+                                                    @RequestParam("cType") String cType,
+                                                    @RequestParam("pageNum") Integer pageNum,
+                                                    @RequestParam("pageSize") Integer pageSize) {
+        return Response.success(commentsService.getCommentsList(id, cType, pageNum, pageSize));
     }
 
 }

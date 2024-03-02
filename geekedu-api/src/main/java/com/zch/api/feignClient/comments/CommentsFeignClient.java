@@ -2,6 +2,7 @@ package com.zch.api.feignClient.comments;
 
 import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.interceptor.FeignInterceptor;
+import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.ask.CommentsVO;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
@@ -28,5 +29,19 @@ public interface CommentsFeignClient {
 
     @PostMapping("/api/comments/delete/batch")
     public Response<Boolean> deleteBatchComments(@RequestBody CommentsBatchDelForm form);
+
+    /**
+     * 获取评论列表
+     * @param id
+     * @param cType
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/api/comments/v2/list")
+    public Response<CommentsFullVO> getCommentsList(@RequestParam("id") Integer id,
+                                                    @RequestParam("cType") String cType,
+                                                    @RequestParam("pageNum") Integer pageNum,
+                                                    @RequestParam("pageSize") Integer pageSize);
 
 }

@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Poison02
@@ -41,7 +42,7 @@ public class EBookArticleServiceImpl extends ServiceImpl<EBookArticleMapper, EBo
                                                       Integer bookId,
                                                       Integer chapterId) {
         if (ObjectUtils.isNull(pageNum) || ObjectUtils.isNull(pageSize)
-        || StringUtils.isBlank(sort) || StringUtils.isBlank(order)) {
+                || StringUtils.isBlank(sort) || StringUtils.isBlank(order)) {
             pageNum = 1;
             pageSize = 10;
             sort = "groundingTime";
@@ -170,5 +171,39 @@ public class EBookArticleServiceImpl extends ServiceImpl<EBookArticleMapper, EBo
         EBookArticleVO vo = new EBookArticleVO();
         BeanUtils.copyProperties(one, vo);
         return vo;
+    }
+
+    @Override
+    public List<EBookArticleVO> getArticleList(Integer bookId, Integer chapterId) {
+        if (ObjectUtils.isNull(bookId)) {
+            return new ArrayList<>(0);
+        }
+        List<EBookArticle> list;
+        LambdaQueryWrapper<EBookArticle> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(EBookArticle::getBookId, bookId);
+        if (ObjectUtils.isNotNull(chapterId)) {
+            wrapper.eq(EBookArticle::getChapterId, chapterId);
+            list = articleMapper.selectList(wrapper);
+            if (ObjectUtils.isNull(list) || CollUtils.isEmpty(list)) {
+                return new ArrayList<>(0);
+            }
+            return list.stream().map(item -> {
+                EBookArticleVO vo1 = new EBookArticleVO();
+                BeanUtils.copyProperties(item, vo1);
+                return vo1;
+            }).collect(Collectors.toList());
+        } else {
+            // 为空
+            wrapper.eq(EBookArticle::getChapterId, 0);
+            list = articleMapper.selectList(wrapper);
+            if (ObjectUtils.isNull(list) || CollUtils.isEmpty(list)) {
+                return new ArrayList<>(0);
+            }
+            return list.stream().map(item -> {
+                EBookArticleVO vo1 = new EBookArticleVO();
+                BeanUtils.copyProperties(item, vo1);
+                return vo1;
+            }).collect(Collectors.toList());
+        }
     }
 }

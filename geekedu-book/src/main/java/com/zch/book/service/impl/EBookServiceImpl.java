@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.book.EBookForm;
+import com.zch.api.feignClient.comments.CommentsFeignClient;
 import com.zch.api.feignClient.label.LabelFeignClient;
+import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.book.*;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.book.domain.po.EBook;
@@ -23,8 +25,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Poison02
@@ -38,6 +40,8 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
     private final EBookMapper bookMapper;
 
     private final LabelFeignClient labelFeignClient;
+
+    private final CommentsFeignClient commentsFeignClient;
 
     private final IEBookChapterService chapterService;
 
@@ -95,7 +99,7 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
         }
         vo.getData().setTotal(count);
         vo.getData().setData(list);
-        Response<List<CategorySimpleVO>> response = labelFeignClient.getCategoryList("E_BOOK");
+        Response<List<CategorySimpleVO>> response = labelFeignClient.getCategorySimpleList("E_BOOK");
         if (ObjectUtils.isNull(response) || ObjectUtils.isNull(response.getData())) {
             vo.setCategories(null);
         }
@@ -215,5 +219,125 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
             return new EBookArticleVO();
         }
         return articleService.getEBookArticleById(id);
+    }
+
+    @Override
+    public EBookAndCategoryVO getBookList(Integer pageNum, Integer pageSize, String scene, Integer categoryId) {
+        if (ObjectUtils.isNull(pageNum) || ObjectUtils.isNull(pageSize)
+        || StringUtils.isBlank(scene) || ObjectUtils.isNull(categoryId)) {
+            pageNum = 1;
+            pageSize = 10;
+            scene = "default";
+            categoryId = 0;
+        }
+        EBookAndCategoryVO vo = new EBookAndCategoryVO();
+        // 查询分类
+        Response<List<CategorySimpleVO>> res = labelFeignClient.getCategorySimpleList("E_BOOK");
+        if (ObjectUtils.isNull(res) || ObjectUtils.isNull(res.getData()) || CollUtils.isEmpty(res.getData())) {
+            vo.setCategories(new ArrayList<>(0));
+        }
+        vo.setCategories(res.getData());
+        long count = count();
+        if (count == 0) {
+            vo.getData().setTotal(0);
+            vo.getData().setData(new ArrayList<>(0));
+            return vo;
+        }
+        LambdaQueryWrapper<EBook> wrapper = new LambdaQueryWrapper<>();
+        if (! Objects.equals(categoryId, 0)) {
+            wrapper.eq(EBook::getCategoryId, categoryId);
+        }
+        if (StringUtils.isNotBlank(scene)) {
+            if ("default".equals(scene)) {
+                wrapper.orderBy(true, false, EBook::getId);
+            }
+        }
+        Page<EBook> page = page(new Page<EBook>(pageNum, pageSize), wrapper);
+        if (ObjectUtils.isNull(page) || ObjectUtils.isNull(page.getRecords()) || CollUtils.isEmpty(page.getRecords())) {
+            vo.getData().setTotal(0);
+            vo.getData().setData(new ArrayList<>(0));
+            return vo;
+        }
+        List<EBookVO> vos = page.getRecords().stream().map(item -> {
+            EBookVO vo1 = new EBookVO();
+            BeanUtils.copyProperties(item, vo1);
+            Response<CategorySimpleVO> res2 = labelFeignClient.getCategoryById(item.getCategoryId(), "E_BOOK");
+            if (ObjectUtils.isNull(res2) || ObjectUtils.isNull(res2.getData())) {
+                vo1.setCategory(null);
+            }
+            vo1.setCategory(res2.getData());
+            return vo1;
+        }).collect(Collectors.toList());
+        vo.getData().setTotal(count);
+        vo.getData().setData(vos);
+        return vo;
+    }
+
+    @Override
+    public EBookFullVO getBookDetailById(Integer id) {
+        if (ObjectUtils.isNull(id)) {
+            return new EBookFullVO();
+        }
+        EBook eBook = bookMapper.selectById(id);
+        if (ObjectUtils.isNull(eBook)) {
+            return new EBookFullVO();
+        }
+        EBookFullVO vo = new EBookFullVO();
+        EBookVO vo1 = new EBookVO();
+        BeanUtils.copyProperties(eBook, vo1);
+        Response<CategorySimpleVO> res = labelFeignClient.getCategoryById(eBook.getCategoryId(), "E_BOOK");
+        if (ObjectUtils.isNull(res) || ObjectUtils.isNull(res.getData())) {
+            vo1.setCategory(null);
+        }
+        vo1.setCategory(res.getData());
+        // 查找章节
+        boolean hasChapter = true;
+        List<EBookChapterVO> chapters = chapterService.getChapterListByBookId(eBook.getId());
+        if (ObjectUtils.isNull(chapters) || CollUtils.isEmpty(chapters)) {
+            hasChapter = false;
+            vo.setChapters(new ArrayList<>(0));
+        }
+        vo.setChapters(chapters);
+        // 查找文章 这里分为三种情况
+        // 1. 没有章节时，使用 vo 里面的articles
+        // 2. 有章节时，使用 vo 里面的articleMap
+        // 3. 有章节但没有使用时，使用 vo 里面的articleMap
+        List<EBookArticleVO> articles = new ArrayList<>();
+        Map<Integer, List<EBookArticleVO>> articleMap = new HashMap<>();
+        if (hasChapter) {
+            // 先将有章节的文章查出来
+            for (EBookChapterVO item : chapters) {
+                List<EBookArticleVO> list = articleService.getArticleList(eBook.getId(), item.getId());
+                if (CollUtils.isNotEmpty(list)) {
+                    articleMap.put(item.getId(), list);
+                }
+            }
+            // 再查询有章节但是没有使用章节的文章
+            List<EBookArticleVO> list2 = articleService.getArticleList(eBook.getId(), null);
+            if (CollUtils.isNotEmpty(list2)) {
+                articleMap.put(0, list2);
+            }
+        } else {
+            // 没有章节 直接查没有章节的文章，放入 articles
+            List<EBookArticleVO> list3 = articleService.getArticleList(eBook.getId(), null);
+            articles = list3.stream().filter(Objects::nonNull).collect(Collectors.toList());
+        }
+        vo.setArticles(articles);
+        vo.setArticleMap(articleMap);
+        vo.setBook(vo1);
+        return vo;
+    }
+
+    @Override
+    public CommentsFullVO getBookComments(Integer id, Integer pageNum, Integer pageSize) {
+        EBook eBook = bookMapper.selectById(id);
+        if (ObjectUtils.isNull(eBook)) {
+            return new CommentsFullVO();
+        }
+        Response<CommentsFullVO> res = commentsFeignClient.getCommentsList(id, "E_BOOK", pageNum, pageSize);
+        if (ObjectUtils.isNull(res) || ObjectUtils.isNull(res.getData())) {
+            return new CommentsFullVO();
+        }
+        return res.getData();
     }
 }

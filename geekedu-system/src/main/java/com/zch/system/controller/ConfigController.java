@@ -104,6 +104,15 @@ public class ConfigController {
     public Response getAskConfigInfo() {
         return Response.success(pcConfigService.getAskConfig());
     }
+
+    /**
+     * 前台 获取电子书推荐
+     * @return
+     */
+    @GetMapping("/v2/eBook/recommend")
+    public Response getEBookRecommendConfig() {
+        return Response.success();
+    }
 ///////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * 后台获取配置信息

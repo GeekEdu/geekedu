@@ -9,6 +9,8 @@ import com.zch.api.dto.ask.CommentsForm;
 import com.zch.api.feignClient.course.CourseFeignClient;
 import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.utils.AddressUtils;
+import com.zch.api.vo.ask.CommentsFullVO;
+import com.zch.api.vo.ask.CommentsSimpleVO;
 import com.zch.api.vo.ask.CommentsVO;
 import com.zch.api.vo.course.CourseSimpleVO;
 import com.zch.api.vo.user.UserSimpleVO;
@@ -33,6 +35,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -220,6 +223,43 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
         }).collect(Collectors.toList());
         vo.setRecords(list);
         vo.setTotal(count);
+        return vo;
+    }
+
+    @Override
+    public CommentsFullVO getCommentsList(Integer id, String cType, Integer pageNum, Integer pageSize) {
+        CommentsFullVO vo = new CommentsFullVO();
+        List<Comments> cList = commentsMapper.selectList(new LambdaQueryWrapper<Comments>()
+                .eq(Comments::getRelationId, id)
+                .eq(Comments::getCType, CommentsEnum.valueOf(cType)));
+        if (ObjectUtils.isNull(cList) || CollUtils.isEmpty(cList)) {
+            vo.getData().setTotal(0);
+            vo.getData().setData(new ArrayList<>(0));
+            return vo;
+        }
+        Page<Comments> page = page(new Page<Comments>(pageNum, pageSize), new LambdaQueryWrapper<Comments>()
+                .eq(Comments::getRelationId, id)
+                .eq(Comments::getCType, CommentsEnum.valueOf(cType)));
+        if (ObjectUtils.isNull(page) || ObjectUtils.isNull(page.getRecords()) || CollUtils.isEmpty(page.getRecords())) {
+            vo.getData().setTotal(0);
+            vo.getData().setData(new ArrayList<>(0));
+            return vo;
+        }
+        List<CommentsSimpleVO> list = new ArrayList<>(page.getRecords().size());
+        Map<Long, UserSimpleVO> map = new HashMap<>(0);
+        for (Comments item : page.getRecords()) {
+            CommentsSimpleVO vo1 = new CommentsSimpleVO();
+            BeanUtils.copyProperties(item, vo1);
+            list.add(vo1);
+            Response<UserSimpleVO> user = userFeignClient.getUserById(item.getUserId() + "");
+            if (ObjectUtils.isNull(user) || ObjectUtils.isNull(user.getData())) {
+                vo.setUsers(new HashMap<>(0));
+            }
+            map.put(item.getUserId(), user.getData());
+        }
+        vo.getData().setData(list);
+        vo.getData().setTotal(page.getTotal());
+        vo.setUsers(map);
         return vo;
     }
 

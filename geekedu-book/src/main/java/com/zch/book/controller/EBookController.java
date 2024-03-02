@@ -196,4 +196,57 @@ public class EBookController {
         return Response.success(chapterService.updateChapter(id, form));
     }
 
+    // ======================================================================================
+
+    /**
+     * 前台 电子书列表
+     * @param pageNum
+     * @param pageSize
+     * @param scene
+     * @param categoryId
+     * @return
+     */
+    @GetMapping("/v2/book/list")
+    public Response getBookList(@RequestParam("pageNum") Integer pageNum,
+                                @RequestParam("pageSize") Integer pageSize,
+                                @RequestParam("scene") String scene,
+                                @RequestParam("categoryId") Integer categoryId) {
+        return Response.success(eBookService.getBookList(pageNum, pageSize, scene, categoryId));
+    }
+
+    /**
+     * 获取 某电子书 明细
+     * @param id
+     * @return
+     */
+    @GetMapping("/v2/book/{id}/detail")
+    public Response<EBookFullVO> getBookDetailById(@PathVariable("id") Integer id) {
+        return Response.success(eBookService.getBookDetailById(id));
+    }
+
+    /**
+     * 获取某篇文章的评论
+     * @param id
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/v2/book/{id}/comments")
+    public Response getBookCommentsById(@PathVariable("id") Integer id,
+                                        @RequestParam("pageNum") Integer pageNum,
+                                        @RequestParam("pageSize") Integer pageSize) {
+        return Response.success(eBookService.getBookComments(id, pageNum, pageSize));
+    }
+
+    /**
+     * 查询某篇文章是否点赞
+     * @param id
+     * @param type
+     * @return
+     */
+    @GetMapping("/v2/book/thumb/status")
+    public Response checkBookThumbStatus(@RequestParam("id") Integer id, @RequestParam("type") String type) {
+        return Response.success();
+    }
+
 }

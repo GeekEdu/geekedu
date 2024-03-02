@@ -53,7 +53,7 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
         }
         ImageTextAndCategoryVO vo = new ImageTextAndCategoryVO();
         // 查找所有符合的分类
-        Response<List<CategorySimpleVO>> categoryList = labelFeignClient.getCategoryList(IMAGE_TEXT);
+        Response<List<CategorySimpleVO>> categoryList = labelFeignClient.getCategorySimpleList(IMAGE_TEXT);
         if (ObjectUtils.isNull(categoryList) || ObjectUtils.isNull(categoryList.getData())) {
             vo.setCategories(new ArrayList<>(0));
         }

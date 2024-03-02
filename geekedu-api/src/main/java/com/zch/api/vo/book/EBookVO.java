@@ -69,6 +69,11 @@ public class EBookVO extends BaseVO {
     private Long collectCount;
 
     /**
+     * 学员数量
+     */
+    private Long userCount;
+
+    /**
      * 价格
      */
     private BigDecimal price;

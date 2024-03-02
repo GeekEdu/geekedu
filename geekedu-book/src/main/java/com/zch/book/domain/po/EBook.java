@@ -74,6 +74,11 @@ public class EBook extends BaseEntity {
     private Long collectCount;
 
     /**
+     * 学员数量
+     */
+    private Long userCount;
+
+    /**
      * 价格
      */
     private BigDecimal price;

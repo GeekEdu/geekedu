@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.ask.CommentAnswerForm;
 import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.ask.CommentsForm;
+import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.ask.CommentsVO;
 import com.zch.ask.domain.po.Comments;
 
@@ -66,5 +67,15 @@ public interface ICommentsService extends IService<Comments> {
      * @return
      */
     Page<CommentsVO> getCommentsPage(Integer id, Integer pageNum, Integer pageSize);
+
+    /**
+     * 前台 返回评论列表
+     * @param id
+     * @param cType
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    CommentsFullVO getCommentsList(Integer id, String cType, Integer pageNum, Integer pageSize);
 
 }
