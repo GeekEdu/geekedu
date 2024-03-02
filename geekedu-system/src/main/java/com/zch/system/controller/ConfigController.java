@@ -113,6 +113,15 @@ public class ConfigController {
     public Response getEBookRecommendConfig() {
         return Response.success();
     }
+
+    /**
+     * 前台 获取图文推荐
+     * @return
+     */
+    @GetMapping("/v2/imageText/recommend")
+    public Response getImageTextRecommendConfig() {
+        return Response.success();
+    }
 ///////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * 后台获取配置信息

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.book.ImageTextForm;
 import com.zch.api.feignClient.label.LabelFeignClient;
 import com.zch.api.vo.book.ImageTextAndCategoryVO;
+import com.zch.api.vo.book.ImageTextSingleVO;
 import com.zch.api.vo.book.ImageTextVO;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.book.domain.po.ImageText;
@@ -24,6 +25,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author Poison02
@@ -165,5 +168,73 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
         imageText.setCreatedBy(userId);
         imageText.setUpdatedBy(userId);
         return save(imageText);
+    }
+
+    @Override
+    public ImageTextAndCategoryVO getImageTextList(Integer pageNum, Integer pageSize, String scene, Integer categoryId) {
+        if (ObjectUtils.isNull(pageNum) || ObjectUtils.isNull(pageSize)
+        || StringUtils.isBlank(scene) || ObjectUtils.isNull(categoryId)) {
+            pageNum = 1;
+            pageSize = 10;
+            scene = "default";
+            categoryId = 0;
+        }
+        ImageTextAndCategoryVO vo = new ImageTextAndCategoryVO();
+        // 查询图文分类
+        Response<List<CategorySimpleVO>> res = labelFeignClient.getCategorySimpleList("IMAGE_TEXT");
+        if (ObjectUtils.isNull(res) || ObjectUtils.isNull(res.getData()) || CollUtils.isEmpty(res.getData())) {
+            vo.setCategories(new ArrayList<>(0));
+        }
+        vo.setCategories(res.getData());
+        long count = count();
+        if (count == 0) {
+            vo.getData().setTotal(0);
+            vo.getData().setData(new ArrayList<>(0));
+            return vo;
+        }
+        LambdaQueryWrapper<ImageText> wrapper = new LambdaQueryWrapper<>();
+        if (! Objects.equals(categoryId, 0)) {
+            wrapper.eq(ImageText::getCategoryId, categoryId);
+        }
+        if (StringUtils.isNotBlank(scene)) {
+            wrapper.orderBy(true, false, ImageText::getId);
+        }
+        Page<ImageText> page = page(new Page<ImageText>(pageNum, pageSize), wrapper);
+        if (ObjectUtils.isNull(page) || ObjectUtils.isNull(page.getRecords()) || CollUtils.isEmpty(page.getRecords())) {
+            vo.getData().setTotal(0);
+            vo.getData().setData(new ArrayList<>(0));
+            return vo;
+        }
+        List<ImageText> records = page.getRecords();
+        List<ImageTextVO> list = new ArrayList<>(records.size());
+        list = records.stream().map(item -> {
+            ImageTextVO vo1 = new ImageTextVO();
+            BeanUtils.copyProperties(item, vo1);
+            Response<CategorySimpleVO> res2 = labelFeignClient.getCategoryById(item.getCategoryId(), "IMAGE_TEXT");
+            if (ObjectUtils.isNull(res2) || ObjectUtils.isNull(res2.getData())) {
+                vo1.setCategory(null);
+            }
+            vo1.setCategory(res2.getData());
+            return vo1;
+        }).collect(Collectors.toList());
+        vo.getData().setData(list);
+        vo.getData().setTotal(count);
+        return vo;
+    }
+
+    @Override
+    public ImageTextSingleVO getImageTextDetailById(Integer id) {
+        if (ObjectUtils.isNull(id)) {
+            return new ImageTextSingleVO();
+        }
+        ImageText one = imageTextMapper.selectById(id);
+        if (ObjectUtils.isNull(one)) {
+            return new ImageTextSingleVO();
+        }
+        ImageTextVO vo1 = new ImageTextVO();
+        BeanUtils.copyProperties(one, vo1);
+        ImageTextSingleVO vo = new ImageTextSingleVO();
+        vo.setImageText(vo1);
+        return vo;
     }
 }

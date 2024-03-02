@@ -2,6 +2,7 @@ package com.zch.book.controller;
 
 import com.zch.api.dto.book.ImageTextForm;
 import com.zch.api.vo.book.ImageTextAndCategoryVO;
+import com.zch.api.vo.book.ImageTextSingleVO;
 import com.zch.api.vo.book.ImageTextVO;
 import com.zch.book.service.IImageTextService;
 import com.zch.common.mvc.result.Response;
@@ -78,6 +79,44 @@ public class ImageTextController {
     @PostMapping("/add")
     public Response<Boolean> addImageText(@RequestBody ImageTextForm form) {
         return Response.success(imageTextService.insertImageText(form));
+    }
+
+    //========================================================================================
+
+    /**
+     * 前台 图文列表
+     * @param pageNum
+     * @param pageSize
+     * @param scene
+     * @param categoryId
+     * @return
+     */
+    @GetMapping("/v2/list")
+    public Response<ImageTextAndCategoryVO> getImageTextList(@RequestParam("pageNum") Integer pageNum,
+                                     @RequestParam("pageSize") Integer pageSize,
+                                     @RequestParam("scene") String scene,
+                                     @RequestParam("categoryId") Integer categoryId) {
+        return Response.success(imageTextService.getImageTextList(pageNum, pageSize, scene, categoryId));
+    }
+
+    /**
+     * 获取图文明细
+     * @param id
+     * @return
+     */
+    @GetMapping("/v2/{id}/detail")
+    public Response<ImageTextSingleVO> getImageTextDetail(@PathVariable("id") Integer id) {
+        return Response.success(imageTextService.getImageTextDetailById(id));
+    }
+
+    /**
+     * 前台 获取图文评论列表
+     * @param id
+     * @return
+     */
+    @GetMapping("/v2/{id}/comments")
+    public Response getImageTextComments(@PathVariable("id") Integer id) {
+        return Response.success();
     }
 
 }
