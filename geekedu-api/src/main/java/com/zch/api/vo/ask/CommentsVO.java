@@ -4,6 +4,7 @@ import com.zch.api.vo.course.CourseSimpleVO;
 import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.common.mvc.entity.BaseVO;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
 
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
  * @author Poison02
  * @date 2024/2/20
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class CommentsVO extends BaseVO {
 

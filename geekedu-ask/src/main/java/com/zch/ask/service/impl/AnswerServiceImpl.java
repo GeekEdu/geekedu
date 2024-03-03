@@ -171,11 +171,11 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
 
     @Override
     public Boolean replyQuestion(Integer id, ReplyQuestionForm form) {
-        Answer one = answerMapper.selectOne(new LambdaQueryWrapper<Answer>()
-                .eq(Answer::getQuestionId, id));
-        if (ObjectUtils.isNull(one)) {
-            return false;
-        }
+//        Answer one = answerMapper.selectOne(new LambdaQueryWrapper<Answer>()
+//                .eq(Answer::getQuestionId, id));
+//        if (ObjectUtils.isNull(one)) {
+//            return false;
+//        }
         Long userId = UserContext.getLoginId();
         Answer answer = new Answer();
         answer.setContent(form.getContent());
@@ -200,7 +200,12 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
             return false;
         }
         // 新增评论
-        return commentsService.commentAnswer(id, form);
+        boolean isOk = commentsService.commentAnswer(id, form);
+        if (isOk) {
+            answer.setCommentCount(answer.getCommentCount() + 1);
+            updateById(answer);
+        }
+        return isOk;
     }
 
     @Override

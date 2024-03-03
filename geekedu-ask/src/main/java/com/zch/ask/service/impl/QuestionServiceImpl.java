@@ -346,11 +346,14 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         if (ObjectUtils.isNull(question)) {
             return false;
         }
-        question.setAnswerCount(question.getAnswerCount() + 1);
-        // 更新问题
-        updateById(question);
         // 新增回答
-        return answerService.replyQuestion(id, form);
+        boolean isOk = answerService.replyQuestion(id, form);
+        if (isOk) {
+            question.setAnswerCount(question.getAnswerCount() + 1);
+            // 更新问题
+            updateById(question);
+        }
+        return isOk;
     }
 
     /**

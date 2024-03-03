@@ -16,6 +16,8 @@ public class UserSimpleVO extends BaseVO {
 
     private String userName;
 
+    private String name;
+
     private String avatar;
 
     /**
