@@ -1,10 +1,13 @@
 package com.zch.book.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zch.api.dto.ask.ImageTextCommentForm;
 import com.zch.api.dto.book.ImageTextForm;
 import com.zch.api.vo.book.ImageTextAndCategoryVO;
 import com.zch.api.vo.book.ImageTextSingleVO;
 import com.zch.api.vo.book.ImageTextVO;
+import com.zch.api.vo.book.comment.CommentVO;
 import com.zch.book.domain.po.ImageText;
 
 /**
@@ -68,5 +71,23 @@ public interface IImageTextService extends IService<ImageText> {
      * @return
      */
     ImageTextSingleVO getImageTextDetailById(Integer id);
+
+    /**
+     * 获取 图文评论列表
+     * @param relationId
+     * @param pageNum
+     * @param pageSize
+     * @param commentId
+     * @return
+     */
+    Page<CommentVO> getImageTextCommentList(Integer relationId, Integer pageNum, Integer pageSize, Integer commentId);
+
+    /**
+     * 发表评论
+     * @param id
+     * @param form
+     * @return
+     */
+    Integer addComment(Integer id, ImageTextCommentForm form);
 
 }

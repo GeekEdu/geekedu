@@ -1,10 +1,13 @@
 package com.zch.book.controller;
 
+import com.zch.api.dto.ask.ImageTextCommentForm;
 import com.zch.api.dto.book.ImageTextForm;
 import com.zch.api.vo.book.ImageTextAndCategoryVO;
 import com.zch.api.vo.book.ImageTextSingleVO;
 import com.zch.api.vo.book.ImageTextVO;
+import com.zch.api.vo.book.comment.CommentVO;
 import com.zch.book.service.IImageTextService;
+import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -115,8 +118,21 @@ public class ImageTextController {
      * @return
      */
     @GetMapping("/v2/{id}/comments")
-    public Response getImageTextComments(@PathVariable("id") Integer id) {
-        return Response.success();
+    public PageResult<CommentVO> getImageTextComments(@PathVariable("id") Integer id,
+                                                      @RequestParam("pageNum") Integer pageNum,
+                                                      @RequestParam("pageSize") Integer pageSize,
+                                                      @RequestParam("commentId") Integer commentId) {
+        return PageResult.success(imageTextService.getImageTextCommentList(id, pageNum, pageSize, commentId));
+    }
+
+    /**
+     * 发表评论
+     * @param id
+     * @return
+     */
+    @PostMapping("/v2/{id}/comment")
+    public Response<Integer> addCommentFirst(@PathVariable("id") Integer id, @RequestBody ImageTextCommentForm form) {
+        return Response.success(imageTextService.addComment(id, form));
     }
 
 }

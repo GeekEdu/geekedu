@@ -3,14 +3,17 @@ package com.zch.book.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zch.api.dto.ask.ImageTextCommentForm;
 import com.zch.api.dto.book.ImageTextForm;
 import com.zch.api.feignClient.label.LabelFeignClient;
 import com.zch.api.vo.book.ImageTextAndCategoryVO;
 import com.zch.api.vo.book.ImageTextSingleVO;
 import com.zch.api.vo.book.ImageTextVO;
+import com.zch.api.vo.book.comment.CommentVO;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.book.domain.po.ImageText;
 import com.zch.book.mapper.ImageTextMapper;
+import com.zch.book.service.IBCommentService;
 import com.zch.book.service.IImageTextService;
 import com.zch.common.core.utils.BeanUtils;
 import com.zch.common.core.utils.CollUtils;
@@ -40,6 +43,8 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
     private final ImageTextMapper imageTextMapper;
 
     private final LabelFeignClient labelFeignClient;
+
+    private final IBCommentService commentService;
 
     private static final String IMAGE_TEXT = "IMAGE_TEXT";
 
@@ -236,5 +241,29 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
         ImageTextSingleVO vo = new ImageTextSingleVO();
         vo.setImageText(vo1);
         return vo;
+    }
+
+    @Override
+    public Page<CommentVO> getImageTextCommentList(Integer relationId, Integer pageNum, Integer pageSize, Integer commentId) {
+        if (ObjectUtils.isNull(relationId)) {
+            return new Page<>();
+        }
+        ImageText imageText = imageTextMapper.selectById(relationId);
+        if (ObjectUtils.isNull(imageText)) {
+            return new Page<>();
+        }
+        return commentService.getCommentPage(relationId, pageNum, pageSize, commentId, "IMAGE_TEXT");
+    }
+
+    @Override
+    public Integer addComment(Integer id, ImageTextCommentForm form) {
+        if (ObjectUtils.isNull(id)) {
+            return 0;
+        }
+        ImageText imageText = imageTextMapper.selectById(id);
+        if (ObjectUtils.isNull(imageText)) {
+            return 0;
+        }
+        return commentService.addComment(id, form, "IMAGE_TEXT");
     }
 }
