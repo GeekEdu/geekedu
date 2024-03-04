@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.book.AddCommentForm;
 import com.zch.api.vo.book.comment.BCommentFullVO;
+import com.zch.api.vo.book.comment.BCommentVO;
 import com.zch.api.vo.book.comment.CommentVO;
 import com.zch.book.domain.po.BComment;
+
+import java.util.List;
 
 /**
  * @author Poison02
@@ -50,5 +53,25 @@ public interface IBCommentService extends IService<BComment> {
      * @return
      */
     BCommentFullVO getFullComment(Integer relationId, Integer pageNum, Integer pageSize, String type);
+
+    //===============================================================================================
+
+    /**
+     * 后台 获取图文评论列表 只需要将所有有关图文评论查出来即可，不需要划分等级评论
+     * @param pageNum
+     * @param pageSize
+     * @param cType
+     * @param createdTime
+     * @return
+     */
+    Page<BCommentVO> getBackendComments(Integer pageNum, Integer pageSize, String cType, List<String> createdTime);
+
+    /**
+     * 后台 根据id删除评论
+     * @param id
+     * @param cType
+     * @return
+     */
+    Boolean deleteCommentById(Integer id, String cType);
 
 }

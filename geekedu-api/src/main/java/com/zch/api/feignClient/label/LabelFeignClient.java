@@ -7,10 +7,7 @@ import com.zch.api.vo.label.CategoryVO;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -38,7 +35,7 @@ public interface LabelFeignClient {
      * @return
      */
     @PostMapping("/api/category/add")
-    public Response addCategory(@RequestBody CategoryForm form);
+    public Response<Boolean> addCategory(@RequestBody CategoryForm form);
 
     /**
      * 根据id和类型查找分类
@@ -63,4 +60,21 @@ public interface LabelFeignClient {
      */
     @GetMapping("/api/category/getCategorySimpleList")
     Response<List<CategorySimpleVO>> getCategorySimpleList(@RequestParam("type") String type);
+
+    /**
+     * 更新分类
+     * @param id
+     * @param form
+     * @return
+     */
+    @PostMapping("/api/category/update/{id}")
+    public Response<Boolean> updateCategoryById(@PathVariable("id") Integer id, @RequestBody CategoryForm form);
+
+    /**
+     * 删除分类
+     * @param id
+     * @return
+     */
+    @PostMapping("/api/category/delete/{id}")
+    public Response<Boolean> deleteCategoryById(@PathVariable("id") Integer id);
 }

@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.book.AddCommentForm;
+import com.zch.api.feignClient.book.ImageTextFeignClient;
 import com.zch.api.feignClient.user.UserFeignClient;
+import com.zch.api.utils.AddressUtils;
 import com.zch.api.vo.book.comment.BCommentFullVO;
 import com.zch.api.vo.book.comment.BCommentVO;
 import com.zch.api.vo.book.comment.CommentVO;
@@ -18,11 +20,17 @@ import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
 import com.zch.common.mvc.result.Response;
+import com.zch.common.mvc.utils.CommonServletUtils;
 import com.zch.common.satoken.context.UserContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -37,6 +45,8 @@ public class BCommentServiceImpl extends ServiceImpl<BCommentMapper, BComment> i
     private final UserFeignClient userFeignClient;
 
     private final BCommentMapper commentMapper;
+
+    private final ImageTextFeignClient imageTextFeignClient;
 
     @Override
     public Page<CommentVO> getCommentPage(Integer relationId, Integer pageNum, Integer pageSize, Integer commentId, String cType) {
@@ -198,5 +208,89 @@ public class BCommentServiceImpl extends ServiceImpl<BCommentMapper, BComment> i
         vo.getData().setData(list);
         vo.getData().setTotal(count);
         return vo;
+    }
+
+    @Override
+    public Page<BCommentVO> getBackendComments(Integer pageNum, Integer pageSize, String cType, List<String> createdTime) {
+        if (ObjectUtils.isNull(pageNum) || ObjectUtils.isNull(pageSize)) {
+            pageNum = 1;
+            pageSize = 10;
+        }
+        Page<BCommentVO> response = new Page<>();
+        HttpServletRequest request = CommonServletUtils.getRequest();
+        Map<String, String> res1 = AddressUtils.getAddress(request);
+        String ip = res1.get("ip");
+        String province = res1.get("province");
+        String browser = res1.get("browser");
+        String os = res1.get("os");
+        LambdaQueryWrapper<BComment> wrapper = new LambdaQueryWrapper<>();
+        if (StringUtils.isNotBlank(cType)) {
+            wrapper.eq(BComment::getCType, CommentEnums.valueOf(cType));
+        }
+        // 时间处理
+        if (ObjectUtils.isNotNull(createdTime) && CollUtils.isNotEmpty(createdTime) && createdTime.size() > 1) {
+            List<LocalDateTime> times = timeHandle(createdTime);
+            // 增加条件
+            wrapper.between(BComment::getCreatedTime, times.get(0), times.get(1));
+        }
+        Page<BComment> page = page(new Page<BComment>(pageNum, pageSize), wrapper);
+        if (ObjectUtils.isNull(page) || ObjectUtils.isNull(page.getRecords()) || CollUtils.isEmpty(page.getRecords())) {
+            response.setRecords(new ArrayList<>(0));
+            response.setTotal(0);
+            return response;
+        }
+        List<BComment> records = page.getRecords();
+        List<BCommentVO> list = new ArrayList<>(records.size());
+        for (BComment comment : records) {
+            BCommentVO vo = new BCommentVO();
+            BeanUtils.copyProperties(comment, vo);
+            // 查询用户信息
+            Response<UserSimpleVO> user = userFeignClient.getUserById(comment.getUserId() + "");
+            if (ObjectUtils.isNotNull(user.getData())) {
+                user.getData().setIpAddress(ip);
+                user.getData().setProvince(province);
+                user.getData().setBrowser(browser);
+                user.getData().setOs(os);
+                vo.setUser(user.getData());
+            }
+            list.add(vo);
+        }
+        BeanUtils.copyProperties(page, response);
+        response.setRecords(list);
+        return response;
+    }
+
+    @Override
+    public Boolean deleteCommentById(Integer id, String cType) {
+        if (ObjectUtils.isNull(id)) {
+            return false;
+        }
+        // 查询该评论是否存在
+        BComment comment = commentMapper.selectOne(new LambdaQueryWrapper<BComment>()
+                .eq(BComment::getId, id)
+                .eq(BComment::getCType, CommentEnums.valueOf(cType)));
+        if (ObjectUtils.isNull(comment)) {
+            return false;
+        }
+        return removeById(comment);
+    }
+
+    /**
+     * 对时间的处理
+     * @param time
+     * @return
+     */
+    public static List<LocalDateTime> timeHandle(List<String> time) {
+        List<LocalDateTime> res = new ArrayList<>(2);
+        String start = time.get(0);
+        String end = time.get(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDate startDate = LocalDate.parse(start, formatter);
+        LocalDate endDate = LocalDate.parse(end, formatter);
+        LocalDateTime startDateTime = LocalDateTime.of(startDate, LocalTime.MIN);
+        LocalDateTime endDateTime = LocalDateTime.of(endDate, LocalTime.MAX);
+        res.add(startDateTime);
+        res.add(endDateTime);
+        return res;
     }
 }

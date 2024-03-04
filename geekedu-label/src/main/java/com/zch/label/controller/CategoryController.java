@@ -30,7 +30,7 @@ public class CategoryController {
      * @return
      */
     @PostMapping("/add")
-    public Response addCategory(@RequestBody CategoryForm form) {
+    public Response<Boolean> addCategory(@RequestBody CategoryForm form) {
         return Response.success(categoryService.addCategory(form));
     }
 

@@ -5,12 +5,16 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.book.AddCommentForm;
 import com.zch.api.dto.book.ImageTextForm;
+import com.zch.api.dto.label.CategoryForm;
 import com.zch.api.feignClient.label.LabelFeignClient;
 import com.zch.api.vo.book.ImageTextAndCategoryVO;
+import com.zch.api.vo.book.ImageTextSimpleVO;
 import com.zch.api.vo.book.ImageTextSingleVO;
 import com.zch.api.vo.book.ImageTextVO;
+import com.zch.api.vo.book.comment.BCommentVO;
 import com.zch.api.vo.book.comment.CommentVO;
 import com.zch.api.vo.label.CategorySimpleVO;
+import com.zch.api.vo.label.CategoryVO;
 import com.zch.book.domain.po.ImageText;
 import com.zch.book.mapper.ImageTextMapper;
 import com.zch.book.service.IBCommentService;
@@ -119,6 +123,17 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
     }
 
     @Override
+    public ImageTextSimpleVO getSimpleImageText(Integer id) {
+        if (ObjectUtils.isNull(id)) {
+            return new ImageTextSimpleVO();
+        }
+        ImageText imageText = getById(id);
+        ImageTextSimpleVO vo = new ImageTextSimpleVO();
+        BeanUtils.copyProperties(imageText, vo);
+        return vo;
+    }
+
+    @Override
     public Boolean deleteImageTextById(Integer id) {
         if (ObjectUtils.isNull(id)) {
             return false;
@@ -173,6 +188,66 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
         imageText.setCreatedBy(userId);
         imageText.setUpdatedBy(userId);
         return save(imageText);
+    }
+
+    @Override
+    public List<CategoryVO> getCategoryList() {
+        Response<List<CategoryVO>> res = labelFeignClient.getCategoryList("IMAGE_TEXT");
+        if (ObjectUtils.isNull(res) || ObjectUtils.isNull(res.getData()) || CollUtils.isEmpty(res.getData())) {
+            return new ArrayList<>(0);
+        }
+        return res.getData();
+    }
+
+    @Override
+    public CategorySimpleVO getCategoryDetail(Integer categoryId) {
+        Response<CategorySimpleVO> res = labelFeignClient.getCategoryById(categoryId, "IMAGE_TEXT");
+        if (ObjectUtils.isNull(res) || ObjectUtils.isNull(res.getData())) {
+            return new CategorySimpleVO();
+        }
+        return res.getData();
+    }
+
+    @Override
+    public Boolean deleteCategory(Integer categoryId) {
+        return labelFeignClient.deleteCategoryById(categoryId).getData();
+    }
+
+    @Override
+    public Boolean updateCategory(Integer categoryId, CategoryForm form) {
+        return labelFeignClient.updateCategoryById(categoryId, form).getData();
+    }
+
+    @Override
+    public Boolean addCategory(CategoryForm form) {
+        return labelFeignClient.addCategory(form).getData();
+    }
+
+    @Override
+    public Page<BCommentVO> getCommentList(Integer pageNum, Integer pageSize, String cType, List<String> createdTime) {
+        Page<BCommentVO> page = commentService.getBackendComments(pageNum, pageSize, cType, createdTime);
+        if (ObjectUtils.isNull(page) || ObjectUtils.isNull(page.getRecords()) || CollUtils.isEmpty(page.getRecords())) {
+            return new Page<>();
+        }
+        List<BCommentVO> list = page.getRecords().stream().map(item -> {
+            // 判断类型，根据类型查找对应信息
+            if (StringUtils.isNotBlank(cType)) {
+                if (cType.equals("IMAGE_TEXT")) {
+                    ImageTextSimpleVO text = getSimpleImageText(item.getRelationId());
+                    if (ObjectUtils.isNotNull(text)) {
+                        item.setImageText(text);
+                    }
+                }
+            }
+            return item;
+        }).collect(Collectors.toList());
+        page.setRecords(list);
+        return page;
+    }
+
+    @Override
+    public Boolean deleteComment(Integer commentId, String cType) {
+        return commentService.deleteCommentById(commentId, cType);
     }
 
     @Override

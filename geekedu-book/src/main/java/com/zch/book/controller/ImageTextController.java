@@ -2,15 +2,22 @@ package com.zch.book.controller;
 
 import com.zch.api.dto.book.AddCommentForm;
 import com.zch.api.dto.book.ImageTextForm;
+import com.zch.api.dto.label.CategoryForm;
 import com.zch.api.vo.book.ImageTextAndCategoryVO;
+import com.zch.api.vo.book.ImageTextSimpleVO;
 import com.zch.api.vo.book.ImageTextSingleVO;
 import com.zch.api.vo.book.ImageTextVO;
+import com.zch.api.vo.book.comment.BCommentVO;
 import com.zch.api.vo.book.comment.CommentVO;
+import com.zch.api.vo.label.CategorySimpleVO;
+import com.zch.api.vo.label.CategoryVO;
 import com.zch.book.service.IImageTextService;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author Poison02
@@ -54,6 +61,16 @@ public class ImageTextController {
     }
 
     /**
+     * 根据id获取简单图文
+     * @param id
+     * @return
+     */
+    @GetMapping("/getSimpleImageText/{id}")
+    public Response<ImageTextSimpleVO> getSimpleImageText(@PathVariable("id") Integer id) {
+        return Response.success();
+    }
+
+    /**
      * 根据id删除图文
      * @param id
      * @return
@@ -82,6 +99,84 @@ public class ImageTextController {
     @PostMapping("/add")
     public Response<Boolean> addImageText(@RequestBody ImageTextForm form) {
         return Response.success(imageTextService.insertImageText(form));
+    }
+
+    /**
+     * 后台 返回分类列表
+     * @return
+     */
+    @GetMapping("/category/list")
+    public Response<List<CategoryVO>> getCategoryList() {
+        return Response.success(imageTextService.getCategoryList());
+    }
+
+    /**
+     * 后台 分类明细
+     * @param categoryId
+     * @return
+     */
+    @GetMapping("/category/{id}")
+    public Response<CategorySimpleVO> getCategoryDetail(@PathVariable("id") Integer categoryId) {
+        return Response.success(imageTextService.getCategoryDetail(categoryId));
+    }
+
+    /**
+     * 删除分类
+     * @param categoryId
+     * @return
+     */
+    @PostMapping("/category/delete/{id}")
+    public Response<Boolean> deleteCategory(@PathVariable("id") Integer categoryId) {
+        return Response.success(imageTextService.deleteCategory(categoryId));
+    }
+
+    /**
+     * 更新分类
+     * @param categoryId
+     * @param form
+     * @return
+     */
+    @PostMapping("/category/update/{id}")
+    public Response<Boolean> updateCategory(@PathVariable("id") Integer categoryId, @RequestBody CategoryForm form) {
+        return Response.success(imageTextService.updateCategory(categoryId, form));
+    }
+
+    /**
+     * 新增分类
+     * @param form
+     * @return
+     */
+    @PostMapping("/category/add")
+    public Response<Boolean> addCategory(@RequestBody CategoryForm form) {
+        return Response.success(imageTextService.addCategory(form));
+    }
+
+    /**
+     * 后台 获取图文评论列表
+     * @param pageNum
+     * @param pageSize
+     * @param cType
+     * @param createdTime
+     * @return
+     */
+    @GetMapping("/comments")
+    public PageResult<BCommentVO> getImageTextComments(@RequestParam("pageNum") Integer pageNum,
+                                                       @RequestParam("pageSize") Integer pageSize,
+                                                       @RequestParam("cType") String cType,
+                                                       @RequestParam(value = "createdTime", required = false) List<String> createdTime) {
+        return PageResult.success(imageTextService.getCommentList(pageNum, pageSize, cType, createdTime));
+    }
+
+    /**
+     * 根据id删除评论
+     * @param id
+     * @param cType
+     * @return
+     */
+    @PostMapping("/comment/delete/{id}")
+    public Response<Boolean> deleteComment(@PathVariable("id") Integer id,
+                                           @RequestParam("cType") String cType) {
+        return Response.success(imageTextService.deleteComment(id, cType));
     }
 
     //========================================================================================

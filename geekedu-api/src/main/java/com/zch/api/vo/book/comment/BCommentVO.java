@@ -1,5 +1,6 @@
 package com.zch.api.vo.book.comment;
 
+import com.zch.api.vo.book.ImageTextSimpleVO;
 import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.common.mvc.entity.BaseVO;
 import lombok.Data;
@@ -41,5 +42,10 @@ public class BCommentVO extends BaseVO {
     private LocalDateTime updatedTime;
 
     private UserSimpleVO user;
+
+    /**
+     * 关联的图文信息
+     */
+    private ImageTextSimpleVO imageText;
 
 }
