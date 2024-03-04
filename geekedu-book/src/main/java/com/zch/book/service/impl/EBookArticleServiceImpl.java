@@ -4,9 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.book.EBookArticleForm;
-import com.zch.api.vo.book.EBookArticleFullVO;
-import com.zch.api.vo.book.EBookArticleVO;
-import com.zch.api.vo.book.EBookChapterVO;
+import com.zch.api.vo.book.*;
 import com.zch.book.domain.po.EBookArticle;
 import com.zch.book.mapper.EBookArticleMapper;
 import com.zch.book.service.IEBookArticleService;
@@ -205,6 +203,20 @@ public class EBookArticleServiceImpl extends ServiceImpl<EBookArticleMapper, EBo
                 return vo1;
             }).collect(Collectors.toList());
         }
+    }
+
+    @Override
+    public EBookArticleSimpleVO getArticleSimple(Integer id) {
+        if (ObjectUtils.isNull(id)) {
+            return new EBookArticleSimpleVO();
+        }
+        EBookArticle article = articleMapper.selectById(id);
+        if (ObjectUtils.isNull(article)) {
+            return new EBookArticleSimpleVO();
+        }
+        EBookArticleSimpleVO vo = new EBookArticleSimpleVO();
+        BeanUtils.copyProperties(article, vo);
+        return vo;
     }
 
     @Override

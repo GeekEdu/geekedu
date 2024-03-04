@@ -1,12 +1,13 @@
 package com.zch.book.controller;
 
-import com.zch.api.dto.book.AddCommentForm;
-import com.zch.api.dto.book.EBookArticleForm;
-import com.zch.api.dto.book.EBookChapterForm;
-import com.zch.api.dto.book.EBookForm;
+import com.zch.api.dto.book.*;
+import com.zch.api.dto.label.CategoryForm;
 import com.zch.api.vo.book.*;
 import com.zch.api.vo.book.comment.BCommentFullVO;
+import com.zch.api.vo.book.comment.BCommentVO;
 import com.zch.api.vo.book.comment.CommentVO;
+import com.zch.api.vo.label.CategorySimpleVO;
+import com.zch.api.vo.label.CategoryVO;
 import com.zch.book.service.IEBookArticleService;
 import com.zch.book.service.IEBookChapterService;
 import com.zch.book.service.IEBookService;
@@ -198,6 +199,119 @@ public class EBookController {
     @PostMapping("/chapter/update/{id}")
     public Response<EBookChapterVO> updateChapter(@PathVariable("id") Integer id, @RequestBody EBookChapterForm form) {
         return Response.success(chapterService.updateChapter(id, form));
+    }
+
+    /**
+     * 后台 返回分类列表
+     * @return
+     */
+    @GetMapping("/category/list")
+    public Response<List<CategoryVO>> getCategoryList() {
+        return Response.success(eBookService.getCategoryList());
+    }
+
+    /**
+     * 后台 分类明细
+     * @param categoryId
+     * @return
+     */
+    @GetMapping("/category/{id}")
+    public Response<CategorySimpleVO> getCategoryDetail(@PathVariable("id") Integer categoryId) {
+        return Response.success(eBookService.getCategoryDetail(categoryId));
+    }
+
+    /**
+     * 删除分类
+     * @param categoryId
+     * @return
+     */
+    @PostMapping("/category/delete/{id}")
+    public Response<Boolean> deleteCategory(@PathVariable("id") Integer categoryId) {
+        return Response.success(eBookService.deleteCategory(categoryId));
+    }
+
+    /**
+     * 更新分类
+     * @param categoryId
+     * @param form
+     * @return
+     */
+    @PostMapping("/category/update/{id}")
+    public Response<Boolean> updateCategory(@PathVariable("id") Integer categoryId, @RequestBody CategoryForm form) {
+        return Response.success(eBookService.updateCategory(categoryId, form));
+    }
+
+    /**
+     * 新增分类
+     * @param form
+     * @return
+     */
+    @PostMapping("/category/add")
+    public Response<Boolean> addCategory(@RequestBody CategoryForm form) {
+        return Response.success(eBookService.addCategory(form));
+    }
+
+    /**
+     * 后台 获取电子书评论列表
+     * @param pageNum
+     * @param pageSize
+     * @param cType
+     * @param createdTime
+     * @return
+     */
+    @GetMapping("/comments")
+    public PageResult<BCommentVO> getEBookComments(@RequestParam("pageNum") Integer pageNum,
+                                                   @RequestParam("pageSize") Integer pageSize,
+                                                   @RequestParam("cType") String cType,
+                                                   @RequestParam(value = "createdTIme", required = false) List<String> createdTime) {
+        return PageResult.success(eBookService.getCommentList(pageNum, pageSize, cType, createdTime));
+    }
+
+    /**
+     * 后台 根据id删除评论
+     * @param id
+     * @param cType
+     * @return
+     */
+    @PostMapping("/comment/delete/{id}")
+    public Response<Boolean> deleteBookComment(@PathVariable("id") Integer id, @RequestParam("cType") String cType) {
+        return Response.success(eBookService.deleteComment(id, cType));
+    }
+
+    /**
+     * 后台 批量删除电子书评论
+     * @param form
+     * @return
+     */
+    @PostMapping("/comment/delete/batch")
+    public Response<Boolean> deleteBookCommentBatch(@RequestBody DelCommentBatchForm form) {
+        return Response.success(eBookService.deleteCommentBatch(form));
+    }
+
+    /**
+     * 后台 批量删除文章评论
+     * @param form
+     * @return
+     */
+    @PostMapping("/article/comment/delete/batch")
+    public Response<Boolean> deleteArticleCommentBatch(@RequestBody DelCommentBatchForm form) {
+        return Response.success(eBookService.deleteCommentBatch(form));
+    }
+
+    /**
+     * 后台 返回文章评论列表
+     * @param pageNum
+     * @param pageSize
+     * @param cType
+     * @param createdTime
+     * @return
+     */
+    @GetMapping("/article/comments")
+    public PageResult<BCommentVO> getArticleComments(@RequestParam("pageNum") Integer pageNum,
+                                       @RequestParam("pageSize") Integer pageSize,
+                                       @RequestParam("cType") String cType,
+                                       @RequestParam(value = "createdTime", required = false) List<String> createdTime) {
+        return PageResult.success(eBookService.getCommentList(pageNum, pageSize, cType, createdTime));
     }
 
     // ======================================================================================

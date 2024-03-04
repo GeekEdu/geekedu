@@ -3,6 +3,7 @@ package com.zch.book.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.book.EBookArticleForm;
 import com.zch.api.vo.book.EBookArticleFullVO;
+import com.zch.api.vo.book.EBookArticleSimpleVO;
 import com.zch.api.vo.book.EBookArticleVO;
 import com.zch.book.domain.po.EBookArticle;
 
@@ -64,6 +65,14 @@ public interface IEBookArticleService extends IService<EBookArticle> {
      */
     List<EBookArticleVO> getArticleList(Integer bookId, Integer chapterId);
 
+    /**
+     * 返回简单 文章
+     * @param id
+     * @return
+     */
+    EBookArticleSimpleVO getArticleSimple(Integer id);
+
+//=============================================================================
     /**
      * 查找原本文章id列表，只根据电子书id
      * @param bookId

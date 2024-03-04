@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.book.AddCommentForm;
+import com.zch.api.dto.book.DelCommentBatchForm;
 import com.zch.api.feignClient.book.ImageTextFeignClient;
 import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.utils.AddressUtils;
@@ -25,6 +26,7 @@ import com.zch.common.satoken.context.UserContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
@@ -273,6 +275,15 @@ public class BCommentServiceImpl extends ServiceImpl<BCommentMapper, BComment> i
             return false;
         }
         return removeById(comment);
+    }
+
+    @Transactional
+    @Override
+    public Boolean deleteCommentBatch(DelCommentBatchForm form) {
+        if (ObjectUtils.isNull(form) || ObjectUtils.isNull(form.getIds()) || CollUtils.isEmpty(form.getIds())) {
+            return false;
+        }
+        return removeBatchByIds(form.getIds());
     }
 
     /**

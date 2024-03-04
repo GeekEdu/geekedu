@@ -1,5 +1,7 @@
 package com.zch.api.vo.book.comment;
 
+import com.zch.api.vo.book.EBookArticleSimpleVO;
+import com.zch.api.vo.book.EBookSimpleVO;
 import com.zch.api.vo.book.ImageTextSimpleVO;
 import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.common.mvc.entity.BaseVO;
@@ -47,5 +49,15 @@ public class BCommentVO extends BaseVO {
      * 关联的图文信息
      */
     private ImageTextSimpleVO imageText;
+
+    /**
+     * 关联电子书信息
+     */
+    private EBookSimpleVO eBook;
+
+    /**
+     * 关联文章信息
+     */
+    private EBookArticleSimpleVO article;
 
 }

@@ -3,6 +3,7 @@ package com.zch.book.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.book.AddCommentForm;
+import com.zch.api.dto.book.DelCommentBatchForm;
 import com.zch.api.vo.book.comment.BCommentFullVO;
 import com.zch.api.vo.book.comment.BCommentVO;
 import com.zch.api.vo.book.comment.CommentVO;
@@ -73,5 +74,12 @@ public interface IBCommentService extends IService<BComment> {
      * @return
      */
     Boolean deleteCommentById(Integer id, String cType);
+
+    /**
+     * 批量删除评论
+     * @param form
+     * @return
+     */
+    Boolean deleteCommentBatch(DelCommentBatchForm form);
 
 }

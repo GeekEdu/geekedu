@@ -3,10 +3,15 @@ package com.zch.book.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.book.AddCommentForm;
+import com.zch.api.dto.book.DelCommentBatchForm;
 import com.zch.api.dto.book.EBookForm;
+import com.zch.api.dto.label.CategoryForm;
 import com.zch.api.vo.book.*;
 import com.zch.api.vo.book.comment.BCommentFullVO;
+import com.zch.api.vo.book.comment.BCommentVO;
 import com.zch.api.vo.book.comment.CommentVO;
+import com.zch.api.vo.label.CategorySimpleVO;
+import com.zch.api.vo.label.CategoryVO;
 import com.zch.book.domain.po.EBook;
 
 import java.util.List;
@@ -88,6 +93,75 @@ public interface IEBookService extends IService<EBook> {
      */
     EBookArticleVO getEBookArticleById(Integer id);
 
+    /**
+     * 返回简单 电子书
+     * @param id
+     * @return
+     */
+    EBookSimpleVO getEBookSimple(Integer id);
+
+    /**
+     * 后台 返回分类列表
+     * @return
+     */
+    List<CategoryVO> getCategoryList();
+
+    /**
+     * 后台 返回分类明细
+     * @param categoryId
+     * @return
+     */
+    CategorySimpleVO getCategoryDetail(Integer categoryId);
+
+    /**
+     * 后台 删除分类
+     * @param categoryId
+     * @return
+     */
+    Boolean deleteCategory(Integer categoryId);
+
+    /**
+     * 后台 更新分类
+     * @param categoryId
+     * @param form
+     * @return
+     */
+    Boolean updateCategory(Integer categoryId, CategoryForm form);
+
+    /**
+     * 后台 新增分类
+     * @param form
+     * @return
+     */
+    Boolean addCategory(CategoryForm form);
+
+    /**
+     * 后台 获取电子书或者文章评论列表，只需要查出来全部图文有关评论即可， 不需要划分等级评论
+     * @param pageNum
+     * @param pageSize
+     * @param cType
+     * @param createdTime
+     * @return
+     */
+    Page<BCommentVO> getCommentList(Integer pageNum, Integer pageSize, String cType, List<String> createdTime);
+
+    /**
+     * 根据id删除评论
+     * @param commentId
+     * @param cType
+     * @return
+     */
+    Boolean deleteComment(Integer commentId, String cType);
+
+    /**
+     * 批量删除评论
+     * @param form
+     * @return
+     */
+    Boolean deleteCommentBatch(DelCommentBatchForm form);
+
+    //==============================================================================================
+    // 前台
     /**
      * 电子书列表
      * @param pageNum

@@ -4,12 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.book.AddCommentForm;
+import com.zch.api.dto.book.DelCommentBatchForm;
 import com.zch.api.dto.book.EBookForm;
+import com.zch.api.dto.label.CategoryForm;
 import com.zch.api.feignClient.label.LabelFeignClient;
 import com.zch.api.vo.book.*;
 import com.zch.api.vo.book.comment.BCommentFullVO;
+import com.zch.api.vo.book.comment.BCommentVO;
 import com.zch.api.vo.book.comment.CommentVO;
 import com.zch.api.vo.label.CategorySimpleVO;
+import com.zch.api.vo.label.CategoryVO;
 import com.zch.book.domain.po.EBook;
 import com.zch.book.domain.po.EBookArticle;
 import com.zch.book.mapper.EBookMapper;
@@ -222,6 +226,90 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
             return new EBookArticleVO();
         }
         return articleService.getEBookArticleById(id);
+    }
+
+    @Override
+    public EBookSimpleVO getEBookSimple(Integer id) {
+        if (ObjectUtils.isNull(id)) {
+            return new EBookSimpleVO();
+        }
+        EBook eBook = bookMapper.selectById(id);
+        if (ObjectUtils.isNull(eBook)) {
+            return new EBookSimpleVO();
+        }
+        EBookSimpleVO vo = new EBookSimpleVO();
+        BeanUtils.copyProperties(eBook, vo);
+        return vo;
+    }
+
+    @Override
+    public List<CategoryVO> getCategoryList() {
+        Response<List<CategoryVO>> res = labelFeignClient.getCategoryList("E_BOOK");
+        if (ObjectUtils.isNull(res) || ObjectUtils.isNull(res.getData()) || CollUtils.isEmpty(res.getData())) {
+            return new ArrayList<>(0);
+        }
+        return res.getData();
+    }
+
+    @Override
+    public CategorySimpleVO getCategoryDetail(Integer categoryId) {
+        Response<CategorySimpleVO> res = labelFeignClient.getCategoryById(categoryId, "E_BOOK");
+        if (ObjectUtils.isNull(res) || ObjectUtils.isNull(res.getData())) {
+            return new CategorySimpleVO();
+        }
+        return res.getData();
+    }
+
+    @Override
+    public Boolean deleteCategory(Integer categoryId) {
+        return labelFeignClient.deleteCategoryById(categoryId).getData();
+    }
+
+    @Override
+    public Boolean updateCategory(Integer categoryId, CategoryForm form) {
+        return labelFeignClient.updateCategoryById(categoryId, form).getData();
+    }
+
+    @Override
+    public Boolean addCategory(CategoryForm form) {
+        return labelFeignClient.addCategory(form).getData();
+    }
+
+    @Override
+    public Page<BCommentVO> getCommentList(Integer pageNum, Integer pageSize, String cType, List<String> createdTime) {
+        Page<BCommentVO> page = commentService.getBackendComments(pageNum, pageSize, cType, createdTime);
+        if (ObjectUtils.isNull(page) || ObjectUtils.isNull(page.getRecords()) || CollUtils.isEmpty(page.getRecords())) {
+            return new Page<>();
+        }
+        List<BCommentVO> list = page.getRecords().stream().map(item -> {
+            // 判断类型，根据类型查找对应信息
+            if (StringUtils.isNotBlank(cType)) {
+                if ("E_BOOK".equals(cType)) {
+                    EBookSimpleVO book = getEBookSimple(item.getRelationId());
+                    if (ObjectUtils.isNotNull(book)) {
+                        item.setEBook(book);
+                    }
+                } else if ("E_BOOK_ARTICLE".equals(cType)) {
+                    EBookArticleSimpleVO article = articleService.getArticleSimple(item.getRelationId());
+                    if (ObjectUtils.isNotNull(article)) {
+                        item.setArticle(article);
+                    }
+                }
+            }
+            return item;
+        }).collect(Collectors.toList());
+        page.setRecords(list);
+        return page;
+    }
+
+    @Override
+    public Boolean deleteComment(Integer commentId, String cType) {
+        return commentService.deleteCommentById(commentId, cType);
+    }
+
+    @Override
+    public Boolean deleteCommentBatch(DelCommentBatchForm form) {
+        return commentService.deleteCommentBatch(form);
     }
 
     @Override
