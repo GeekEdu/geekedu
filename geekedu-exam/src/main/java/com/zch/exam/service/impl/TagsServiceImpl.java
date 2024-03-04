@@ -6,9 +6,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.exam.TagForm;
 import com.zch.api.vo.exam.CTagsVO;
 import com.zch.api.vo.exam.TagsVO;
+import com.zch.api.vo.exam.practice.CategoryFirstVO;
+import com.zch.api.vo.exam.practice.CategorySecondVO;
 import com.zch.common.core.utils.BeanUtils;
 import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
+import com.zch.common.core.utils.StringUtils;
 import com.zch.common.satoken.context.UserContext;
 import com.zch.exam.domain.po.Tags;
 import com.zch.exam.enums.ExamTagsEnum;
@@ -230,5 +233,41 @@ public class TagsServiceImpl extends ServiceImpl<TagsMapper, Tags> implements IT
         tags.setCreatedBy(userId);
         tags.setUpdatedBy(userId);
         return save(tags);
+    }
+
+    @Override
+    public List<CategoryFirstVO> getFirstCategoryList(String type) {
+        if (StringUtils.isBlank(type)) {
+            return new ArrayList<>(0);
+        }
+        List<Tags> tags = tagsMapper.selectList(new LambdaQueryWrapper<Tags>()
+                .eq(Tags::getParentId, 0)
+                .eq(Tags::getType, ExamTagsEnum.valueOf(type)));
+        if (ObjectUtils.isNull(tags) || CollUtils.isEmpty(tags)) {
+            return new ArrayList<>(0);
+        }
+        return tags.stream().map(item -> {
+            CategoryFirstVO vo = new CategoryFirstVO();
+            BeanUtils.copyProperties(item, vo);
+            return vo;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CategorySecondVO> getSecondCategoryList(Integer parentId, String type) {
+        if (ObjectUtils.isNull(parentId) || StringUtils.isBlank(type) || parentId == 0) {
+            return new ArrayList<>(0);
+        }
+        List<Tags> tags = tagsMapper.selectList(new LambdaQueryWrapper<Tags>()
+                .eq(Tags::getParentId, parentId)
+                .eq(Tags::getType, ExamTagsEnum.valueOf(type)));
+        if (ObjectUtils.isNull(tags) || CollUtils.isEmpty(tags)) {
+            return new ArrayList<>(0);
+        }
+        return tags.stream().map(item -> {
+            CategorySecondVO vo = new CategorySecondVO();
+            BeanUtils.copyProperties(item, vo);
+            return vo;
+        }).collect(Collectors.toList());
     }
 }

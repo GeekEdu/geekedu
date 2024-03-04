@@ -15,31 +15,31 @@ public class ExamCountVO extends BaseVO {
     /**
      * 试卷数 在线考试数
      */
-    private Integer paperCount = 0;
+    private long paperCount = 0;
 
     /**
      * 模拟考试数
      */
-    private Integer mockCount = 0;
+    private long mockCount = 0;
 
     /**
      * 收藏数
      */
-    private Integer collectionCount = 0;
+    private long collectionCount = 0;
 
     /**
      * 错题本数
      */
-    private Integer wrongBookCount = 0;
+    private long wrongBookCount = 0;
 
     /**
      * 练习数
      */
-    private Integer practiceCount = 0;
+    private long practiceCount = 0;
 
     /**
      * 练习章节数
      */
-    private Integer practiceChapterCount = 0;
+    private long practiceChapterCount = 0;
 
 }

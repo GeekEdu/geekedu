@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.exam.TagForm;
 import com.zch.api.vo.exam.CTagsVO;
 import com.zch.api.vo.exam.TagsVO;
+import com.zch.api.vo.exam.practice.CategoryFirstVO;
+import com.zch.api.vo.exam.practice.CategorySecondVO;
 import com.zch.exam.domain.po.Tags;
 
 import java.util.List;
@@ -83,5 +85,23 @@ public interface ITagsService extends IService<Tags> {
      * @return
      */
     Boolean addTag(TagForm form);
+
+    // ============================================================
+    // 前台
+
+    /**
+     * 获取一级分类
+     * @param type
+     * @return
+     */
+    List<CategoryFirstVO> getFirstCategoryList(String type);
+
+    /**
+     * 获取二级分类
+     * @param parentId
+     * @param type
+     * @return
+     */
+    List<CategorySecondVO> getSecondCategoryList(Integer parentId, String type);
 
 }

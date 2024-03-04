@@ -50,4 +50,13 @@ public interface IChapterService extends IService<Chapter> {
      */
     Boolean updateChapter(Integer id, ChapterForm form);
 
+    //============================================================
+    // 前台
+
+    /**
+     * 返回章节 数量
+     * @return
+     */
+    long chapterCount();
+
 }

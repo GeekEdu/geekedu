@@ -115,4 +115,9 @@ public class ChapterServiceImpl extends ServiceImpl<ChapterMapper, Chapter> impl
         chapter.setUpdatedBy(userId);
         return updateById(chapter);
     }
+
+    @Override
+    public long chapterCount() {
+        return count();
+    }
 }

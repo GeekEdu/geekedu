@@ -10,8 +10,8 @@ import lombok.Getter;
 @Getter
 public enum ExamTagsEnum {
 
-    QUESTIONS(0, "题目"),
-    PAPERS(1, "试卷");
+    QUESTIONS(1, "题目"),
+    PAPERS(2, "试卷");
 
     @EnumValue
     private final Integer code;

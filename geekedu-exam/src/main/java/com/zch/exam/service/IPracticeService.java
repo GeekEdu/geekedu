@@ -7,6 +7,7 @@ import com.zch.api.dto.exam.DelChapterForm;
 import com.zch.api.vo.exam.CTagsVO;
 import com.zch.api.vo.exam.ChapterVO;
 import com.zch.api.vo.exam.PracticeVO;
+import com.zch.api.vo.exam.practice.PracticeFrontVO;
 import com.zch.exam.domain.po.Practice;
 
 import java.util.List;
@@ -77,5 +78,24 @@ public interface IPracticeService extends IService<Practice> {
      * @return
      */
     Boolean updateChapter(Integer id, ChapterForm form);
+
+    //============================================================================
+    // 前台
+
+    /**
+     * 返回练习 数量
+     * @return
+     */
+    long practiceCount();
+
+    /**
+     * 前台 返回练习 数量
+     * @param pageNum
+     * @param pageSize
+     * @param chapterId
+     * @param childId
+     * @return
+     */
+    PracticeFrontVO getPracticeList(Integer pageNum, Integer pageSize, Integer chapterId, Integer childId);
 
 }
