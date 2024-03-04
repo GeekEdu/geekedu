@@ -8,8 +8,10 @@ import com.zch.api.dto.book.EBookForm;
 import com.zch.api.feignClient.label.LabelFeignClient;
 import com.zch.api.vo.book.*;
 import com.zch.api.vo.book.comment.BCommentFullVO;
+import com.zch.api.vo.book.comment.CommentVO;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.book.domain.po.EBook;
+import com.zch.book.domain.po.EBookArticle;
 import com.zch.book.mapper.EBookMapper;
 import com.zch.book.service.IBCommentService;
 import com.zch.book.service.IEBookArticleService;
@@ -346,5 +348,106 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
             return 0;
         }
         return commentService.addComment(bookId, form, "E_BOOK");
+    }
+
+    @Override
+    public ArticleFullVO readArticle(Integer articleId) {
+        // 构建返回对象
+        ArticleFullVO vo = new ArticleFullVO();
+        // 根据id获取文章明细
+        EBookArticleVO article = articleService.getEBookArticleById(articleId);
+        if (ObjectUtils.isNull(article)) {
+            return vo;
+        }
+        // 存在这篇文章，则将这篇文章对应的电子书id查出来，先构造电子书信息
+        // 直接调用查询文章明细时的方法即可，都是相似的
+        EBookFullVO bookVO = getBookDetailById(article.getBookId());
+        vo.setArticles(bookVO.getArticles());
+        vo.setArticleMap(bookVO.getArticleMap());
+        vo.setBook(bookVO.getBook());
+        vo.setChapters(bookVO.getChapters());
+        vo.setArticle(article);
+        // 上一节和下一节由后端返回
+        // 这里有一个思路是：将该电子书的所有文章查出来，只需要文章id即可，
+        // 放在一个列表里面，只要保证有序即可，每次请求传过来是文章id，那么只需要在这里列表里面查找对应的id
+        // 然后返回此索引的前一个和后一个即可，如果遇到边界，那么按照实际来，设为0
+        // 这里暂未考虑删除文章之后的 id 列表变化！
+        List<Integer> ids = articleService.getArticleIdList(article.getBookId());
+        if (ObjectUtils.isNull(ids) || CollUtils.isEmpty(ids)) {
+            vo.setPrevId(0);
+            vo.setNextId(0);
+            return vo;
+        }
+        // 列表只有一个id且就是当前文章id时
+        if (ids.contains(articleId) && ids.size() == 1) {
+            vo.setPrevId(0);
+            vo.setNextId(0);
+            return vo;
+        }
+        // 返回当前文章id在列表中的位置
+        int index = ids.indexOf(articleId);
+        int head = 0; // 首
+        int tail = ids.size() - 1; // 尾
+        /*
+        分为几种情况 前提都是ids的长度 > 1
+            当前位置在 head ，则存在next
+            当前位置在 tail ，则存在prev
+            当前位置在 head 和 tail 之间，则 prev 和 next 都存在
+         */
+        if (index == head) {
+            vo.setNextId(ids.get(index + 1));
+            vo.setPrevId(0);
+        } else if (index == tail) {
+            vo.setPrevId(ids.get(index - 1));
+            vo.setNextId(0);
+        } else if ((index > head) && (index < tail)) {
+            vo.setPrevId(ids.get(index - 1));
+            vo.setNextId(ids.get(index + 1));
+        }
+        return vo;
+    }
+
+    @Override
+    public Page<CommentVO> getArticleComments(Integer articleId, Integer pageNum, Integer pageSize, Integer commentId) {
+        if (ObjectUtils.isNull(articleId)) {
+            return new Page<>();
+        }
+        // 查询是否有这篇文章
+        EBookArticle article = articleService.getById(articleId);
+        if (ObjectUtils.isNull(article)) {
+            return new Page<>();
+        }
+        return commentService.getCommentPage(articleId, pageNum, pageSize, commentId, "E_BOOK_ARTICLE");
+    }
+
+    public static void main(String[] args) {
+        List<Integer> test = new LinkedList<>();
+        test.add(1);
+        test.add(2);
+        test.add(3);
+        test.add(4);
+        test.add(5);
+        int prev = 0;
+        int next = 0;
+        ListIterator<Integer> iterator = test.listIterator();
+        while (iterator.hasNext()) {
+            int current = iterator.next();
+            if (current == 3) {
+                // 获取当前元素的前一个节点
+                if (iterator.hasPrevious()) {
+                    prev = iterator.previous();
+                    System.out.println("Previous Element: " + prev);
+                    iterator.next(); // 移动回到当前位置
+                }
+
+                // 获取当前元素的后一个节点
+                if (iterator.hasNext()) {
+                    next = iterator.next();
+                    System.out.println("Next Element: " + next);
+                    iterator.previous(); // 移动回到当前位置
+                }
+            }
+        }
+        System.out.println(prev + " " + next);
     }
 }

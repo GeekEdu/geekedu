@@ -6,9 +6,11 @@ import com.zch.api.dto.book.EBookChapterForm;
 import com.zch.api.dto.book.EBookForm;
 import com.zch.api.vo.book.*;
 import com.zch.api.vo.book.comment.BCommentFullVO;
+import com.zch.api.vo.book.comment.CommentVO;
 import com.zch.book.service.IEBookArticleService;
 import com.zch.book.service.IEBookChapterService;
 import com.zch.book.service.IEBookService;
+import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -260,6 +262,31 @@ public class EBookController {
     @PostMapping("/v2/book/{id}/comment")
     public Response<Integer> addBookComment(@PathVariable("id") Integer id, @RequestBody AddCommentForm form) {
         return Response.success(eBookService.addBookComment(id, form));
+    }
+
+    /**
+     * 阅读 某一篇文章
+     * @param id
+     * @return
+     */
+    @GetMapping("/v2/article/{id}/read")
+    public Response readArticle(@PathVariable("id") Integer id) {
+        return Response.success(eBookService.readArticle(id));
+    }
+
+    /**
+     * 返回 某一篇文章 评论列表
+     * @param id
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/v2/article/{id}/comments")
+    public PageResult<CommentVO> getArticleComments(@PathVariable("id") Integer id,
+                                                    @RequestParam("pageNum") Integer pageNum,
+                                                    @RequestParam("pageSize") Integer pageSize,
+                                                    @RequestParam("commentId") Integer commentId) {
+        return PageResult.success(eBookService.getArticleComments(id, pageNum, pageSize, commentId));
     }
 
 }

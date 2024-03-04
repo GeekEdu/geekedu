@@ -63,4 +63,11 @@ public interface IEBookArticleService extends IService<EBookArticle> {
      * @return
      */
     List<EBookArticleVO> getArticleList(Integer bookId, Integer chapterId);
+
+    /**
+     * 查找原本文章id列表，只根据电子书id
+     * @param bookId
+     * @return
+     */
+    List<Integer> getArticleIdList(Integer bookId);
 }

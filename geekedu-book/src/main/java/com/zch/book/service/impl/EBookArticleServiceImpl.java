@@ -206,4 +206,16 @@ public class EBookArticleServiceImpl extends ServiceImpl<EBookArticleMapper, EBo
             }).collect(Collectors.toList());
         }
     }
+
+    @Override
+    public List<Integer> getArticleIdList(Integer bookId) {
+        List<EBookArticle> list = articleMapper.selectList(new LambdaQueryWrapper<EBookArticle>()
+                .eq(EBookArticle::getBookId, bookId)
+                .select(EBookArticle::getId));
+        if (ObjectUtils.isNull(list) || CollUtils.isEmpty(list)) {
+            return new ArrayList<>(0);
+        }
+        return list.stream().map(EBookArticle::getId).collect(Collectors.toList());
+    }
+
 }
