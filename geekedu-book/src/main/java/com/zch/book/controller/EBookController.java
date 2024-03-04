@@ -1,9 +1,11 @@
 package com.zch.book.controller;
 
+import com.zch.api.dto.book.AddCommentForm;
 import com.zch.api.dto.book.EBookArticleForm;
 import com.zch.api.dto.book.EBookChapterForm;
 import com.zch.api.dto.book.EBookForm;
 import com.zch.api.vo.book.*;
+import com.zch.api.vo.book.comment.BCommentFullVO;
 import com.zch.book.service.IEBookArticleService;
 import com.zch.book.service.IEBookChapterService;
 import com.zch.book.service.IEBookService;
@@ -225,16 +227,16 @@ public class EBookController {
     }
 
     /**
-     * 获取某篇文章的评论
+     * 获取某本电子书的评论
      * @param id
      * @param pageNum
      * @param pageSize
      * @return
      */
     @GetMapping("/v2/book/{id}/comments")
-    public Response getBookCommentsById(@PathVariable("id") Integer id,
-                                        @RequestParam("pageNum") Integer pageNum,
-                                        @RequestParam("pageSize") Integer pageSize) {
+    public Response<BCommentFullVO> getBookCommentsById(@PathVariable("id") Integer id,
+                                                        @RequestParam("pageNum") Integer pageNum,
+                                                        @RequestParam("pageSize") Integer pageSize) {
         return Response.success(eBookService.getBookComments(id, pageNum, pageSize));
     }
 
@@ -247,6 +249,17 @@ public class EBookController {
     @GetMapping("/v2/book/thumb/status")
     public Response checkBookThumbStatus(@RequestParam("id") Integer id, @RequestParam("type") String type) {
         return Response.success();
+    }
+
+    /**
+     * 新增电子书评论
+     * @param id
+     * @param form
+     * @return
+     */
+    @PostMapping("/v2/book/{id}/comment")
+    public Response<Integer> addBookComment(@PathVariable("id") Integer id, @RequestBody AddCommentForm form) {
+        return Response.success(eBookService.addBookComment(id, form));
     }
 
 }

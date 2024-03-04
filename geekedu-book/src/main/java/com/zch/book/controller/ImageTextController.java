@@ -1,6 +1,6 @@
 package com.zch.book.controller;
 
-import com.zch.api.dto.ask.ImageTextCommentForm;
+import com.zch.api.dto.book.AddCommentForm;
 import com.zch.api.dto.book.ImageTextForm;
 import com.zch.api.vo.book.ImageTextAndCategoryVO;
 import com.zch.api.vo.book.ImageTextSingleVO;
@@ -131,7 +131,7 @@ public class ImageTextController {
      * @return
      */
     @PostMapping("/v2/{id}/comment")
-    public Response<Integer> addCommentFirst(@PathVariable("id") Integer id, @RequestBody ImageTextCommentForm form) {
+    public Response<Integer> addCommentFirst(@PathVariable("id") Integer id, @RequestBody AddCommentForm form) {
         return Response.success(imageTextService.addComment(id, form));
     }
 

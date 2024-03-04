@@ -3,14 +3,15 @@ package com.zch.book.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zch.api.dto.book.AddCommentForm;
 import com.zch.api.dto.book.EBookForm;
-import com.zch.api.feignClient.comments.CommentsFeignClient;
 import com.zch.api.feignClient.label.LabelFeignClient;
-import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.book.*;
+import com.zch.api.vo.book.comment.BCommentFullVO;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.book.domain.po.EBook;
 import com.zch.book.mapper.EBookMapper;
+import com.zch.book.service.IBCommentService;
 import com.zch.book.service.IEBookArticleService;
 import com.zch.book.service.IEBookChapterService;
 import com.zch.book.service.IEBookService;
@@ -41,7 +42,7 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
 
     private final LabelFeignClient labelFeignClient;
 
-    private final CommentsFeignClient commentsFeignClient;
+    private final IBCommentService commentService;
 
     private final IEBookChapterService chapterService;
 
@@ -329,15 +330,21 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
     }
 
     @Override
-    public CommentsFullVO getBookComments(Integer id, Integer pageNum, Integer pageSize) {
+    public BCommentFullVO getBookComments(Integer id, Integer pageNum, Integer pageSize) {
         EBook eBook = bookMapper.selectById(id);
         if (ObjectUtils.isNull(eBook)) {
-            return new CommentsFullVO();
+            return new BCommentFullVO();
         }
-        Response<CommentsFullVO> res = commentsFeignClient.getCommentsList(id, "E_BOOK", pageNum, pageSize);
-        if (ObjectUtils.isNull(res) || ObjectUtils.isNull(res.getData())) {
-            return new CommentsFullVO();
+        return commentService.getFullComment(id, pageNum, pageSize, "E_BOOK");
+    }
+
+    @Override
+    public Integer addBookComment(Integer bookId, AddCommentForm form) {
+        // 查询电子书是否存在
+        EBook eBook = bookMapper.selectById(bookId);
+        if (ObjectUtils.isNull(eBook)) {
+            return 0;
         }
-        return res.getData();
+        return commentService.addComment(bookId, form, "E_BOOK");
     }
 }

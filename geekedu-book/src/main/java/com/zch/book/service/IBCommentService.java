@@ -2,7 +2,8 @@ package com.zch.book.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zch.api.dto.ask.ImageTextCommentForm;
+import com.zch.api.dto.book.AddCommentForm;
+import com.zch.api.vo.book.comment.BCommentFullVO;
 import com.zch.api.vo.book.comment.CommentVO;
 import com.zch.book.domain.po.BComment;
 
@@ -13,7 +14,7 @@ import com.zch.book.domain.po.BComment;
 public interface IBCommentService extends IService<BComment> {
 
     /**
-     * 前台 获取评论列表
+     * 前台 图文 获取评论列表
      * @param relationId
      * @param pageNum
      * @param pageSize
@@ -38,6 +39,16 @@ public interface IBCommentService extends IService<BComment> {
      * @param cType
      * @return
      */
-    Integer addComment(Integer id, ImageTextCommentForm form, String cType);
+    Integer addComment(Integer id, AddCommentForm form, String cType);
+
+    /**
+     * 电子书 获取评论列表
+     * @param relationId
+     * @param pageNum
+     * @param pageSize
+     * @param type
+     * @return
+     */
+    BCommentFullVO getFullComment(Integer relationId, Integer pageNum, Integer pageSize, String type);
 
 }

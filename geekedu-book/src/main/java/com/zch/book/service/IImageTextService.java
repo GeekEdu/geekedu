@@ -2,7 +2,7 @@ package com.zch.book.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zch.api.dto.ask.ImageTextCommentForm;
+import com.zch.api.dto.book.AddCommentForm;
 import com.zch.api.dto.book.ImageTextForm;
 import com.zch.api.vo.book.ImageTextAndCategoryVO;
 import com.zch.api.vo.book.ImageTextSingleVO;
@@ -88,6 +88,6 @@ public interface IImageTextService extends IService<ImageText> {
      * @param form
      * @return
      */
-    Integer addComment(Integer id, ImageTextCommentForm form);
+    Integer addComment(Integer id, AddCommentForm form);
 
 }

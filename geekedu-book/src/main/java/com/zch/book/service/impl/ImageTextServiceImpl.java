@@ -3,7 +3,7 @@ package com.zch.book.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zch.api.dto.ask.ImageTextCommentForm;
+import com.zch.api.dto.book.AddCommentForm;
 import com.zch.api.dto.book.ImageTextForm;
 import com.zch.api.feignClient.label.LabelFeignClient;
 import com.zch.api.vo.book.ImageTextAndCategoryVO;
@@ -256,7 +256,7 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
     }
 
     @Override
-    public Integer addComment(Integer id, ImageTextCommentForm form) {
+    public Integer addComment(Integer id, AddCommentForm form) {
         if (ObjectUtils.isNull(id)) {
             return 0;
         }

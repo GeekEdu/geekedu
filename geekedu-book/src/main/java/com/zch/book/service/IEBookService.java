@@ -1,9 +1,10 @@
 package com.zch.book.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zch.api.dto.book.AddCommentForm;
 import com.zch.api.dto.book.EBookForm;
-import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.book.*;
+import com.zch.api.vo.book.comment.BCommentFullVO;
 import com.zch.book.domain.po.EBook;
 
 import java.util.List;
@@ -109,6 +110,14 @@ public interface IEBookService extends IService<EBook> {
      * @param pageSize
      * @return
      */
-    CommentsFullVO getBookComments(Integer id, Integer pageNum, Integer pageSize);
+    BCommentFullVO getBookComments(Integer id, Integer pageNum, Integer pageSize);
+
+    /**
+     * 添加电子书 评论
+     * @param bookId
+     * @param form
+     * @return
+     */
+    Integer addBookComment(Integer bookId, AddCommentForm form);
 
 }

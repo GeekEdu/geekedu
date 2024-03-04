@@ -1,4 +1,4 @@
-package com.zch.api.dto.ask;
+package com.zch.api.dto.book;
 
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @date 2024/3/3
  */
 @Data
-public class ImageTextCommentForm implements Serializable {
+public class AddCommentForm implements Serializable {
 
     private static final Long serialVersionUID = 1L;
 

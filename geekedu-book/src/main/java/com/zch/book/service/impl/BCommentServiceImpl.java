@@ -3,8 +3,9 @@ package com.zch.book.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zch.api.dto.ask.ImageTextCommentForm;
+import com.zch.api.dto.book.AddCommentForm;
 import com.zch.api.feignClient.user.UserFeignClient;
+import com.zch.api.vo.book.comment.BCommentFullVO;
 import com.zch.api.vo.book.comment.BCommentVO;
 import com.zch.api.vo.book.comment.CommentVO;
 import com.zch.api.vo.user.UserSimpleVO;
@@ -22,9 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author Poison02
@@ -123,7 +122,7 @@ public class BCommentServiceImpl extends ServiceImpl<BCommentMapper, BComment> i
     }
 
     @Override
-    public Integer addComment(Integer id, ImageTextCommentForm form, String cType) {
+    public Integer addComment(Integer id, AddCommentForm form, String cType) {
         if (ObjectUtils.isNull(form) || ObjectUtils.isNull(form.getContent()) || StringUtils.isBlank(form.getContent())) {
             return 0;
         }
@@ -155,5 +154,49 @@ public class BCommentServiceImpl extends ServiceImpl<BCommentMapper, BComment> i
                 .eq(BComment::getUserId, 1745747394693820416L)
                 .last(" limit 1"));
         return one.getId();
+    }
+
+    @Override
+    public BCommentFullVO getFullComment(Integer relationId, Integer pageNum, Integer pageSize, String type) {
+        BCommentFullVO vo = new BCommentFullVO();
+        if (ObjectUtils.isNull(pageNum) || ObjectUtils.isNull(pageSize)) {
+            pageNum = 1;
+            pageSize = 10000;
+        }
+        Long count = commentMapper.selectCount(new LambdaQueryWrapper<BComment>()
+                .eq(BComment::getRelationId, relationId)
+                .eq(BComment::getCType, CommentEnums.valueOf(type)));
+        if (count == 0) {
+            vo.setUsers(new HashMap<>(0));
+            vo.getData().setData(new ArrayList<>(0));
+            vo.getData().setTotal(0);
+            return vo;
+        }
+        Page<BComment> page = page(new Page<BComment>(pageNum, pageSize), new LambdaQueryWrapper<BComment>()
+                .eq(BComment::getRelationId, relationId)
+                .eq(BComment::getCType, CommentEnums.valueOf(type)));
+        if (ObjectUtils.isNull(page) || ObjectUtils.isNull(page.getRecords()) || CollUtils.isEmpty(page.getRecords())) {
+            vo.setUsers(new HashMap<>(0));
+            vo.getData().setData(new ArrayList<>(0));
+            vo.getData().setTotal(0);
+            return vo;
+        }
+        List<BComment> records = page.getRecords();
+        List<BCommentVO> list = new ArrayList<>(records.size());
+        Map<Long, UserSimpleVO> users = new TreeMap<>();
+        for (BComment item : records) {
+            BCommentVO vo1 = new BCommentVO();
+            BeanUtils.copyProperties(item, vo1);
+            // 拿到每个评论的用户id，将用户信息查找出来
+            Response<UserSimpleVO> res = userFeignClient.getUserById(item.getUserId() + "");
+            if (ObjectUtils.isNotNull(res) || ObjectUtils.isNotNull(res.getData())) {
+                users.put(item.getUserId(), res.getData());
+            }
+            list.add(vo1);
+        }
+        vo.setUsers(users);
+        vo.getData().setData(list);
+        vo.getData().setTotal(count);
+        return vo;
     }
 }
