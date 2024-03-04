@@ -420,6 +420,19 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
         return commentService.getCommentPage(articleId, pageNum, pageSize, commentId, "E_BOOK_ARTICLE");
     }
 
+    @Override
+    public Integer addArticleComment(Integer articleId, AddCommentForm form) {
+        if (ObjectUtils.isNull(articleId)) {
+            return 0;
+        }
+        // 查询文章是否存在
+        EBookArticle article = articleService.getById(articleId);
+        if (ObjectUtils.isNull(article)) {
+            return 0;
+        }
+        return commentService.addComment(articleId, form, "E_BOOK_ARTICLE");
+    }
+
     public static void main(String[] args) {
         List<Integer> test = new LinkedList<>();
         test.add(1);

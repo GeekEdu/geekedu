@@ -289,4 +289,15 @@ public class EBookController {
         return PageResult.success(eBookService.getArticleComments(id, pageNum, pageSize, commentId));
     }
 
+    /**
+     * 新增文章评论
+     * @param articleId
+     * @param form
+     * @return
+     */
+    @PostMapping("/v2/article/{id}/comment")
+    public Response addArticleComment(@PathVariable("id") Integer articleId, @RequestBody AddCommentForm form) {
+        return Response.success(eBookService.addArticleComment(articleId, form));
+    }
+
 }

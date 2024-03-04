@@ -138,4 +138,12 @@ public interface IEBookService extends IService<EBook> {
      */
     Page<CommentVO> getArticleComments(Integer articleId, Integer pageNum, Integer pageSize, Integer commentId);
 
+    /**
+     * 新增文章评论
+     * @param articleId
+     * @param form
+     * @return
+     */
+    Integer addArticleComment(Integer articleId, AddCommentForm form);
+
 }
