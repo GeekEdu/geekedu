@@ -13,6 +13,7 @@ import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.ask.CommentsVO;
 import com.zch.api.vo.course.*;
+import com.zch.api.vo.course.record.PlayUrlVO;
 import com.zch.api.vo.course.record.RecordCourseVO;
 import com.zch.api.vo.course.record.RecordSectionVO;
 import com.zch.api.vo.label.CategorySimpleVO;
@@ -435,6 +436,15 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Override
     public Boolean addSectionComment(Integer sectionId, AddCommentForm form) {
         return commentsFeignClient.addComment(sectionId, "REPLAY_COURSE_HOUR", form).getData();
+    }
+
+    @Override
+    public PlayUrlVO getSectionPlayUrl(Integer sectionId, Integer isTry) {
+        PlayUrlVO vo = new PlayUrlVO();
+        List<String> url = new ArrayList<>();
+        url.add("https://1315662121.vod-qcloud.com/d61a2526vodtranscq1315662121/690b7dec388912588786384834/v.f100010.mp4");
+        vo.setUrl(url);
+        return vo;
     }
 
 
