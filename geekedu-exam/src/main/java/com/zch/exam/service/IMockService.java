@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.vo.exam.CTagsVO;
 import com.zch.api.vo.exam.MockVO;
+import com.zch.api.vo.exam.mock.MockFrontVO;
 import com.zch.exam.domain.po.Mock;
 
 import java.util.List;
@@ -39,5 +40,24 @@ public interface IMockService extends IService<Mock> {
      * @return
      */
     List<CTagsVO> getTagList(List<Integer> ids);
+
+    //===================================================================================
+    // 前台
+
+    /**
+     * 查找模拟考试数
+     * @return
+     */
+    long getMockCount();
+
+    /**
+     * 前台 返回模拟考试列表
+     * @param pageNum
+     * @param pageSize
+     * @param categoryId
+     * @param childId
+     * @return
+     */
+    MockFrontVO getMockList(Integer pageNum, Integer pageSize, Integer categoryId, Integer childId);
 
 }

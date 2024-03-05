@@ -46,4 +46,54 @@ public class ExamController {
         return Response.success(examService.getPracticeList(pageNum, pageSize, categoryId, childId));
     }
 
+    /**
+     * 在线考试列表 在线考试就是后台的试卷！
+     * @param pageNum
+     * @param pageSize
+     * @param categoryId
+     * @param childId
+     * @return
+     */
+    @GetMapping("/paper/list")
+    public Response getPaperList(@RequestParam("pageNum") Integer pageNum,
+                                 @RequestParam("pageSize") Integer pageSize,
+                                 @RequestParam("cid") Integer categoryId,
+                                 @RequestParam("childId") Integer childId) {
+        return Response.success(examService.getPaperList(pageNum, pageSize, categoryId, childId));
+    }
+
+    /**
+     * 模拟考试列表 即后台的模拟！
+     * @param pageNum
+     * @param pageSize
+     * @param categoryId
+     * @param childId
+     * @return
+     */
+    @GetMapping("/mock/list")
+    public Response getMockList(@RequestParam("pageNum") Integer pageNum,
+                                @RequestParam("pageSize") Integer pageSize,
+                                @RequestParam("cid") Integer categoryId,
+                                @RequestParam("childId") Integer childId) {
+        return Response.success(examService.getMockList(pageNum, pageSize, categoryId, childId));
+    }
+
+    /**
+     * 错题本列表 后台无
+     * @return
+     */
+    @GetMapping("/wrongBook/list")
+    public Response getWrongBookList() {
+        return Response.success();
+    }
+
+    /**
+     * 收藏试题列表 后台无
+     * @return
+     */
+    @GetMapping("/collection/list")
+    public Response getCollectionList() {
+        return Response.success();
+    }
+
 }

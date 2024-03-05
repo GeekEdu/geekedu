@@ -7,6 +7,7 @@ import com.zch.api.vo.exam.CTagsVO;
 import com.zch.api.vo.exam.PaperAndCategoryVO;
 import com.zch.api.vo.exam.PapersVO;
 import com.zch.api.vo.exam.TagsVO;
+import com.zch.api.vo.exam.paper.PaperFrontVO;
 import com.zch.exam.domain.po.Papers;
 
 import java.util.List;
@@ -85,5 +86,24 @@ public interface IPapersService extends IService<Papers> {
      * @return
      */
     Boolean deleteTag(Integer id);
+
+    //=============================================================================
+    // 前台
+
+    /**
+     * 查找 在线考试数
+     * @return
+     */
+    long getPaperCount();
+
+    /**
+     * 前台 返回在线考试列表
+     * @param pageNum
+     * @param pageSize
+     * @param categoryId
+     * @param childId
+     * @return
+     */
+    PaperFrontVO getPaperList(Integer pageNum, Integer pageSize, Integer categoryId, Integer childId);
 
 }

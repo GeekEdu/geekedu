@@ -60,6 +60,11 @@ public class MockVO extends BaseVO {
      */
     private String rule;
 
+    /**
+     * 试题数
+     */
+    private Long questionCount;
+
     private CTagsVO category;
 
 }

@@ -1,6 +1,8 @@
 package com.zch.exam.service.impl;
 
 import com.zch.api.vo.exam.ExamCountVO;
+import com.zch.api.vo.exam.mock.MockFrontVO;
+import com.zch.api.vo.exam.paper.PaperFrontVO;
 import com.zch.api.vo.exam.practice.PracticeFrontVO;
 import com.zch.exam.service.*;
 import lombok.RequiredArgsConstructor;
@@ -34,11 +36,27 @@ public class ExamServiceImpl implements IExamService {
         long practiceChapterCount = chapterService.chapterCount();
         vo.setPracticeCount(practiceCount);
         vo.setPracticeChapterCount(practiceChapterCount);
+        // 查找在线考试数 即试卷数
+        long paperCount = papersService.getPaperCount();
+        // 查找模拟考试数
+        long mockCount = mockService.getMockCount();
+        vo.setPaperCount(paperCount);
+        vo.setMockCount(mockCount);
         return vo;
     }
 
     @Override
     public PracticeFrontVO getPracticeList(Integer pageNum, Integer pageSize, Integer categoryId, Integer childId) {
         return practiceService.getPracticeList(pageNum, pageSize, categoryId, childId);
+    }
+
+    @Override
+    public PaperFrontVO getPaperList(Integer pageNum, Integer pageSize, Integer categoryId, Integer childId) {
+        return papersService.getPaperList(pageNum, pageSize, categoryId, childId);
+    }
+
+    @Override
+    public MockFrontVO getMockList(Integer pageNum, Integer pageSize, Integer categoryId, Integer childId) {
+        return mockService.getMockList(pageNum, pageSize, categoryId, childId);
     }
 }

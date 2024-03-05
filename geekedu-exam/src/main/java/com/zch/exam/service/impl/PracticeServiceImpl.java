@@ -147,12 +147,12 @@ public class PracticeServiceImpl extends ServiceImpl<PracticeMapper, Practice> i
     }
 
     @Override
-    public PracticeFrontVO getPracticeList(Integer pageNum, Integer pageSize, Integer chapterId, Integer childId) {
+    public PracticeFrontVO getPracticeList(Integer pageNum, Integer pageSize, Integer categoryId, Integer childId) {
         if (ObjectUtils.isNull(pageNum) || ObjectUtils.isNull(pageSize)
-        || ObjectUtils.isNull(chapterId) || ObjectUtils.isNull(childId)) {
+        || ObjectUtils.isNull(categoryId) || ObjectUtils.isNull(childId)) {
             pageNum = 1;
             pageSize = 10;
-            chapterId = 0;
+            categoryId = 0;
             childId = 0;
         }
         PracticeFrontVO vo = new PracticeFrontVO();
@@ -183,31 +183,31 @@ public class PracticeServiceImpl extends ServiceImpl<PracticeMapper, Practice> i
         }
         LambdaQueryWrapper<Practice> wrapper = new LambdaQueryWrapper<>();
         /*
-            1. chapterId != 0 && childId == 0
-            2. chapterId != 0 && childId != 0
-            3. chapterId == 0 && childId == 0
+            1. categoryId != 0 && childId == 0
+            2. categoryId != 0 && childId != 0
+            3. categoryId == 0 && childId == 0
          */
-        if ((! Objects.equals(chapterId, 0)) && Objects.equals(childId, 0)) {
+        if ((! Objects.equals(categoryId, 0)) && Objects.equals(childId, 0)) {
             // 这里 一级分类 查询有一个坑，不能单纯等于一级分类，因为可能某个练习的分类是一级分类下的二级分类
             // 应该将该一级分类下的所有二级分类查出来，查询就在一级和二级分类id列表中
             if (! childrenCategories.isEmpty()) {
-                List<CategorySecondVO> list = childrenCategories.get(chapterId);
+                List<CategorySecondVO> list = childrenCategories.get(categoryId);
                 if (CollUtils.isNotEmpty(list)) {
                     // 有二级分类的情况下
                     List<Integer> ids = list.stream().map(CategorySecondVO::getId).collect(Collectors.toList());
                     // 将一级分类id放入
-                    ids.add(chapterId);
+                    ids.add(categoryId);
                     // 则查询条件在这个分类id列表中
                     wrapper.in(Practice::getCategoryId, ids);
                 } else {
                     // 没有二级分类情况下，直接使用一级分类
-                    wrapper.eq(Practice::getCategoryId, chapterId);
+                    wrapper.eq(Practice::getCategoryId, categoryId);
                 }
             } else {
                 // 都没有二级分类，直接使用一级分类
-                wrapper.eq(Practice::getCategoryId, chapterId);
+                wrapper.eq(Practice::getCategoryId, categoryId);
             }
-        } else if ((! Objects.equals(chapterId, 0)) && (! Objects.equals(childId, 0))) {
+        } else if ((! Objects.equals(categoryId, 0)) && (! Objects.equals(childId, 0))) {
             // 第二种情况时，既然都有二级分类id，那么就是精准查询，直接使用二级分类id即可
             wrapper.eq(Practice::getCategoryId, childId);
         }

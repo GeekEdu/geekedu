@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * @author Poison02
@@ -75,6 +76,18 @@ public class PapersVO extends BaseVO {
      * 关联课程
      */
     private Integer requireCourse;
+
+    /**
+     * 考试规则
+     */
+    private String rule;
+
+    /**
+     * 试题数
+     */
+    private Long questionCount;
+
+    private LocalDateTime createdTime;
 
     private CTagsVO category;
 

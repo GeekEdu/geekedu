@@ -82,6 +82,16 @@ public class Papers extends BaseEntity {
      */
     private Integer requireCourse;
 
+    /**
+     * 考试规则
+     */
+    private String rule;
+
+    /**
+     * 试题数
+     */
+    private Long questionCount;
+
     private Long createdBy;
 
     private Long updatedBy;

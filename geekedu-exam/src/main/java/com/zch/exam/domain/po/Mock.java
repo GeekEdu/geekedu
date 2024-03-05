@@ -66,6 +66,11 @@ public class Mock extends BaseEntity {
      */
     private String rule;
 
+    /**
+     * 试题数
+     */
+    private Long questionCount;
+
     private Long createdBy;
 
     private Long updatedBy;

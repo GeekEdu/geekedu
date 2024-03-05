@@ -92,10 +92,10 @@ public interface IPracticeService extends IService<Practice> {
      * 前台 返回练习 数量
      * @param pageNum
      * @param pageSize
-     * @param chapterId
+     * @param categoryId
      * @param childId
      * @return
      */
-    PracticeFrontVO getPracticeList(Integer pageNum, Integer pageSize, Integer chapterId, Integer childId);
+    PracticeFrontVO getPracticeList(Integer pageNum, Integer pageSize, Integer categoryId, Integer childId);
 
 }
