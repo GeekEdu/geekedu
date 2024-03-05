@@ -273,6 +273,8 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
         comments.setCType(CommentsEnum.valueOf(cType));
         comments.setContent(form.getContent());
         comments.setRelationId(relationId);
+        comments.setCreatedBy(1745747394693820416L);
+        comments.setCreatedBy(1745747394693820416L);
         return save(comments);
     }
 

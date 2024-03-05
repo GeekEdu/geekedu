@@ -9,6 +9,7 @@ import com.zch.api.dto.course.DelSectionBatchForm;
 import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.course.*;
 import com.zch.api.vo.course.record.RecordCourseVO;
+import com.zch.api.vo.course.record.RecordSectionVO;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.course.domain.po.Course;
 
@@ -174,5 +175,27 @@ public interface ICourseService extends IService<Course> {
      * @return
      */
     Boolean addCourseComment(Integer id, AddCommentForm form);
+
+    /**
+     * 前台 课时评论
+     * @param sectionId
+     * @return
+     */
+    CommentsFullVO getSectionComments(Integer sectionId);
+
+    /**
+     * 前台 课时明细
+     * @param sectionId
+     * @return
+     */
+    RecordSectionVO getSectionDetail(Integer sectionId);
+
+    /**
+     * 新增课时评论
+     * @param sectionId
+     * @param form
+     * @return
+     */
+    Boolean addSectionComment(Integer sectionId, AddCommentForm form);
 
 }

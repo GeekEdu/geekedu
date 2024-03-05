@@ -7,6 +7,7 @@ import com.zch.api.dto.course.DelSectionBatchForm;
 import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.course.*;
 import com.zch.api.vo.course.record.RecordCourseVO;
+import com.zch.api.vo.course.record.RecordSectionVO;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
@@ -251,6 +252,38 @@ public class CourseController {
     public Response<Boolean> addCourseComment(@PathVariable("id") Integer id,
                                               @RequestBody AddCommentForm form) {
         return Response.success(courseService.addCourseComment(id, form));
+    }
+
+    /**
+     * 前台 课时评论
+     * @param id
+     * @return
+     */
+    @GetMapping("/v2/section/{id}/comments")
+    public Response<CommentsFullVO> getSectionComments(@PathVariable("id") Integer id) {
+        return Response.success(courseService.getSectionComments(id));
+    }
+
+    /**
+     * 前台 课时信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/v2/section/detail/{id}")
+    public Response<RecordSectionVO> getSectionDetail(@PathVariable("id") Integer id) {
+        return Response.success(courseService.getSectionDetail(id));
+    }
+
+    /**
+     * 新增课时评论
+     * @param id
+     * @param form
+     * @return
+     */
+    @PostMapping("/v2/section/{id}/comment")
+    public Response<Boolean> addSectionComment(@PathVariable("id") Integer id,
+                                               @RequestBody AddCommentForm form) {
+        return Response.success(courseService.addSectionComment(id, form));
     }
 
 }
