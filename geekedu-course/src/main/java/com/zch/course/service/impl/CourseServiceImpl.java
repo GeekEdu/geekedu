@@ -3,14 +3,17 @@ package com.zch.course.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zch.api.dto.ask.AddCommentForm;
 import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.course.ChapterForm;
 import com.zch.api.dto.course.DelSectionBatchForm;
 import com.zch.api.feignClient.comments.CommentsFeignClient;
 import com.zch.api.feignClient.label.LabelFeignClient;
 import com.zch.api.feignClient.user.UserFeignClient;
+import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.ask.CommentsVO;
 import com.zch.api.vo.course.*;
+import com.zch.api.vo.course.record.RecordCourseVO;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.common.core.utils.BeanUtils;
@@ -283,6 +286,79 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         vo.setRecords(list);
         vo.setTotal(count);
         return vo;
+    }
+
+    @Override
+    public RecordCourseVO getDetailCourse(Integer id) {
+        RecordCourseVO vo = new RecordCourseVO();
+        if (ObjectUtils.isNull(id)) {
+            return vo;
+        }
+        // 查询是否存在该课程
+        Course course = courseMapper.selectById(id);
+        if (ObjectUtils.isNull(course)) {
+            return vo;
+        }
+        // 构建课程返回信息
+        CourseVO cv = new CourseVO();
+        BeanUtils.copyProperties(course, cv);
+        vo.setCourse(cv);
+        // 查询课程对应的章节
+        List<CourseChapterVO> chapters = chapterService.getChapterList(course.getId());
+        if (ObjectUtils.isNotNull(chapters) && CollUtils.isNotEmpty(chapters)) {
+            vo.setChapters(chapters);
+        }
+        // 查询课程对应的视频小节
+        // 1. 如果没有章节
+        Map<Integer, List<CourseSectionVO>> videos = new HashMap<>(0);
+        // 查全部视频
+        List<CourseSectionVO> sections = sectionService.getSectionList(id, 0);
+        if (ObjectUtils.isNull(chapters) || CollUtils.isEmpty(chapters)) {
+            // 没有视频
+            if (ObjectUtils.isNull(sections) || CollUtils.isEmpty(sections)) {
+                vo.setVideos(new HashMap<>(0));
+                return vo;
+            } else {
+                // 存在视频 但是没有章节 直接放在map的第0个
+                videos.put(0, sections);
+            }
+        } else {
+            // 2. 有章节
+            // 没有视频
+            if (ObjectUtils.isNull(sections) || CollUtils.isEmpty(sections)) {
+                vo.setVideos(new HashMap<>(0));
+                return vo;
+            } else {
+                // 存在视频 且有章节 但是要考虑：1.所有视频都用了章节；2.所有视频都没用章节；3.部分视频用章节，部分没有
+                // 将没有用章节的视频都查出来 放入 map 的 0 位置 没有用章节，只需要在全部视频中过滤出章节id为0的
+                List<CourseSectionVO> notChapters = sections.stream().filter((item) -> item.getChapterId() == 0).collect(Collectors.toList());
+                if (ObjectUtils.isNotNull(notChapters)) {
+                    videos.put(0, notChapters);
+                }
+                // 将使用章节的视频查出，放入map对应章节id的位置即可
+                for (CourseChapterVO item : chapters) {
+                    videos.put(item.getId(), sections.stream()
+                            .filter(e -> Objects.equals(e.getChapterId(), item.getId()))
+                            .collect(Collectors.toList()));
+                }
+            }
+        }
+        vo.setVideos(videos);
+        // TODO 是否购买课程
+        // TODO 是否收藏课程
+        // TODO 附件
+        // TODO 视频观看进度
+        return vo;
+    }
+
+    @Override
+    public CommentsFullVO getCourseComments(Integer courseId) {
+        return commentsFeignClient.getCommentsList(courseId, "REPLAY_COURSE", 1, 10000).getData();
+    }
+
+    @Override
+    public Boolean addCourseComment(Integer id, AddCommentForm form) {
+        return commentsFeignClient.addComment(id, "REPLAY_COURSE", form).getData();
     }
 
 

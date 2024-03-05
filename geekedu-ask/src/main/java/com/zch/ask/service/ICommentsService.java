@@ -2,6 +2,7 @@ package com.zch.ask.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zch.api.dto.ask.AddCommentForm;
 import com.zch.api.dto.ask.CommentAnswerForm;
 import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.ask.CommentsForm;
@@ -77,5 +78,13 @@ public interface ICommentsService extends IService<Comments> {
      * @return
      */
     CommentsFullVO getCommentsList(Integer id, String cType, Integer pageNum, Integer pageSize);
+
+    /**
+     * 前台 新增评论
+     * @param relationId
+     * @param form
+     * @return
+     */
+    Boolean addComment(Integer relationId, String cType, AddCommentForm form);
 
 }

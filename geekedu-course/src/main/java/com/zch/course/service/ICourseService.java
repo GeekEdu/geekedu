@@ -2,10 +2,13 @@ package com.zch.course.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zch.api.dto.ask.AddCommentForm;
 import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.course.ChapterForm;
 import com.zch.api.dto.course.DelSectionBatchForm;
+import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.course.*;
+import com.zch.api.vo.course.record.RecordCourseVO;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.course.domain.po.Course;
 
@@ -149,5 +152,27 @@ public interface ICourseService extends IService<Course> {
      * @return
      */
     Page<CourseVO> getCourseCondition(Integer pageNum, Integer pageSize, String scene, Integer categoryId);
+
+    /**
+     * 返回课程明细
+     * @param id
+     * @return
+     */
+    RecordCourseVO getDetailCourse(Integer id);
+
+    /**
+     * 获取课程评论
+     * @param courseId
+     * @return
+     */
+    CommentsFullVO getCourseComments(Integer courseId);
+
+    /**
+     * 新增课程评论
+     * @param id
+     * @param form
+     * @return
+     */
+    Boolean addCourseComment(Integer id, AddCommentForm form);
 
 }

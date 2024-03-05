@@ -25,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author Poison02
@@ -127,5 +129,30 @@ public class CourseSectionServiceImpl extends ServiceImpl<CourseSectionMapper, C
             return false;
         }
         return removeBatchByIds(form.getIds());
+    }
+
+    @Override
+    public List<CourseSectionVO> getSectionList(Integer courseId, Integer chapterId) {
+        if (ObjectUtils.isNull(courseId)) {
+            return new ArrayList<>(0);
+        }
+        LambdaQueryWrapper<CourseSection> wrapper = new LambdaQueryWrapper<>();
+        if (!Objects.equals(chapterId, 0)) {
+            // 不为0则查 对应课程及章节
+            wrapper.eq(CourseSection::getCourseId, courseId)
+                    .eq(CourseSection::getChapterId, chapterId);
+        } else {
+            // 不为0则查 对应课程
+            wrapper.eq(CourseSection::getCourseId, courseId);
+        }
+        List<CourseSection> sections = sectionMapper.selectList(wrapper);
+        if (ObjectUtils.isNull(sections) || CollUtils.isEmpty(sections)) {
+            return new ArrayList<>(0);
+        }
+        return sections.stream().map(item -> {
+            CourseSectionVO vo = new CourseSectionVO();
+            BeanUtils.copyProperties(item, vo);
+            return vo;
+        }).collect(Collectors.toList());
     }
 }

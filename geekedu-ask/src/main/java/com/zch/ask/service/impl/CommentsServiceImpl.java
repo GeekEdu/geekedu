@@ -3,6 +3,7 @@ package com.zch.ask.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zch.api.dto.ask.AddCommentForm;
 import com.zch.api.dto.ask.CommentAnswerForm;
 import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.ask.CommentsForm;
@@ -261,6 +262,18 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
         vo.getData().setTotal(page.getTotal());
         vo.setUsers(map);
         return vo;
+    }
+
+    @Override
+    public Boolean addComment(Integer relationId, String cType, AddCommentForm form) {
+        Long userId = UserContext.getLoginId();
+        Comments comments = new Comments();
+//        comments.setUserId(userId);
+        comments.setUserId(1745747394693820416L);
+        comments.setCType(CommentsEnum.valueOf(cType));
+        comments.setContent(form.getContent());
+        comments.setRelationId(relationId);
+        return save(comments);
     }
 
     /**

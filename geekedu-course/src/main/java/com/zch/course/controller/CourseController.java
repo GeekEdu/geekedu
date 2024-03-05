@@ -1,9 +1,12 @@
 package com.zch.course.controller;
 
+import com.zch.api.dto.ask.AddCommentForm;
 import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.course.ChapterForm;
 import com.zch.api.dto.course.DelSectionBatchForm;
+import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.course.*;
+import com.zch.api.vo.course.record.RecordCourseVO;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
@@ -192,6 +195,8 @@ public class CourseController {
         return Response.success(courseService.deleteSectionBatch(form));
     }
 
+    //=======================================================================================
+
     /**
      * 前台获取录播课分类列表
      * @return
@@ -215,6 +220,37 @@ public class CourseController {
                                          @RequestParam(value = "scene", required = false) String scene,
                                          @RequestParam("categoryId") Integer categoryId) {
         return PageResult.success(courseService.getCourseCondition(pageNum, pageSize, scene, categoryId));
+    }
+
+    /**
+     * 返回课程明细
+     * @param id
+     * @return
+     */
+    @GetMapping("/v2/detail/{id}")
+    public Response<RecordCourseVO> getCourseDetail(@PathVariable("id") Integer id) {
+        return Response.success(courseService.getDetailCourse(id));
+    }
+
+    /**
+     * 返回课程评论
+     * @param id
+     * @return
+     */
+    @GetMapping("/v2/{id}/comments")
+    public Response<CommentsFullVO> getCourseComments(@PathVariable("id") Integer id) {
+        return Response.success(courseService.getCourseComments(id));
+    }
+
+    /**
+     * 新增课程评论
+     * @param id
+     * @return
+     */
+    @PostMapping("/v2/{id}/comment")
+    public Response<Boolean> addCourseComment(@PathVariable("id") Integer id,
+                                              @RequestBody AddCommentForm form) {
+        return Response.success(courseService.addCourseComment(id, form));
     }
 
 }

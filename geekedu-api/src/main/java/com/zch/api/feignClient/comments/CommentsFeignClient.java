@@ -1,5 +1,6 @@
 package com.zch.api.feignClient.comments;
 
+import com.zch.api.dto.ask.AddCommentForm;
 import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.interceptor.FeignInterceptor;
 import com.zch.api.vo.ask.CommentsFullVO;
@@ -43,5 +44,17 @@ public interface CommentsFeignClient {
                                                     @RequestParam("cType") String cType,
                                                     @RequestParam("pageNum") Integer pageNum,
                                                     @RequestParam("pageSize") Integer pageSize);
+
+    /**
+     * 前台 新增评论
+     * @param relationId
+     * @param form
+     * @param cType
+     * @return
+     */
+    @PostMapping("/api/comments/v2/add")
+    public Response<Boolean> addComment(@RequestParam("id") Integer relationId,
+                                        @RequestParam("cType") String cType,
+                                        @RequestBody AddCommentForm form);
 
 }

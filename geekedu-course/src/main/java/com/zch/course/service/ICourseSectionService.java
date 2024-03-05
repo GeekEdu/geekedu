@@ -6,6 +6,8 @@ import com.zch.api.dto.course.DelSectionBatchForm;
 import com.zch.api.vo.course.CourseSectionVO;
 import com.zch.course.domain.po.CourseSection;
 
+import java.util.List;
+
 /**
  * @author Poison02
  * @date 2024/2/26
@@ -36,5 +38,16 @@ public interface ICourseSectionService extends IService<CourseSection> {
      * @return
      */
     Boolean deleteSectionBatch(DelSectionBatchForm form);
+
+    //====================================================================
+    // 前台
+
+    /**
+     * 查找视频小节列表
+     * @param courseId
+     * @param chapterId
+     * @return
+     */
+    List<CourseSectionVO> getSectionList(Integer courseId, Integer chapterId);
 
 }
