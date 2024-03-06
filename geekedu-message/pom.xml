@@ -5,11 +5,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.zch</groupId>
-		<artifactId>geekedu-common</artifactId>
+		<artifactId>geekedu</artifactId>
 		<version>1.0</version>
 	</parent>
 
-	<artifactId>common-core</artifactId>
+	<artifactId>geekedu-message</artifactId>
 	<packaging>jar</packaging>
 
 	<properties>
@@ -21,36 +21,24 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.zch</groupId>
-			<artifactId>common-mvc</artifactId>
-			<version>1.0</version>
+			<artifactId>geekedu-api</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.zch</groupId>
-			<artifactId>common-mybatis</artifactId>
-			<version>1.0</version>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.zch</groupId>
-			<artifactId>common-redis</artifactId>
-			<version>1.0</version>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.zch</groupId>
-			<artifactId>common-satoken</artifactId>
-			<version>1.0</version>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-loadbalancer</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.zch</groupId>
-			<artifactId>common-sms</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.lionsoul</groupId>
-			<artifactId>ip2region</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
 	</dependencies>
 

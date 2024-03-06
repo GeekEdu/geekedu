@@ -2,4 +2,5 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.zch.common.mvc.config.JsonConfig,\
   com.zch.common.mybatis.config.MybatisConfig,\
   com.zch.common.redis.config.RedissonConfig,\
-  com.zch.common.satoken.config.SaTokenConfig
+  com.zch.common.satoken.config.SaTokenConfig,\
+  com.zch.common.sms.config.SmsConfig

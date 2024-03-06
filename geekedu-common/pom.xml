@@ -10,6 +10,7 @@
 		<module>common-redis</module>
 		<module>common-mybatis</module>
 		<module>common-satoken</module>
+		<module>common-sms</module>
 	</modules>
 	<parent>
 		<groupId>com.zch</groupId>
