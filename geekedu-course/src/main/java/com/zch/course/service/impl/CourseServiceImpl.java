@@ -453,7 +453,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         List<TestVO> url = new ArrayList<>();
         TestVO test = new TestVO();
         test.setUrl(mediaFeignClient.getVideoPlayUrl(section.getVideoId()).getData());
-        test.setName("test");
+        test.setName("");
         url.add(test);
         vo.setUrl(url);
         return vo;

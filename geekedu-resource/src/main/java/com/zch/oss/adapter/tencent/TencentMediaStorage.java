@@ -1,9 +1,7 @@
 package com.zch.oss.adapter.tencent;
 
 import cn.hutool.core.codec.Base64;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.crypto.digest.HMac;
-import cn.hutool.crypto.digest.HmacAlgorithm;
+import cn.hutool.crypto.digest.MD5;
 import cn.hutool.jwt.JWT;
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
@@ -21,7 +19,6 @@ import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.tencentcloudapi.vod.v20180717.VodClient;
 import com.tencentcloudapi.vod.v20180717.models.*;
 import com.zch.common.core.utils.RandomUtils;
-import com.zch.common.core.utils.StringUtils;
 import com.zch.common.mvc.exception.CommonException;
 import com.zch.oss.adapter.MediaStorageAdapter;
 import com.zch.oss.adapter.MediaUploadResult;
@@ -32,7 +29,6 @@ import lombok.extern.slf4j.Slf4j;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.InputStream;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -54,56 +50,67 @@ public class TencentMediaStorage implements MediaStorageAdapter {
         this.vodClient = vodClient;
         this.tencentProperties = tencentProperties;
     }
+    private static final String[] MEDIA_INFO_FILTERS = new String[]{"basicInfo", "metaData", "adaptiveDynamicStreamingInfo"};
 
-    private static final String CONTEXT_TEMPLATE =
-            "secretId=%s&currentTimeStamp=%d&expireTime=%d&random=%d";
-    private static final String CONTEXT_TEMPLATE_WITH_PROCEDURE =
-            "secretId=%s&currentTimeStamp=%d&expireTime=%d&random=%d&procedure=%s";
-    private static final String[] MEDIA_INFO_FILTERS = new String[]{"basicInfo", "metaData"};
+    private static final String HMAC_ALGORITHM = "HmacSHA1"; //签名算法
+    private static final String CONTENT_CHARSET = "UTF-8";
+
+    public static byte[] byteMerger(byte[] byte1, byte[] byte2) {
+        byte[] byte3 = new byte[byte1.length + byte2.length];
+        System.arraycopy(byte1, 0, byte3, 0, byte1.length);
+        System.arraycopy(byte2, 0, byte3, byte1.length, byte2.length);
+        return byte3;
+    }
 
     @Override
     public String getUploadSignature() {
-        // 1. 获取加密工具
-        HMac mac = new HMac(HmacAlgorithm.HmacSHA1, tencentProperties.getSecretKey().getBytes(StandardCharsets.UTF_8));
-        // 2. 准备加密数据
         long now = System.currentTimeMillis() / 1000;
-        long endTime = now + tencentProperties.getVod().getVodValidSeconds();
-        String procedure = tencentProperties.getVod().getProcedure();
-        String context;
-        if (StringUtils.isBlank(procedure)) {
-            context = String.format(CONTEXT_TEMPLATE,
-                    URLEncoder.encode(tencentProperties.getSecretId(), StandardCharsets.UTF_8),
-                    now,
-                    endTime,
-                    RandomUtils.randomInt(0, Integer.MAX_VALUE)
-            );
-        } else {
-            context = String.format(CONTEXT_TEMPLATE_WITH_PROCEDURE,
-                    URLEncoder.encode(tencentProperties.getSecretId(), StandardCharsets.UTF_8),
-                    now,
-                    endTime,
-                    RandomUtils.randomInt(0, Integer.MAX_VALUE),
-                    procedure
-            );
+        String strSign = "";
+        String contextStr = "";
+
+        // 生成原始参数字符串
+        long endTime = (now + tencentProperties.getVod().getVodValidSeconds());
+        contextStr += "secretId=" + java.net.URLEncoder.encode(tencentProperties.getSecretId(), StandardCharsets.UTF_8);
+        contextStr += "&currentTimeStamp=" + now;
+        contextStr += "&expireTime=" + endTime;
+        contextStr += "&random=" + RandomUtils.randomInt(0, Integer.MAX_VALUE);
+        // 任务流可以用 可以不用
+        // contextStr += "&procedure=" + tencentProperties.getVod().getProcedure();
+
+        try {
+            Mac mac = Mac.getInstance(HMAC_ALGORITHM);
+            SecretKeySpec secretKey = new SecretKeySpec(tencentProperties.getSecretKey().getBytes(StandardCharsets.UTF_8), mac.getAlgorithm());
+            mac.init(secretKey);
+
+
+            byte[] hash = mac.doFinal(contextStr.getBytes(CONTENT_CHARSET));
+            byte[] sigBuf = byteMerger(hash, contextStr.getBytes(StandardCharsets.UTF_8));
+            strSign = Base64.encode(sigBuf);
+            strSign = strSign.replace(" ", "").replace("\n", "").replace("\r", "");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        // 3. 加密返回
-        byte[] bytes = ArrayUtil.addAll(mac.digest(context), context.getBytes(StandardCharsets.UTF_8));
-        return Base64.encode(bytes);
+        return strSign;
+
     }
 
     @Override
     public String getPlaySignature(String mediaId, Long userId, Integer freeExpire) {
         long currentTime = System.currentTimeMillis() / 1000;
 
-        HashMap<String, Object> urlAccessInfo = new HashMap<>(2);
+        Map<String, Object> urlAccessInfo = new HashMap<>(2);
         if (freeExpire != null) {
             // 试看时间 秒
             urlAccessInfo.put("exper", freeExpire * 60);
+            urlAccessInfo.put("rlimit", 3);
+            urlAccessInfo.put("us", "72d4cd1101");
         }
-        HashMap<String, Object> contentInfo = new HashMap<>(2);
+        Map<String, Object> contentInfo = new HashMap<>(2);
         // contentInfo为自适应码流
-        contentInfo.put("audioVideoType", "RawAdaptive");
-        contentInfo.put("rawAdaptiveDefinition", 10);
+        contentInfo.put("audioVideoType", "ProtectedAdaptive"); // 加密
+        Map<String, Object> DRMAdaptiveInfo = new HashMap<>(1);
+        DRMAdaptiveInfo.put("privateEncryptionDefinition", 12);
+        contentInfo.put("rawAdaptiveDefinition", DRMAdaptiveInfo);
         return JWT.create()
                 .setHeader("alg", "HS256")
                 .setHeader("typ", "JWT")
@@ -112,7 +119,6 @@ public class TencentMediaStorage implements MediaStorageAdapter {
                 .setPayload("fileId", mediaId)
                 .setPayload("contentInfo", contentInfo)
                 .setPayload("currentTimeStamp", currentTime)
-                // .setPayload("pcfg", tencentProperties.getVod().getPfcg())
                 .setPayload("urlAccessInfo", urlAccessInfo)
                 .sign();
     }
@@ -209,43 +215,33 @@ public class TencentMediaStorage implements MediaStorageAdapter {
             e.printStackTrace();
             return "";
         }
-        // 腾讯云上的加密key
-//        String pKey = tencentProperties.getVod().getUrlKey();
-//        Long appId = tencentProperties.getAppId();
-//        // 1. 获取加密工具
-//        HMac mac = new HMac(HmacAlgorithm.HmacSHA256, pKey.getBytes(StandardCharsets.UTF_8));
-//        Map<String, String> header = new HashMap<>(2);
-//        header.put("alg", "HS256");
-//        header.put("typ", "JWT");
-//        Map<String, Object> payload = new HashMap<>(7);
-//        payload.put("type", "DrmToken");
-//        payload.put("appId", appId);
-//        payload.put("fileId", mediaId);
-//        payload.put("currentTimeStamp", System.currentTimeMillis());
-//        payload.put("expireTimeStamp", null);
-//        payload.put("random", RandomUtils.randomInt(10000000, 99999999));
-//        payload.put("issuer", "client");
-//        try {
-//            Mac sha256HMAC = Mac.getInstance("HmacSHA256");
-//            SecretKeySpec secretKey = new SecretKeySpec(pKey.getBytes(), "HmacSHA256");
-//            sha256HMAC.init(secretKey);
-//
-//            String data = java.util.Base64.getUrlEncoder().encodeToString(header.toString().getBytes()) + "." + java.util.Base64.getUrlEncoder().encodeToString(payload.toString().getBytes());
-//            // 计算signature
-//            byte[] signatureBytes = sha256HMAC.doFinal(data.getBytes());
-//            String signature = java.util.Base64.getUrlEncoder().encodeToString(signatureBytes);
-//            // header
-//            String headers = java.util.Base64.getUrlEncoder().encodeToString(header.toString().getBytes());
-//            // payload
-//            String payloads = java.util.Base64.getUrlEncoder().encodeToString(payload.toString().getBytes());
-//            // 最终DrmToken
-//            String drmToken = headers + "~" + payloads + "~" + signature;
-//
-//            return drmToken;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return "";
-//        }
+    }
+
+    public String getKeyPlayUrl(String mediaId) {
+        String playUrl;
+        String[] filed = new String[] {mediaId};
+        DescribeMediaInfosRequest req = new DescribeMediaInfosRequest();
+        req.setFilters(MEDIA_INFO_FILTERS);
+        req.setFileIds(filed);
+        DescribeMediaInfosResponse resp;
+        // 随机 us
+        String us = RandomUtils.randomString(8);
+        // 生成key签名
+        String key = keySignature(tencentProperties.getVod().getPKey(), 60, 3, us);
+        // 当前时间戳
+        long current = System.currentTimeMillis() / 1000;
+        try {
+            resp = vodClient.DescribeMediaInfos(req);
+            // 内容URL
+            playUrl = resp.getMediaInfoSet()[0].getAdaptiveDynamicStreamingInfo().getAdaptiveDynamicStreamingSet()[0].getUrl();
+            // DRMToken生成
+            String drmToken = generateDrmToken(tencentProperties.getVod().getUrlKey(), current, "DrmToken", tencentProperties.getAppId(), mediaId);
+            String finalUrl = generateFinalUrl(playUrl, drmToken) + key;
+            return finalUrl;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     /**
@@ -338,39 +334,104 @@ public class TencentMediaStorage implements MediaStorageAdapter {
         throw new CommonException(MEDIA_COMMIT_UPLOAD_ERROR, err);
     }
 
-    public static void main(String[] args) {
-        String pKey = "wHrNZ3ihG2Eq1gfDN3vG";
-        Long appId = 1315662121L;
-        Map<String, String> header = new HashMap<>(2);
-        header.put("alg", "HS256");
-        header.put("typ", "JWT");
-        Map<String, Object> payload = new HashMap<>(7);
-        payload.put("type", "DrmToken");
-        payload.put("appId", appId);
-        payload.put("fileId", 1397757886313096284L);
-        payload.put("currentTimeStamp", System.currentTimeMillis());
-        payload.put("expireTimeStamp", null);
-        payload.put("random", RandomUtils.randomInt(10000000, 99999999));
-        payload.put("issuer", "client");
-        try {
-            Mac sha256HMAC = Mac.getInstance("HmacSHA256");
-            SecretKeySpec secretKey = new SecretKeySpec(pKey.getBytes(), "HmacSHA256");
-            sha256HMAC.init(secretKey);
+    /**
+     * key防盗链 签名生成
+     * @param key
+     * @param expr
+     * @param rlimit
+     * @param us
+     * @return
+     */
+    public String keySignature(String key, long expr, Integer rlimit, String us) {
+        long currentTime = System.currentTimeMillis() / 1000;
+        String strSign = "";
+        String contextStr = "";
+        // 过期时间，固定为当前时间的下一天
+        long expireTime = currentTime + 24 * 60 * 60;
+        // 转为Hex字符串
+        String expireHex = Long.toHexString(expireTime).toLowerCase();
 
-            String data = java.util.Base64.getUrlEncoder().encodeToString(header.toString().getBytes()) + "." + java.util.Base64.getUrlEncoder().encodeToString(payload.toString().getBytes());
-            // 计算signature
-            byte[] signatureBytes = sha256HMAC.doFinal(data.getBytes());
-            String signature = java.util.Base64.getUrlEncoder().encodeToString(signatureBytes);
-            // header
-            String headers = java.util.Base64.getUrlEncoder().encodeToString(header.toString().getBytes());
-            // payload
-            String payloads = java.util.Base64.getUrlEncoder().encodeToString(payload.toString().getBytes());
-            // 最终DrmToken
-            String drmToken = headers + "~" + payloads + "~" + signature;
-            System.out.println(headers + " " + payloads + " " + signature);
-            System.out.println(drmToken);
+        contextStr += "&t=" + expireHex;
+        contextStr += "&exper=" + expr; // 试看时间
+        contextStr += "&rlimit=" + rlimit; // 允许多少ip同时观看
+
+        // 将参数拼接在一起使用md5加密
+        strSign = Base64.encode(MD5.create().digest(key + expireHex + expr + rlimit + us));
+        contextStr += "&sign=" + strSign;
+        return contextStr;
+    }
+
+    /**
+     * 生成 DRMToken
+     * @param pkey
+     * @param currentTimeStamp
+     * @param type
+     * @param appId
+     * @param fileId
+     * @return
+     */
+    public static String generateDrmToken(String pkey, long currentTimeStamp, String type, long appId, String fileId) {
+        String header = "{\"alg\": \"HS256\", \"typ\": \"JWT\"}";
+
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("type", type);
+        payload.put("appId", appId);
+        payload.put("fileId", fileId);
+        payload.put("currentTimeStamp", currentTimeStamp);
+        payload.put("issuer", "client");
+
+        String encodedHeader = base64UrlEncode(header.getBytes(StandardCharsets.UTF_8));
+        String encodedPayload = base64UrlEncode(payload.toString().getBytes(StandardCharsets.UTF_8));
+
+        String signature = calculateSignature(encodedHeader + "." + encodedPayload, pkey);
+
+        return encodedHeader + "~" + encodedPayload + "~" + signature;
+    }
+
+    private static String base64UrlEncode(byte[] input) {
+        return java.util.Base64.getUrlEncoder().withoutPadding().encodeToString(input);
+    }
+
+    private static String calculateSignature(String data, String key) {
+        try {
+            Mac hmacSHA256 = Mac.getInstance("HmacSHA256");
+            SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
+            hmacSHA256.init(secretKey);
+            byte[] hmacData = hmacSHA256.doFinal(data.getBytes(StandardCharsets.UTF_8));
+            return base64UrlEncode(hmacData);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
+    }
+
+    /**
+     * 生成最终的url
+     * @param contentUrl
+     * @param drmToken
+     * @return
+     */
+    public static String generateFinalUrl(String contentUrl, String drmToken) {
+        int index = contentUrl.lastIndexOf("/");
+        String baseUrl = contentUrl.substring(0, index + 1);
+        String fileName = contentUrl.substring(index + 1);
+
+        String finalUrl = baseUrl + drmToken + "/" + fileName;
+
+        return finalUrl;
+    }
+
+    public static void main(String[] args) {
+        String pkey = "dsfsdfdsgfhebberh";
+        long currentTimeStamp = System.currentTimeMillis() / 1000L;
+        String type = "DrmToken";
+        long appId = 1500014561; // Example value, change according to your needs
+        String fileId = "387702307091793695"; // Example value, change according to your needs
+
+        String drmToken = generateDrmToken(pkey, currentTimeStamp, type, appId, fileId);
+        System.out.println("DrmToken: " + drmToken);
+
+        String url = "https://1500014561.vod2.myqcloud.com/4395be81vodtranscq1500014561/8f8e01fb387702307091793695/adp.12.m3u8?t=9ee2bdd0&sign=46f6120466d6e931ad792bad8e4f8dff";
+        System.out.println(generateFinalUrl(url, drmToken));
     }
 }

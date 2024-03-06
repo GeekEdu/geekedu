@@ -51,6 +51,7 @@ geekedu:
       region: "ap-chongqing" # 存储地域
       procedure: "geekedu-hub" # 任务模版流
       urlKey: "wHrNZ3ihG2Eq1gfDN3vG" # 播放秘钥
+      pKey: "VHCGL4Plq4tiWK0nP3sy"  # 防盗链key
       pfcg: "basicDrmPreset" # 播放器配置
     cos:
       enable: true

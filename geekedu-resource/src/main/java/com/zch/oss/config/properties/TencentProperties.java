@@ -38,6 +38,8 @@ public class TencentProperties {
         /*播放秘钥*/
         private String urlKey;
 
+        private String pKey;
+
         /*播放器配置*/
         private String pfcg;
     }

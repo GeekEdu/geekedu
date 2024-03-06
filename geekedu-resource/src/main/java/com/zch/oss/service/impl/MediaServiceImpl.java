@@ -47,7 +47,7 @@ public class MediaServiceImpl extends ServiceImpl<MediaMapper, Media> implements
         // 1. 根据id查询视频信息
         Media media = mediaMapper.selectById(mediaId);
         // 2. 获取签名
-        String signature = mediaStorageAdapter.getPlaySignature(media.getMediaId(), UserContext.getLoginId(), null);
+        String signature = mediaStorageAdapter.getPlaySignature(media.getMediaId(), UserContext.getLoginId(), 1);
         // 3. 构造数据返回
         VideoPlayVO vo = new VideoPlayVO();
         vo.setMediaId(media.getMediaId());
