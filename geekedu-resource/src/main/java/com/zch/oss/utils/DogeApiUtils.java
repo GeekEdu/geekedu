@@ -1,6 +1,7 @@
 package com.zch.oss.utils;
 
 import org.apache.commons.codec.binary.Hex;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -120,18 +121,25 @@ public class DogeApiUtils {
     }
 
     public static void main(String[] args) throws JSONException {
-        JSONObject body = new JSONObject();
-        JSONObject vodConfig = new JSONObject();
-        vodConfig.put("filename", "test.mp4"); // 从客户端请求的参数中获取文件名，主要用于判断文件后缀
-        vodConfig.put("vn", "test111"); // 从客户端请求的参数中获取视频名称，也可以由你自己在服务端指定
-        body.put("channel", "VOD_UPLOAD");
-        body.put("vodConfig", vodConfig);
+//        JSONObject body = new JSONObject();
+//        JSONObject vodConfig = new JSONObject();
+//        vodConfig.put("filename", "test.mp4"); // 从客户端请求的参数中获取文件名，主要用于判断文件后缀
+//        vodConfig.put("vn", "test111"); // 从客户端请求的参数中获取视频名称，也可以由你自己在服务端指定
+//        body.put("channel", "VOD_UPLOAD");
+//        body.put("vodConfig", vodConfig);
+//
+//        JSONObject data = dogeAPIGet("/auth/tmp_token.json", body);
+//
+//        JSONObject output = data.getJSONObject("VodUploadInfo");
+//        output.put("credentials", data.getJSONObject("Credentials"));
+//        System.out.println(output.toString()); //成功输出
 
-        JSONObject data = dogeAPIGet("/auth/tmp_token.json", body);
-
-        JSONObject output = data.getJSONObject("VodUploadInfo");
-        output.put("credentials", data.getJSONObject("Credentials"));
-        System.out.println(output.toString()); //成功输出
+        JSONObject data = dogeAPIGet("/console/video/list.json");
+        JSONArray videos = data.getJSONArray("videos");
+        for (int i = 0 ; i < videos.length(); i++) {
+            JSONObject jsonObject = videos.getJSONObject(i);
+            System.out.println(videos.getJSONObject(i).toString());
+        }
 
     }
 

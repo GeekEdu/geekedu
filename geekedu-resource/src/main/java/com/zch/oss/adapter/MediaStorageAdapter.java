@@ -18,7 +18,7 @@ public interface MediaStorageAdapter {
     String getUploadSignature();
 
     /**
-     * 获取临时双穿的授权签名
+     * 获取播放的授权签名
      * @param mediaId 视频文件id
      * @param userId 查看视频的用户id，用于生成水印
      * @param freeExpire 免费观看时长，null表示不限制时长

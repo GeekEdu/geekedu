@@ -7,6 +7,7 @@ import com.zch.api.dto.resource.VideoAddForm;
 import com.zch.api.vo.resources.VideoPlayVO;
 import com.zch.api.vo.resources.VideoVO;
 import com.zch.oss.domain.po.Media;
+import com.zch.oss.domain.vo.DogeCloudUploadVO;
 
 /**
  * @author Poison02
@@ -49,5 +50,12 @@ public interface IMediaService extends IService<Media> {
      * @return
      */
     Boolean deleteVideo(BatchDelVideoForm form);
+
+    /**
+     * 多吉云上传签名获取
+     * @param filename
+     * @return
+     */
+    DogeCloudUploadVO getDogeCloudUploadSignature(String filename);
 
 }
