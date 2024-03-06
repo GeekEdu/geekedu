@@ -74,4 +74,14 @@ public class MediaController {
         return Response.success(mediaService.getDogeCloudUploadSignature(filename));
     }
 
+    /**
+     * 获取视频真实播放地址
+     * @param id
+     * @return
+     */
+    @GetMapping("/video/{id}/playUrl")
+    public Response<String> getVideoPlayUrl(@PathVariable("id") Integer id) {
+        return Response.success(mediaService.getPlayUrl(id));
+    }
+
 }

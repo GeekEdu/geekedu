@@ -29,13 +29,12 @@ import com.zch.oss.config.properties.TencentProperties;
 import com.zch.oss.domain.po.Media;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static com.zch.oss.enums.FileErrorInfo.Msg.*;
 
@@ -193,6 +192,62 @@ public class TencentMediaStorage implements MediaStorageAdapter {
         return list;
     }
 
+    @Override
+    public String getPlayUrl(String mediaId) {
+        String playUrl;
+        String[] filed = new String[] {mediaId};
+        String[] filters = new String[] {"basicInfo"};
+        DescribeMediaInfosRequest req = new DescribeMediaInfosRequest();
+        req.setFilters(filters);
+        req.setFileIds(filed);
+        DescribeMediaInfosResponse resp;
+        try {
+            resp = vodClient.DescribeMediaInfos(req);
+            playUrl = resp.getMediaInfoSet()[0].getBasicInfo().getMediaUrl();
+            return playUrl;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+        // 腾讯云上的加密key
+//        String pKey = tencentProperties.getVod().getUrlKey();
+//        Long appId = tencentProperties.getAppId();
+//        // 1. 获取加密工具
+//        HMac mac = new HMac(HmacAlgorithm.HmacSHA256, pKey.getBytes(StandardCharsets.UTF_8));
+//        Map<String, String> header = new HashMap<>(2);
+//        header.put("alg", "HS256");
+//        header.put("typ", "JWT");
+//        Map<String, Object> payload = new HashMap<>(7);
+//        payload.put("type", "DrmToken");
+//        payload.put("appId", appId);
+//        payload.put("fileId", mediaId);
+//        payload.put("currentTimeStamp", System.currentTimeMillis());
+//        payload.put("expireTimeStamp", null);
+//        payload.put("random", RandomUtils.randomInt(10000000, 99999999));
+//        payload.put("issuer", "client");
+//        try {
+//            Mac sha256HMAC = Mac.getInstance("HmacSHA256");
+//            SecretKeySpec secretKey = new SecretKeySpec(pKey.getBytes(), "HmacSHA256");
+//            sha256HMAC.init(secretKey);
+//
+//            String data = java.util.Base64.getUrlEncoder().encodeToString(header.toString().getBytes()) + "." + java.util.Base64.getUrlEncoder().encodeToString(payload.toString().getBytes());
+//            // 计算signature
+//            byte[] signatureBytes = sha256HMAC.doFinal(data.getBytes());
+//            String signature = java.util.Base64.getUrlEncoder().encodeToString(signatureBytes);
+//            // header
+//            String headers = java.util.Base64.getUrlEncoder().encodeToString(header.toString().getBytes());
+//            // payload
+//            String payloads = java.util.Base64.getUrlEncoder().encodeToString(payload.toString().getBytes());
+//            // 最终DrmToken
+//            String drmToken = headers + "~" + payloads + "~" + signature;
+//
+//            return drmToken;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return "";
+//        }
+    }
+
     /**
      * 申请上传视频
      * @param mediaName 视频名
@@ -281,5 +336,41 @@ public class TencentMediaStorage implements MediaStorageAdapter {
 
         }
         throw new CommonException(MEDIA_COMMIT_UPLOAD_ERROR, err);
+    }
+
+    public static void main(String[] args) {
+        String pKey = "wHrNZ3ihG2Eq1gfDN3vG";
+        Long appId = 1315662121L;
+        Map<String, String> header = new HashMap<>(2);
+        header.put("alg", "HS256");
+        header.put("typ", "JWT");
+        Map<String, Object> payload = new HashMap<>(7);
+        payload.put("type", "DrmToken");
+        payload.put("appId", appId);
+        payload.put("fileId", 1397757886313096284L);
+        payload.put("currentTimeStamp", System.currentTimeMillis());
+        payload.put("expireTimeStamp", null);
+        payload.put("random", RandomUtils.randomInt(10000000, 99999999));
+        payload.put("issuer", "client");
+        try {
+            Mac sha256HMAC = Mac.getInstance("HmacSHA256");
+            SecretKeySpec secretKey = new SecretKeySpec(pKey.getBytes(), "HmacSHA256");
+            sha256HMAC.init(secretKey);
+
+            String data = java.util.Base64.getUrlEncoder().encodeToString(header.toString().getBytes()) + "." + java.util.Base64.getUrlEncoder().encodeToString(payload.toString().getBytes());
+            // 计算signature
+            byte[] signatureBytes = sha256HMAC.doFinal(data.getBytes());
+            String signature = java.util.Base64.getUrlEncoder().encodeToString(signatureBytes);
+            // header
+            String headers = java.util.Base64.getUrlEncoder().encodeToString(header.toString().getBytes());
+            // payload
+            String payloads = java.util.Base64.getUrlEncoder().encodeToString(payload.toString().getBytes());
+            // 最终DrmToken
+            String drmToken = headers + "~" + payloads + "~" + signature;
+            System.out.println(headers + " " + payloads + " " + signature);
+            System.out.println(drmToken);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

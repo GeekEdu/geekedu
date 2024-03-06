@@ -9,6 +9,7 @@ import com.zch.api.dto.course.ChapterForm;
 import com.zch.api.dto.course.DelSectionBatchForm;
 import com.zch.api.feignClient.comments.CommentsFeignClient;
 import com.zch.api.feignClient.label.LabelFeignClient;
+import com.zch.api.feignClient.resources.MediaFeignClient;
 import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.ask.CommentsVO;
@@ -16,6 +17,7 @@ import com.zch.api.vo.course.*;
 import com.zch.api.vo.course.record.PlayUrlVO;
 import com.zch.api.vo.course.record.RecordCourseVO;
 import com.zch.api.vo.course.record.RecordSectionVO;
+import com.zch.api.vo.course.record.TestVO;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.common.core.utils.BeanUtils;
@@ -56,6 +58,8 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     private final ICourseChapterService chapterService;
 
     private final ICourseSectionService sectionService;
+
+    private final MediaFeignClient mediaFeignClient;
 
     @Override
     public CourseAndCategoryVO getCoursePage(Integer pageNum, Integer pageSize, String sort, String order, String keywords, Integer cid, Integer id) {
@@ -441,8 +445,16 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Override
     public PlayUrlVO getSectionPlayUrl(Integer sectionId, Integer isTry) {
         PlayUrlVO vo = new PlayUrlVO();
-        List<String> url = new ArrayList<>();
-        url.add("https://1315662121.vod-qcloud.com/d61a2526vodtranscq1315662121/690b7dec388912588786384834/v.f100010.mp4");
+        // 查找课时对应的视频id
+        CourseSectionVO section = sectionService.getSectionById(sectionId);
+        if (Objects.isNull(section)) {
+            return vo;
+        }
+        List<TestVO> url = new ArrayList<>();
+        TestVO test = new TestVO();
+        test.setUrl(mediaFeignClient.getVideoPlayUrl(section.getVideoId()).getData());
+        test.setName("test");
+        url.add(test);
         vo.setUrl(url);
         return vo;
     }

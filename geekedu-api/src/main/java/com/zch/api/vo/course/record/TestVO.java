@@ -4,20 +4,16 @@ import com.zch.common.mvc.entity.BaseVO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author Poison02
- * @date 2024/3/5
+ * @date 2024/3/6
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class PlayUrlVO extends BaseVO {
+public class TestVO extends BaseVO {
 
-    /**
-     * 播放地址
-     */
-    private List<TestVO> url = new ArrayList<>(0);
+    private String name = "";
+
+    private String url;
 
 }

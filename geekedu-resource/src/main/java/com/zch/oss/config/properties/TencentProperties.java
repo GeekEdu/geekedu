@@ -35,7 +35,7 @@ public class TencentProperties {
         /*任务流*/
         private String procedure;
 
-        /*防盗链秘钥*/
+        /*播放秘钥*/
         private String urlKey;
 
         /*播放器配置*/

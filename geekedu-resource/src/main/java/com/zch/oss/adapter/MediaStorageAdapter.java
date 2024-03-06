@@ -54,4 +54,11 @@ public interface MediaStorageAdapter {
      */
     List<Media> queryMediaInfos(String ... mediaIds);
 
+    /**
+     * 获取播放URL
+     * @param mediaId
+     * @return
+     */
+    String getPlayUrl(String mediaId);
+
 }

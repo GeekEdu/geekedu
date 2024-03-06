@@ -125,6 +125,16 @@ public class MediaServiceImpl extends ServiceImpl<MediaMapper, Media> implements
     }
 
     @Override
+    public String getPlayUrl(Integer id) {
+        // 查询数据库查找出 mediaId
+        Media media = mediaMapper.selectById(id);
+        if (Objects.isNull(media)) {
+            return "";
+        }
+        return mediaStorageAdapter.getPlayUrl(media.getMediaId());
+    }
+
+    @Override
     public DogeCloudUploadVO getDogeCloudUploadSignature(String filename) {
         if (StringUtils.isBlank(filename)) {
             return null;

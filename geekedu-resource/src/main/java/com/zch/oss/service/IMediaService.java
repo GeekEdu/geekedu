@@ -51,6 +51,8 @@ public interface IMediaService extends IService<Media> {
      */
     Boolean deleteVideo(BatchDelVideoForm form);
 
+    String getPlayUrl(Integer id);
+
     /**
      * 多吉云上传签名获取
      * @param filename

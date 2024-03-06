@@ -27,9 +27,9 @@ public class CourseSectionVO extends BaseVO {
     private String title;
 
     /**
-     * 视频链接
+     * 视频id
      */
-    private String videoLink;
+    private Integer videoId;
 
     /**
      * 浏览次数
