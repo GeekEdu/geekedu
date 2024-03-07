@@ -3,6 +3,7 @@ package com.zch.exam.service;
 import com.zch.api.vo.exam.ExamCountVO;
 import com.zch.api.vo.exam.mock.MockFrontVO;
 import com.zch.api.vo.exam.paper.PaperFrontVO;
+import com.zch.api.vo.exam.practice.PracticeDetailVO;
 import com.zch.api.vo.exam.practice.PracticeFrontVO;
 
 /**
@@ -26,6 +27,13 @@ public interface IExamService {
      * @return
      */
     PracticeFrontVO getPracticeList(Integer pageNum, Integer pageSize, Integer categoryId, Integer childId);
+
+    /**
+     * 获取练习明细
+     * @param id
+     * @return
+     */
+    PracticeDetailVO getPracticeDetailById(Integer id);
 
     /**
      * 在线考试列表

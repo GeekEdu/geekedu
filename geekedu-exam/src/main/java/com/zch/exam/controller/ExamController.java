@@ -1,14 +1,12 @@
 package com.zch.exam.controller;
 
 import com.zch.api.vo.exam.ExamCountVO;
+import com.zch.api.vo.exam.practice.PracticeDetailVO;
 import com.zch.api.vo.exam.practice.PracticeFrontVO;
 import com.zch.common.mvc.result.Response;
 import com.zch.exam.service.IExamService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Poison02
@@ -44,6 +42,16 @@ public class ExamController {
                                                      @RequestParam("cid") Integer categoryId,
                                                      @RequestParam("childId") Integer childId) {
         return Response.success(examService.getPracticeList(pageNum, pageSize, categoryId, childId));
+    }
+
+    /**
+     * 前台 练习明细
+     * @param id
+     * @return
+     */
+    @GetMapping("/practice/detail/{id}")
+    public Response<PracticeDetailVO> getPracticeDetail(@PathVariable("id") Integer id) {
+        return Response.success(examService.getPracticeDetailById(id));
     }
 
     /**
