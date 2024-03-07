@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,64 +38,53 @@ public class AliSandboxTestController {
     @Resource
     private AliSandboxConfig aliPayConfig;
 
-    @GetMapping("/test")
-    public void pay(HttpServletResponse response) throws IOException {
-        // 1. 创建 client
-        AlipayClient client = new DefaultAlipayClient(GATEWAY_URL, aliPayConfig.getAppId(),
+    @GetMapping("/pay")
+    public void pay(HttpServletResponse httpResponse) throws Exception {
+        AlipayClient alipayClient = new DefaultAlipayClient(GATEWAY_URL, aliPayConfig.getAppId(),
                 aliPayConfig.getAppPrivateKey(), FORMAT, CHARSET, aliPayConfig.getAlipayPublicKey(), SIGN_TYPE);
-
-        // 2. 创建 Request 并是个直Request参数
         AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
-        AliSandboxPay aliPay = new AliSandboxPay();
-        aliPay.setTraceNo("32355342152");
-        aliPay.setSubject("测试支付宝支付");
-        aliPay.setTotalAmount(123.00);
-        // 回调地址
         request.setNotifyUrl(aliPayConfig.getNotifyUrl());
-        JSONObject bizContent = new JSONObject();
-        // 自己生成的订单编号
-        bizContent.set("out_trade_no", aliPay.getTraceNo());
-        // 订单总金额
-        bizContent.set("total_amount", aliPay.getTotalAmount());
-        // 支付名称
-        bizContent.set("subject", aliPay.getSubject());
-        // 固定配置
-        bizContent.set("product_code", "FAST_INSTANT_TRADE_PAY");
-        request.setBizContent(bizContent.toString());
-
-        // 执行请求 拿到相应的结果 返回给浏览器
+        AliSandboxPay aliPay = new AliSandboxPay();
+        aliPay.setTotalAmount(0.01);
+        aliPay.setSubject("测试支付宝支付");
+        aliPay.setTraceNo("654321999");
+        request.setBizContent("{\"out_trade_no\":\"" + aliPay.getTraceNo() + "\","
+                + "\"total_amount\":\"" + aliPay.getTotalAmount() + "\","
+                + "\"subject\":\"" + aliPay.getSubject() + "\","
+                + "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
         String form = "";
         try {
-            // 调用sdk生成表单
-            form = client.pageExecute(request).getBody();
+            // 调用SDK生成表单
+            form = alipayClient.pageExecute(request).getBody();
         } catch (AlipayApiException e) {
             e.printStackTrace();
         }
-        response.setContentType("text/html;charset=" + CHARSET);
-        // 直接将完整表单html输出到页面
-        response.getWriter().write(form);
-        response.getWriter().flush();
-        response.getWriter().close();
+        httpResponse.setContentType("text/html;charset=" + CHARSET);
+        // 直接将完整的表单html输出到页面
+        httpResponse.getWriter().write(form);
+        httpResponse.getWriter().flush();
+        httpResponse.getWriter().close();
     }
 
-    @PostMapping("/notify")
-    public String payNotify(HttpServletRequest request) throws AlipayApiException {
+    @PostMapping("/notify")  // 注意这里必须是POST接口
+    public String payNotify(HttpServletRequest request) throws Exception {
         if (request.getParameter("trade_status").equals("TRADE_SUCCESS")) {
-            System.out.println("=======支付宝回调==========");
+            System.out.println("=========支付宝异步回调========");
+
             Map<String, String> params = new HashMap<>();
             Map<String, String[]> requestParams = request.getParameterMap();
             for (String name : requestParams.keySet()) {
                 params.put(name, request.getParameter(name));
-                System.out.println(name + "=" + request.getParameter(name));
+                // System.out.println(name + " = " + request.getParameter(name));
             }
+
             String tradeNo = params.get("out_trade_no");
             String gmtPayment = params.get("gmt_payment");
             String alipayTradeNo = params.get("trade_no");
-
+            // 支付宝验签
             String sign = params.get("sign");
             String content = AlipaySignature.getSignCheckContentV1(params);
-            boolean checkSignature = AlipaySignature.rsa256CheckContent(content, sign, aliPayConfig.getAlipayPublicKey(), CHARSET);
-            // 支付宝验签
+            boolean checkSignature = AlipaySignature.rsa256CheckContent(content, sign, aliPayConfig.getAlipayPublicKey(), "UTF-8"); // 验证签名
             if (checkSignature) {
                 // 验签通过
                 System.out.println("交易名称: " + params.get("subject"));
@@ -107,12 +95,11 @@ public class AliSandboxTestController {
                 System.out.println("买家在支付宝唯一id: " + params.get("buyer_id"));
                 System.out.println("买家付款时间: " + params.get("gmt_payment"));
                 System.out.println("买家付款金额: " + params.get("buyer_pay_amount"));
-
-                // 更新订单未已支付
             }
         }
         return "success";
     }
+
 
     @GetMapping("/return")
     public String returnPay(@RequestBody AliSandboxPay aliPay) throws AlipayApiException {
@@ -120,7 +107,7 @@ public class AliSandboxTestController {
         // 1. 创建Client，通用SDK提供的Client，负责调用支付宝的API
         AlipayClient alipayClient = new DefaultAlipayClient(GATEWAY_URL,
                 aliPayConfig.getAppId(), aliPayConfig.getAppPrivateKey(), FORMAT, CHARSET,
-                "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhS0WfyW3/4sSe9lgZXTKKjiQvz6l+oxxoqwKb/KRxv5QswIuvajk8JTgmjJisW6AA+oBNMBsbLaM5CAFRtvjIvVXvFH4sZG8QhO1eRzDXb4i+cw/ksSNwgdtiGnkFoRDflsixdzGDNj0wVVG9h7QiwJBSLunhqiQWE36c6Kni29UXEXchPKiJ6ayzlmryaRaJ7EoVgCPXAs63umi3X3GPEeyfzfLmrk6GEkgWL/XZUhrZaDFeaVVP1lfbyZpUjK7oDG+v81lWlwETh8seNshD4iQFEYt2jero4ja63z9/ZvL/aYxpfo26BVajulhx6oNE1Bm1IxRo1rkdQcZlI3wJwIDAQAB", SIGN_TYPE);
+                aliPayConfig.getAlipayPublicKey(), SIGN_TYPE);
         // 2. 创建 Request，设置参数
         AlipayTradeRefundRequest request = new AlipayTradeRefundRequest();
         JSONObject bizContent = new JSONObject();
