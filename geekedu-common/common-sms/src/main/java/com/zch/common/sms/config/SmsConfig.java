@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SmsConfig {
 
-    public static final String ACCESS_KEY_ID = "your access key id";
+    public static final String ACCESS_KEY_ID = "PYqX4iABz9iCd92pvPr5DQ3etoHwZ5LRnqWGc3k6td4B9dfHW";
     private static final String ACCESS_KEY_SECRET = "your access key secret";
 
     @Bean

@@ -5,6 +5,7 @@ import com.apistd.uni.UniResponse;
 import com.apistd.uni.sms.UniMessage;
 import com.apistd.uni.sms.UniSMS;
 import com.zch.message.adapter.SmsAdapter;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,12 +14,14 @@ import java.util.Map;
  * @author Poison02
  * @date 2024/3/6
  */
+@Component
 public class UniSmsAdapter implements SmsAdapter {
     @Override
-    public void send(String code, String phone, String signature, String template) {
+    public void send(String code, String ttl, String phone, String signature, String template) {
         // 设置自定义参数 (变量短信)
         Map<String, String> templateData = new HashMap<>();
         templateData.put("code", code);
+        templateData.put("ttl", ttl);
 
         // 构建信息
         UniMessage message = UniSMS.buildMessage()
