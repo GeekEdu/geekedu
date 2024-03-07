@@ -1,0 +1,43 @@
+server:
+  port: 8091  #端口
+  tomcat:
+    uri-encoding: UTF-8   #服务编码
+spring:
+  profiles:
+#    active: dev
+    active: local
+
+  application:
+    name: trade-service
+  cloud:
+    nacos:
+      config:
+        file-extension: yaml
+#        server-addr: 192.168.150.101:8848
+        server-addr: 127.0.0.1:8848
+        shared-configs: # 共享配置
+          - data-id: shared-spring.yaml # 共享spring配置
+            refresh: false
+          - data-id: shared-redis.yaml # 共享redis配置
+            refresh: false
+          - data-id: shared-logs.yaml # 共享日志配置
+            refresh: false
+          - data-id: shared-mybatis.yaml # 共享mybatis配置
+            refresh: false
+          - data-id: shared-feign.yaml # 共享feign配置
+            refresh: false
+geekedu:
+  jdbc:
+    host: 127.0.0.1
+#    host: 192.168.150.101
+    port: 3306
+    database: geekedu-trade
+  redis:
+    host: 127.0.0.1
+#    host: 192.168.150.101
+
+alipay:
+  appId: 9021000134695654
+  appPrivateKey: MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCcFwA6FG8x0Phz4s/UuZG1qINf5E3fxfVDwK+8iLM+twVhGCswqT1jeAfmB8biDQVvBCFrz/1LcYlbPY6haXHUMGll27RYb71kLyr6j6eCWEH/SXBnZl+dHZ7LT1/w+51i/dVCI7R4IRSnJQto8VK9/dN5pSE7wwZ6her31sinKTnmdoqoKDpa3Jv9Yr3xH82Se6RGyBRsMJQuyoor6Knz5eekL/0vZ410eKCsjQsjadNgpMVucSOurojplsHdYGY+Gt85eOYTMExkqnS/Gf4iHpVn2iSNxejwr82aspwghB5Y9Q49neCgbFHQKLib3kpaSuI4CAFj02jV5aqpPTDvAgMBAAECggEAb5oadWxq3Il3OxRuWMCdp+7mj8dizp5xcJHylLCAyFR/qh5nsxEubVJDA3uH/dQlkGy5oKZDio+REAWBV3NXCcnbchKWbaznExyOdDwGHrIP7gGKNsQBlQq6oM8N3/VnYIHw2qtAu6ubYq6f69avvFwhuhYRHvOgTDY3/CA7sxgtqYGpziVcgrJGp63Gl0FfQW/tbIduBolZfZBBD0wEGmgjs6yY24MuZYeDPVP2kZQdz1xNr68Jzr4odWXpk+qTWWVojcTd5Y2Xbqd+Ky0GTk5gr7cgfPEVil9tqy6+ttg0UBlg2FD39yvIlwbiHugx+R2aimyv3vPHViggEGQoQQKBgQDcnl2zxozsWVZLluyqZkg9oW/+m+v4Bp504XgGPAaAsWT2oy0PKYWHA7Xr21zjWx29FZrOFJLkXUSC3aXftvxO9o3MnB2HohFFsdHbcjZ+WPrzG/dM1Vx7UZ1E+Yy+WG05Cdnhbihzp92F+xYphRmzuV9IrcJzr+7wrd0q5/PvHwKBgQC1H13B5Gta5ij7eo2OYoMV8PwBpTH1Wyk/kwZSEgMpsc0ORDgxtn1kMq/XvrctI5MUqvwrzIc6/gW16cV3cQISeNCqRRV2UHQQD7emii434ZbZkBSJLetMq2zUxhl54bUVzLs2VEMQM/02C6/JcDNeYc93L8gU2GDeEcSF9WIUMQKBgQCyVZGI8MaZht2q3KUSWPusVgMh3Qgxxafw8xECeSMIhF0IwX568yVsriMwNHIxlkXDwuMQErFqx7nJz0F2RYROkB6vdsKoEOnFXKg2q2xBVcwFGGYfRZksVhy61L5gXzprEPt+rn0kgF0hIIYZqe3Mydur9ElrGpwbEW/mbvlQIQKBgB5kXgIsBwugtV3Fab1rsF1dK5xHEQP/wQMm85eP6DH14Ne1AMzut0m566HDIc+UOZjtPBVJY6O1flXRHU52iwd4eGMp5nkM9PzA9mseorTDyOFG+Psv1lzuIvvtJdc61X0L9poeN4afgqyv91ZQ2n3K4do5DVTaHh8FUjm8PDHxAoGAeI4IJokEjsf3woNoZ4gOC457YTGo3ofRCVYA1JQwvxlJVlHl3XlJ8CnoaV7yaY0SkRZZz0rrWNX+LxCM1RXjRt8X5lsuKkpep18GPIZdmx56nh6dfHiKzlrN1rXyAuYoI7I1U7SyvRlNXecPOBshsaYIg6yMM2MujmqyajbnBSE=
+  alipayPublicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnBcAOhRvMdD4c+LP1LmRtaiDX+RN38X1Q8CvvIizPrcFYRgrMKk9Y3gH5gfG4g0FbwQha8/9S3GJWz2OoWlx1DBpZdu0WG+9ZC8q+o+nglhB/0lwZ2ZfnR2ey09f8PudYv3VQiO0eCEUpyULaPFSvf3TeaUhO8MGeoXq99bIpyk55naKqCg6Wtyb/WK98R/NknukRsgUbDCULsqKK+ip8+XnpC/9L2eNdHigrI0LI2nTYKTFbnEjrq6I6ZbB3WBmPhrfOXjmEzBMZKp0vxn+Ih6VZ9okjcXo8K/NmrKcIIQeWPUOPZ3goGxR0Ci4m95KWkriOAgBY9No1eWqqT0w7wIDAQAB
+  notifyUrl: https://6968y1r161.yicp.fun
