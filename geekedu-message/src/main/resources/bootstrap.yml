@@ -35,3 +35,8 @@ geekedu:
   redis:
     host: 127.0.0.1
 #    host: 192.168.150.101
+
+rocketmq:
+  name-server: 127.0.0.1:9876
+  producer:
+    group: BREAD_ORDER_GROUP

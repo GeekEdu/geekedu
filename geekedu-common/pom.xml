@@ -12,6 +12,7 @@
 		<module>common-satoken</module>
 		<module>common-sms</module>
 		<module>common-pay</module>
+		<module>common-mq</module>
 	</modules>
 	<parent>
 		<groupId>com.zch</groupId>

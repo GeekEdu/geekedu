@@ -66,6 +66,8 @@
 
 		<!--消息相关依赖 SMS MQ-->
 		<uni-sms.version>0.0.4</uni-sms.version>
+		<rocketmq-client.version>5.1.3</rocketmq-client.version>
+		<rocketmq-starter.version>2.2.2</rocketmq-starter.version>
 
 		<!--支付相关-->
 		<alipay-sdk-java.version>4.38.221.ALL</alipay-sdk-java.version>
@@ -182,6 +184,16 @@
 				<groupId>com.apistd.uni</groupId>
 				<artifactId>uni-sdk</artifactId>
 				<version>${uni-sms.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.rocketmq</groupId>
+				<artifactId>rocketmq-client</artifactId>
+				<version>${rocketmq-client.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.rocketmq</groupId>
+				<artifactId>rocketmq-spring-boot-starter</artifactId>
+				<version>${rocketmq-starter.version}</version>
 			</dependency>
 
 			<!--支付相关-->
