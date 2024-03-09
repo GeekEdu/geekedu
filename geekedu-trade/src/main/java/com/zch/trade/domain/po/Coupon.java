@@ -1,5 +1,6 @@
 package com.zch.trade.domain.po;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zch.trade.enums.CouponTypeEnum;
@@ -20,6 +21,7 @@ public class Coupon {
     /**
      * 优惠券id
      */
+    @TableId
     private Long couponId;
 
     /**

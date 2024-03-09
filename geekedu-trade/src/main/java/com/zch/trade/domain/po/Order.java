@@ -1,5 +1,6 @@
 package com.zch.trade.domain.po;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zch.common.mvc.entity.BaseEntity;
@@ -24,6 +25,7 @@ public class Order extends BaseEntity {
     /**
      * 订单id
      */
+    @TableId
     private Long orderId;
 
     /**

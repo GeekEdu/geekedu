@@ -1,5 +1,7 @@
 package com.zch.trade.domain.po;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zch.trade.enums.PayTypeEnum;
@@ -20,6 +22,7 @@ public class PayInfo {
     /**
      * 支付记录id
      */
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**
