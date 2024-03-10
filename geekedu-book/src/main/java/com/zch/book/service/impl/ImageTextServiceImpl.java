@@ -6,7 +6,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.book.AddCommentForm;
 import com.zch.api.dto.book.ImageTextForm;
 import com.zch.api.dto.label.CategoryForm;
+import com.zch.api.dto.user.ThumbForm;
 import com.zch.api.feignClient.label.LabelFeignClient;
+import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.vo.book.ImageTextAndCategoryVO;
 import com.zch.api.vo.book.ImageTextSimpleVO;
 import com.zch.api.vo.book.ImageTextSingleVO;
@@ -49,6 +51,8 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
     private final LabelFeignClient labelFeignClient;
 
     private final IBCommentService commentService;
+
+    private final UserFeignClient userFeignClient;
 
     private static final String IMAGE_TEXT = "IMAGE_TEXT";
 
@@ -314,6 +318,16 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
         ImageTextVO vo1 = new ImageTextVO();
         BeanUtils.copyProperties(one, vo1);
         ImageTextSingleVO vo = new ImageTextSingleVO();
+        // 查询图文点赞信息
+        Response<Boolean> isThumb = userFeignClient.queryIsVote(id, "IMAGE_TEXT");
+        Response<Long> thumbCount = userFeignClient.queryCount(id, "IMAGE_TEXT");
+        if (ObjectUtils.isNotNull(isThumb) && ObjectUtils.isNotNull(isThumb.getData()) ) {
+            vo.setIsThumb(isThumb.getData());
+            vo1.setIsThumb(isThumb.getData());
+        }
+        if (ObjectUtils.isNotNull(thumbCount) && ObjectUtils.isNotNull(thumbCount.getData())) {
+            vo1.setThumbCount(thumbCount.getData());
+        }
         vo.setImageText(vo1);
         return vo;
     }
@@ -340,5 +354,10 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
             return 0;
         }
         return commentService.addComment(id, form, "IMAGE_TEXT");
+    }
+
+    @Override
+    public Boolean thumb(ThumbForm form) {
+        return userFeignClient.thumbHandle(form).getData();
     }
 }

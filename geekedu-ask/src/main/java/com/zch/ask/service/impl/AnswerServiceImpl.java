@@ -126,10 +126,11 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
             // 查找该回答 点赞相关
             Response<Boolean> isThumb = userFeignClient.queryIsVote(answer.getId(), "QA_COMMENT");
             Response<Long> thumbCount = userFeignClient.queryCount(answer.getId(), "QA_COMMENT");
-            if (ObjectUtils.isNotNull(isThumb) && ObjectUtils.isNotNull(thumbCount)
-            && ObjectUtils.isNotNull(isThumb.getData()) && ObjectUtils.isNotNull(thumbCount.getData())) {
-                vo.setThumbCount(thumbCount.getData());
+            if (ObjectUtils.isNotNull(isThumb) && ObjectUtils.isNotNull(isThumb.getData()) ) {
                 vo.setIsThumb(isThumb.getData());
+            }
+            if (ObjectUtils.isNotNull(thumbCount) && ObjectUtils.isNotNull(thumbCount.getData())) {
+                vo.setThumbCount(thumbCount.getData());
             }
             vos.add(vo);
         }

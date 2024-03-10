@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.book.AddCommentForm;
 import com.zch.api.dto.book.ImageTextForm;
 import com.zch.api.dto.label.CategoryForm;
+import com.zch.api.dto.user.ThumbForm;
 import com.zch.api.vo.book.ImageTextAndCategoryVO;
 import com.zch.api.vo.book.ImageTextSimpleVO;
 import com.zch.api.vo.book.ImageTextSingleVO;
@@ -156,5 +157,12 @@ public interface IImageTextService extends IService<ImageText> {
      * @return
      */
     Integer addComment(Integer id, AddCommentForm form);
+
+    /**
+     * 图文点赞
+     * @param form
+     * @return
+     */
+    Boolean thumb(ThumbForm form);
 
 }
