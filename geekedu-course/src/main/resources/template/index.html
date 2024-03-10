@@ -5,10 +5,10 @@
     <title>Live-Zhibo</title>
     <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.1/css/bootstrap.min.css" rel="stylesheet">
     <!--TCPlayer-->
-<!--    <link href="https://web.sdk.qcloud.com/player/tcplayer/release/v5.1.0/tcplayer.min.css" rel="stylesheet"/>-->
-<!--    &lt;!&ndash;播放器脚本文件&ndash;&gt;-->
-<!--    <script src="https://cdn.bootcdn.net/ajax/libs/hls.js/1.4.12/hls.min.js"></script>-->
-<!--    <script src="https://web.sdk.qcloud.com/player/tcplayer/release/v5.1.0/tcplayer.v5.1.0.min.js"></script>-->
+    <!--    <link href="https://web.sdk.qcloud.com/player/tcplayer/release/v5.1.0/tcplayer.min.css" rel="stylesheet"/>-->
+    <!--    &lt;!&ndash;播放器脚本文件&ndash;&gt;-->
+    <!--    <script src="https://cdn.bootcdn.net/ajax/libs/hls.js/1.4.12/hls.min.js"></script>-->
+    <!--    <script src="https://web.sdk.qcloud.com/player/tcplayer/release/v5.1.0/tcplayer.v5.1.0.min.js"></script>-->
     <style>
         body, html {
             height: 100%;
@@ -22,7 +22,7 @@
             font-size: 24px;
             text-align: center;
             padding: 0;
-            margin: 0 ;
+            margin: 0;
         }
 
         .container {
@@ -202,8 +202,8 @@
         <!--左边视频-->
         <div class="video-container">
             <div class="video-placeholder">
-<!--                <video id="player-container-id" width="840" height="470" preload="auto" playsinline webkit-playsinline>-->
-<!--                </video>-->
+                <!--                <video id="player-container-id" width="840" height="470" preload="auto" playsinline webkit-playsinline>-->
+                <!--                </video>-->
                 <div id="player"></div>
             </div>
             <div class="video-info">
@@ -244,75 +244,129 @@
                     <li class="member">成员</li>
                 </ul>
                 <div class="m-body" id="tab-chat">
-                    <p>hahahah</p>
+
                 </div>
                 <div class="m-list" id="member-chat">
-                    <p>xixixixi</p>
+
                 </div>
             </div>
             <div class="input-group">
                 <input type="text" placeholder="Enter your message..."/>
-                <button>Send</button>
+                <button id="send">Send</button>
             </div>
         </div>
     </div>
 </div>
 <script>
-const player = new DPlayer({
-    container: document.getElementById("player"),
-    live: true,
-    video: {
-        url: "http://www.geekedu.fun/live/push.m3u8?txSecret=6598274510002334ae5e37e890b8e6cc&txTime=65EEB4F7",
-    },
-    danmaku: true,
-    apiBackend: {
-        read: function (options) {
-            console.log('Pretend to connect WebSocket');
-            options.success([]);
-        },
-        send: function (options) {
-            console.log('Pretend to send danmaku via WebSocket', options.data);
-            options.success();
-        },
-    },
-})
-/*const player = new Artplayer({
-    container: "#player",
-    isLive: true,
-    autoPlay: true,
-    url: "http://www.geekedu.fun/live/push.m3u8?txSecret=6598274510002334ae5e37e890b8e6cc&txTime=65EEB4F7",
-    setting: true,
-    plugins: [
-        artplayerPluginDanmuku({
-            // 弹幕数组
-            danmuku: [
-                {
-                    text: '111', // 弹幕文本
-                    time: 1, // 发送时间，单位秒
-                    color: '#fff', // 弹幕局部颜色
-                    border: false, // 是否显示描边
-                    mode: 0, // 弹幕模式: 0表示滚动, 1静止
-                },
-                {
-                    text: '222',
-                    time: 2,
-                    color: 'red',
-                    border: true,
-                    mode: 0,
-                },
-                {
-                    text: '333',
-                    time: 3,
-                    color: 'green',
-                    border: false,
-                    mode: 1,
-                },
-            ],
-        }),
-    ],
+    $(document).ready(function () {
+        // 初始化播放器
+        initPlayer()
+        // 发送信息
+        getInput()
+    })
 
-})
-player.volume = 0.5*/
+    // 初始化播放器
+    function initPlayer() {
+        const player = new DPlayer({
+            container: document.getElementById("player"),
+            live: true,
+            video: {
+                url: "http://www.geekedu.fun/live/push.m3u8?txSecret=6598274510002334ae5e37e890b8e6cc&txTime=65EEB4F7",
+            },
+            danmaku: true,
+            apiBackend: {
+                read: function (options) {
+                    console.log('Pretend to connect WebSocket');
+                    options.success([]);
+                },
+                send: function (options) {
+                    console.log('Pretend to send danmaku via WebSocket', options.data);
+                    options.success();
+                },
+            },
+        })
+    }
+
+    // 建立websocket链接
+    let ws = null
+    if ('WebSocket' in window) {
+        ws = new WebSocket("ws://localhost:8080/websocket");
+    } else {
+        alert('Not support websocket')
+    }
+    //连接发生错误的回调方法
+    ws.onerror = function(){
+        console.log("Websocket is Error!!!")
+    };
+
+    //连接成功建立的回调方法
+    ws.onopen = function(event){
+        console.log("Websocket is OK!!!")
+    }
+
+    //接收到消息的回调方法
+    ws.onmessage = function(event){
+        console.log(event.data)
+    }
+
+    //连接关闭的回调方法
+    ws.onclose = function(){
+
+    }
+    //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+    window.onbeforeunload = function(){
+        alert("已关闭连接");
+        ws.close();
+    }
+    // 得到input内容 发送到后端
+    function getInput() {
+        $("#send").click(function () {
+            let msg = $(".input-group input").val()
+            console.log(msg)
+            // 向服务端发送消息
+            ws.send(msg)
+            // 回显到前端
+            $("tab-chat").append("<p>" + msg + "</p>>")
+        })
+    }
+
+    /*const player = new Artplayer({
+        container: "#player",
+        isLive: true,
+        autoPlay: true,
+        url: "http://www.geekedu.fun/live/push.m3u8?txSecret=6598274510002334ae5e37e890b8e6cc&txTime=65EEB4F7",
+        setting: true,
+        plugins: [
+            artplayerPluginDanmuku({
+                // 弹幕数组
+                danmuku: [
+                    {
+                        text: '111', // 弹幕文本
+                        time: 1, // 发送时间，单位秒
+                        color: '#fff', // 弹幕局部颜色
+                        border: false, // 是否显示描边
+                        mode: 0, // 弹幕模式: 0表示滚动, 1静止
+                    },
+                    {
+                        text: '222',
+                        time: 2,
+                        color: 'red',
+                        border: true,
+                        mode: 0,
+                    },
+                    {
+                        text: '333',
+                        time: 3,
+                        color: 'green',
+                        border: false,
+                        mode: 1,
+                    },
+                ],
+            }),
+        ],
+
+    })
+    player.volume = 0.5*/
 </script>
 </body>
 </html>

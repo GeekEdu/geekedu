@@ -21,7 +21,8 @@
         <module>geekedu-ask</module>
 		<module>geekedu-message</module>
 		<module>geekedu-trade</module>
-	</modules>
+        <module>geekedu-websocket</module>
+    </modules>
 	<packaging>pom</packaging>
     <!-- 继承SpringBoot父类 -->
     <parent>
