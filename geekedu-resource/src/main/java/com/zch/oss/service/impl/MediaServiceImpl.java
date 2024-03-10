@@ -13,9 +13,7 @@ import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
 import com.zch.common.satoken.context.UserContext;
 import com.zch.oss.adapter.MediaStorageAdapter;
-import com.zch.oss.adapter.dogeCloud.DogeCloudMediaStorage;
 import com.zch.oss.domain.po.Media;
-import com.zch.oss.domain.vo.DogeCloudUploadVO;
 import com.zch.oss.mapper.MediaMapper;
 import com.zch.oss.service.IMediaService;
 import lombok.RequiredArgsConstructor;
@@ -39,8 +37,6 @@ public class MediaServiceImpl extends ServiceImpl<MediaMapper, Media> implements
     private final MediaMapper mediaMapper;
 
     private final MediaStorageAdapter mediaStorageAdapter;
-
-    private final DogeCloudMediaStorage dogeCloudMediaStorage;
 
     @Override
     public VideoPlayVO getPreviewSignatureByMediaId(Long mediaId) {
@@ -134,17 +130,4 @@ public class MediaServiceImpl extends ServiceImpl<MediaMapper, Media> implements
         return mediaStorageAdapter.getPlayUrl(media.getMediaId());
     }
 
-    @Override
-    public DogeCloudUploadVO getDogeCloudUploadSignature(String filename) {
-        if (StringUtils.isBlank(filename)) {
-            return null;
-        }
-        DogeCloudUploadVO vo = null;
-        try {
-            vo = dogeCloudMediaStorage.getUploadSignature(filename);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return vo;
-    }
 }

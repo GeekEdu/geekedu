@@ -1,4 +1,4 @@
-package com.zch.oss;
+package com.zch;
 
 import com.zch.common.core.listener.AppStartupListener;
 import org.mybatis.spring.annotation.MapperScan;
@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 
 /**
  * @author Poison02
@@ -15,7 +14,6 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @SpringBootApplication
 @MapperScan({"com.zch.oss.mapper"})
-@ComponentScan(basePackages = {"com.zch"})
 @EnableDiscoveryClient
 @EnableFeignClients
 public class ResourceApplication {

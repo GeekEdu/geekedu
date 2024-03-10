@@ -69,11 +69,6 @@ public class MediaController {
         return Response.success(mediaService.deleteVideo(form));
     }
 
-    @GetMapping("/dogeCloud/getSignature")
-    public Response getDogeCloudSignature(@RequestParam("filename") String filename) {
-        return Response.success(mediaService.getDogeCloudUploadSignature(filename));
-    }
-
     /**
      * 获取视频真实播放地址
      * @param id
