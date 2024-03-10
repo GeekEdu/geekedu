@@ -31,6 +31,11 @@ public class AnswerAndCommentsVO extends BaseVO {
 
     private Long thumbCount;
 
+    /**
+     * 是否点赞 不管有没有登录，默认都是false
+     */
+    private Boolean isThumb = false;
+
     private Long commentCount;
 
     private Boolean isCorrect;

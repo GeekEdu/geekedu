@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.ask.CommentAnswerForm;
 import com.zch.api.dto.ask.ReplyQuestionForm;
+import com.zch.api.dto.user.ThumbForm;
 import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.utils.AddressUtils;
 import com.zch.api.vo.ask.AnswerAndCommentsVO;
@@ -122,6 +123,14 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
             if (ObjectUtils.isNull(res)) {
                 vo.setComments(res);
             }
+            // 查找该回答 点赞相关
+            Response<Boolean> isThumb = userFeignClient.queryIsVote(answer.getId(), "QA_COMMENT");
+            Response<Long> thumbCount = userFeignClient.queryCount(answer.getId(), "QA_COMMENT");
+            if (ObjectUtils.isNotNull(isThumb) && ObjectUtils.isNotNull(thumbCount)
+            && ObjectUtils.isNotNull(isThumb.getData()) && ObjectUtils.isNotNull(thumbCount.getData())) {
+                vo.setThumbCount(thumbCount.getData());
+                vo.setIsThumb(isThumb.getData());
+            }
             vos.add(vo);
         }
         return vos;
@@ -215,6 +224,11 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
             return new Page<>();
         }
         return commentsService.getCommentsPage(id, pageNum, pageSize);
+    }
+
+    @Override
+    public Boolean thumbAnswer(ThumbForm form) {
+        return userFeignClient.thumbHandle(form).getData();
     }
 
 

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.ask.CommentAnswerForm;
 import com.zch.api.dto.ask.ReplyQuestionForm;
+import com.zch.api.dto.user.ThumbForm;
 import com.zch.api.vo.ask.AnswerAndCommentsVO;
 import com.zch.api.vo.ask.AnswersVO;
 import com.zch.api.vo.ask.CommentsVO;
@@ -92,5 +93,12 @@ public interface IAnswerService extends IService<Answer> {
      * @return
      */
     Page<CommentsVO> getCommentsPage(Integer id, Integer pageNum, Integer pageSize);
+
+    /**
+     * 点赞评论
+     * @param form
+     * @return
+     */
+    Boolean thumbAnswer(ThumbForm form);
 
 }

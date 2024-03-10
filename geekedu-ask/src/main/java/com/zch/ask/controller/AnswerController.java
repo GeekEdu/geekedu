@@ -1,6 +1,7 @@
 package com.zch.ask.controller;
 
 import com.zch.api.dto.ask.CommentAnswerForm;
+import com.zch.api.dto.user.ThumbForm;
 import com.zch.api.vo.ask.CommentsVO;
 import com.zch.ask.service.IAnswerService;
 import com.zch.common.mvc.result.PageResult;
@@ -66,6 +67,16 @@ public class AnswerController {
                                                         @RequestParam("pageNum") Integer pageNum,
                                                         @RequestParam("pageSize") Integer pageSize) {
         return PageResult.success(answerService.getCommentsPage(id, pageNum, pageSize));
+    }
+
+    /**
+     * 点赞评论
+     * @param form
+     * @return
+     */
+    @PostMapping("/v2/thumb")
+    public Response<Boolean> thumbAnswer(@RequestBody ThumbForm form) {
+        return Response.success(answerService.thumbAnswer(form));
     }
 
 }
