@@ -6,6 +6,10 @@ spring:
   profiles:
 #    active: dev
     active: local
+  thymeleaf:
+    prefix: classpath:/template/
+    suffix: .html
+    cache: false
 
   application:
     name: course-service

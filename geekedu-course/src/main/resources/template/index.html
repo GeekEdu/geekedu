@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Live-Zhibo</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!--TCPlayer-->
+<!--    <link href="https://web.sdk.qcloud.com/player/tcplayer/release/v5.1.0/tcplayer.min.css" rel="stylesheet"/>-->
+<!--    &lt;!&ndash;播放器脚本文件&ndash;&gt;-->
+<!--    <script src="https://cdn.bootcdn.net/ajax/libs/hls.js/1.4.12/hls.min.js"></script>-->
+<!--    <script src="https://web.sdk.qcloud.com/player/tcplayer/release/v5.1.0/tcplayer.v5.1.0.min.js"></script>-->
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+        }
+
+        .live-title {
+            display: block;
+            font-size: 24px;
+            text-align: center;
+            padding: 0;
+            margin: 0 ;
+        }
+
+        .container {
+            width: 100%;
+            height: 1000px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .video {
+            width: 1200px;
+            height: 900px;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .video-container {
+            width: 840px;
+            height: 800px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .video-placeholder {
+            width: 840px;
+            height: 470px;
+            background: rgba(255, 123, 132, 0.1);
+        }
+
+        #player {
+            width: 100%;
+            height: 100%;
+            max-height: 470px;
+            max-width: 840px;
+        }
+
+        .video-info {
+            width: 100%;
+            height: 320px;
+            margin-top: 10px;
+            padding: 0;
+            background: #fff;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .video-navbar {
+            /* Ensure the navbar container fills its parent and centers its children */
+            width: 100%;
+            height: 47px;
+            text-align: center;
+        }
+
+        .navbar {
+            /* Remove default list styling */
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+
+            /* Display flex to layout children horizontally */
+            display: flex;
+            justify-content: center; /* Center the items horizontally */
+            align-items: center; /* Center the items vertically */
+        }
+
+        .navbar li {
+            /* Add some spacing around each list item */
+            margin: 0 10px;
+            padding: 5px;
+
+            /* Optional: Styles for the appearance */
+            background-color: #f2f2f2;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        /* Add some styles for hover effect - optional */
+        .navbar li:hover {
+            background-color: #e9e9e9;
+            cursor: pointer;
+        }
+
+        /* Style the share and OBS configuration options individually if needed */
+        .share, .obs-set {
+            /* Any individual styling for share and obs-set goes here */
+        }
+
+        .settings {
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            padding: 0;
+            width: 840px;
+            height: 270px;
+        }
+
+        .setting-item label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .setting-item input {
+            width: 440px;
+            padding: 10px;
+            margin-right: 10px;
+        }
+
+        .setting-item button {
+            padding: 10px 15px;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .toggle {
+            display: flex;
+            align-items: center;
+        }
+
+        .toggle input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .chat-box {
+            border-top: 1px solid #e0e0e0;
+            margin-left: 10px;
+            width: 300px;
+            height: 840px;
+        }
+
+        .messages {
+            height: 700px; /* Adjust the height as needed */
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #f9f9f9; /* Light grey background */
+            border: 1px solid #e0e0e0; /* Border to distinguish the chat area */
+        }
+
+        .input-group {
+            display: flex;
+        }
+
+        .input-group input {
+            flex-grow: 1;
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .input-group button {
+            padding: 10px 15px;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.1/js/bootstrap.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/hls.js/1.4.12/hls.min.js"></script>
+<!--DPlayer-->
+<script src="https://cdn.bootcdn.net/ajax/libs/dplayer/1.27.1/DPlayer.min.js"></script>
+<!--ArtPlayer-->
+<!--<script src="https://cdn.bootcdn.net/ajax/libs/artplayer/5.0.9/artplayer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/artplayer-plugin-danmuku/dist/artplayer-plugin-danmuku.js"></script>-->
+
+<div class="live-title">直播界面</div>
+<div class="container">
+    <div class="video">
+        <!--左边视频-->
+        <div class="video-container">
+            <div class="video-placeholder">
+<!--                <video id="player-container-id" width="840" height="470" preload="auto" playsinline webkit-playsinline>-->
+<!--                </video>-->
+                <div id="player"></div>
+            </div>
+            <div class="video-info">
+                <div class="video-navbar">
+                    <ul class="navbar">
+                        <li class="share">分享直播间</li>
+                        <li class="obs-set">OBS推流配置</li>
+                    </ul>
+                </div>
+                <div class="settings">
+                    <div class="setting-item">
+                        <label for="stream-url">推流地址</label>
+                        <input type="text" id="stream-url" value="rtmp://145393.livepush.myqcloud.com/live/...">
+                        <button>复制</button>
+                    </div>
+                    <div class="setting-item">
+                        <label for="obs-url">OBS推流器</label>
+                        <input type="text" id="obs-url" value="rtmp://145393.livepush.myqcloud.com/live/...">
+                        <button>复制</button>
+                    </div>
+                    <div class="setting-item">
+                        <label for="obs-security">OBS推流密钥</label>
+                        <input type="text" id="obs-security" value="live-course39-video847xSecret=93...">
+                        <button>复制</button>
+                    </div>
+                    <div class="toggle">
+                        <label for="enable-comments">启用弹幕</label>
+                        <input type="checkbox" id="enable-comments">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--右边聊天框-->
+        <div class="chat-box">
+            <div class="messages">
+                <ul class="navbar" id="right-nav">
+                    <li class="chat">聊天</li>
+                    <li class="member">成员</li>
+                </ul>
+                <div class="m-body" id="tab-chat">
+                    <p>hahahah</p>
+                </div>
+                <div class="m-list" id="member-chat">
+                    <p>xixixixi</p>
+                </div>
+            </div>
+            <div class="input-group">
+                <input type="text" placeholder="Enter your message..."/>
+                <button>Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+const player = new DPlayer({
+    container: document.getElementById("player"),
+    live: true,
+    video: {
+        url: "http://www.geekedu.fun/live/push.m3u8?txSecret=6598274510002334ae5e37e890b8e6cc&txTime=65EEB4F7",
+    },
+    danmaku: true,
+    apiBackend: {
+        read: function (options) {
+            console.log('Pretend to connect WebSocket');
+            options.success([]);
+        },
+        send: function (options) {
+            console.log('Pretend to send danmaku via WebSocket', options.data);
+            options.success();
+        },
+    },
+})
+/*const player = new Artplayer({
+    container: "#player",
+    isLive: true,
+    autoPlay: true,
+    url: "http://www.geekedu.fun/live/push.m3u8?txSecret=6598274510002334ae5e37e890b8e6cc&txTime=65EEB4F7",
+    setting: true,
+    plugins: [
+        artplayerPluginDanmuku({
+            // 弹幕数组
+            danmuku: [
+                {
+                    text: '111', // 弹幕文本
+                    time: 1, // 发送时间，单位秒
+                    color: '#fff', // 弹幕局部颜色
+                    border: false, // 是否显示描边
+                    mode: 0, // 弹幕模式: 0表示滚动, 1静止
+                },
+                {
+                    text: '222',
+                    time: 2,
+                    color: 'red',
+                    border: true,
+                    mode: 0,
+                },
+                {
+                    text: '333',
+                    time: 3,
+                    color: 'green',
+                    border: false,
+                    mode: 1,
+                },
+            ],
+        }),
+    ],
+
+})
+player.volume = 0.5*/
+</script>
+</body>
+</html>

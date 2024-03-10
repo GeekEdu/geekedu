@@ -1,0 +1,70 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f0f0f0;
+}
+
+.container {
+    display: flex;
+    height: 100%;
+}
+
+.video-container {
+    flex-grow: 1;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.video-placeholder {
+    width: 80%;
+    height: 50%;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar {
+    width: 300px;
+    background: #fff;
+    padding: 20px;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.settings {
+    display: flex;
+    flex-direction: column;
+}
+
+.setting-item {
+    margin-bottom: 20px;
+}
+
+.setting-item label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.setting-item input {
+    width: calc(100% - 50px);
+    padding: 10px;
+    margin-right: 10px;
+    display: inline-block;
+}
+
+.setting-item button {
+    padding: 10px 15px;
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.toggle {
+    display: flex;
+    align-items: center;
+}
+
+.toggle input[type="checkbox"] {
+    margin-right: 10px;
+}
