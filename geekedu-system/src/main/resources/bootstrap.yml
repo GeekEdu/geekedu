@@ -6,6 +6,8 @@ spring:
   profiles:
 #    active: dev
     active: local
+  elasticsearch:
+    uris: http://10.7.42.117:9200
   application:
     name: system-service
   servlet:
