@@ -20,18 +20,18 @@ public class TestController {
     @Resource
     private MQProducerService mqProducerService;
 
-    @GetMapping("/send")
-    public void send() {
-        User user = new User();
-        user.setName("nameIsOk");
-        user.setAge(100);
-        mqProducerService.send(user);
-    }
-
-    @GetMapping("/sendTag")
-    public SendResult sendTag() {
-        SendResult sendResult = mqProducerService.sendTagMsg("带有tag的字符消息");
-        return sendResult;
-    }
+//    @GetMapping("/send")
+//    public void send() {
+//        User user = new User();
+//        user.setName("nameIsOk");
+//        user.setAge(100);
+//        mqProducerService.send(user);
+//    }
+//
+//    @GetMapping("/sendTag")
+//    public SendResult sendTag() {
+//        SendResult sendResult = mqProducerService.sendTagMsg("带有tag的字符消息");
+//        return sendResult;
+//    }
 
 }
