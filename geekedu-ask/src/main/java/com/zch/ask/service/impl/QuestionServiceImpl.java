@@ -362,6 +362,38 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         return isOk;
     }
 
+    @Override
+    public Page<QuestionVO> getUsersQuestionList(Integer pageNum, Integer pageSize) {
+        if (ObjectUtils.isNull(pageNum) || ObjectUtils.isNull(pageSize)) {
+            pageNum = 1;
+            pageSize = 10;
+        }
+        Page<QuestionVO> vo = new Page<>();
+        long count = count();
+        if (count == 0) {
+            vo.setRecords(new ArrayList<>(0));
+            vo.setTotal(0);
+            return vo;
+        }
+        // 当前用户id
+        // Long userId = UserContext.getLoginId();
+        Long userId = 1745747394693820416L;
+        Page<Question> page = page(new Page<Question>(pageNum, pageSize), new LambdaQueryWrapper<Question>()
+                .eq(Question::getUserId, userId));
+        if (ObjectUtils.isNull(page) || ObjectUtils.isNull(page.getRecords()) || CollUtils.isEmpty(page.getRecords())) {
+            vo.setRecords(new ArrayList<>(0));
+            vo.setTotal(0);
+            return vo;
+        }
+        vo.setRecords(page.getRecords().stream().map(item -> {
+            QuestionVO vo1 = new QuestionVO();
+            BeanUtils.copyProperties(item, vo1);
+            return vo1;
+        }).collect(Collectors.toList()));
+        vo.setTotal(page.getTotal());
+        return vo;
+    }
+
     /**
      * 对时间的处理
      * @param time

@@ -156,6 +156,42 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
+    public Integer signIn() {
+        // 返回当前登录用户
+        // Long userId = UserContext.getLoginId();
+        Long userId = 1745747394693820416L;
+        // 获取日期
+        LocalDateTime now = LocalDateTime.now();
+        // 拼接key 这里拼接后缀 使用 年月
+        String suffix = now.format(DateTimeFormatter.ofPattern(":yyyyMM"));
+        // 和用户标识进行拼接
+        String key = USER_SIGN_KEY + userId + suffix;
+        // 获取今天是本月的第几天
+        int day = now.getDayOfMonth();
+        // 写入redis中 签到使用 BitMap 数据结构
+        RedisUtils.setBitMap(key, day - 1);
+        // 返回积分，这里设计一个积分规则，看今天是本月第几次签到，则给多少积分
+        // TODO
+        return 1;
+    }
+
+    @Override
+    public Boolean isSign() {
+        // 当前登录用户
+        // Long userId = UserContext.getLoginId();
+        Long userId = 1745747394693820416L;
+        // 获取日期
+        LocalDateTime now = LocalDateTime.now();
+        // 拼接key 这里拼接后缀 使用 年月
+        String suffix = now.format(DateTimeFormatter.ofPattern(":yyyyMM"));
+        // 和用户标识进行拼接
+        String key = USER_SIGN_KEY + userId + suffix;
+        // 获取今天是本月的第几天
+        int day = now.getDayOfMonth();
+        return RedisUtils.getBigMap(key, day);
+    }
+
+    @Override
     public Boolean changePwd(ChangePwdForm form) {
         if (ObjectUtils.isNull(form)) {
             return false;

@@ -83,6 +83,24 @@ public class UserController {
     }
 
     /**
+     * 前台 签到
+     * @return
+     */
+    @PostMapping("/v2/sign")
+    public Response<Integer> signIn() {
+        return Response.success(userService.signIn());
+    }
+
+    /**
+     * 前台 查看用户是否签到
+     * @return
+     */
+    @GetMapping("/v2/isSign")
+    public Response<Boolean> isSign() {
+        return Response.success(userService.isSign());
+    }
+
+    /**
      * 登出
      * @return
      */

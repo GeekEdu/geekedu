@@ -533,4 +533,19 @@ public class RedisUtils {
         RKeys rKeys = CLIENT.getKeys();
         return rKeys.countExists(key) > 0;
     }
+
+    /**
+     * 缓存 BitMap
+     * @param key
+     * @param offset
+     */
+    public static void setBitMap(String key, long offset) {
+        RBitSet set = CLIENT.getBitSet(key);
+        set.set(offset, true);
+    }
+
+    public static boolean getBigMap(String key, int now) {
+        RBitSet set = CLIENT.getBitSet(key);
+        return set.get(now);
+    }
 }

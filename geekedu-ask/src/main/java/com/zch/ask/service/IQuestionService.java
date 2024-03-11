@@ -1,5 +1,6 @@
 package com.zch.ask.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.ask.QuestionDeleteBatchForm;
 import com.zch.api.dto.ask.QuestionForm;
@@ -7,6 +8,7 @@ import com.zch.api.dto.ask.ReplyQuestionForm;
 import com.zch.api.vo.ask.AnswersVO;
 import com.zch.api.vo.ask.QuestionAndCategoryVO;
 import com.zch.api.vo.ask.QuestionFullVO;
+import com.zch.api.vo.ask.QuestionVO;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.ask.domain.po.Question;
 
@@ -107,5 +109,13 @@ public interface IQuestionService extends IService<Question> {
      * @return
      */
     Boolean replyQuestion(Integer id, ReplyQuestionForm form);
+
+    /**
+     * 前台 返回我的问题列表
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    Page<QuestionVO> getUsersQuestionList(Integer pageNum, Integer pageSize);
 
 }

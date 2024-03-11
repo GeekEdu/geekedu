@@ -52,6 +52,18 @@ public interface IUserService extends IService<User> {
     UserVO getLoginUserDetail();
 
     /**
+     * 前台 签到 返回积分
+     * @return
+     */
+    Integer signIn();
+
+    /**
+     * 是否签到
+     * @return
+     */
+    Boolean isSign();
+
+    /**
      * 修改密码
      *
      * @param form

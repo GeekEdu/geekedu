@@ -6,8 +6,10 @@ import com.zch.api.dto.ask.ReplyQuestionForm;
 import com.zch.api.vo.ask.AnswersVO;
 import com.zch.api.vo.ask.QuestionAndCategoryVO;
 import com.zch.api.vo.ask.QuestionFullVO;
+import com.zch.api.vo.ask.QuestionVO;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.ask.service.IQuestionService;
+import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -148,6 +150,18 @@ public class QuestionController {
     @PostMapping("/v2/{id}/answer")
     public Response<Boolean> replyQuestion(@PathVariable("id") Integer id, @RequestBody ReplyQuestionForm form) {
         return Response.success(questionService.replyQuestion(id, form));
+    }
+
+    /**
+     * 前台 我的问题 列表
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/v2/users/list")
+    public PageResult<QuestionVO> getUsersQuestionList(@RequestParam("pageNum") Integer pageNum,
+                                                       @RequestParam("pageSize") Integer pageSize) {
+        return PageResult.success(questionService.getUsersQuestionList(pageNum, pageSize));
     }
 
 }

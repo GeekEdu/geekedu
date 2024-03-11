@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Poison02
@@ -229,6 +230,38 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
     @Override
     public Boolean thumbAnswer(ThumbForm form) {
         return userFeignClient.thumbHandle(form).getData();
+    }
+
+    @Override
+    public Page<AnswersVO> getUserList(Integer pageNum, Integer pageSize) {
+        if (ObjectUtils.isNull(pageNum) || ObjectUtils.isNull(pageSize)) {
+            pageNum = 1;
+            pageSize = 10;
+        }
+        Page<AnswersVO> vo = new Page<>();
+        long count = count();
+        if (count == 0) {
+            vo.setRecords(new ArrayList<>(0));
+            vo.setTotal(0);
+            return vo;
+        }
+        // 当前用户id
+        // Long userId = UserContext.getLoginId();
+        Long userId = 1745747394693820416L;
+        Page<Answer> page = page(new Page<Answer>(pageNum, pageSize), new LambdaQueryWrapper<Answer>()
+                .eq(Answer::getUserId, userId));
+        if (ObjectUtils.isNull(page) || ObjectUtils.isNull(page.getRecords()) || CollUtils.isEmpty(page.getRecords())) {
+            vo.setRecords(new ArrayList<>(0));
+            vo.setTotal(0);
+            return vo;
+        }
+        vo.setRecords(page.getRecords().stream().map(item -> {
+            AnswersVO vo1 = new AnswersVO();
+            BeanUtils.copyProperties(item, vo1);
+            return vo1;
+        }).collect(Collectors.toList()));
+        vo.setTotal(page.getTotal());
+        return vo;
     }
 
 

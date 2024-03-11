@@ -101,4 +101,12 @@ public interface IAnswerService extends IService<Answer> {
      */
     Boolean thumbAnswer(ThumbForm form);
 
+    /**
+     * 前台 返回我的回答
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    Page<AnswersVO> getUserList(Integer pageNum, Integer pageSize);
+
 }

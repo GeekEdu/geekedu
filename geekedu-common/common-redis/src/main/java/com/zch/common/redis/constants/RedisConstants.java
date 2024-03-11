@@ -34,4 +34,6 @@ public interface RedisConstants {
 
     String USERINFO = "userInfo:";
 
+    String USER_SIGN_KEY = "user:sign:";
+
 }

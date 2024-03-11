@@ -2,6 +2,7 @@ package com.zch.ask.controller;
 
 import com.zch.api.dto.ask.CommentAnswerForm;
 import com.zch.api.dto.user.ThumbForm;
+import com.zch.api.vo.ask.AnswersVO;
 import com.zch.api.vo.ask.CommentsVO;
 import com.zch.ask.service.IAnswerService;
 import com.zch.common.mvc.result.PageResult;
@@ -77,6 +78,18 @@ public class AnswerController {
     @PostMapping("/v2/thumb")
     public Response<Boolean> thumbAnswer(@RequestBody ThumbForm form) {
         return Response.success(answerService.thumbAnswer(form));
+    }
+
+    /**
+     * 前台 我的回答 列表
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/v2/users/list")
+    public PageResult<AnswersVO> getUsersAnswerList(@RequestParam("pageNum") Integer pageNum,
+                                                    @RequestParam("pageSize") Integer pageSize) {
+        return PageResult.success(answerService.getUserList(pageNum, pageSize));
     }
 
 }
