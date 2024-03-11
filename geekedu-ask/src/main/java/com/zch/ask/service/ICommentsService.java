@@ -58,7 +58,7 @@ public interface ICommentsService extends IService<Comments> {
      * @param form
      * @return
      */
-    Boolean commentAnswer(Integer id, CommentAnswerForm form);
+    Integer commentAnswer(Integer id, CommentAnswerForm form);
 
     /**
      * 分页查找评论

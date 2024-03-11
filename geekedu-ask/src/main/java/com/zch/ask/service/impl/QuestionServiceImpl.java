@@ -280,6 +280,12 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
             return null;
         }
         QuestionFullVO vo = new QuestionFullVO();
+        // 查看当前用户是否是该 question 的 Master
+        // Long userId = UserContext.getLoginId();
+        Long userId = 1745747394693820416L;
+        if (Objects.equals(userId, question.getUserId())) {
+            vo.setIsMaster(true);
+        }
         QuestionVO vo1 = vo.getQuestion();
         BeanUtils.copyProperties(question, vo1);
         Response<CategorySimpleVO> res2 = labelFeignClient.getCategoryById(question.getCategoryId(), "ASK_QUESTION");

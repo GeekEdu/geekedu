@@ -179,16 +179,23 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
     }
 
     @Override
-    public Boolean commentAnswer(Integer id, CommentAnswerForm form) {
-        Long userId = UserContext.getLoginId();
+    public Integer commentAnswer(Integer id, CommentAnswerForm form) {
+        // Long userId = UserContext.getLoginId();
         Comments comments = new Comments();
         comments.setAnswerId(id);
         comments.setCType(CommentsEnum.ASK_QUESTION);
         comments.setContent(form.getContent());
-        comments.setUserId(userId);
-        comments.setCreatedBy(userId);
-        comments.setUpdatedBy(userId);
-        return save(comments);
+        comments.setUserId(1745747394693820416L);
+        comments.setCreatedBy(1745747394693820416L);
+        comments.setUpdatedBy(1745747394693820416L);
+        save(comments);
+        Comments one = commentsMapper.selectOne(new LambdaQueryWrapper<Comments>()
+                .eq(Comments::getCType, CommentsEnum.ASK_QUESTION)
+                .eq(Comments::getAnswerId, id)
+                .eq(Comments::getUserId, 1745747394693820416L)
+                .orderByDesc(Comments::getCreatedTime)
+                .last(" limit 1"));
+        return one.getId();
     }
 
     @Override

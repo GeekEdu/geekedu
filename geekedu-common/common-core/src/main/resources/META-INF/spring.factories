@@ -4,5 +4,4 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.zch.common.redis.config.RedissonConfig,\
   com.zch.common.satoken.config.SaTokenConfig,\
   com.zch.common.sms.config.SmsConfig,\
-  com.zch.common.pay.config.AliSandboxConfig,\
-  com.zch.common.config.ElasticSearchConfig
+  com.zch.common.pay.config.AliSandboxConfig

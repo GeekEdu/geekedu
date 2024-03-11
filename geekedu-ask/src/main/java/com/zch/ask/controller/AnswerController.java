@@ -53,7 +53,7 @@ public class AnswerController {
      * @return
      */
     @PostMapping("/v2/{id}/comment")
-    public Response<Boolean> commentAnswer(@PathVariable("id") Integer id, @RequestBody CommentAnswerForm form) {
+    public Response<Integer> commentAnswer(@PathVariable("id") Integer id, @RequestBody CommentAnswerForm form) {
         return Response.success(answerService.commentAnswer(id, form));
     }
 

@@ -20,9 +20,9 @@ public class QuestionFullVO extends BaseVO {
     private List<AnswerAndCommentsVO> answer = new ArrayList<>(0);
 
     /**
-     * 是否是管理员
+     * 是否是该问题的 Master
      */
-    private Boolean isAdmin = false;
+    private Boolean isMaster = false;
 
     /**
      * 是否点赞

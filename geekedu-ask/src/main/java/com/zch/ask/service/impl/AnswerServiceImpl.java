@@ -22,7 +22,6 @@ import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
 import com.zch.common.mvc.result.Response;
 import com.zch.common.mvc.utils.CommonServletUtils;
-import com.zch.common.satoken.context.UserContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -186,7 +185,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
 //        if (ObjectUtils.isNull(one)) {
 //            return false;
 //        }
-        Long userId = UserContext.getLoginId();
+        // Long userId = UserContext.getLoginId();
         Answer answer = new Answer();
         answer.setContent(form.getContent());
         if (CollUtils.isNotEmpty(form.getImages())) {
@@ -194,28 +193,28 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
             answer.setImages(join);
         }
         answer.setQuestionId(id);
-        answer.setCreatedBy(userId);
-        answer.setUpdatedBy(userId);
-        answer.setUserId(userId);
+        answer.setCreatedBy(1745747394693820416L);
+        answer.setUpdatedBy(1745747394693820416L);
+        answer.setUserId(1745747394693820416L);
         return save(answer);
     }
 
     @Override
-    public Boolean commentAnswer(Integer id, CommentAnswerForm form) {
+    public Integer commentAnswer(Integer id, CommentAnswerForm form) {
         // 新增回答的评论数
         Answer answer = answerMapper.selectOne(new LambdaQueryWrapper<Answer>()
                 .eq(Answer::getId, id)
                 .eq(Answer::getUserId, form.getUserId()));
         if (ObjectUtils.isNull(answer)) {
-            return false;
+            return 0;
         }
         // 新增评论
-        boolean isOk = commentsService.commentAnswer(id, form);
-        if (isOk) {
+        Integer commentId = commentsService.commentAnswer(id, form);
+        if (commentId > 0) {
             answer.setCommentCount(answer.getCommentCount() + 1);
             updateById(answer);
         }
-        return isOk;
+        return commentId;
     }
 
     @Override

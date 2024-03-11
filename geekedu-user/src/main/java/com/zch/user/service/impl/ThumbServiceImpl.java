@@ -6,7 +6,6 @@ import com.zch.api.dto.user.ThumbForm;
 import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
-import com.zch.common.satoken.context.UserContext;
 import com.zch.user.domain.po.Thumb;
 import com.zch.user.enums.ThumbEnums;
 import com.zch.user.mapper.ThumbMapper;
@@ -37,23 +36,24 @@ public class ThumbServiceImpl extends ServiceImpl<ThumbMapper, Thumb> implements
             return false;
         }
         // 当前登录用户
-        Long userId = UserContext.getLoginId();
+        // Long userId = UserContext.getLoginId();
         // 查找点赞表中是否已经有该记录
         LambdaQueryWrapper<Thumb> wrapper = new LambdaQueryWrapper<Thumb>()
                 .eq(Thumb::getRelationId, form.getRelationId())
-                .eq(Thumb::getType, ThumbEnums.valueOf(form.getType()));
+                .eq(Thumb::getType, ThumbEnums.valueOf(form.getType()))
+                .eq(Thumb::getUserId, 1745747394693820416L);
         Thumb one = getOne(wrapper);
         if (ObjectUtils.isNull(one)) {
             // 如果没有该记录，则直接新插入一条
             Thumb thumb = new Thumb();
             thumb.setType(ThumbEnums.valueOf(form.getType()));
-            thumb.setUserId(userId);
+            thumb.setUserId(1745747394693820416L);
             thumb.setIsCancel(false);
             thumb.setRelationId(form.getRelationId());
             return save(thumb);
         } else {
-            // 如果已经存在该记录，那么操作就是取消点赞
-            one.setIsCancel(true);
+            // 如果已经存在该记录，那么操作就是取消去取反
+            one.setIsCancel(! one.getIsCancel());
             return updateById(one);
         }
     }
@@ -63,11 +63,11 @@ public class ThumbServiceImpl extends ServiceImpl<ThumbMapper, Thumb> implements
         if (ObjectUtils.isNull(relationId) || StringUtils.isBlank(type)) {
             return false;
         }
-        Long userId = UserContext.getLoginId();
+        // Long userId = UserContext.getLoginId();
         Thumb one = getOne(new LambdaQueryWrapper<Thumb>()
                 .eq(Thumb::getRelationId, relationId)
                 .eq(Thumb::getType, ThumbEnums.valueOf(type))
-                .eq(Thumb::getUserId, userId));
+                .eq(Thumb::getUserId, 1745747394693820416L));
         if (ObjectUtils.isNull(one)) {
             // 不存在则未点赞
             return false;
@@ -84,14 +84,14 @@ public class ThumbServiceImpl extends ServiceImpl<ThumbMapper, Thumb> implements
 
     @Override
     public Long queryCount(Integer relationId, String type) {
-        Long userId = UserContext.getLoginId();
+        // Long userId = UserContext.getLoginId();
         if (ObjectUtils.isNull(relationId) || StringUtils.isBlank(type)) {
             return 0L;
         }
         List<Thumb> thumbs = thumbMapper.selectList(new LambdaQueryWrapper<Thumb>()
                 .eq(Thumb::getRelationId, relationId)
                 .eq(Thumb::getType, ThumbEnums.valueOf(type))
-                .eq(Thumb::getUserId, userId)
+                .eq(Thumb::getUserId, 1745747394693820416L)
                 .eq(Thumb::getIsCancel, false));
         if (ObjectUtils.isNull(thumbs) || CollUtils.isEmpty(thumbs)) {
             return 0L;
