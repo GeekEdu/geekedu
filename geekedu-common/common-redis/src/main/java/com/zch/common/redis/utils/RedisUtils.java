@@ -548,4 +548,31 @@ public class RedisUtils {
         RBitSet set = CLIENT.getBitSet(key);
         return set.get(now);
     }
+
+    public static long getBitCount(String key) {
+        RBitSet set = CLIENT.getBitSet(key);
+        return set.cardinality();
+    }
+
+    /**
+     * 获取BitMap中有符号整数值
+     * @param key
+     * @param val
+     * @return
+     */
+    public static long getSigned(String key, int val) {
+        RBitSet set = CLIENT.getBitSet(key);
+        return set.getSigned(val, 0);
+    }
+
+    /**
+     * 获取BitMap中无符号整数值
+     * @param key
+     * @param val
+     * @return
+     */
+    public static long getUnsigned(String key, int val) {
+        RBitSet set = CLIENT.getBitSet(key);
+        return set.getUnsigned(val, 0);
+    }
 }

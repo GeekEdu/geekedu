@@ -160,19 +160,52 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         // 返回当前登录用户
         // Long userId = UserContext.getLoginId();
         Long userId = 1745747394693820416L;
-        // 获取日期
-        LocalDateTime now = LocalDateTime.now();
-        // 拼接key 这里拼接后缀 使用 年月
-        String suffix = now.format(DateTimeFormatter.ofPattern(":yyyyMM"));
-        // 和用户标识进行拼接
-        String key = USER_SIGN_KEY + userId + suffix;
-        // 获取今天是本月的第几天
-        int day = now.getDayOfMonth();
+        Map<String, Object> res = spliceKey(userId);
+        String key = res.get("key").toString();
+        int day = (int) res.get("day");
+        // 这里判断的前提是：今天是本月第一天，查看今天是否签到，如果已经签了 则返回对应积分，若没有，则进行签到，再返回对应积分
+        if (day == 1 && isSign()) {
+            return 1;
+        }
         // 写入redis中 签到使用 BitMap 数据结构
         RedisUtils.setBitMap(key, day - 1);
         // 返回积分，这里设计一个积分规则，看今天是本月第几次签到，则给多少积分
-        // TODO
-        return 1;
+        /**
+         * 积分规则：
+         *   - 未有连续签到
+         *     用户截止目前，本月签到的天数，签到天数即为得到的积分数
+         *   - 有连续签到
+         *     先得到本月签到的天数，再找到本月连续签到的地方（可能不止一处）
+         *     连续签到的积分计算：从第一次签到开始，往后，每连续一次，则当天积分+1；如第一天1，第二天2，第三天3...
+         *     最后将所得积分入库，返回前端展示
+         *
+         */
+        // 1. 获取用户本月签到天数
+        long signDays = RedisUtils.getBitCount(key);
+        if (signDays < 2) {
+            return 1;
+        }
+        // 2. 获取截止当前日期，本月签到情况整数值。后续转为二进制进行比较
+        long signed = RedisUtils.getUnsigned(key, day);
+        // 签到情况可能是：101010101  11001011011 分为两类：连续或者不连续
+        String binarySign = Long.toBinaryString(signed);
+        // 计算最大连续签到天数
+        int longSignDays = longSignDays(binarySign);
+        if (longSignDays < 2) {
+            // 如果最大连续签到天数已经小于2天 则直接计算签到天数的积分即可
+            // 这种情况则是没有连续签到的情况
+            return Math.toIntExact(signDays);
+        } {
+            // 存在连续签到的情况
+            // 将所有签到情况汇总
+            Map<Integer, Integer> signRes = collectSign(binarySign);
+            // 累加所有类型的积分即可！
+            int credit = 0;
+            for (Integer e : signRes.values()) {
+                credit += e;
+            }
+            return credit;
+        }
     }
 
     @Override
@@ -180,6 +213,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         // 当前登录用户
         // Long userId = UserContext.getLoginId();
         Long userId = 1745747394693820416L;
+        Map<String, Object> res = spliceKey(userId);
+        return RedisUtils.getBigMap(res.get("key").toString(),  ((int) res.get("day")) - 1);
+    }
+
+    /**
+     * 拼接用户签到 Key
+     * @param userId
+     * @return
+     */
+    private Map<String, Object> spliceKey(Long userId) {
+        Map<String, Object> res = new HashMap<>(2);
         // 获取日期
         LocalDateTime now = LocalDateTime.now();
         // 拼接key 这里拼接后缀 使用 年月
@@ -188,7 +232,81 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         String key = USER_SIGN_KEY + userId + suffix;
         // 获取今天是本月的第几天
         int day = now.getDayOfMonth();
-        return RedisUtils.getBigMap(key, day);
+        res.put("day", day);
+        res.put("key", key);
+        return res;
+    }
+
+    /**
+     * 计算最大连续签到天数
+     * @param binarySign
+     * @return
+     */
+    private int longSignDays(String binarySign) {
+        int maxLen = 0;
+        int current = 0;
+        for (char item : binarySign.toCharArray()) {
+            if ((item & 1) == 1) {
+                // 如果当前天已签到
+                current++;
+                // 更新最大连续签到天数
+                maxLen = Math.max(current, maxLen);
+            } else {
+                // 则重置签到天数
+                current = 0;
+            }
+        }
+        return maxLen;
+    }
+
+    /**
+     * 汇总全部签到情况
+     * @param binarySign
+     * @return
+     */
+    private Map<Integer, Integer> collectSign(String binarySign) {
+        Map<Integer, Integer> res = new HashMap<>();
+        // 计数器
+        int count = 0;
+        // 签到天数
+        int current = 0;
+        // 连续签到天数
+        int continuous = 0;
+        for (char item : binarySign.toCharArray()) {
+            if ((item & 1) == 1) {
+                current++;
+                continuous = current;
+            } else {
+                // 这里没有考虑这种情况：101100111，即最后是1
+                current = 0;
+                // 先将连续签到的情况放入map中
+                res.put(count++, continuous == 0 ? 0 : (calCredit(continuous)));
+                // 将连续签到天数归0
+                continuous = 0;
+            }
+        }
+        // 加上最后一天是1的情况 最后一天一定是1
+        if (continuous == 0) {
+            // 连续天数为0，即最后一天的前一天未签到，则积分为1
+            res.put(count, 1);
+        } else {
+            // 连续天数不为0，即至少最后一天的前一天签到了的，计算积分
+            res.put(count, calCredit(continuous));
+        }
+        return res;
+    }
+
+    /**
+     * 根据天数 计算积分
+     * @param day
+     * @return
+     */
+    private int calCredit(int day) {
+        int count = 0;
+        for (int i = 1; i <= day; i++) {
+            count += i;
+        }
+        return count;
     }
 
     @Override
@@ -535,7 +653,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     public static void main(String[] args) {
-        String[] list = "1,2,3,4,5".split(",");
-        System.out.println(Arrays.toString(list));
+        long test = 123L;
+        System.out.println(Long.toBinaryString(test));
+        long test2 = 21341242L;
+        System.out.println(Math.toIntExact(test2));
     }
 }
