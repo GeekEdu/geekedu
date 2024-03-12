@@ -8,6 +8,8 @@ import com.zch.common.mvc.result.Response;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author Poison02
  * @date 2024/1/20
@@ -17,6 +19,7 @@ public interface UserFeignClient {
 
     /**
      * 验证码
+     *
      * @return
      */
     @GetMapping("/api/captcha/image")
@@ -24,6 +27,7 @@ public interface UserFeignClient {
 
     /**
      * 根据id查询简单用户
+     *
      * @param userId
      * @return
      */
@@ -32,6 +36,7 @@ public interface UserFeignClient {
 
     /**
      * 点赞和取消点赞操作
+     *
      * @param form
      * @return
      */
@@ -40,6 +45,7 @@ public interface UserFeignClient {
 
     /**
      * 查询是否点过赞
+     *
      * @param relationId
      * @param type
      * @return
@@ -49,11 +55,19 @@ public interface UserFeignClient {
 
     /**
      * 查询点赞数量
+     *
      * @param relationId
      * @param type
      * @return
      */
     @GetMapping("/api/thumb/count/{id}")
     public Response<Long> queryCount(@PathVariable("id") Integer relationId, @RequestParam("type") String type);
+
+    /**
+     * 后台 获取教师列表
+     * @return
+     */
+    @GetMapping("/teacher/list")
+    public Response<List<UserSimpleVO>> getTeacherList()
 
 }

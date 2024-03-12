@@ -38,6 +38,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import static com.zch.common.core.constants.ErrorInfo.Msg.EXPIRE_CAPTCHA_CODE;
 import static com.zch.common.core.constants.ErrorInfo.Msg.INVALID_VERIFY_CODE;
@@ -554,6 +555,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public Boolean updateVip(Integer id, VipForm form) {
         return vipInfoService.updateVip(id, form);
+    }
+
+    @Override
+    public List<UserSimpleVO> getTeacherList() {
+        List<User> users = userMapper.selectList(new LambdaQueryWrapper<User>()
+                .eq(User::getRoleId, 2));
+        if (ObjectUtils.isNull(users) || CollUtils.isEmpty(users)) {
+            return new ArrayList<>(0);
+        }
+        return users.stream().map(item -> {
+            UserSimpleVO vo = new UserSimpleVO();
+            BeanUtils.copyProperties(item, vo);
+            return vo;
+        }).collect(Collectors.toList());
     }
 
     /**

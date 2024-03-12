@@ -167,4 +167,10 @@ public interface IUserService extends IService<User> {
      */
     Boolean updateVip(Integer id, VipForm form);
 
+    /**
+     * 后台 返回教师列表
+     * @return
+     */
+    List<UserSimpleVO> getTeacherList();
+
 }

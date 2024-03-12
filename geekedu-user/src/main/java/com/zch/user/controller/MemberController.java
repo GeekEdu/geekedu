@@ -2,10 +2,7 @@ package com.zch.user.controller;
 
 import com.zch.api.dto.user.VipForm;
 import com.zch.api.vo.order.OrderVO;
-import com.zch.api.vo.user.MemberFullVO;
-import com.zch.api.vo.user.UserVO;
-import com.zch.api.vo.user.VipAndTagVO;
-import com.zch.api.vo.user.VipVO;
+import com.zch.api.vo.user.*;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import com.zch.user.service.IUserService;
@@ -130,6 +127,15 @@ public class MemberController {
     public Response<Boolean> updateVip(@PathVariable("id") Integer id, @RequestBody VipForm form) {
         return Response.success(userService.updateVip(id, form));
 
+    }
+
+    /**
+     * 后台 获取教师列表
+     * @return
+     */
+    @GetMapping("/teacher/list")
+    public Response<List<UserSimpleVO>> getTeacherList() {
+        return Response.success(userService.getTeacherList());
     }
 
 }
