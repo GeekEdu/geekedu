@@ -1,20 +1,16 @@
 package com.zch.message.listener;
 
-import com.alibaba.fastjson.JSON;
 import com.zch.message.domain.User;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 /**
  * @author Poison02
  * @date 2024/3/8
  */
-@Slf4j
-@Component
+// @Component
 public class MQConsumerService {
 
     // topic需要和生产者的topic一致，consumerGroup属性是必须指定的，内容可以随意
@@ -25,7 +21,7 @@ public class MQConsumerService {
         // 监听到消息就会执行此方法
         @Override
         public void onMessage(User user) {
-            log.info("监听到消息：user={}", JSON.toJSONString(user));
+            //log.info("监听到消息：user={}", JSON.toJSONString(user));
         }
     }
 
@@ -36,7 +32,7 @@ public class MQConsumerService {
     public class ConsumerSend2 implements RocketMQListener<String> {
         @Override
         public void onMessage(String str) {
-            log.info("监听到消息：str={}", str);
+            //log.info("监听到消息：str={}", str);
         }
     }
 
@@ -48,7 +44,7 @@ public class MQConsumerService {
         public void onMessage(MessageExt messageExt) {
             byte[] body = messageExt.getBody();
             String msg = new String(body);
-            log.info("监听到消息：msg={}", msg);
+            //log.info("监听到消息：msg={}", msg);
         }
     }
 

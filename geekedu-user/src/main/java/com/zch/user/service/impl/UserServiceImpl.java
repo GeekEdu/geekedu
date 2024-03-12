@@ -1,6 +1,7 @@
 package com.zch.user.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -8,12 +9,14 @@ import com.zch.api.dto.user.*;
 import com.zch.api.utils.AddressUtils;
 import com.zch.api.vo.order.OrderVO;
 import com.zch.api.vo.user.*;
+import com.zch.common.constants.MQConstants;
 import com.zch.common.core.utils.*;
 import com.zch.common.core.utils.encrypt.EncryptUtils;
 import com.zch.common.mvc.exception.CommonException;
 import com.zch.common.mvc.utils.CommonServletUtils;
 import com.zch.common.redis.utils.RedisUtils;
 import com.zch.common.satoken.context.UserContext;
+import com.zch.common.utils.RocketMQUtils;
 import com.zch.user.domain.po.SysPermission;
 import com.zch.user.domain.po.SysRole;
 import com.zch.user.domain.po.User;
@@ -21,9 +24,13 @@ import com.zch.user.mapper.UserMapper;
 import com.zch.user.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.rocketmq.client.producer.DefaultMQProducer;
+import org.apache.rocketmq.common.message.Message;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -54,6 +61,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private final ITagService tagService;
 
     private final IVipInfoService vipInfoService;
+
+    private final ApplicationContext applicationContext;
 
     @Override
     public CaptchaVO getCaptcha() {
@@ -152,6 +161,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
         UserVO vo = new UserVO();
         BeanUtils.copyProperties(user, vo);
+        // 查询会员信息
+        if (ObjectUtils.isNotNull(user.getVipId())) {
+            VipVO vip = vipInfoService.getVipById(user.getVipId());
+            vo.setVip(vip);
+        }
         return vo;
     }
 
@@ -163,8 +177,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         Map<String, Object> res = spliceKey(userId);
         String key = res.get("key").toString();
         int day = (int) res.get("day");
+        // 增加MQ 写入数据库测试 后续重构 TODO
+        DefaultMQProducer producer = (DefaultMQProducer) applicationContext.getBean("save2MysqlProducer");
+        User user = userMapper.selectById(userId);
+        JSONObject json = new JSONObject();
+        Message msg = new Message();
+        msg.setTopic(MQConstants.SAVE_TO_MYSQL_TOPIC);
         // 这里判断的前提是：今天是本月第一天，查看今天是否签到，如果已经签了 则返回对应积分，若没有，则进行签到，再返回对应积分
         if (day == 1 && isSign()) {
+            user.setPoints(user.getPoints() + 1);
+            json.put("message", user);
+            msg.setBody(json.toJSONString().getBytes(StandardCharsets.UTF_8));
+            RocketMQUtils.asyncSendMsg(producer, msg);
             return 1;
         }
         // 写入redis中 签到使用 BitMap 数据结构
@@ -183,6 +207,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         // 1. 获取用户本月签到天数
         long signDays = RedisUtils.getBitCount(key);
         if (signDays < 2) {
+            user.setPoints(user.getPoints() + 1);
+            json.put("message", user);
+            msg.setBody(json.toJSONString().getBytes(StandardCharsets.UTF_8));
+            RocketMQUtils.asyncSendMsg(producer, msg);
             return 1;
         }
         // 2. 获取截止当前日期，本月签到情况整数值。后续转为二进制进行比较
@@ -204,6 +232,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             for (Integer e : signRes.values()) {
                 credit += e;
             }
+            user.setPoints(user.getPoints() + credit);
+            json.put("message", user);
+            msg.setBody(json.toJSONString().getBytes(StandardCharsets.UTF_8));
+            RocketMQUtils.asyncSendMsg(producer, msg);
             return credit;
         }
     }

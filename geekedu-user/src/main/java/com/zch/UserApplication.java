@@ -21,7 +21,7 @@ public class UserApplication {
         SpringApplication.run(UserApplication.class, args);
     }
 
-    @Bean
+    @Bean("userAppStartupListener")
     public AppStartupListener appStartupListener(){
         return new AppStartupListener();
     }

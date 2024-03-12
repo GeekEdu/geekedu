@@ -1,12 +1,9 @@
 package com.zch.message.listener;
 
-import com.alibaba.fastjson.JSON;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
@@ -14,8 +11,7 @@ import javax.annotation.Resource;
  * @author Poison02
  * @date 2024/3/8
  */
-@Slf4j
-@Component
+// @Component
 public class MQProducerService {
 
 //    @Value("${rocketmq.producer.send-message-timeout}")
@@ -34,7 +30,7 @@ public class MQProducerService {
      */
     public SendResult sendMsg(Object msgBody) {
         SendResult sendResult = rocketMQTemplate.syncSend(topic, MessageBuilder.withPayload(msgBody).build());
-        log.info("【sendMsg】sendResult={}", JSON.toJSONString(sendResult));
+        //log.info("【sendMsg】sendResult={}", JSON.toJSONString(sendResult));
         return sendResult;
     }
 
@@ -47,12 +43,12 @@ public class MQProducerService {
             @Override
             public void onSuccess(SendResult sendResult) {
                 // 处理消息发送成功逻辑
-                log.debug("Message SendAsync SuccessFully!: " + sendResult.getMsgId());
+                //log.debug("Message SendAsync SuccessFully!: " + sendResult.getMsgId());
             }
             @Override
             public void onException(Throwable throwable) {
                 // 处理消息发送异常逻辑
-                log.error("Message SendAsync Error!");
+                //log.error("Message SendAsync Error!");
             }
         });
     }

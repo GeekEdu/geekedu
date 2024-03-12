@@ -1,17 +1,17 @@
-package com.zch.common.config;
+package com.zch.message.producer;
 
 import com.zch.common.constants.MQConstants;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Poison02
- * @date 2024/3/8
+ * @date 2024/3/12
  */
-@Configuration
-public class RocketmqConfig {
+@Component
+public class MQProducer {
 
     @Value("${rocketmq.name-server}")
     private String nameSrvUrl;

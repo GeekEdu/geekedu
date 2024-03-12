@@ -17,8 +17,8 @@ import javax.annotation.Resource;
 @RequestMapping("/api")
 public class TestController {
 
-    @Resource
-    private MQProducerService mqProducerService;
+//    @Resource
+//    private MQProducerService mqProducerService;
 
 //    @GetMapping("/send")
 //    public void send() {
