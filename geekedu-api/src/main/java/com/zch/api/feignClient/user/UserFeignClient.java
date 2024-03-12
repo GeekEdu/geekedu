@@ -68,6 +68,6 @@ public interface UserFeignClient {
      * @return
      */
     @GetMapping("/teacher/list")
-    public Response<List<UserSimpleVO>> getTeacherList()
+    public Response<List<UserSimpleVO>> getTeacherList();
 
 }
