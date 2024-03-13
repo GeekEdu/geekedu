@@ -2,10 +2,12 @@ package com.zch.course.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zch.api.dto.ask.AddCommentForm;
 import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.course.ChapterForm;
 import com.zch.api.dto.course.live.LiveCourseForm;
 import com.zch.api.dto.course.live.LiveVideoForm;
+import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.course.CourseCommentsVO;
 import com.zch.api.vo.course.live.*;
 import com.zch.course.domain.po.LiveCourse;
@@ -165,5 +167,37 @@ public interface ILiveCourseService extends IService<LiveCourse> {
      * @return
      */
     Boolean addVideo(LiveVideoForm form);
+
+    //===================================================================
+    /**
+     * 获取V2课程列表
+     * @param pageNum
+     * @param pageSize
+     * @param categoryId
+     * @return
+     */
+    LiveFrontVO getV2List(Integer pageNum, Integer pageSize, Integer categoryId);
+
+    /**
+     * 获取直播详情
+     * @param id
+     * @return
+     */
+    LiveDetailVO getLiveDetail(Integer id);
+
+    /**
+     * 获取课程评论
+     * @param courseId
+     * @return
+     */
+    CommentsFullVO getCourseComments(Integer courseId);
+
+    /**
+     * 评论直播课程
+     * @param id
+     * @param form
+     * @return
+     */
+    Boolean addCourseComment(Integer id, AddCommentForm form);
 
 }

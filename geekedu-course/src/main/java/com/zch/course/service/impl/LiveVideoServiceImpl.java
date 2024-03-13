@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -91,5 +92,20 @@ public class LiveVideoServiceImpl extends ServiceImpl<LiveVideoMapper, LiveVideo
         video.setLiveTime(form.getLiveTime());
         video.setEstimateDuration(form.getEstimateDuration());
         return save(video);
+    }
+
+    @Override
+    public List<LiveVideoVO> getVideoList(Integer courseId) {
+        List<LiveVideo> list = list(new LambdaQueryWrapper<LiveVideo>().eq(LiveVideo::getCourseId, courseId));
+        if (ObjectUtils.isNull(list) || CollUtils.isEmpty(list)) {
+            return new ArrayList<>(0);
+        }
+        return list.stream().map(item -> {
+            LiveVideoVO vo = new LiveVideoVO();
+            BeanUtils.copyProperties(item, vo);
+            vo.setChapter(chapterService.getChapterById(item.getChapterId()));
+            vo.setStatusText(item.getStatus().getValue());
+            return vo;
+        }).collect(Collectors.toList());
     }
 }

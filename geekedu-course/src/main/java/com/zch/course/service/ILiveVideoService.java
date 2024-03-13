@@ -6,6 +6,8 @@ import com.zch.api.dto.course.live.LiveVideoForm;
 import com.zch.api.vo.course.live.LiveVideoVO;
 import com.zch.course.domain.po.LiveVideo;
 
+import java.util.List;
+
 /**
  * @author Poison02
  * @date 2024/3/12
@@ -49,5 +51,12 @@ public interface ILiveVideoService extends IService<LiveVideo> {
      * @return
      */
     Boolean addVideo(LiveVideoForm form);
+
+    /**
+     * 查询视频列表
+     * @param courseId
+     * @return
+     */
+    List<LiveVideoVO> getVideoList(Integer courseId);
 
 }

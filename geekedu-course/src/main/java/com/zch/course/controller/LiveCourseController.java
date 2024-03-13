@@ -1,9 +1,12 @@
 package com.zch.course.controller;
 
+import com.zch.api.dto.ask.AddCommentForm;
 import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.course.ChapterForm;
 import com.zch.api.dto.course.live.LiveCourseForm;
 import com.zch.api.dto.course.live.LiveVideoForm;
+import com.zch.api.vo.ask.CommentsFullVO;
+import com.zch.api.vo.course.CourseCommentsVO;
 import com.zch.api.vo.course.live.*;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
@@ -158,10 +161,10 @@ public class LiveCourseController {
      * @return
      */
     @GetMapping("/getCommentsList")
-    public Response getCourseComments(@RequestParam("pageNum") Integer pageNum,
-                                      @RequestParam("pageSize") Integer pageSize,
-                                      @RequestParam("cType") String cType,
-                                      @RequestParam(value = "createdTime", required = false) List<String> createdTime) {
+    public Response<CourseCommentsVO> getCourseComments(@RequestParam("pageNum") Integer pageNum,
+                                                        @RequestParam("pageSize") Integer pageSize,
+                                                        @RequestParam("cType") String cType,
+                                                        @RequestParam(value = "createdTime", required = false) List<String> createdTime) {
         return Response.success(courseService.getCommentsList(pageNum, pageSize, cType, createdTime));
     }
 
@@ -238,6 +241,53 @@ public class LiveCourseController {
     @PostMapping("/video/add")
     public Response<Boolean> addVideo(@RequestBody LiveVideoForm form) {
         return Response.success(courseService.addVideo(form));
+    }
+
+    //==========================================================================
+
+    /**
+     * 前台 直播课列表
+     * @param pageNum
+     * @param pageSize
+     * @param categoryId
+     * @return
+     */
+    @GetMapping("/v2/list")
+    public Response<LiveFrontVO> getV2List(@RequestParam("pageNum") Integer pageNum,
+                                @RequestParam("pageSize") Integer pageSize,
+                                @RequestParam("categoryId") Integer categoryId) {
+        return Response.success(courseService.getV2List(pageNum, pageSize, categoryId));
+    }
+
+    /**
+     * 获取直播详情
+     * @param id
+     * @return
+     */
+    @GetMapping("/v2/{id}/detail")
+    public Response<LiveDetailVO> getV2Detail(@PathVariable("id") Integer id) {
+        return Response.success(courseService.getLiveDetail(id));
+    }
+
+    /**
+     * 返回课程评论
+     * @param id
+     * @return
+     */
+    @GetMapping("/v2/{id}/comments")
+    public Response<CommentsFullVO> getCourseComments(@PathVariable("id") Integer id) {
+        return Response.success(courseService.getCourseComments(id));
+    }
+
+    /**
+     * 评论课程
+     * @param id
+     * @param form
+     * @return
+     */
+    @PostMapping("/v2/{id}/comment")
+    public Response<Boolean> addCourseComment(@PathVariable("id") Integer id, @RequestBody AddCommentForm form) {
+        return Response.success(courseService.addCourseComment(id, form));
     }
 
 }

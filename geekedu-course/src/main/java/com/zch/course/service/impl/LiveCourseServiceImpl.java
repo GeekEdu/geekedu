@@ -3,6 +3,7 @@ package com.zch.course.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zch.api.dto.ask.AddCommentForm;
 import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.course.ChapterForm;
 import com.zch.api.dto.course.live.LiveCourseForm;
@@ -10,6 +11,7 @@ import com.zch.api.dto.course.live.LiveVideoForm;
 import com.zch.api.feignClient.comments.CommentsFeignClient;
 import com.zch.api.feignClient.label.LabelFeignClient;
 import com.zch.api.feignClient.user.UserFeignClient;
+import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.ask.CommentsVO;
 import com.zch.api.vo.course.CourseCommentsVO;
 import com.zch.api.vo.course.live.*;
@@ -51,6 +53,8 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
     private final LabelFeignClient labelFeignClient;
 
     private final CommentsFeignClient commentsFeignClient;
+
+    private final LiveCourseMapper courseMapper;
 
     @Override
     public LiveCourseFullVO getLiveCourseFullList(Integer pageNum, Integer pageSize, String sort, String order,
@@ -260,6 +264,106 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
     @Override
     public Boolean addVideo(LiveVideoForm form) {
         return videoService.addVideo(form);
+    }
+
+    @Override
+    public LiveFrontVO getV2List(Integer pageNum, Integer pageSize, Integer categoryId) {
+        LambdaQueryWrapper<LiveCourse> wrapper = new LambdaQueryWrapper<>();
+        if (! Objects.equals(categoryId, 0)) {
+            wrapper.eq(LiveCourse::getCategoryId, categoryId);
+        }
+        LiveFrontVO vo = new LiveFrontVO();
+        // 查询分类列表
+        vo.setCategories(labelFeignClient.getCategorySimpleList("LIVE_COURSE").getData());
+        Page<LiveCourse> page = page(new Page<>(pageNum, pageSize), wrapper);
+        if (ObjectUtils.isNull(page) || ObjectUtils.isNull(page.getRecords()) || CollUtils.isEmpty(page.getRecords())) {
+            vo.getData().setTotal(0);
+            vo.getData().setData(new ArrayList<>(0));
+            return vo;
+        }
+        vo.getData().setData(page.getRecords().stream().map(item -> {
+            LiveCourseVO vo1 = new LiveCourseVO();
+            BeanUtils.copyProperties(item, vo1);
+            vo1.setCategory(labelFeignClient.getCategoryById(item.getCategoryId(), "LIVE_COURSE").getData());
+            vo1.setTeacher(userFeignClient.getUserById(item.getTeacherId() + "").getData());
+            return vo1;
+        }).collect(Collectors.toList()));
+        vo.getData().setTotal(page.getTotal());
+        return vo;
+    }
+
+    @Override
+    public LiveDetailVO getLiveDetail(Integer id) {
+        LiveDetailVO vo = new LiveDetailVO();
+        if (ObjectUtils.isNull(id)) {
+            return vo;
+        }
+        // 查询是否存在该课程
+        LiveCourse course = courseMapper.selectById(id);
+        if (ObjectUtils.isNull(course)) {
+            return vo;
+        }
+        // 构建课程返回信息
+        LiveCourseVO cv = new LiveCourseVO();
+        BeanUtils.copyProperties(course, cv);
+        cv.setTeacher(userFeignClient.getUserById(course.getTeacherId() + "").getData());
+        vo.setCourse(cv);
+        // 查询课程对应的章节
+        List<LiveChapterVO> chapters = chapterService.getChapterList(course.getId());
+        if (ObjectUtils.isNotNull(chapters) && CollUtils.isNotEmpty(chapters)) {
+            vo.setChapters(chapters);
+        }
+        // 查询课程对应的视频小节
+        // 1. 如果没有章节
+        Map<Integer, List<LiveVideoVO>> videos = new HashMap<>(0);
+        // 查全部视频
+        List<LiveVideoVO> sections = videoService.getVideoList(id);
+        if (ObjectUtils.isNull(chapters) || CollUtils.isEmpty(chapters)) {
+            // 没有视频
+            if (ObjectUtils.isNull(sections) || CollUtils.isEmpty(sections)) {
+                vo.setVideos(new HashMap<>(0));
+                return vo;
+            } else {
+                // 存在视频 但是没有章节 直接放在map的第0个
+                videos.put(0, sections);
+            }
+        } else {
+            // 2. 有章节
+            // 没有视频
+            if (ObjectUtils.isNull(sections) || CollUtils.isEmpty(sections)) {
+                vo.setVideos(new HashMap<>(0));
+                return vo;
+            } else {
+                // 存在视频 且有章节 但是要考虑：1.所有视频都用了章节；2.所有视频都没用章节；3.部分视频用章节，部分没有
+                // 将没有用章节的视频都查出来 放入 map 的 0 位置 没有用章节，只需要在全部视频中过滤出章节id为0的
+                List<LiveVideoVO> notChapters = sections.stream().filter((item) -> item.getChapterId() == 0).collect(Collectors.toList());
+                if (ObjectUtils.isNotNull(notChapters)) {
+                    videos.put(0, notChapters);
+                }
+                // 将使用章节的视频查出，放入map对应章节id的位置即可
+                for (LiveChapterVO item : chapters) {
+                    videos.put(item.getId(), sections.stream()
+                            .filter(e -> Objects.equals(e.getChapterId(), item.getId()))
+                            .collect(Collectors.toList()));
+                }
+            }
+        }
+        vo.setVideos(videos);
+        // TODO 是否购买课程
+        // TODO 是否收藏课程
+        // TODO 附件
+        // TODO 视频观看进度
+        return vo;
+    }
+
+    @Override
+    public CommentsFullVO getCourseComments(Integer courseId) {
+        return commentsFeignClient.getCommentsList(courseId, "LIVE_COURSE", 1, 10000).getData();
+    }
+
+    @Override
+    public Boolean addCourseComment(Integer id, AddCommentForm form) {
+        return commentsFeignClient.addComment(id, "LIVE_COURSE", form).getData();
     }
 
     /**
