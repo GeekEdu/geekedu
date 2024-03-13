@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.course.ChapterForm;
 import com.zch.api.dto.course.live.LiveCourseForm;
+import com.zch.api.dto.course.live.LiveVideoForm;
 import com.zch.api.feignClient.comments.CommentsFeignClient;
 import com.zch.api.feignClient.label.LabelFeignClient;
 import com.zch.api.feignClient.user.UserFeignClient;
@@ -23,6 +24,7 @@ import com.zch.course.domain.po.LiveCourse;
 import com.zch.course.mapper.LiveCourseMapper;
 import com.zch.course.service.ILiveChapterService;
 import com.zch.course.service.ILiveCourseService;
+import com.zch.course.service.ILiveVideoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -41,6 +43,8 @@ import java.util.stream.Collectors;
 public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCourse> implements ILiveCourseService {
 
     private final ILiveChapterService chapterService;
+
+    private final ILiveVideoService videoService;
 
     private final UserFeignClient userFeignClient;
 
@@ -224,6 +228,38 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
             return false;
         }
         return response.getData();
+    }
+
+    @Override
+    public Page<LiveVideoVO> getVideoList(Integer pageNum, Integer pageSize, Integer courseId) {
+        Page<LiveVideoVO> page = videoService.getVideoList(pageNum, pageSize, courseId);
+        if (ObjectUtils.isNull(page) || ObjectUtils.isNull(page.getRecords()) || CollUtils.isEmpty(page.getRecords())) {
+            return page;
+        }
+        page.getRecords().forEach(vo -> {
+            vo.setCourse(getCourseSimpleById(vo.getCourseId()));
+        });
+        return page;
+    }
+
+    @Override
+    public LiveVideoVO getVideoDetail(Integer id) {
+        return videoService.getVideoDetail(id);
+    }
+
+    @Override
+    public Boolean updateVideo(Integer id, LiveVideoForm form) {
+        return videoService.updateVideo(id, form);
+    }
+
+    @Override
+    public Boolean deleteVideo(Integer id) {
+        return videoService.deleteVideo(id);
+    }
+
+    @Override
+    public Boolean addVideo(LiveVideoForm form) {
+        return videoService.addVideo(form);
     }
 
     /**

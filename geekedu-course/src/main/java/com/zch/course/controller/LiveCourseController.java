@@ -3,7 +3,9 @@ package com.zch.course.controller;
 import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.course.ChapterForm;
 import com.zch.api.dto.course.live.LiveCourseForm;
+import com.zch.api.dto.course.live.LiveVideoForm;
 import com.zch.api.vo.course.live.*;
+import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import com.zch.course.service.ILiveCourseService;
 import lombok.RequiredArgsConstructor;
@@ -181,6 +183,61 @@ public class LiveCourseController {
     @GetMapping("/getCourseSimpleById/{id}")
     public Response<LiveCourseSimpleVO> getCourseSimpleById(@PathVariable("id") Integer id) {
         return Response.success(courseService.getCourseSimpleById(id));
+    }
+
+    /**
+     * 分页查找视频列表
+     * @param pageNum
+     * @param pageSize
+     * @param courseId
+     * @return
+     */
+    @GetMapping("/video/list")
+    public PageResult<LiveVideoVO> getVideoList(@RequestParam("pageNum") Integer pageNum,
+                                     @RequestParam("pageSize") Integer pageSize,
+                                     @RequestParam("courseId") Integer courseId) {
+        return PageResult.success(courseService.getVideoList(pageNum, pageSize, courseId));
+    }
+
+    /**
+     * 视频明细
+     * @param id
+     * @return
+     */
+    @GetMapping("/video/{id}/detail")
+    public Response<LiveVideoVO> getVideoDetail(@PathVariable("id") Integer id) {
+        return Response.success(courseService.getVideoDetail(id));
+    }
+
+    /**
+     * 删除视频
+     * @param id
+     * @return
+     */
+    @PostMapping("/video/{id}/delete")
+    public Response<Boolean> deleteVideo(@PathVariable("id") Integer id) {
+        return Response.success(courseService.deleteVideo(id));
+    }
+
+    /**
+     * 更新视频
+     * @param id
+     * @param form
+     * @return
+     */
+    @PostMapping("/video/{id}/update")
+    public Response<Boolean> updateVideo(@PathVariable("id") Integer id, @RequestBody LiveVideoForm form) {
+        return Response.success(courseService.updateVideo(id, form));
+    }
+
+    /**
+     * 新增视频
+     * @param form
+     * @return
+     */
+    @PostMapping("/video/add")
+    public Response<Boolean> addVideo(@RequestBody LiveVideoForm form) {
+        return Response.success(courseService.addVideo(form));
     }
 
 }

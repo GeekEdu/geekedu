@@ -37,6 +37,11 @@ public class LiveVideoVO extends BaseVO {
     private Boolean isShow;
 
     /**
+     * 状态
+     */
+    private Integer status;
+
+    /**
      * 状态 文本
      */
     private String statusText;
@@ -70,5 +75,10 @@ public class LiveVideoVO extends BaseVO {
      * 章节信息
      */
     private LiveChapterVO chapter;
+
+    /**
+     * 课程信息
+     */
+    private LiveCourseSimpleVO course;
 
 }
