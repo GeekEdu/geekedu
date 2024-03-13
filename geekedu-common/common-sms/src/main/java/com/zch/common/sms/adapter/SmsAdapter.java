@@ -1,4 +1,4 @@
-package com.zch.message.adapter;
+package com.zch.common.sms.adapter;
 
 /**
  * SMS 适配器

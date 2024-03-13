@@ -19,7 +19,6 @@
         <module>geekedu-book</module>
 		<module>geekedu-exam</module>
         <module>geekedu-ask</module>
-		<module>geekedu-message</module>
 		<module>geekedu-trade</module>
         <module>geekedu-websocket</module>
     </modules>

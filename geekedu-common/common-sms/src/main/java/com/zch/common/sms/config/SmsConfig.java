@@ -1,6 +1,7 @@
 package com.zch.common.sms.config;
 
 import com.apistd.uni.Uni;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,11 +12,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SmsConfig {
 
-    public static final String ACCESS_KEY_ID = "PYqX4iABz9iCd92pvPr5DQ3etoHwZ5LRnqWGc3k6td4B9dfHW";
-    private static final String ACCESS_KEY_SECRET = "your access key secret";
+    @Value("${sms.accessKeyId}")
+    private String ACCESS_KEY_ID;
+    private String ACCESS_KEY_SECRET;
 
     @Bean
-    public static void uni() {
+    public void uni() {
         // 简易模式 只需要 ACCESS_KEY
         Uni.init(ACCESS_KEY_ID);
 //        Uni.init(ACCESS_KEY_ID, ACCESS_KEY_SECRET);

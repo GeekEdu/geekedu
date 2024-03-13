@@ -1,10 +1,10 @@
-package com.zch.message.adapter.uni;
+package com.zch.common.sms.adapter.uni;
 
 import com.apistd.uni.UniException;
 import com.apistd.uni.UniResponse;
 import com.apistd.uni.sms.UniMessage;
 import com.apistd.uni.sms.UniSMS;
-import com.zch.message.adapter.SmsAdapter;
+import com.zch.common.sms.adapter.SmsAdapter;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
