@@ -2,6 +2,7 @@ package com.zch.course.domain.po;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zch.common.mvc.entity.BaseEntity;
 import lombok.Data;
@@ -13,7 +14,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("course_chapter")
+@TableName("live_chapter")
 public class LiveChapter extends BaseEntity {
 
     @TableId(value = "id", type = IdType.AUTO)
@@ -35,6 +36,7 @@ public class LiveChapter extends BaseEntity {
 
     private Long updatedBy;
 
+    @TableLogic
     private Boolean isDelete;
 
 }

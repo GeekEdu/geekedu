@@ -1,6 +1,7 @@
 package com.zch.api.vo.course.live;
 
 import com.zch.api.vo.label.CategorySimpleVO;
+import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.common.mvc.entity.BaseVO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,6 +28,11 @@ public class LiveCourseVO extends BaseVO {
      * 封面
      */
     private String cover;
+
+    /**
+     * 直播播放封面
+     */
+    private String poster;
 
     /**
      * 简介
@@ -84,6 +90,11 @@ public class LiveCourseVO extends BaseVO {
     private Long teacherId;
 
     /**
+     * 课程状态
+     */
+    private Integer status;
+
+    /**
      * 课程状态 文案
      */
     private String statusText;
@@ -97,5 +108,10 @@ public class LiveCourseVO extends BaseVO {
      * 分类信息
      */
     private CategorySimpleVO category;
+
+    /**
+     * 教师信息
+     */
+    private UserSimpleVO teacher;
 
 }

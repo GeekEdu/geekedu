@@ -3,16 +3,22 @@ package com.zch.course.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.course.ChapterForm;
+import com.zch.api.dto.course.live.LiveCourseForm;
+import com.zch.api.feignClient.comments.CommentsFeignClient;
 import com.zch.api.feignClient.label.LabelFeignClient;
 import com.zch.api.feignClient.user.UserFeignClient;
-import com.zch.api.vo.course.live.LiveChapterVO;
-import com.zch.api.vo.course.live.LiveCourseFullVO;
-import com.zch.api.vo.course.live.LiveCourseVO;
+import com.zch.api.vo.ask.CommentsVO;
+import com.zch.api.vo.course.CourseCommentsVO;
+import com.zch.api.vo.course.live.*;
+import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.common.core.utils.BeanUtils;
 import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
+import com.zch.common.mvc.result.PageResult;
+import com.zch.common.mvc.result.Response;
 import com.zch.course.domain.po.LiveCourse;
 import com.zch.course.mapper.LiveCourseMapper;
 import com.zch.course.service.ILiveChapterService;
@@ -21,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,12 +46,14 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
 
     private final LabelFeignClient labelFeignClient;
 
+    private final CommentsFeignClient commentsFeignClient;
+
     @Override
     public LiveCourseFullVO getLiveCourseFullList(Integer pageNum, Integer pageSize, String sort, String order,
                                                   String keywords, Integer categoryId, Long teacherId, Integer status) {
         LiveCourseFullVO vo = new LiveCourseFullVO();
         // 查询课程分类列表
-        vo.setCategories(labelFeignClient.getCategorySimpleList("LIVE_COURSE").getData());
+        vo.setCategories(labelFeignClient.getCategoryList("LIVE_COURSE").getData());
         // 查询教师列表
         vo.setTeachers(userFeignClient.getTeacherList().getData());
         // 构建课程状态列表
@@ -80,9 +89,75 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
             LiveCourseVO vo1 = new LiveCourseVO();
             BeanUtils.copyProperties(item, vo1);
             vo1.setCategory(labelFeignClient.getCategoryById(item.getCategoryId(), "LIVE_COURSE").getData());
+            vo1.setTeacher(userFeignClient.getUserById(item.getTeacherId() + "").getData());
+            vo1.setStatus(item.getStatus().getCode());
+            vo1.setStatusText(item.getStatus().getValue());
             return vo1;
         }).collect(Collectors.toList()));
         vo.getCourses().setTotal(count);
+        return vo;
+    }
+
+    @Override
+    public Boolean updateLiveCourse(Integer courseId, LiveCourseForm form) {
+        if (ObjectUtils.isNull(form)) {
+            return false;
+        }
+        LiveCourse course = getById(courseId);
+        course.setCategoryId(form.getCategoryId());
+        course.setCover(form.getCover());
+        course.setTitle(form.getTitle());
+        course.setIsShow(form.getIsShow());
+        course.setPrice(new BigDecimal(form.getPrice()));
+        course.setIntro(form.getIntro());
+        course.setRenderDesc(form.getRenderDesc());
+        course.setVipCanView(form.getVipCanView());
+        course.setTeacherId(form.getTeacherId());
+        course.setGroundingTime(form.getGroundingTime());
+        return updateById(course);
+    }
+
+    @Override
+    public Boolean addLiveCourse(LiveCourseForm form) {
+        if (ObjectUtils.isNull(form)) {
+            return false;
+        }
+        LiveCourse course = new LiveCourse();
+        course.setCategoryId(form.getCategoryId());
+        course.setCover(form.getCover());
+        course.setTitle(form.getTitle());
+        course.setIsShow(form.getIsShow());
+        course.setPrice(new BigDecimal(form.getPrice()));
+        course.setIntro(form.getIntro());
+        course.setRenderDesc(form.getRenderDesc());
+        course.setVipCanView(form.getVipCanView());
+        course.setTeacherId(form.getTeacherId());
+        course.setGroundingTime(form.getGroundingTime());
+        return save(course);
+    }
+
+    @Override
+    public Boolean deleteLiveCourse(Integer courseId) {
+        return removeById(courseId);
+    }
+
+    @Override
+    public LiveCourseVO getLiveCourseDetail(Integer courseId) {
+        LiveCourse course = getById(courseId);
+        if (ObjectUtils.isNull(course)) {
+            return new LiveCourseVO();
+        }
+        LiveCourseVO vo = new LiveCourseVO();
+        BeanUtils.copyProperties(course, vo);
+        vo.setCategory(labelFeignClient.getCategoryById(course.getCategoryId(), "LIVE_COURSE").getData());
+        return vo;
+    }
+
+    @Override
+    public LiveCategoryVO getCategoryList() {
+        LiveCategoryVO vo = new LiveCategoryVO();
+        vo.setCategories(labelFeignClient.getCategoryList("LIVE_COURSE").getData());
+        vo.setTeachers(userFeignClient.getTeacherList().getData());
         return vo;
     }
 
@@ -92,39 +167,83 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
     }
 
     @Override
-    public Boolean deleteChapterById(Integer courseId, Integer id) {
-        return chapterService.deleteChapterById(courseId, id);
+    public Boolean deleteChapterById(Integer id) {
+        return chapterService.deleteChapterById(id);
     }
 
     @Override
-    public Boolean addChapter(Integer courseId, ChapterForm form) {
-        return chapterService.addChapter(courseId, form);
+    public Boolean addChapter(ChapterForm form) {
+        return chapterService.addChapter(form);
     }
 
     @Override
-    public Boolean updateChapter(Integer courseId, Integer id, ChapterForm form) {
-        return chapterService.updateChapter(courseId, id, form);
+    public Boolean updateChapter(Integer id, ChapterForm form) {
+        return chapterService.updateChapter(id, form);
     }
 
     @Override
-    public LiveChapterVO getChapterById(Integer courseId, Integer id) {
-        return chapterService.getChapterById(courseId, id);
+    public LiveChapterVO getChapterById(Integer id) {
+        return chapterService.getChapterById(id);
     }
 
+    @Override
+    public CourseCommentsVO getCommentsList(Integer pageNum, Integer pageSize, String cType, List<String> createdTime) {
+        CourseCommentsVO vo = new CourseCommentsVO();
+        PageResult<CommentsVO> response = commentsFeignClient.getCommentsPage(pageNum, pageSize, cType, createdTime);
+        if (ObjectUtils.isNull(response) || ObjectUtils.isNull(response.getData())) {
+            vo.setData(null);
+        }
+        List<CommentsVO> data = response.getData().getData();
+        if (ObjectUtils.isNull(data) || CollUtils.isEmpty(data)) {
+            vo.setUsers(new HashMap<>(0));
+        }
+        data.forEach(item -> {
+            UserSimpleVO user = userFeignClient.getUserById(item.getUserId() + "").getData();
+            item.setUser(user);
+            item.setLiveCourse(getCourseSimpleById(item.getRelationId()));
+        });
+        vo.setData(response.getData());
+        return vo;
+    }
+
+    @Override
+    public LiveCourseSimpleVO getCourseSimpleById(Integer id) {
+        if (ObjectUtils.isNull(id)) {
+            return new LiveCourseSimpleVO();
+        }
+        LiveCourse course = getById(id);
+        LiveCourseSimpleVO vo = new LiveCourseSimpleVO();
+        BeanUtils.copyProperties(course, vo);
+        return vo;
+    }
+
+    @Override
+    public Boolean deleteBatchCourseComments(CommentsBatchDelForm form) {
+        Response<Boolean> response = commentsFeignClient.deleteBatchComments(form);
+        if (ObjectUtils.isNull(response) || ObjectUtils.isNull(response.getData())) {
+            return false;
+        }
+        return response.getData();
+    }
+
+    /**
+     * 构建状态列表
+     * @return
+     */
     private List<Map<String, Object>> buildStatusList() {
         List<Map<String, Object>> res = new ArrayList<>(4);
         Map<String, Object> status = new HashMap<>(1);
         status.put("key", 0);
         status.put("name", "全部");
         Map<String, Object> status1 = new HashMap<>(1);
-        status.put("key", 1);
-        status.put("name", "未开课");
+        status1.put("key", 1);
+        status1.put("name", "未开课");
         Map<String, Object> status2 = new HashMap<>(1);
-        status.put("key", 2);
-        status.put("name", "已开课");
+        status2.put("key", 2);
+        status2.put("name", "已开课");
         Map<String, Object> status3 = new HashMap<>(1);
-        status.put("key", 3);
-        status.put("name", "已完结");
+        status3.put("key", 3);
+        status3.put("name", "已完结");
         res.add(status);
         res.add(status1);
         res.add(status2);

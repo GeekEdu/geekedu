@@ -24,14 +24,9 @@
 			<artifactId>geekedu-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>com.zch</groupId>
-			<artifactId>common-mq</artifactId>
-			<version>1.0</version>
-		</dependency>
 <!--		<dependency>-->
 <!--			<groupId>com.zch</groupId>-->
-<!--			<artifactId>geekedu-message</artifactId>-->
+<!--			<artifactId>common-mq</artifactId>-->
 <!--			<version>1.0</version>-->
 <!--		</dependency>-->
 		<dependency>

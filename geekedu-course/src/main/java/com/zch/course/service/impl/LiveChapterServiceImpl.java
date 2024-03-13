@@ -49,12 +49,11 @@ public class LiveChapterServiceImpl extends ServiceImpl<LiveChapterMapper, LiveC
     }
 
     @Override
-    public Boolean deleteChapterById(Integer courseId, Integer id) {
-        if (ObjectUtils.isNull(courseId) || ObjectUtils.isNull(id)) {
+    public Boolean deleteChapterById(Integer id) {
+        if (ObjectUtils.isNull(id)) {
             return false;
         }
         LiveChapter chapter = chapterMapper.selectOne(new LambdaQueryWrapper<LiveChapter>()
-                .eq(LiveChapter::getCourseId, courseId)
                 .eq(LiveChapter::getId, id));
         if (ObjectUtils.isNull(chapter)) {
             return false;
@@ -63,12 +62,11 @@ public class LiveChapterServiceImpl extends ServiceImpl<LiveChapterMapper, LiveC
     }
 
     @Override
-    public Boolean addChapter(Integer courseId, ChapterForm form) {
-        if (ObjectUtils.isNull(courseId) || ObjectUtils.isNull(form)) {
+    public Boolean addChapter(ChapterForm form) {
+        if (ObjectUtils.isNull(form)) {
             return false;
         }
         LiveChapter one = chapterMapper.selectOne(new LambdaQueryWrapper<LiveChapter>()
-                .eq(LiveChapter::getCourseId, courseId)
                 .eq(LiveChapter::getName, form.getName()));
         if (ObjectUtils.isNotNull(one)) {
             return false;
@@ -76,7 +74,7 @@ public class LiveChapterServiceImpl extends ServiceImpl<LiveChapterMapper, LiveC
         Long userId = UserContext.getLoginId();
         LiveChapter chapter = new LiveChapter();
         chapter.setName(form.getName());
-        chapter.setCourseId(courseId);
+        chapter.setCourseId(form.getCourseId());
         chapter.setSort(form.getSort());
         chapter.setCreatedBy(userId);
         chapter.setUpdatedBy(userId);
@@ -84,12 +82,11 @@ public class LiveChapterServiceImpl extends ServiceImpl<LiveChapterMapper, LiveC
     }
 
     @Override
-    public Boolean updateChapter(Integer courseId, Integer id, ChapterForm form) {
-        if (ObjectUtils.isNull(courseId) || ObjectUtils.isNull(id) || ObjectUtils.isNull(form)) {
+    public Boolean updateChapter(Integer id, ChapterForm form) {
+        if (ObjectUtils.isNull(id) || ObjectUtils.isNull(form)) {
             return false;
         }
         LiveChapter one = chapterMapper.selectOne(new LambdaQueryWrapper<LiveChapter>()
-                .eq(LiveChapter::getCourseId, courseId)
                 .eq(LiveChapter::getName, form.getName())
                 .eq(LiveChapter::getId, id));
         if (ObjectUtils.isNotNull(one)) {
@@ -98,7 +95,6 @@ public class LiveChapterServiceImpl extends ServiceImpl<LiveChapterMapper, LiveC
         Long userId = UserContext.getLoginId();
         LiveChapter chapter = new LiveChapter();
         chapter.setId(id);
-        chapter.setCourseId(courseId);
         chapter.setName(form.getName());
         chapter.setSort(form.getSort());
         chapter.setUpdatedBy(userId);
@@ -106,12 +102,11 @@ public class LiveChapterServiceImpl extends ServiceImpl<LiveChapterMapper, LiveC
     }
 
     @Override
-    public LiveChapterVO getChapterById(Integer courseId, Integer id) {
-        if (ObjectUtils.isNull(courseId) || ObjectUtils.isNull(id)) {
+    public LiveChapterVO getChapterById(Integer id) {
+        if (ObjectUtils.isNull(id)) {
             return new LiveChapterVO();
         }
         LiveChapter chapter = chapterMapper.selectOne(new LambdaQueryWrapper<LiveChapter>()
-                .eq(LiveChapter::getCourseId, courseId)
                 .eq(LiveChapter::getId, id));
         if (ObjectUtils.isNull(chapter)) {
             return new LiveChapterVO();

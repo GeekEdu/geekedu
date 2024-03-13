@@ -35,6 +35,11 @@ public class LiveCourse extends BaseEntity {
     private String cover;
 
     /**
+     * 直播播放封面
+     */
+    private String poster;
+
+    /**
      * 简介
      */
     private String intro;

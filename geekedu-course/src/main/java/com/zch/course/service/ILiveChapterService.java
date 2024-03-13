@@ -25,31 +25,28 @@ public interface ILiveChapterService extends IService<LiveChapter> {
      * @param id
      * @return
      */
-    Boolean deleteChapterById(Integer courseId, Integer id);
+    Boolean deleteChapterById(Integer id);
 
     /**
      * 新增章节
-     * @param courseId
      * @param form
      * @return
      */
-    Boolean addChapter(Integer courseId, ChapterForm form);
+    Boolean addChapter(ChapterForm form);
 
     /**
      * 更新章节
-     * @param courseId
      * @param id
      * @param form
      * @return
      */
-    Boolean updateChapter(Integer courseId, Integer id, ChapterForm form);
+    Boolean updateChapter(Integer id, ChapterForm form);
 
     /**
      * 获取章节明细
-     * @param courseId
      * @param id
      * @return
      */
-    LiveChapterVO getChapterById(Integer courseId, Integer id);
+    LiveChapterVO getChapterById(Integer id);
 
 }

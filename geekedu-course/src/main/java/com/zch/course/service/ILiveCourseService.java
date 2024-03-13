@@ -1,9 +1,11 @@
 package com.zch.course.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.course.ChapterForm;
-import com.zch.api.vo.course.live.LiveChapterVO;
-import com.zch.api.vo.course.live.LiveCourseFullVO;
+import com.zch.api.dto.course.live.LiveCourseForm;
+import com.zch.api.vo.course.CourseCommentsVO;
+import com.zch.api.vo.course.live.*;
 import com.zch.course.domain.po.LiveCourse;
 
 import java.util.List;
@@ -30,6 +32,41 @@ public interface ILiveCourseService extends IService<LiveCourse> {
                                            String keywords, Integer categoryId, Long teacherId, Integer status);
 
     /**
+     * 更新直播课
+     * @param courseId
+     * @param form
+     * @return
+     */
+    Boolean updateLiveCourse(Integer courseId, LiveCourseForm form);
+
+    /**
+     * 新增直播课
+     * @param form
+     * @return
+     */
+    Boolean addLiveCourse(LiveCourseForm form);
+
+    /**
+     * 删除直播课
+     * @param courseId
+     * @return
+     */
+    Boolean deleteLiveCourse(Integer courseId);
+
+    /**
+     * 获取直播课明细
+     * @param courseId
+     * @return
+     */
+    LiveCourseVO getLiveCourseDetail(Integer courseId);
+
+    /**
+     * 获取分类列表
+     * @return
+     */
+    LiveCategoryVO getCategoryList();
+
+    /**
      * 获取章节列表
      * @param courseId
      * @return
@@ -41,31 +78,52 @@ public interface ILiveCourseService extends IService<LiveCourse> {
      * @param id
      * @return
      */
-    Boolean deleteChapterById(Integer courseId, Integer id);
+    Boolean deleteChapterById(Integer id);
 
     /**
      * 新增章节
-     * @param courseId
      * @param form
      * @return
      */
-    Boolean addChapter(Integer courseId, ChapterForm form);
+    Boolean addChapter(ChapterForm form);
 
     /**
      * 更新章节
-     * @param courseId
      * @param id
      * @param form
      * @return
      */
-    Boolean updateChapter(Integer courseId, Integer id, ChapterForm form);
+    Boolean updateChapter(Integer id, ChapterForm form);
 
     /**
      * 获取章节明细
-     * @param courseId
      * @param id
      * @return
      */
-    LiveChapterVO getChapterById(Integer courseId, Integer id);
+    LiveChapterVO getChapterById(Integer id);
+
+    /**
+     * 条件分页查找评论列表
+     * @param pageNum
+     * @param pageSize
+     * @param cType
+     * @param createdTime
+     * @return
+     */
+    CourseCommentsVO getCommentsList(Integer pageNum, Integer pageSize, String cType, List<String> createdTime);
+
+    /**
+     * 根据id 返回简单课程信息
+     * @param id
+     * @return
+     */
+    LiveCourseSimpleVO getCourseSimpleById(Integer id);
+
+    /**
+     * 批量删除课程评论
+     * @param form
+     * @return
+     */
+    Boolean deleteBatchCourseComments(CommentsBatchDelForm form);
 
 }

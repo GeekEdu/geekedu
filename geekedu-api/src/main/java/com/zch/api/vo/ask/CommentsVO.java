@@ -1,6 +1,7 @@
 package com.zch.api.vo.ask;
 
 import com.zch.api.vo.course.CourseSimpleVO;
+import com.zch.api.vo.course.live.LiveCourseSimpleVO;
 import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.common.mvc.entity.BaseVO;
 import lombok.Data;
@@ -33,5 +34,7 @@ public class CommentsVO extends BaseVO {
     private UserSimpleVO user;
 
     private CourseSimpleVO course;
+
+    private LiveCourseSimpleVO liveCourse;
 
 }

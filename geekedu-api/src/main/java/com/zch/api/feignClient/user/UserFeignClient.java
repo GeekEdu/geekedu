@@ -67,7 +67,7 @@ public interface UserFeignClient {
      * 后台 获取教师列表
      * @return
      */
-    @GetMapping("/teacher/list")
+    @GetMapping("/api/member/teacher/list")
     public Response<List<UserSimpleVO>> getTeacherList();
 
 }
