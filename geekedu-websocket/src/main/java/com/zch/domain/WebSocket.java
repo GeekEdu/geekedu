@@ -7,6 +7,7 @@ import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
+import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -17,7 +18,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 //注册成组件
 @Component
 //定义websocket服务器端，它的功能主要是将目前的类定义成一个websocket服务器端。注解的值将被用于监听用户连接的终端访问URL地址
-@ServerEndpoint("/websocket")
+@ServerEndpoint("/live/course/{courseId}/video/{videoId}/token/{token}")
 //如果不想每次都写private  final Logger logger = LoggerFactory.getLogger(当前类名.class); 可以用注解@Slf4j;可以直接调用log.info
 @Slf4j
 public class WebSocket {
@@ -30,10 +31,14 @@ public class WebSocket {
 
     //前端请求时一个websocket时
     @OnOpen
-    public void onOpen(Session session) {
+    public void onOpen(@PathParam("courseId") Integer courseId,
+                       @PathParam("videoId") Integer videoId,
+                       @PathParam("token") String token,
+                       Session session) {
         this.session = session;
         webSocketSet.add(this);
         log.info("【websocket消息】有新的连接, 总数:{}", webSocketSet.size());
+        log.info("[courseId, videoId, token]:{}-{}-{}", courseId, videoId, token);
     }
 
     //前端关闭时一个websocket时
@@ -47,7 +52,7 @@ public class WebSocket {
     @OnMessage
     public void onMessage(String message) {
         log.info("【websocket消息】收到客户端发来的消息:{}", message);
-        sendMessage(message);
+        // sendMessage(message);
     }
 
     //新增一个方法用于主动向客户端发送消息

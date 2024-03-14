@@ -200,4 +200,6 @@ public interface ILiveCourseService extends IService<LiveCourse> {
      */
     Boolean addCourseComment(Integer id, AddCommentForm form);
 
+    LiveVO getPlayInfo(Integer id);
+
 }

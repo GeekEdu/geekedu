@@ -21,4 +21,18 @@ public interface MediaFeignClient {
     @GetMapping("/api/media/video/{id}/playUrl")
     public Response<String> getVideoPlayUrl(@PathVariable("id") Integer id);
 
+    /**
+     * 获取推流地址
+     * @return
+     */
+    @GetMapping("/api/live/push/url")
+    public Response<String> getPushUrl();
+
+    /**
+     * 获取播放地址
+     * @return
+     */
+    @GetMapping("/api/live/play/url")
+    public Response<String> getPlayUrl();
+
 }

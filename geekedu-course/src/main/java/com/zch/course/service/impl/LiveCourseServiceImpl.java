@@ -10,6 +10,7 @@ import com.zch.api.dto.course.live.LiveCourseForm;
 import com.zch.api.dto.course.live.LiveVideoForm;
 import com.zch.api.feignClient.comments.CommentsFeignClient;
 import com.zch.api.feignClient.label.LabelFeignClient;
+import com.zch.api.feignClient.resources.MediaFeignClient;
 import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.ask.CommentsVO;
@@ -53,6 +54,8 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
     private final LabelFeignClient labelFeignClient;
 
     private final CommentsFeignClient commentsFeignClient;
+
+    private final MediaFeignClient mediaFeignClient;
 
     private final LiveCourseMapper courseMapper;
 
@@ -366,6 +369,23 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
         return commentsFeignClient.addComment(id, "LIVE_COURSE", form).getData();
     }
 
+    @Override
+    public LiveVO getPlayInfo(Integer id) {
+        LiveVO vo = new LiveVO();
+        LiveVideoVO video = videoService.getVideoDetail(id);
+        LiveCourseVO course = getLiveCourseDetail(video.getCourseId());
+        vo.setCourse(course);
+        vo.setVideo(video);
+        vo.setTest(mediaFeignClient.getPushUrl().getData());
+        vo.setWeb_rtc_play_url(mediaFeignClient.getPlayUrl().getData());
+        LiveChatVO chat = new LiveChatVO();
+        chat.setUser(userFeignClient.getUserById("1745747394693820416").getData());
+        chat.setConnect_url("ws://127.0.0.1/live/course/:courseId/video/:videoId/token/:token");
+        chat.setChannel("geekedu-live-chat");
+        vo.setChat(chat);
+        return vo;
+    }
+
     /**
      * 构建状态列表
      * @return
@@ -390,4 +410,5 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
         res.add(status3);
         return res;
     }
+
 }
