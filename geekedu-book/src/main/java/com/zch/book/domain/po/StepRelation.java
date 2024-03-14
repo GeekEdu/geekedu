@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.zch.book.enums.LearnPathCourseEnums;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -32,7 +33,7 @@ public class StepRelation {
     /**
      * 关联类型
      */
-    private Byte relationType; // tinyint usually maps to a Java byte, but check your DB specifics
+    private LearnPathCourseEnums relationType; // tinyint usually maps to a Java byte, but check your DB specifics
 
     /**
      * 路径id

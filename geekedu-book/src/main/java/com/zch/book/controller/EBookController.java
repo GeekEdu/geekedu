@@ -125,6 +125,16 @@ public class EBookController {
     }
 
     /**
+     * 获取电子书简单明细
+     * @param id
+     * @return
+     */
+    @GetMapping("/getEBookSimple/{id}")
+    public Response<EBookSimpleVO> getEBookSimpleById(@PathVariable("id") Integer id) {
+        return Response.success(eBookService.getEBookSimple(id));
+    }
+
+    /**
      * 根据id获取文章明细
      * @param id
      * @return

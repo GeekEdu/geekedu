@@ -29,4 +29,13 @@ public enum LearnPathCourseEnums {
         this.value = value;
     }
 
+    public static LearnPathCourseEnums getByCode(Integer code) {
+        for (LearnPathCourseEnums e : values()) {
+            if (e.code.equals(code)) {
+                return e;
+            }
+        }
+        return null; // or throw an exception if 'code' is not found
+    }
+
 }

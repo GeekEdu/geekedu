@@ -18,4 +18,6 @@ public class EBookSimpleVO extends BaseVO {
 
     private String coverLink;
 
+    private String price;
+
 }

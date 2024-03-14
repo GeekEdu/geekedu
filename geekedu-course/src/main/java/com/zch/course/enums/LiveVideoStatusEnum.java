@@ -10,8 +10,8 @@ import lombok.Getter;
 @Getter
 public enum LiveVideoStatusEnum {
 
-    NOT_STARTED(1, "未开始"),
-
+    NOT_STARTED(0, "未开始"),
+    LIVING(1, "直播中"),
     ALREADY_ENDED(2, "已结束"),
     ;
 

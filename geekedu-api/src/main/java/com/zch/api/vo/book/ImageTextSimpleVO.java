@@ -18,4 +18,6 @@ public class ImageTextSimpleVO extends BaseVO {
 
     private String coverLink;
 
+    private String price;
+
 }
