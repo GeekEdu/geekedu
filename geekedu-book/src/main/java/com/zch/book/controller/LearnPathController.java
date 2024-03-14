@@ -2,9 +2,7 @@ package com.zch.book.controller;
 
 import com.zch.api.dto.path.LearnPathForm;
 import com.zch.api.dto.path.StepForm;
-import com.zch.api.vo.path.LearnPathVO;
-import com.zch.api.vo.path.StepEndVO;
-import com.zch.api.vo.path.StepVO;
+import com.zch.api.vo.path.*;
 import com.zch.book.service.ILearnPathService;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
@@ -130,6 +128,32 @@ public class LearnPathController {
     @PostMapping("/step/add")
     public Response<Boolean> addStep(@RequestBody StepForm form) {
         return Response.success(learnPathService.addStep(form));
+    }
+
+    //=======================================================================
+
+    /**
+     * 前台 返回学习路径列表
+     * @param pageNum
+     * @param pageSize
+     * @param categoryId
+     * @return
+     */
+    @GetMapping("/v2/list")
+    public Response<LearnPathFullVO> getV2PathList(@RequestParam("pageNum") Integer pageNum,
+                                                   @RequestParam("pageSize") Integer pageSize,
+                                                   @RequestParam("categoryId") Integer categoryId) {
+        return Response.success(learnPathService.getV2PathList(pageNum, pageSize, categoryId));
+    }
+
+    /**
+     * 获取学习路径详情
+     * @param id
+     * @return
+     */
+    @GetMapping("/v2/{id}/detail")
+    public Response<LearnPathDetailVO> getV2PathDetail(@PathVariable("id") Integer id) {
+        return Response.success(learnPathService.getV2PathDetail(id));
     }
 
 }

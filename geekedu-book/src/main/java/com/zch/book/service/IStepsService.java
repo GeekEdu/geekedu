@@ -49,4 +49,11 @@ public interface IStepsService extends IService<Steps> {
      */
     Boolean addStep(StepForm form);
 
+    /**
+     * 获取步骤列表
+     * @param pathId
+     * @return
+     */
+    List<StepForm> getStepFullList(Integer pathId);
+
 }

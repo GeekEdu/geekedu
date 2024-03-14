@@ -82,25 +82,37 @@ public class StepsServiceImpl extends ServiceImpl<StepsMapper, Steps> implements
             vo.setCourses(new ArrayList<>(0));
             return vo;
         }
+        List<RelationCourseForm> list = getComplexList(relations);
+        vo.setCourses(list);
+        return vo;
+    }
+
+    /**
+     * 查询复杂列表
+     * @param relations
+     * @return
+     */
+    private List<RelationCourseForm> getComplexList(List<StepRelation> relations) {
+
         List<RelationCourseForm> list = new ArrayList<>();
-        RelationCourseForm form = new RelationCourseForm();
         // 遍历关联课程，将对应的课程查找出来
         for (StepRelation item : relations) {
+            RelationCourseForm form = new RelationCourseForm();
             if (item.getRelationType().equals(REPLAY_COURSE)) {
                 CourseSimpleVO course = courseFeignClient.getCourseSimpleById(item.getRelationId()).getData();
                 form.setCover(course.getCoverLink());
                 form.setName(course.getTitle());
                 form.setPrice(String.valueOf(course.getPrice()));
                 form.setRelationId(course.getId());
-                form.setType("录播课");
+                form.setTypeText("录播课");
                 list.add(form);
-            } else if (item.getRelationType().equals(LIVE_COURSE)){
+            } else if (item.getRelationType().equals(LIVE_COURSE)) {
                 LiveCourseSimpleVO course = courseFeignClient.getLiveCourseSimpleById(item.getRelationId()).getData();
                 form.setCover(course.getCover());
                 form.setName(course.getTitle());
                 form.setPrice(String.valueOf(course.getPrice()));
                 form.setRelationId(course.getId());
-                form.setType("直播课");
+                form.setTypeText("直播课");
                 list.add(form);
             } else if (item.getRelationType().equals(IMAGE_TEXT)) {
                 ImageTextSimpleVO course = bookFeignClient.getSimpleImageText(item.getRelationId()).getData();
@@ -108,7 +120,7 @@ public class StepsServiceImpl extends ServiceImpl<StepsMapper, Steps> implements
                 form.setName(course.getTitle());
                 form.setPrice(String.valueOf(course.getPrice()));
                 form.setRelationId(course.getId());
-                form.setType("图文");
+                form.setTypeText("图文");
                 list.add(form);
             } else if (item.getRelationType().equals(E_BOOK)) {
                 EBookSimpleVO course = bookFeignClient.getEBookSimpleById(item.getRelationId()).getData();
@@ -116,12 +128,11 @@ public class StepsServiceImpl extends ServiceImpl<StepsMapper, Steps> implements
                 form.setName(course.getName());
                 form.setPrice(String.valueOf(course.getPrice()));
                 form.setRelationId(course.getId());
-                form.setType("电子书");
+                form.setTypeText("电子书");
                 list.add(form);
             }
         }
-        vo.setCourses(list);
-        return vo;
+        return list;
     }
 
     @Override
@@ -155,5 +166,26 @@ public class StepsServiceImpl extends ServiceImpl<StepsMapper, Steps> implements
         // 新增关联库
         relationService.addRelation(one.getId(), form.getPathId(), form.getCourses());
         return true;
+    }
+
+    @Override
+    public List<StepForm> getStepFullList(Integer pathId) {
+        List<StepVO> vos = getStepList(pathId);
+        if (ObjectUtils.isNull(vos) || CollUtils.isEmpty(vos)) {
+            return new ArrayList<>(0);
+        }
+        return vos.stream().map(item -> {
+            StepForm form = new StepForm();
+            BeanUtils.copyProperties(item, form);
+            // 查询步骤关联的课程
+            List<StepRelation> relations = relationService.list(new LambdaQueryWrapper<StepRelation>()
+                    .eq(StepRelation::getPathId, item.getPathId())
+                    .eq(StepRelation::getStepId, item.getId()));
+            if (ObjectUtils.isNotNull(relations) || CollUtils.isNotEmpty(relations)) {
+                List<RelationCourseForm> list = getComplexList(relations);
+                form.setCourses(list);
+            }
+            return form;
+        }).collect(Collectors.toList());
     }
 }

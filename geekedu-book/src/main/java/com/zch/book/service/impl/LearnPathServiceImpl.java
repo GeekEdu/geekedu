@@ -6,9 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.path.LearnPathForm;
 import com.zch.api.dto.path.StepForm;
 import com.zch.api.feignClient.label.LabelFeignClient;
-import com.zch.api.vo.path.LearnPathVO;
-import com.zch.api.vo.path.StepEndVO;
-import com.zch.api.vo.path.StepVO;
+import com.zch.api.vo.path.*;
 import com.zch.book.domain.po.LearnPath;
 import com.zch.book.mapper.LearnPathMapper;
 import com.zch.book.service.ILearnPathService;
@@ -22,8 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -143,5 +140,44 @@ public class LearnPathServiceImpl extends ServiceImpl<LearnPathMapper, LearnPath
     @Override
     public Boolean addStep(StepForm form) {
         return stepsService.addStep(form);
+    }
+
+    @Override
+    public LearnPathFullVO getV2PathList(Integer pageNum, Integer pageSize, Integer categoryId) {
+        LambdaQueryWrapper<LearnPath> wrapper = new LambdaQueryWrapper<>();
+        if (! Objects.equals(categoryId, 0)) {
+            wrapper = new LambdaQueryWrapper<LearnPath>()
+                    .eq(LearnPath::getCategoryId, categoryId);
+        }
+        LearnPathFullVO vo = new LearnPathFullVO();
+        Page<LearnPath> page = page(new Page<>(pageNum, pageSize), wrapper);
+        if (ObjectUtils.isNull(page) || ObjectUtils.isNull(page.getRecords()) || CollUtils.isEmpty(page.getRecords())) {
+            vo.getData().setData(new ArrayList<>(0));
+            vo.getData().setTotal(0);
+            return vo;
+        }
+        vo.getData().setData(page.getRecords().stream().map(item -> {
+            LearnPathVO vo1 = new LearnPathVO();
+            BeanUtils.copyProperties(item, vo1);
+            vo1.setCategory(labelFeignClient.getCategoryById(item.getCategoryId(), "LEARN_PATH").getData());
+            return vo1;
+        }).collect(Collectors.toList()));
+        vo.getData().setTotal(page.getTotal());
+        // 查询步骤
+        Map<Integer, List<StepForm>> steps = new HashMap<>(0);
+        page.getRecords().forEach(item -> {
+            steps.put(item.getId(), stepsService.getStepFullList(item.getId()));
+        });
+        vo.setSteps(steps);
+        return vo;
+    }
+
+    @Override
+    public LearnPathDetailVO getV2PathDetail(Integer id) {
+        LearnPathDetailVO vo = new LearnPathDetailVO();
+        LearnPathVO data = getPathDetail(id);
+        vo.setData(data);
+        vo.setSteps(stepsService.getStepFullList(data.getId()));
+        return vo;
     }
 }

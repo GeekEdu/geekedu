@@ -23,4 +23,6 @@ public class RelationCourseForm implements Serializable {
 
     private String price;
 
+    private String typeText;
+
 }

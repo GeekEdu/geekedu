@@ -4,9 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.path.LearnPathForm;
 import com.zch.api.dto.path.StepForm;
-import com.zch.api.vo.path.LearnPathVO;
-import com.zch.api.vo.path.StepEndVO;
-import com.zch.api.vo.path.StepVO;
+import com.zch.api.vo.path.*;
 import com.zch.book.domain.po.LearnPath;
 
 import java.util.List;
@@ -90,5 +88,22 @@ public interface ILearnPathService extends IService<LearnPath> {
      * @return
      */
     Boolean addStep(StepForm form);
+
+    //=================================================================
+    /**
+     * 分页查询路径列表
+     * @param pageNum
+     * @param pageSize
+     * @param categoryId
+     * @return
+     */
+    LearnPathFullVO getV2PathList(Integer pageNum, Integer pageSize, Integer categoryId);
+
+    /**
+     * 获取路径详情
+     * @param id
+     * @return
+     */
+    LearnPathDetailVO getV2PathDetail(Integer id);
 
 }
