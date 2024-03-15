@@ -1,7 +1,9 @@
 package com.zch.course.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zch.api.vo.course.live.LiveDurationVO;
 import com.zch.api.vo.course.live.LiveVO;
+import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import com.zch.course.service.ILiveCourseService;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +44,14 @@ public class LiveController {
                                          @PathVariable("videoId") Integer videoId,
                                          @RequestBody LiveDurationVO duration) {
         return Response.success();
+    }
+
+    @GetMapping("/course/{courseId}/video/{videoId}/chat/msg")
+    public PageResult getChatMsg(@PathVariable("courseId") Integer courseId,
+                                 @PathVariable("videoId") Integer videoId,
+                                 @RequestParam("pageNum") Integer pageNum,
+                                 @RequestParam("pageSize") Integer pageSize) {
+        return PageResult.success(new Page<>());
     }
 
 }

@@ -380,7 +380,7 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
         vo.setWeb_rtc_play_url(mediaFeignClient.getPlayUrl().getData());
         LiveChatVO chat = new LiveChatVO();
         chat.setUser(userFeignClient.getUserById("1745747394693820416").getData());
-        chat.setConnect_url("ws://127.0.0.1/live/course/:courseId/video/:videoId/token/:token");
+        chat.setConnect_url("ws://127.0.0.1:8091/live/course/:courseId/video/:videoId/token/:token");
         chat.setChannel("geekedu-live-chat");
         vo.setChat(chat);
         return vo;
