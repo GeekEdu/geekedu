@@ -41,17 +41,17 @@ public class Order extends BaseEntity {
     /**
      * 商品id
      */
-    private Integer productId;
+    private Integer goodsId;
 
     /**
      * 商品类型
      */
-    private ProductTypeEnum productType;
+    private ProductTypeEnum goodsType;
 
     /**
      * 商品价格
      */
-    private BigDecimal productPrice;
+    private BigDecimal goodsPrice;
 
     /**
      * 最终支付金额
