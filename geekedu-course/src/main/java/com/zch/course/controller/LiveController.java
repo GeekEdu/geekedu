@@ -20,13 +20,6 @@ public class LiveController {
 
     private final ILiveCourseService liveCourseService;
 
-//    @RequestMapping("/index")
-//    public ModelAndView getLiveIndex() {
-//        ModelAndView mv = new ModelAndView();
-//        mv.setViewName("index");
-//        return mv;
-//    }
-
     @GetMapping("/v2/{id}/play")
     public Response<LiveVO> getPlayInfo(@PathVariable("id") Integer id) {
         return Response.success(liveCourseService.getPlayInfo(id));
@@ -36,13 +29,6 @@ public class LiveController {
     public Response<Boolean> liveWatchRecord(@PathVariable("courseId") Integer courseId,
                                              @PathVariable("videoId") Integer videoId,
                                              @RequestBody LiveDurationVO duration) {
-        return Response.success();
-    }
-
-    @PostMapping("/course/{courseId}/video/{videoId}/chat/send")
-    public Response<Boolean> chatSendMsg(@PathVariable("courseId") Integer courseId,
-                                         @PathVariable("videoId") Integer videoId,
-                                         @RequestBody LiveDurationVO duration) {
         return Response.success();
     }
 

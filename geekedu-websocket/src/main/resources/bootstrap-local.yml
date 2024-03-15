@@ -1,0 +1,12 @@
+spring:
+  cloud:
+    nacos:
+      server-addr: 127.0.0.1:8848 # nacos注册中心
+      discovery:
+        namespace: 0b9a59a8-3e92-4637-81ec-4f43304c767b
+        group: DEFAULT_GROUP
+        ip: 127.0.0.1
+logging:
+  level:
+    com.zch: debug
+
