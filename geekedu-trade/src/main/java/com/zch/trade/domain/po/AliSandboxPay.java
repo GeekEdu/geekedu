@@ -17,4 +17,6 @@ public class AliSandboxPay {
 
     private String alipayTraceNo;
 
+    private String returnUrl;
+
 }

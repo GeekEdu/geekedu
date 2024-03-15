@@ -69,6 +69,7 @@ public class AliSandboxPayAdapter implements PayAdapter {
                 aliPayConfig.getAppPrivateKey(), FORMAT, CHARSET, aliPayConfig.getAlipayPublicKey(), SIGN_TYPE);
         AlipayTradePrecreateRequest request = new AlipayTradePrecreateRequest();
         request.setNotifyUrl(aliPayConfig.getNotifyUrl());
+        request.setReturnUrl(alipay.getReturnUrl());
         request.setBizContent("{\"out_trade_no\":\"" + alipay.getTraceNo() + "\","
                 + "\"total_amount\":\"" + alipay.getTotalAmount() + "\","
                 + "\"subject\":\"" + alipay.getSubject() + "\"}");

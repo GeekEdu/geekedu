@@ -11,4 +11,13 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class OrderVO extends BaseVO {
+
+    private String orderId = "202403151330123456";
+
+    private String statusText = "未支付";
+
+    private String qrCode;
+
+    private Integer status;
+
 }

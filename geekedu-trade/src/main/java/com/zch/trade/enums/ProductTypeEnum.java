@@ -15,6 +15,7 @@ public enum ProductTypeEnum {
     IMAGE_TEXT(3, "图文"),
     LEARN_PATH(4, "学习路径"),
     E_BOOK(5, "电子书"),
+    VIP(6, "会员")
     ;
 
     @EnumValue

@@ -62,7 +62,7 @@ public class PcConfigServiceImpl extends ServiceImpl<PcConfigMapper, PcConfig> i
                 .webName("GeekEdu官方网站")
                 .name("GeekEdu官方网站")
                 .logo(logo)
-                .url("#")
+                .url("https://6968y1r161.yicp.fun")
                 .pcUrl("#")
                 .wxUrl("#")
                 .icp("四川公安备案")

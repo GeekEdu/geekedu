@@ -8,7 +8,11 @@ import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.alipay.api.request.AlipayTradeRefundRequest;
 import com.alipay.api.response.AlipayTradeRefundResponse;
+import com.zch.api.dto.trade.CreateOrderForm;
+import com.zch.api.vo.order.OrderVO;
+import com.zch.common.mvc.result.Response;
 import com.zch.common.pay.config.AliSandboxConfig;
+import com.zch.trade.adapter.PayAdapter;
 import com.zch.trade.domain.po.AliSandboxPay;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -35,20 +39,30 @@ public class AliSandboxTestController {
     //签名方式
     private static final String SIGN_TYPE = "RSA2";
 
+    private final PayAdapter payAdapter;
+
     @Resource
     private AliSandboxConfig aliPayConfig;
 
     @GetMapping("/pay")
-    public void pay(HttpServletResponse httpResponse) throws Exception {
+    public void pay(@RequestParam("order_id") String orderId,
+                    @RequestParam("payment_scene") String paymentScene,
+                    @RequestParam("scene") String scene,
+                    @RequestParam("payment") String payment,
+                    @RequestParam("token") String token,
+                    @RequestParam("redirect") String redirect,
+                    @RequestParam("cancel_redirect") String cancelRedirect,
+                    HttpServletResponse httpResponse) throws Exception {
         AlipayClient alipayClient = new DefaultAlipayClient(GATEWAY_URL, aliPayConfig.getAppId(),
                 aliPayConfig.getAppPrivateKey(), FORMAT, CHARSET, aliPayConfig.getAlipayPublicKey(), SIGN_TYPE);
         AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
         request.setNotifyUrl(aliPayConfig.getNotifyUrl());
+        request.setReturnUrl(redirect);
         AliSandboxPay aliPay = new AliSandboxPay();
         aliPay.setTotalAmount(0.01);
         aliPay.setSubject("测试支付宝支付");
         aliPay.setTraceNo("654321999");
-        request.setBizContent("{\"out_trade_no\":\"" + aliPay.getTraceNo() + "\","
+        request.setBizContent("{\"out_trade_no\":\"" + orderId + "\","
                 + "\"total_amount\":\"" + aliPay.getTotalAmount() + "\","
                 + "\"subject\":\"" + aliPay.getSubject() + "\","
                 + "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
@@ -64,6 +78,25 @@ public class AliSandboxTestController {
         httpResponse.getWriter().write(form);
         httpResponse.getWriter().flush();
         httpResponse.getWriter().close();
+    }
+
+    @PostMapping("/qrCode/pay")
+    public Response<OrderVO> qrCodePay(@RequestBody CreateOrderForm form) {
+        AliSandboxPay aliPay = new AliSandboxPay();
+        aliPay.setTraceNo(form.getOrderId());
+        aliPay.setTotalAmount(0.1);
+        aliPay.setSubject("测试二维码支付");
+        aliPay.setReturnUrl("http://localhost:7001/success");
+        OrderVO vo = new OrderVO();
+        vo.setQrCode(payAdapter.qrCodePayment(aliPay));
+        return Response.success(vo);
+    }
+
+    @GetMapping("/pay/status")
+    public Response<OrderVO> getStatus(@RequestParam("orderId") String orderId) {
+        OrderVO vo = new OrderVO();
+        vo.setStatus(2);
+        return Response.success(vo);
     }
 
     @PostMapping("/notify")  // 注意这里必须是POST接口
