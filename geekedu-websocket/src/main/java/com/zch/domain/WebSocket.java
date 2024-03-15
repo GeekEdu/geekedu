@@ -1,6 +1,13 @@
 package com.zch.domain;
 
+import com.zch.api.feignClient.user.UserFeignClient;
+import com.zch.api.vo.user.UserSimpleVO;
+import com.zch.common.core.utils.CollUtils;
+import com.zch.common.core.utils.ObjectUtils;
+import com.zch.common.core.utils.StringUtils;
+import com.zch.common.mvc.result.Response;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.OnClose;
@@ -9,6 +16,11 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
@@ -19,15 +31,25 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @Component
 //定义websocket服务器端，它的功能主要是将目前的类定义成一个websocket服务器端。注解的值将被用于监听用户连接的终端访问URL地址
 @ServerEndpoint("/live/course/{courseId}/video/{videoId}/token/{token}")
-//如果不想每次都写private  final Logger logger = LoggerFactory.getLogger(当前类名.class); 可以用注解@Slf4j;可以直接调用log.info
 @Slf4j
 public class WebSocket {
 
     //实例一个session，这个session是websocket的session
     private Session session;
 
-    //存放websocket的集合（本次demo不会用到，聊天室的demo会用到）
+    /**
+     * 注入 ApplicationContext 为了拿到Bean
+     */
+    private static ApplicationContext context;
+
+    public static void setContext(ApplicationContext context) {
+        WebSocket.context = context;
+    }
+
+    //存放websocket的集合
     private static CopyOnWriteArraySet<WebSocket> webSocketSet = new CopyOnWriteArraySet<>();
+
+    private static final ConcurrentHashMap<String, Session> SESSION_MAP = new ConcurrentHashMap<>();
 
     //前端请求时一个websocket时
     @OnOpen
@@ -36,14 +58,31 @@ public class WebSocket {
                        @PathParam("token") String token,
                        Session session) {
         this.session = session;
-        webSocketSet.add(this);
+        // 校验当前token，看是否能拿到用户id
+        if (StringUtils.isNotBlank(token)) {
+            // Long userId = (Long) StpUtil.getLoginIdByToken(token);
+            Long userId = 1745747394693820416L;
+            // 看是否能查找到用户
+            // 先拿到 Bean
+            UserFeignClient userFeignClient = (UserFeignClient) context.getBean("userFeignClient");
+            Response<UserSimpleVO> user = userFeignClient.getUserById(userId + "");
+            // 将传入的参数做一个简单的加密，做为键
+            String key = generateUniqueKey(courseId, videoId, token);
+            if (ObjectUtils.isNotNull(user) && ObjectUtils.isNotNull(user.getData())) {
+                SESSION_MAP.put(key, session);
+            }
+            // 如果SESSION_MAP中有值且没有当前用户，则将当前用户放入Set中
+            if (CollUtils.isNotEmpty(SESSION_MAP) && SESSION_MAP.containsKey(key)) {
+                webSocketSet.add(this);
+            }
+        }
         log.info("【websocket消息】有新的连接, 总数:{}", webSocketSet.size());
-        log.info("[courseId, videoId, token]:{}-{}-{}", courseId, videoId, token);
     }
 
     //前端关闭时一个websocket时
     @OnClose
     public void onClose() {
+        SESSION_MAP.clear();
         webSocketSet.remove(this);
         log.info("【websocket消息】连接断开, 总数:{}", webSocketSet.size());
     }
@@ -66,4 +105,20 @@ public class WebSocket {
             }
         }
     }
+
+    public static String generateUniqueKey(Integer courseId, Integer videoId, String token) {
+        // 拼接参数并计算哈希
+        String combined = courseId + "-" + videoId + "-" + token;
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = md.digest(combined.getBytes(StandardCharsets.UTF_8));
+
+            // 使用Base64对哈希值进行URL安全且无填充的编码
+            return Base64.getUrlEncoder().withoutPadding().encodeToString(hashBytes).substring(0, 10);
+
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("无法初始化SHA-256哈希函数", e);
+        }
+    }
+
 }
