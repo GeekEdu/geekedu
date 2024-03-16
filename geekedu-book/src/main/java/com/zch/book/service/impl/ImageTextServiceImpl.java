@@ -329,6 +329,9 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
             vo1.setThumbCount(thumbCount.getData());
         }
         vo.setImageText(vo1);
+        // 更新阅读数
+        one.setReadCount(one.getReadCount() + 1);
+        updateById(one);
         return vo;
     }
 

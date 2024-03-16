@@ -310,6 +310,9 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
             vo.setAnswer(new ArrayList<>(0));
         }
         vo.setAnswer(res);
+        // 增加浏览次数
+        question.setViewCount(question.getViewCount() + 1);
+        updateById(question);
         return vo;
     }
 
