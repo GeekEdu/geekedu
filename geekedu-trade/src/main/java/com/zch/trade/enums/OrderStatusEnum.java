@@ -10,12 +10,10 @@ import lombok.Getter;
 @Getter
 public enum OrderStatusEnum {
 
-    HAVE_PAID(1, "已支付"),
-    NON_PAYMENT(2, "未支付"),
-    DURING_PAYMENT(3, "支付中"),
-    CANCELLED(4, "已取消"),
-    BEING_REFUNDED(5, "退款中"),
-    REFUNDED(6, "已退款"),
+    ORDERED_NO_PAY(1, "已下单未支付"),
+    ORDERED_AND_CANCELLED(2, "已下单已取消"),
+    ORDERED_AND_PAID(3, "已下单已支付"),
+    ORDERED_AND_REFUNDED(4, "已下单已退款"),
     ;
 
     @EnumValue

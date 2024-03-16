@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.zch.common.mvc.entity.BaseEntity;
 import com.zch.trade.enums.PayTypeEnum;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,9 +17,10 @@ import java.time.LocalDateTime;
  * @author Poison02
  * @date 2024/3/9
  */
+@EqualsAndHashCode(callSuper = true)
 @TableName("pay_info")
 @Data
-public class PayInfo {
+public class PayInfo extends BaseEntity {
 
     /**
      * 支付记录id

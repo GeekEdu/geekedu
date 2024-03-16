@@ -83,7 +83,7 @@ public class AliSandboxTestController {
     @PostMapping("/qrCode/pay")
     public Response<OrderVO> qrCodePay(@RequestBody CreateOrderForm form) {
         AliSandboxPay aliPay = new AliSandboxPay();
-        aliPay.setTraceNo(form.getOrderId());
+        // aliPay.setTraceNo(form.getOrderId());
         aliPay.setTotalAmount(0.1);
         aliPay.setSubject("测试二维码支付");
         aliPay.setReturnUrl("http://localhost:7001/success");

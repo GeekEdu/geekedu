@@ -13,10 +13,19 @@ public class CreateOrderForm implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Integer roleId;
+    /**
+     * 商品id
+     */
+    private Integer goodsId;
 
+    /**
+     * 商品类型
+     */
+    private String goodsType;
+
+    /**
+     * 优惠码 / 优惠券id
+     */
     private String promoCode;
-
-    private String orderId;
 
 }

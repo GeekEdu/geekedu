@@ -5,12 +5,14 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zch.common.mvc.entity.BaseEntity;
 import com.zch.trade.enums.OrderStatusEnum;
+import com.zch.trade.enums.PayStatusEnum;
 import com.zch.trade.enums.PayTypeEnum;
 import com.zch.trade.enums.ProductTypeEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * 订单表
@@ -37,6 +39,11 @@ public class Order extends BaseEntity {
      * 订单备注
      */
     private String orderNotes;
+
+    /**
+     * 订单状态
+     */
+    private OrderStatusEnum orderStatus;
 
     /**
      * 商品id
@@ -74,9 +81,19 @@ public class Order extends BaseEntity {
     private PayTypeEnum payType;
 
     /**
-     * 订单状态
+     * 支付状态
      */
-    private OrderStatusEnum orderStatus;
+    private PayStatusEnum payStatus;
+
+    /**
+     * 退款时间
+     */
+    private LocalDateTime refundTime;
+
+    /**
+     * 取消时间 主要用于订单状态为1和2时，超时的最大时间，超时则更新订单状态
+     */
+    private LocalDateTime cancelTime;
 
     @TableLogic
     private Boolean isDelete;
