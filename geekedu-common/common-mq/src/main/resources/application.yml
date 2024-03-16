@@ -1,4 +1,0 @@
-rocketmq:
-  name-server: 8.137.103.164:9876
-  producer:
-    group: GEEK_EDU_GROUP

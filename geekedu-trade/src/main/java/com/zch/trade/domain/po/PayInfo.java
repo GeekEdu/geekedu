@@ -51,6 +51,13 @@ public class PayInfo extends BaseEntity {
     /**
      * 支付时间
      */
+    private LocalDateTime payTime;
+
+    /**
+     * 是否支付
+     */
+    private Boolean isPaid;
+
     private LocalDateTime createdTime;
 
     @TableLogic
