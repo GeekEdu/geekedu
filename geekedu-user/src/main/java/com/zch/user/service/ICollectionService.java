@@ -25,4 +25,12 @@ public interface ICollectionService extends IService<Collection> {
      */
     Boolean hitCollectionIcon(CollectForm form);
 
+    /**
+     * 查询收藏数量
+     * @param relationId
+     * @param type
+     * @return
+     */
+    Long queryCount(Integer relationId, String type);
+
 }

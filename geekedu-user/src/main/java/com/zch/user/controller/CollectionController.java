@@ -24,7 +24,7 @@ public class CollectionController {
      * @return
      */
     @GetMapping("/status")
-    public Response<Boolean> checkCollectStatus(@RequestParam("id") Integer bookId, String type) {
+    public Response<Boolean> checkCollectStatus(@RequestParam("id") Integer bookId, @RequestParam("type") String type) {
         return Response.success(collectionService.checkCollectionStatus(bookId, type));
     }
 
@@ -36,6 +36,17 @@ public class CollectionController {
     @PostMapping("/hit")
     public Response<Boolean> hitCollectIcon(@RequestBody CollectForm form) {
         return Response.success(collectionService.hitCollectionIcon(form));
+    }
+
+    /**
+     * 查询收藏数量
+     * @param relationId
+     * @param type
+     * @return
+     */
+    @GetMapping("/count")
+    public Response<Long> collectionCount(@RequestParam("id") Integer relationId, @RequestParam("type") String type) {
+        return Response.success(collectionService.queryCount(relationId, type));
     }
 
 }

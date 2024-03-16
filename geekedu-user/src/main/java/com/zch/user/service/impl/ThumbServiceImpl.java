@@ -29,7 +29,7 @@ public class ThumbServiceImpl extends ServiceImpl<ThumbMapper, Thumb> implements
 
     @Override
     public Boolean thumb(ThumbForm form) {
-        if (ObjectUtils.isNull(form) || ObjectUtils.isNull(form.getRelationId()) || StringUtils.isBlank(form.getType())) {
+        if (ObjectUtils.isNull(form) || ObjectUtils.isNull(form.getId()) || StringUtils.isBlank(form.getType())) {
             return false;
         }
         if (ObjectUtils.isNull(ThumbEnums.valueOf(form.getType()))) {
@@ -39,7 +39,7 @@ public class ThumbServiceImpl extends ServiceImpl<ThumbMapper, Thumb> implements
         // Long userId = UserContext.getLoginId();
         // 查找点赞表中是否已经有该记录
         LambdaQueryWrapper<Thumb> wrapper = new LambdaQueryWrapper<Thumb>()
-                .eq(Thumb::getRelationId, form.getRelationId())
+                .eq(Thumb::getRelationId, form.getId())
                 .eq(Thumb::getType, ThumbEnums.valueOf(form.getType()))
                 .eq(Thumb::getUserId, 1745747394693820416L);
         Thumb one = getOne(wrapper);
@@ -49,12 +49,18 @@ public class ThumbServiceImpl extends ServiceImpl<ThumbMapper, Thumb> implements
             thumb.setType(ThumbEnums.valueOf(form.getType()));
             thumb.setUserId(1745747394693820416L);
             thumb.setIsCancel(false);
-            thumb.setRelationId(form.getRelationId());
-            return save(thumb);
+            thumb.setRelationId(form.getId());
+            save(thumb);
+            return true;
+        }
+        if (one.getIsCancel()) {
+            one.setIsCancel(false);
+            updateById(one);
+            return true;
         } else {
-            // 如果已经存在该记录，那么操作就是取消去取反
-            one.setIsCancel(! one.getIsCancel());
-            return updateById(one);
+            one.setIsCancel(true);
+            updateById(one);
+            return false;
         }
     }
 
@@ -73,13 +79,9 @@ public class ThumbServiceImpl extends ServiceImpl<ThumbMapper, Thumb> implements
             return false;
         }
         // 如果存在，还需要看其是否取消
-        if (one.getIsCancel()) {
-            // 取消了 则还是未点赞
-            return false;
-        } else {
-            // 未取消 则点赞了
-            return true;
-        }
+        // 取消了 则还是未点赞
+        // 未取消 则点赞了
+        return !one.getIsCancel();
     }
 
     @Override
@@ -91,7 +93,6 @@ public class ThumbServiceImpl extends ServiceImpl<ThumbMapper, Thumb> implements
         List<Thumb> thumbs = thumbMapper.selectList(new LambdaQueryWrapper<Thumb>()
                 .eq(Thumb::getRelationId, relationId)
                 .eq(Thumb::getType, ThumbEnums.valueOf(type))
-                .eq(Thumb::getUserId, 1745747394693820416L)
                 .eq(Thumb::getIsCancel, false));
         if (ObjectUtils.isNull(thumbs) || CollUtils.isEmpty(thumbs)) {
             return 0L;

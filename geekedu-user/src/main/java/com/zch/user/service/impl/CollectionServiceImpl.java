@@ -3,15 +3,19 @@ package com.zch.user.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.user.CollectForm;
+import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
 import com.zch.user.domain.po.Collection;
 import com.zch.user.enums.CollectionEnums;
+import com.zch.user.enums.ThumbEnums;
 import com.zch.user.mapper.CollectionMapper;
 import com.zch.user.service.ICollectionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author Poison02
@@ -37,7 +41,8 @@ public class CollectionServiceImpl extends ServiceImpl<CollectionMapper, Collect
         Long userId = 1745747394693820416L;
         Collection one = getOne(new LambdaQueryWrapper<Collection>()
                 .eq(Collection::getUserId, userId)
-                .eq(Collection::getRelationId, relationId));
+                .eq(Collection::getRelationId, relationId)
+                .eq(Collection::getType, CollectionEnums.valueOf(type)));
         // 没查到的是未收藏
         if (ObjectUtils.isNull(one)) {
             return false;
@@ -70,7 +75,25 @@ public class CollectionServiceImpl extends ServiceImpl<CollectionMapper, Collect
             one.setIsCancel(false);
             updateById(one);
             return true;
+        } else {
+            one.setIsCancel(true);
+            updateById(one);
+            return false;
         }
-        return false;
+    }
+
+    @Override
+    public Long queryCount(Integer relationId, String type) {
+        if (ObjectUtils.isNull(relationId) || StringUtils.isBlank(type)) {
+            return 0L;
+        }
+        List<Collection> collections = list(new LambdaQueryWrapper<Collection>()
+                .eq(Collection::getRelationId, relationId)
+                .eq(Collection::getType, ThumbEnums.valueOf(type))
+                .eq(Collection::getIsCancel, false));
+        if (ObjectUtils.isNull(collections) || CollUtils.isEmpty(collections)) {
+            return 0L;
+        }
+        return (long) collections.size();
     }
 }

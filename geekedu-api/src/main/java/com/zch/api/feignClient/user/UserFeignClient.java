@@ -78,14 +78,23 @@ public interface UserFeignClient {
      * @return
      */
     @GetMapping("/api/collection/status")
-    Response<Boolean> checkCollectStatus(@RequestParam("id") Integer bookId, String type);
+    Response<Boolean> checkCollectStatus(@RequestParam("id") Integer bookId, @RequestParam("type") String type);
 
     /**
-     * 点击 抽藏图标
+     * 点击 收藏图标
      * @param form
      * @return
      */
     @PostMapping("/api/collection/hit")
     Response<Boolean> hitCollectIcon(@RequestBody CollectForm form);
+
+    /**
+     * 查询收藏数量
+     * @param relationId
+     * @param type
+     * @return
+     */
+    @GetMapping("/api/collection/count")
+    public Response<Long> collectionCount(@RequestParam("id") Integer relationId, @RequestParam("type") String type);
 
 }

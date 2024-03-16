@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.book.AddCommentForm;
 import com.zch.api.dto.book.ImageTextForm;
 import com.zch.api.dto.label.CategoryForm;
+import com.zch.api.dto.user.CollectForm;
 import com.zch.api.dto.user.ThumbForm;
 import com.zch.api.feignClient.label.LabelFeignClient;
 import com.zch.api.feignClient.user.UserFeignClient;
@@ -328,6 +329,16 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
         if (ObjectUtils.isNotNull(thumbCount) && ObjectUtils.isNotNull(thumbCount.getData())) {
             vo1.setThumbCount(thumbCount.getData());
         }
+        // 查询图文收藏信息
+        Response<Boolean> isCollect = userFeignClient.checkCollectStatus(id, "IMAGE_TEXT");
+        Response<Long> collectionCount = userFeignClient.collectionCount(id, "IMAGE_TEXT");
+        if (ObjectUtils.isNotNull(isCollect) && ObjectUtils.isNotNull(isCollect.getData()) ) {
+            vo.setIsThumb(isCollect.getData());
+            vo1.setIsThumb(isCollect.getData());
+        }
+        if (ObjectUtils.isNotNull(collectionCount) && ObjectUtils.isNotNull(collectionCount.getData())) {
+            vo1.setThumbCount(collectionCount.getData());
+        }
         vo.setImageText(vo1);
         // 更新阅读数
         one.setReadCount(one.getReadCount() + 1);
@@ -361,6 +372,17 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
 
     @Override
     public Boolean thumb(ThumbForm form) {
+        if (ObjectUtils.isNull(form) || ObjectUtils.isNull(form.getId()) || StringUtils.isBlank(form.getType())) {
+            return false;
+        }
         return userFeignClient.thumbHandle(form).getData();
+    }
+
+    @Override
+    public Boolean collect(CollectForm form) {
+        if (ObjectUtils.isNull(form) || ObjectUtils.isNull(form.getId()) || StringUtils.isBlank(form.getType())) {
+            return false;
+        }
+        return userFeignClient.hitCollectIcon(form).getData();
     }
 }

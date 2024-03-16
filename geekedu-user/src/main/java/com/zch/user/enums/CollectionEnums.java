@@ -10,7 +10,8 @@ import lombok.Getter;
 @Getter
 public enum CollectionEnums {
 
-    E_BOOK(1, "电子书点赞")
+    E_BOOK(1, "电子书点赞"),
+    IMAGE_TEXT(2, "图文点赞")
     ;
 
     @EnumValue

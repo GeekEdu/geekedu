@@ -3,6 +3,7 @@ package com.zch.book.controller;
 import com.zch.api.dto.book.AddCommentForm;
 import com.zch.api.dto.book.ImageTextForm;
 import com.zch.api.dto.label.CategoryForm;
+import com.zch.api.dto.user.CollectForm;
 import com.zch.api.dto.user.ThumbForm;
 import com.zch.api.vo.book.ImageTextAndCategoryVO;
 import com.zch.api.vo.book.ImageTextSimpleVO;
@@ -238,7 +239,17 @@ public class ImageTextController {
      */
     @PostMapping("/v2/thumb")
     public Response<Boolean> thumb(@RequestBody ThumbForm form) {
-        return Response.success();
+        return Response.success(imageTextService.thumb(form));
+    }
+
+    /**
+     * 图文收藏
+     * @param form
+     * @return
+     */
+    @PostMapping("/v2/collect")
+    public Response<Boolean> collect(@RequestBody CollectForm form) {
+        return Response.success(imageTextService.collect(form));
     }
 
 }

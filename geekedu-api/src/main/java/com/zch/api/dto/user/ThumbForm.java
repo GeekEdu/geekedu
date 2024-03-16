@@ -13,7 +13,7 @@ public class ThumbForm implements Serializable {
 
     private static final Long serialVersionUID = 1L;
 
-    private Integer relationId;
+    private Integer id;
 
     private String type;
 
