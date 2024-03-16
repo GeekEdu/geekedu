@@ -2,6 +2,7 @@ package com.zch.book.controller;
 
 import com.zch.api.dto.book.*;
 import com.zch.api.dto.label.CategoryForm;
+import com.zch.api.dto.user.CollectForm;
 import com.zch.api.vo.book.*;
 import com.zch.api.vo.book.comment.BCommentFullVO;
 import com.zch.api.vo.book.comment.BCommentVO;
@@ -367,14 +368,24 @@ public class EBookController {
     }
 
     /**
-     * 查询某篇文章是否点赞
+     * 查询某篇文章是否被当前用户收藏
      * @param id
      * @param type
      * @return
      */
-    @GetMapping("/v2/book/thumb/status")
-    public Response checkBookThumbStatus(@RequestParam("id") Integer id, @RequestParam("type") String type) {
-        return Response.success();
+    @GetMapping("/v2/book/collection/status")
+    public Response<Boolean> checkBookThumbStatus(@RequestParam("id") Integer id, @RequestParam("type") String type) {
+        return Response.success(eBookService.checkBookCollectionStatus(id, type));
+    }
+
+    /**
+     * 点击电子书收藏
+     * @param form
+     * @return
+     */
+    @PostMapping("/v2/book/collection/hit")
+    public Response<Boolean> hitBookCollectionIcon(@RequestBody CollectForm form) {
+        return Response.success(eBookService.hitBookCollectionIcon(form));
     }
 
     /**

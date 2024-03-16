@@ -6,6 +6,7 @@ import com.zch.api.dto.book.AddCommentForm;
 import com.zch.api.dto.book.DelCommentBatchForm;
 import com.zch.api.dto.book.EBookForm;
 import com.zch.api.dto.label.CategoryForm;
+import com.zch.api.dto.user.CollectForm;
 import com.zch.api.vo.book.*;
 import com.zch.api.vo.book.comment.BCommentFullVO;
 import com.zch.api.vo.book.comment.BCommentVO;
@@ -187,6 +188,21 @@ public interface IEBookService extends IService<EBook> {
      * @return
      */
     BCommentFullVO getBookComments(Integer id, Integer pageNum, Integer pageSize);
+
+    /**
+     * 判断是否收藏
+     * @param bookId
+     * @param type
+     * @return
+     */
+    Boolean checkBookCollectionStatus(Integer bookId, String type);
+
+    /**
+     * 点击收藏或者不收藏
+     * @param form
+     * @return
+     */
+    Boolean hitBookCollectionIcon(CollectForm form);
 
     /**
      * 添加电子书 评论

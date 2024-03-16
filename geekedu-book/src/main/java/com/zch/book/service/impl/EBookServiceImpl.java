@@ -7,7 +7,9 @@ import com.zch.api.dto.book.AddCommentForm;
 import com.zch.api.dto.book.DelCommentBatchForm;
 import com.zch.api.dto.book.EBookForm;
 import com.zch.api.dto.label.CategoryForm;
+import com.zch.api.dto.user.CollectForm;
 import com.zch.api.feignClient.label.LabelFeignClient;
+import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.vo.book.*;
 import com.zch.api.vo.book.comment.BCommentFullVO;
 import com.zch.api.vo.book.comment.BCommentVO;
@@ -47,6 +49,8 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
     private final EBookMapper bookMapper;
 
     private final LabelFeignClient labelFeignClient;
+
+    private final UserFeignClient userFeignClient;
 
     private final IBCommentService commentService;
 
@@ -426,6 +430,22 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
             return new BCommentFullVO();
         }
         return commentService.getFullComment(id, pageNum, pageSize, "E_BOOK");
+    }
+
+    @Override
+    public Boolean checkBookCollectionStatus(Integer bookId, String type) {
+        if (ObjectUtils.isNull(bookId) || StringUtils.isBlank(type)) {
+            return false;
+        }
+        return userFeignClient.checkCollectStatus(bookId, type).getData();
+    }
+
+    @Override
+    public Boolean hitBookCollectionIcon(CollectForm form) {
+        if (ObjectUtils.isNull(form) || ObjectUtils.isNull(form.getId()) || StringUtils.isBlank(form.getType())) {
+            return false;
+        }
+        return userFeignClient.hitCollectIcon(form).getData();
     }
 
     @Override

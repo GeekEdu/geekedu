@@ -1,5 +1,6 @@
 package com.zch.api.feignClient.user;
 
+import com.zch.api.dto.user.CollectForm;
 import com.zch.api.dto.user.ThumbForm;
 import com.zch.api.interceptor.FeignInterceptor;
 import com.zch.api.vo.user.CaptchaVO;
@@ -41,7 +42,7 @@ public interface UserFeignClient {
      * @return
      */
     @PostMapping("/api/thumb/vote")
-    public Response<Boolean> thumbHandle(@RequestBody ThumbForm form);
+    Response<Boolean> thumbHandle(@RequestBody ThumbForm form);
 
     /**
      * 查询是否点过赞
@@ -51,7 +52,7 @@ public interface UserFeignClient {
      * @return
      */
     @GetMapping("/api/thumb/isVote/{id}")
-    public Response<Boolean> queryIsVote(@PathVariable("id") Integer relationId, @RequestParam("type") String type);
+    Response<Boolean> queryIsVote(@PathVariable("id") Integer relationId, @RequestParam("type") String type);
 
     /**
      * 查询点赞数量
@@ -61,13 +62,30 @@ public interface UserFeignClient {
      * @return
      */
     @GetMapping("/api/thumb/count/{id}")
-    public Response<Long> queryCount(@PathVariable("id") Integer relationId, @RequestParam("type") String type);
+    Response<Long> queryCount(@PathVariable("id") Integer relationId, @RequestParam("type") String type);
 
     /**
      * 后台 获取教师列表
      * @return
      */
     @GetMapping("/api/member/teacher/list")
-    public Response<List<UserSimpleVO>> getTeacherList();
+    Response<List<UserSimpleVO>> getTeacherList();
+
+    /**
+     * 查询是否收藏
+     * @param bookId
+     * @param type
+     * @return
+     */
+    @GetMapping("/api/collection/status")
+    Response<Boolean> checkCollectStatus(@RequestParam("id") Integer bookId, String type);
+
+    /**
+     * 点击 抽藏图标
+     * @param form
+     * @return
+     */
+    @PostMapping("/api/collection/hit")
+    Response<Boolean> hitCollectIcon(@RequestBody CollectForm form);
 
 }
