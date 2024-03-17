@@ -289,11 +289,11 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         QuestionVO vo1 = vo.getQuestion();
         BeanUtils.copyProperties(question, vo1);
         Response<CategorySimpleVO> res2 = labelFeignClient.getCategoryById(question.getCategoryId(), "ASK_QUESTION");
-        if (ObjectUtils.isNull(res2) || ObjectUtils.isNull(res2.getData())) {
+        if (ObjectUtils.isNotNull(res2) && ObjectUtils.isNotNull(res2.getData())) {
             vo1.setCategory(res2.getData());
         }
         Response<UserSimpleVO> res3 = userFeignClient.getUserById(question.getUserId() + "");
-        if (ObjectUtils.isNull(res3) || ObjectUtils.isNull(res3.getData())) {
+        if (ObjectUtils.isNotNull(res3) && ObjectUtils.isNotNull(res3.getData())) {
             vo1.setUser(res3.getData());
         }
         // 状态文本
