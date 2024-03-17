@@ -49,11 +49,6 @@ public class ImageTextVO extends BaseVO {
     private Long thumbCount;
 
     /**
-     * 是否点赞
-     */
-    private Boolean isThumb = false;
-
-    /**
      * 收藏次数
      */
     private Long collectCount;

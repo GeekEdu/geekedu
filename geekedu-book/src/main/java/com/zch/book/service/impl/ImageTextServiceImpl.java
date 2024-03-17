@@ -324,7 +324,6 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
         Response<Long> thumbCount = userFeignClient.queryCount(id, "IMAGE_TEXT");
         if (ObjectUtils.isNotNull(isThumb) && ObjectUtils.isNotNull(isThumb.getData()) ) {
             vo.setIsThumb(isThumb.getData());
-            vo1.setIsThumb(isThumb.getData());
         }
         if (ObjectUtils.isNotNull(thumbCount) && ObjectUtils.isNotNull(thumbCount.getData())) {
             vo1.setThumbCount(thumbCount.getData());
@@ -333,11 +332,10 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
         Response<Boolean> isCollect = userFeignClient.checkCollectStatus(id, "IMAGE_TEXT");
         Response<Long> collectionCount = userFeignClient.collectionCount(id, "IMAGE_TEXT");
         if (ObjectUtils.isNotNull(isCollect) && ObjectUtils.isNotNull(isCollect.getData()) ) {
-            vo.setIsThumb(isCollect.getData());
-            vo1.setIsThumb(isCollect.getData());
+            vo.setIsCollect(isCollect.getData());
         }
         if (ObjectUtils.isNotNull(collectionCount) && ObjectUtils.isNotNull(collectionCount.getData())) {
-            vo1.setThumbCount(collectionCount.getData());
+            vo1.setCollectCount(collectionCount.getData());
         }
         vo.setImageText(vo1);
         // 更新阅读数

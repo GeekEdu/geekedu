@@ -8,7 +8,6 @@ import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
 import com.zch.user.domain.po.Collection;
 import com.zch.user.enums.CollectionEnums;
-import com.zch.user.enums.ThumbEnums;
 import com.zch.user.mapper.CollectionMapper;
 import com.zch.user.service.ICollectionService;
 import lombok.RequiredArgsConstructor;
@@ -89,7 +88,7 @@ public class CollectionServiceImpl extends ServiceImpl<CollectionMapper, Collect
         }
         List<Collection> collections = list(new LambdaQueryWrapper<Collection>()
                 .eq(Collection::getRelationId, relationId)
-                .eq(Collection::getType, ThumbEnums.valueOf(type))
+                .eq(Collection::getType, CollectionEnums.valueOf(type))
                 .eq(Collection::getIsCancel, false));
         if (ObjectUtils.isNull(collections) || CollUtils.isEmpty(collections)) {
             return 0L;
