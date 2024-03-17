@@ -44,6 +44,11 @@ public class PayInfo extends BaseEntity {
     private BigDecimal payAmount;
 
     /**
+     * 支付订单号
+     */
+    private Long orderId;
+
+    /**
      * 用户id
      */
     private Long userId;
@@ -57,8 +62,6 @@ public class PayInfo extends BaseEntity {
      * 是否支付
      */
     private Boolean isPaid;
-
-    private LocalDateTime createdTime;
 
     @TableLogic
     private Boolean isDelete;

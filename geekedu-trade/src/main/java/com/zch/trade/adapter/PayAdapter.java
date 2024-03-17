@@ -20,7 +20,7 @@ public interface PayAdapter {
 
     /**
      * 二维码支付
-     * @return 返回的是验证码字符串 需要利用HuTool工具生成验证码 参考：QrCodeUtil.generate(qrUrl, 300, 300, "png", response.getOutputStream());
+     * @return 返回的直接就是支付地址的二维码url 前端可以直接使用antd的QrCode组件展示
      */
     String qrCodePayment(AliSandboxPay alipay);
 

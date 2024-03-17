@@ -45,6 +45,7 @@ public class AliSandboxPayAdapter implements PayAdapter {
                 aliPayConfig.getAppPrivateKey(), FORMAT, CHARSET, aliPayConfig.getAlipayPublicKey(), SIGN_TYPE);
         AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
         request.setNotifyUrl(aliPayConfig.getNotifyUrl());
+        request.setReturnUrl(alipay.getReturnUrl());
         // 示例
 //        alipay.setTotalAmount(0.01);
 //        alipay.setSubject("测试支付宝支付");
@@ -120,7 +121,7 @@ public class AliSandboxPayAdapter implements PayAdapter {
 //                System.out.println("买家付款金额: " + params.get("buyer_pay_amount"));
             }
         }
-        return new AliReturnPay();
+        return null;
     }
 
     @Override
