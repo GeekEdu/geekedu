@@ -300,6 +300,14 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
                 vo1.setCategory(null);
             }
             vo1.setCategory(res2.getData());
+            // 查询图文点赞和收藏数量
+            Response<Long> thumbCount = userFeignClient.queryCount(item.getId(), "IMAGE_TEXT");
+            Response<Long> collectionCount = userFeignClient.collectionCount(item.getId(), "IMAGE_TEXT");
+            if (ObjectUtils.isNotNull(thumbCount) && ObjectUtils.isNotNull(thumbCount.getData())
+                && ObjectUtils.isNotNull(collectionCount) && ObjectUtils.isNotNull(collectionCount.getData())) {
+                vo1.setThumbCount(thumbCount.getData());
+                vo1.setCollectCount(collectionCount.getData());
+            }
             return vo1;
         }).collect(Collectors.toList());
         vo.getData().setData(list);
