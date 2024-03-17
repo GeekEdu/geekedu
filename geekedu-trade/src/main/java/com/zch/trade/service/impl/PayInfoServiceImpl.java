@@ -41,7 +41,8 @@ public class PayInfoServiceImpl extends ServiceImpl<PayInfoMapper, PayInfo> impl
                 && StringUtils.isNotBlank(redirect)) {
             AliSandboxPay alipay = new AliSandboxPay();
             // 查询订单相关信息
-            Order order = orderService.getById(orderId);
+            Order order = orderService.getOne(new LambdaQueryWrapper<Order>()
+                    .eq(Order::getOrderNumber, orderId));
             if (ObjectUtils.isNotNull(order)) {
                 alipay.setTotalAmount(order.getAmount().doubleValue());
                 if (ObjectUtils.isNotNull(PayTypeEnum.valueOf(payment)) && payment.equals(PayTypeEnum.ALIPAY.getValue())) {

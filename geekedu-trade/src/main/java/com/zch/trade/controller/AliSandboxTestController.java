@@ -88,14 +88,14 @@ public class AliSandboxTestController {
         aliPay.setSubject("测试二维码支付");
         aliPay.setReturnUrl("http://localhost:7001/success");
         OrderVO vo = new OrderVO();
-        vo.setQrCode(payAdapter.qrCodePayment(aliPay));
+        // vo.setQrCode(payAdapter.qrCodePayment(aliPay));
         return Response.success(vo);
     }
 
     @GetMapping("/pay/status")
     public Response<OrderVO> getStatus(@RequestParam("orderId") String orderId) {
         OrderVO vo = new OrderVO();
-        vo.setStatus(2);
+        // vo.setStatus(2);
         return Response.success(vo);
     }
 

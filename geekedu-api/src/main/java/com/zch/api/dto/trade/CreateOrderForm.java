@@ -28,4 +28,9 @@ public class CreateOrderForm implements Serializable {
      */
     private String promoCode;
 
+    /**
+     * 支付方式
+     */
+    private String payment;
+
 }

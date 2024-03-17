@@ -6,9 +6,11 @@ import com.zch.api.vo.user.*;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import com.zch.user.service.IUserService;
+import com.zch.user.service.IVipInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -21,6 +23,8 @@ import java.util.List;
 public class MemberController {
 
     private final IUserService userService;
+
+    private final IVipInfoService vipInfoService;
 
     /**
      * 后台返回学员列表
@@ -136,6 +140,16 @@ public class MemberController {
     @GetMapping("/teacher/list")
     public Response<List<UserSimpleVO>> getTeacherList() {
         return Response.success(userService.getTeacherList());
+    }
+
+    /**
+     * 获取vip价格
+     * @param id
+     * @return
+     */
+    @GetMapping("/vip/price")
+    public Response<BigDecimal> getVipPriceById(@RequestParam("id") Integer id) {
+        return Response.success(vipInfoService.getVipPrice(id));
     }
 
 }

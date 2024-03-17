@@ -33,7 +33,7 @@ public class Order extends BaseEntity {
     /**
      * 订单编号
      */
-    private Long orderNumber;
+    private String orderNumber;
 
     /**
      * 订单备注

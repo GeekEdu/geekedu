@@ -9,6 +9,7 @@ import com.zch.common.mvc.result.Response;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -95,6 +96,14 @@ public interface UserFeignClient {
      * @return
      */
     @GetMapping("/api/collection/count")
-    public Response<Long> collectionCount(@RequestParam("id") Integer relationId, @RequestParam("type") String type);
+    Response<Long> collectionCount(@RequestParam("id") Integer relationId, @RequestParam("type") String type);
+
+    /**
+     * 获取vip价格
+     * @param id
+     * @return
+     */
+    @GetMapping("/api/member/vip/price")
+    Response<BigDecimal> getVipPriceById(@RequestParam("id") Integer id);
 
 }

@@ -93,4 +93,16 @@ public class VipInfoServiceImpl extends ServiceImpl<VipInfoMapper, VipInfo> impl
         vip.setDay(form.getDay());
         return save(vip);
     }
+
+    @Override
+    public BigDecimal getVipPrice(Integer id) {
+        if (ObjectUtils.isNull(id)) {
+            return BigDecimal.ZERO;
+        }
+        VipInfo vip = getById(id);
+        if (ObjectUtils.isNull(vip)) {
+            return BigDecimal.ZERO;
+        }
+        return vip.getPrice();
+    }
 }

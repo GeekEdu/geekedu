@@ -5,6 +5,7 @@ import com.zch.api.dto.user.VipForm;
 import com.zch.api.vo.user.VipVO;
 import com.zch.user.domain.po.VipInfo;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -47,5 +48,7 @@ public interface IVipInfoService extends IService<VipInfo> {
      * @return
      */
     Boolean updateVip(Integer id, VipForm form);
+
+    BigDecimal getVipPrice(Integer id);
 
 }
