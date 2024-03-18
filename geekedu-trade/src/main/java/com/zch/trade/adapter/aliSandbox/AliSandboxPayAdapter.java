@@ -106,7 +106,7 @@ public class AliSandboxPayAdapter implements PayAdapter {
             if (checkSignature) {
                 // 验签通过
                 returnPay.setOut_trade_no(params.get("out_trade_no"));
-                returnPay.setSign(sign);
+                // returnPay.setSign(sign);
                 returnPay.setTrade_status(params.get("trade_status"));
                 returnPay.setTrade_no(params.get("trade_no"));
                 returnPay.setTotal_amount(params.get("total_amount"));

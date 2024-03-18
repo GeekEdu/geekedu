@@ -1,5 +1,6 @@
 package com.zch.trade.controller;
 
+import com.zch.api.dto.trade.pay.PayInfoForm;
 import com.zch.api.vo.trade.PayChannelVO;
 import com.zch.common.mvc.result.Response;
 import com.zch.trade.service.IPayChannelService;
@@ -26,6 +27,7 @@ public class PayController {
 
     /**
      * 返回所有支付渠道
+     *
      * @return
      */
     @GetMapping("/channels")
@@ -35,31 +37,34 @@ public class PayController {
     }
 
     @GetMapping("/aliPay")
-    public Response<String> pay(@RequestParam("orderId") String orderId,
+    public void pay(@RequestParam("orderId") String orderId,
                     @RequestParam("scene") String scene,
                     @RequestParam("payment") String payment,
                     @RequestParam("redirect") String redirect,
                     HttpServletResponse response) {
-        if ("pc".equals(scene)) {
-           try {
-               response.setContentType("text/html;charset=" + "UTF-8");
-               // 直接将完整的表单html输出到页面
-               response.getWriter().write(payInfoService.handleAliPay(orderId, scene, payment, redirect));
-               response.getWriter().flush();
-               response.getWriter().close();
-           } catch (Exception e) {
-               e.printStackTrace();
-           }
-           return Response.success("PC PAY");
-        } else if ("qrCode".equals(scene)){
-            return Response.success(payInfoService.handleAliPay(orderId, scene, payment, redirect));
+        try {
+            response.setContentType("text/html;charset=" + "UTF-8");
+            // 直接将完整的表单html输出到页面
+            response.getWriter().write(payInfoService.handleAliPay(orderId, scene, payment, redirect));
+            response.getWriter().flush();
+            response.getWriter().close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return Response.success("NOT FOUND");
     }
 
     @PostMapping("/notify")
     public void aliPayNotify(HttpServletRequest request) {
         payInfoService.handlePayNotify(request);
+    }
+
+    /**
+     * 写入支付信息
+     * @param form
+     */
+    @PostMapping("/create/payInfo")
+    public void createPayInfo(@RequestBody PayInfoForm form) {
+        payInfoService.createPayInfo(form);
     }
 
 }

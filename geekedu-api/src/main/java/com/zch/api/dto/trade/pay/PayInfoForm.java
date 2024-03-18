@@ -48,6 +48,6 @@ public class PayInfoForm implements Serializable {
     /**
      * 支付订单号
      */
-    private Long orderId;
+    private String orderId;
 
 }

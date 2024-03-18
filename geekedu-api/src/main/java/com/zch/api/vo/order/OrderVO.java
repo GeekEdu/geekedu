@@ -37,6 +37,11 @@ public class OrderVO extends BaseVO {
     private String goodsType;
 
     /**
+     * 商品名称
+     */
+    private String goodsName;
+
+    /**
      * 商品原价
      */
     private BigDecimal goodsPrice;

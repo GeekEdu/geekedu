@@ -45,21 +45,14 @@ public class PayInfoServiceImpl extends ServiceImpl<PayInfoMapper, PayInfo> impl
                     .eq(Order::getOrderNumber, orderId));
             if (ObjectUtils.isNotNull(order)) {
                 alipay.setTotalAmount(order.getAmount().doubleValue());
-                if (ObjectUtils.isNotNull(PayTypeEnum.valueOf(payment)) && payment.equals(PayTypeEnum.ALIPAY.getValue())) {
-                    alipay.setTraceNo(order.getOrderId() + "");
-                    alipay.setSubject("GeekEdu-" + order.getGoodsType().getValue());
-                    alipay.setReturnUrl(redirect);
-                    if ("pc".equals(scene)) {
-                        // pc网站支付，则直接渲染的是form
-                        return payAdapter.websitePayment(alipay);
-                    } else if ("qrCode".equals(scene)) {
-                        // 扫码支付，返回二维码链接
-                        return payAdapter.qrCodePayment(alipay);
-                    }
-                }
+                alipay.setTraceNo(order.getOrderId() + "");
+                alipay.setSubject("GeekEdu-" + order.getGoodsType().getValue());
+                alipay.setReturnUrl(redirect);
+                // pc网站支付，则直接渲染的是form
+                return payAdapter.websitePayment(alipay);
             }
         }
-        return null;
+        return "";
     }
 
     @Override
@@ -70,7 +63,7 @@ public class PayInfoServiceImpl extends ServiceImpl<PayInfoMapper, PayInfo> impl
             // 支付成功
             PayInfoForm form = new PayInfoForm();
             form.setPayAmount(StringUtils.isBlank(notify.getTotal_amount()) ? BigDecimal.ZERO : new BigDecimal(notify.getTotal_amount()));
-            form.setOrderId(Long.valueOf(notify.getTrade_no()));
+            form.setOrderId(notify.getTrade_no());
             form.setIsPaid(false);
             // 更新订单信息
             updatePayInfo(form);

@@ -2,6 +2,8 @@ package com.zch.trade.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.trade.CreateOrderForm;
+import com.zch.api.dto.trade.pay.PayInfoForm;
+import com.zch.api.feignClient.trade.TradeFeignClient;
 import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.vo.order.OrderVO;
 import com.zch.common.core.utils.ObjectUtils;
@@ -37,6 +39,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     private final UserFeignClient userFeignClient;
 
+    private final TradeFeignClient tradeFeignClient;
+
     @Override
     public OrderVO createOrder(CreateOrderForm form) {
         if (ObjectUtils.isNull(form) || ObjectUtils.isNull(form.getGoodsId()) || StringUtils.isEmpty(form.getGoodsType())
@@ -71,6 +75,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         // 订单编号 使用 IDWorker 设置
         vo.setOrderId(generateOrderId(now));
         // TODO 通知消息队列
+        // 写入支付信息
+        PayInfoForm form1 = new PayInfoForm();
+        form1.setPayName(vo.getGoodsName());
+        form1.setPayChannel(form.getPayment());
+        form1.setPayAmount(vo.getAmount());
+        form1.setOrderId(vo.getOrderId());
+        tradeFeignClient.createPayInfo(form1);
         // 存入数据库
         handle2MySQL(form, vo);
         return vo;
@@ -89,7 +100,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         String nowTime = now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         IDWorker snowFlake = new IDWorker(2, 3);
         long id = snowFlake.nextId();
-        return nowTime + String.valueOf(id).substring(0, 5);
+        String str = String.valueOf(id);
+        int length = str.length();
+        return nowTime + str.substring(length - 5);
     }
 
     /**
