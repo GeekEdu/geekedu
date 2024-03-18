@@ -28,4 +28,18 @@ public enum OrderStatusEnum {
         this.code = code;
         this.value = value;
     }
+
+    /**
+     * 根据状态码获取枚举值
+     * @param code 状态码
+     * @return 对应的枚举实例
+     */
+    public static OrderStatusEnum getByCode(Integer code) {
+        for (OrderStatusEnum status : values()) {
+            if (status.getCode().equals(code)) {
+                return status;
+            }
+        }
+        return null;
+    }
 }

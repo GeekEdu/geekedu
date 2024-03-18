@@ -5,6 +5,7 @@ import com.zch.api.dto.user.ThumbForm;
 import com.zch.api.interceptor.FeignInterceptor;
 import com.zch.api.vo.user.CaptchaVO;
 import com.zch.api.vo.user.UserSimpleVO;
+import com.zch.api.vo.user.VipVO;
 import com.zch.common.mvc.result.Response;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -105,5 +106,13 @@ public interface UserFeignClient {
      */
     @GetMapping("/api/member/vip/price")
     Response<BigDecimal> getVipPriceById(@RequestParam("id") Integer id);
+
+    /**
+     * vip明细
+     * @param id
+     * @return
+     */
+    @GetMapping("/api/member/vip/{id}")
+    public Response<VipVO> getVipById(@PathVariable("id") Integer id);
 
 }

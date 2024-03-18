@@ -61,6 +61,16 @@ public class Order extends BaseEntity {
     private BigDecimal goodsPrice;
 
     /**
+     * 商品名称
+     */
+    private String goodsName;
+
+    /**
+     * 用户id
+     */
+    private Long userId;
+
+    /**
      * 最终支付金额
      */
     private BigDecimal amount;

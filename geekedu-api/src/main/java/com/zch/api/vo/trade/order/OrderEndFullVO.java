@@ -21,6 +21,6 @@ public class OrderEndFullVO extends BaseVO {
 
     private Map<Integer, Long> countMap = new HashMap<>(0);
 
-    private PageResult.Data<Boolean> data = new PageResult.Data();
+    private PageResult.Data<OrderFullVO> data = new PageResult.Data<>();
 
 }

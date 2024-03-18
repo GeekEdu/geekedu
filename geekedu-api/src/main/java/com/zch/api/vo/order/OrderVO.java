@@ -62,6 +62,11 @@ public class OrderVO extends BaseVO {
     private String payType;
 
     /**
+     * 用户id
+     */
+    private Long userId;
+
+    /**
      * 最大支付时间，超过这个时间，订单自动取消
      */
     private LocalDateTime cancelTime;
