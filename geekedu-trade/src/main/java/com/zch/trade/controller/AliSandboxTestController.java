@@ -56,7 +56,7 @@ public class AliSandboxTestController {
         AliSandboxPay aliPay = new AliSandboxPay();
         aliPay.setTotalAmount(0.01);
         aliPay.setSubject("测试支付宝支付");
-        aliPay.setTraceNo("654321999");
+        aliPay.setOutTraceNo("342345435");
         request.setBizContent("{\"out_trade_no\":\"" + orderId + "\","
                 + "\"total_amount\":\"" + aliPay.getTotalAmount() + "\","
                 + "\"subject\":\"" + aliPay.getSubject() + "\","
@@ -141,7 +141,7 @@ public class AliSandboxTestController {
         JSONObject bizContent = new JSONObject();
         bizContent.set("trade_no", aliPay.getAlipayTraceNo());  // 支付宝回调的订单流水号
         bizContent.set("refund_amount", aliPay.getTotalAmount());  // 订单的总金额
-        bizContent.set("out_request_no", aliPay.getTraceNo());   //  我的订单编号
+        bizContent.set("out_request_no", aliPay.getOutTraceNo());   //  我的订单编号
 
         // 返回参数选项，按需传入
         //JSONArray queryOptions = new JSONArray();

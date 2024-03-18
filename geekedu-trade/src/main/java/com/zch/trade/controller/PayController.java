@@ -53,9 +53,29 @@ public class PayController {
         }
     }
 
+    /**
+     * 生成支付二维码
+     * @param orderId
+     * @return
+     */
+    @GetMapping("/qrCode")
+    public Response<String> generateQrCode(@RequestParam("orderId") String orderId, @RequestParam("redirect") String redirect) {
+        return Response.success(payInfoService.generateQrCode(orderId, redirect));
+    }
+
     @PostMapping("/notify")
     public void aliPayNotify(HttpServletRequest request) {
         payInfoService.handlePayNotify(request);
+    }
+
+    /**
+     * 查询支付状态
+     * @param orderId
+     * @return
+     */
+    @GetMapping("/queryPayStatus")
+    public Response<Boolean> queryPayStatus(@RequestParam("orderId") String orderId) {
+        return Response.success(payInfoService.queryPayStatus(orderId));
     }
 
     /**

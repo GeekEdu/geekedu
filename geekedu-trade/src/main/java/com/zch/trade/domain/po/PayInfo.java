@@ -49,11 +49,6 @@ public class PayInfo extends BaseEntity {
     private String orderId;
 
     /**
-     * 交易订单号
-     */
-    private String tradeNo;
-
-    /**
      * 用户id
      */
     private Long userId;

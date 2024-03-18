@@ -32,6 +32,13 @@ public interface PayAdapter {
     AliReturnPay verificationAndNotify(HttpServletRequest request);
 
     /**
+     * 查询支付状态
+     * @param tradeNo
+     * @return
+     */
+    AliReturnPay queryPayStatus(String tradeNo);
+
+    /**
      * 退款
      * @param alipay
      * @return

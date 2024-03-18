@@ -7,8 +7,10 @@ import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.alipay.api.request.AlipayTradePrecreateRequest;
+import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.request.AlipayTradeRefundRequest;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
+import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.alipay.api.response.AlipayTradeRefundResponse;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.pay.config.AliSandboxConfig;
@@ -50,7 +52,7 @@ public class AliSandboxPayAdapter implements PayAdapter {
 //        alipay.setTotalAmount(0.01);
 //        alipay.setSubject("测试支付宝支付");
 //        alipay.setTraceNo("654321999");
-        request.setBizContent("{\"out_trade_no\":\"" + alipay.getTraceNo() + "\","
+        request.setBizContent("{\"out_trade_no\":\"" + alipay.getOutTraceNo() + "\","
                 + "\"total_amount\":\"" + alipay.getTotalAmount() + "\","
                 + "\"subject\":\"" + alipay.getSubject() + "\","
                 + "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
@@ -71,7 +73,7 @@ public class AliSandboxPayAdapter implements PayAdapter {
         AlipayTradePrecreateRequest request = new AlipayTradePrecreateRequest();
         request.setNotifyUrl(aliPayConfig.getNotifyUrl());
         request.setReturnUrl(alipay.getReturnUrl());
-        request.setBizContent("{\"out_trade_no\":\"" + alipay.getTraceNo() + "\","
+        request.setBizContent("{\"out_trade_no\":\"" + alipay.getOutTraceNo() + "\","
                 + "\"total_amount\":\"" + alipay.getTotalAmount() + "\","
                 + "\"subject\":\"" + alipay.getSubject() + "\"}");
         String qr = "";
@@ -125,6 +127,39 @@ public class AliSandboxPayAdapter implements PayAdapter {
     }
 
     @Override
+    public AliReturnPay queryPayStatus(String tradeNo) {
+        AlipayClient alipayClient = new DefaultAlipayClient(GATEWAY_URL,
+                aliPayConfig.getAppId(), aliPayConfig.getAppPrivateKey(), FORMAT, CHARSET,
+                aliPayConfig.getAlipayPublicKey(), SIGN_TYPE);
+        AlipayTradeQueryRequest request = new AlipayTradeQueryRequest();
+        request.setBizContent("{" +
+                "  \"out_trade_no\":\""+ tradeNo + "\"," +
+                "  \"query_options\":[" +
+                "    \"trade_settle_info\"" +
+                "  ]" +
+                "}");
+        AlipayTradeQueryResponse response;
+        try {
+            response = alipayClient.execute(request);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        AliReturnPay aliPay = new AliReturnPay();
+        if (response.isSuccess()) {
+            if ("TRADE_SUCCESS".equals(response.getTradeStatus())) {
+                aliPay.setOut_trade_no(response.getOutTradeNo());
+                aliPay.setTotal_amount(response.getTotalAmount());
+                aliPay.setTrade_status(response.getTradeStatus());
+                return aliPay;
+            } else {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public Boolean refund(AliSandboxPay alipay) {
         AlipayClient alipayClient = new DefaultAlipayClient(GATEWAY_URL,
                 aliPayConfig.getAppId(), aliPayConfig.getAppPrivateKey(), FORMAT, CHARSET,
@@ -134,7 +169,7 @@ public class AliSandboxPayAdapter implements PayAdapter {
         JSONObject bizContent = new JSONObject();
         bizContent.set("trade_no", alipay.getAlipayTraceNo());  // 支付宝回调的订单流水号
         bizContent.set("refund_amount", alipay.getTotalAmount());  // 订单的总金额
-        bizContent.set("out_request_no", alipay.getTraceNo());   //  我的订单编号
+        bizContent.set("out_request_no", alipay.getOutTraceNo());   //  我的订单编号
 
         // 执行退款
         boolean isRefund = false;

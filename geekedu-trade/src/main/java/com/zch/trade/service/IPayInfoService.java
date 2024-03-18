@@ -23,10 +23,24 @@ public interface IPayInfoService extends IService<PayInfo> {
     String handleAliPay(String orderId, String scene, String payment, String redirect);
 
     /**
+     * 生成二维码
+     * @param orderId
+     * @return
+     */
+    String generateQrCode(String orderId, String redirect);
+
+    /**
      * 处理支付回调
      * @param request
      */
     void handlePayNotify(HttpServletRequest request);
+
+    /**
+     * 查询支付状态
+     * @param orderId
+     * @return
+     */
+    Boolean queryPayStatus(String orderId);
 
     /**
      * 创建订单信息

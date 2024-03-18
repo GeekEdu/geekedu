@@ -9,7 +9,10 @@ import lombok.Data;
 @Data
 public class AliSandboxPay {
 
-    private String traceNo;
+    /**
+     * 商家订单号
+     */
+    private String outTraceNo;
 
     private double totalAmount;
 

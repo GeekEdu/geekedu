@@ -73,11 +73,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         // 订单状态设置为 已下单 未支付
         vo.setOrderStatusText(OrderStatusEnum.ORDERED_NO_PAY.getValue());
         // 订单编号 使用 IDWorker 设置
-        vo.setOrderId(generateOrderId(now));
+        String orderId = generateOrderId(now);
+        vo.setOrderId(orderId);
         // TODO 通知消息队列
         // 写入支付信息
         PayInfoForm form1 = new PayInfoForm();
         form1.setPayName(vo.getGoodsName());
+        form1.setOrderId(orderId);
         form1.setPayChannel(form.getPayment());
         form1.setPayAmount(vo.getAmount());
         form1.setOrderId(vo.getOrderId());
