@@ -46,12 +46,7 @@ public class AliSandboxTestController {
 
     @GetMapping("/pay")
     public void pay(@RequestParam("order_id") String orderId,
-                    @RequestParam("payment_scene") String paymentScene,
-                    @RequestParam("scene") String scene,
-                    @RequestParam("payment") String payment,
-                    @RequestParam("token") String token,
                     @RequestParam("redirect") String redirect,
-                    @RequestParam("cancel_redirect") String cancelRedirect,
                     HttpServletResponse httpResponse) throws Exception {
         AlipayClient alipayClient = new DefaultAlipayClient(GATEWAY_URL, aliPayConfig.getAppId(),
                 aliPayConfig.getAppPrivateKey(), FORMAT, CHARSET, aliPayConfig.getAlipayPublicKey(), SIGN_TYPE);

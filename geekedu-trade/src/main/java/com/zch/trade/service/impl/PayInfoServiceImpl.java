@@ -63,7 +63,7 @@ public class PayInfoServiceImpl extends ServiceImpl<PayInfoMapper, PayInfo> impl
             // 支付成功
             PayInfoForm form = new PayInfoForm();
             form.setPayAmount(StringUtils.isBlank(notify.getTotal_amount()) ? BigDecimal.ZERO : new BigDecimal(notify.getTotal_amount()));
-            form.setOrderId(notify.getTrade_no());
+            form.setTradeNo(notify.getTrade_no());
             form.setIsPaid(false);
             // 更新订单信息
             updatePayInfo(form);
@@ -100,6 +100,7 @@ public class PayInfoServiceImpl extends ServiceImpl<PayInfoMapper, PayInfo> impl
                     .eq(PayInfo::getOrderId, form.getOrderId()));
             if (ObjectUtils.isNotNull(payInfo) && payInfo.getIsPaid()) {
                 payInfo.setIsPaid(true);
+                payInfo.setTradeNo(form.getTradeNo());
                 payInfo.setPayTime(LocalDateTime.now());
                 updateById(payInfo);
             }

@@ -50,4 +50,9 @@ public class PayInfoForm implements Serializable {
      */
     private String orderId;
 
+    /**
+     * 交易订单号
+     */
+    private String tradeNo;
+
 }
