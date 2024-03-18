@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.path.RelationCourseForm;
 import com.zch.api.dto.path.StepForm;
-import com.zch.api.feignClient.book.ImageTextFeignClient;
+import com.zch.api.feignClient.book.BookFeignClient;
 import com.zch.api.feignClient.course.CourseFeignClient;
 import com.zch.api.vo.book.EBookSimpleVO;
 import com.zch.api.vo.book.ImageTextSimpleVO;
@@ -43,7 +43,7 @@ public class StepsServiceImpl extends ServiceImpl<StepsMapper, Steps> implements
 
     private final CourseFeignClient courseFeignClient;
 
-    private final ImageTextFeignClient bookFeignClient;
+    private final BookFeignClient bookFeignClient;
 
     @Override
     public List<StepVO> getStepList(Integer pathId) {

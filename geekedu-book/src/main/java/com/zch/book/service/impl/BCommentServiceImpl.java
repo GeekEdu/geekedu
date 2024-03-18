@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.book.AddCommentForm;
 import com.zch.api.dto.book.DelCommentBatchForm;
-import com.zch.api.feignClient.book.ImageTextFeignClient;
+import com.zch.api.feignClient.book.BookFeignClient;
 import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.utils.AddressUtils;
 import com.zch.api.vo.book.comment.BCommentFullVO;
@@ -48,7 +48,7 @@ public class BCommentServiceImpl extends ServiceImpl<BCommentMapper, BComment> i
 
     private final BCommentMapper commentMapper;
 
-    private final ImageTextFeignClient imageTextFeignClient;
+    private final BookFeignClient bookFeignClient;
 
     @Override
     public Page<CommentVO> getCommentPage(Integer relationId, Integer pageNum, Integer pageSize, Integer commentId, String cType) {

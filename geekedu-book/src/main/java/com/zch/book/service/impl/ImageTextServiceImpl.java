@@ -124,6 +124,7 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
         ImageText imageText = getById(id);
         ImageTextVO vo = new ImageTextVO();
         BeanUtils.copyProperties(imageText, vo);
+        vo.setCategory(labelFeignClient.getCategoryById(imageText.getCategoryId(), "IMAGE_TEXT").getData());
         return vo;
     }
 

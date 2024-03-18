@@ -137,6 +137,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
             return vo;
         }
         BeanUtils.copyProperties(course, vo);
+        vo.setCategory(labelFeignClient.getCategoryById(course.getCategoryId(), "REPLAY_COURSE").getData());
         return vo;
     }
 

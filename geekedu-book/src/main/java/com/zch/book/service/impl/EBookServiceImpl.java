@@ -221,6 +221,7 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
             return new EBookVO();
         }
         BeanUtils.copyProperties(eBook, vo);
+        vo.setCategory(labelFeignClient.getCategoryById(eBook.getCategoryId(), "E_BOOK").getData());
         return vo;
     }
 
