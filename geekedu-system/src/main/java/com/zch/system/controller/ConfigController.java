@@ -7,10 +7,7 @@ import com.zch.system.service.INoticeService;
 import com.zch.system.service.IPcConfigService;
 import com.zch.system.service.IVersionInfoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -74,7 +71,7 @@ public class ConfigController {
      * @return
      */
     @GetMapping("/v2/announcement/{id}")
-    public Response<NoticeVO> getOneAnnouncement(@RequestParam(value = "id", required = false) Integer id) {
+    public Response<NoticeVO> getOneAnnouncement(@PathVariable("id") Integer id) {
         return Response.success(noticeService.getNoticeById(id));
     }
 

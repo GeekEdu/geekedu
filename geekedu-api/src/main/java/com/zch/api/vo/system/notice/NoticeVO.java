@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 @Data
 public class NoticeVO extends BaseVO {
 
+    private Integer id;
+
     private String title;
 
     private String announcement;
