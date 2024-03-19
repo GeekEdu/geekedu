@@ -67,7 +67,7 @@ public class Coupon {
     /**
      * 过期时间
      */
-    private LocalDateTime expireTime;
+    private LocalDateTime expiredTime;
 
     @TableLogic
     private Boolean isDelete;
