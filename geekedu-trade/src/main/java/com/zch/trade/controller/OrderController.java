@@ -2,6 +2,7 @@ package com.zch.trade.controller;
 
 import com.zch.api.dto.trade.CreateOrderForm;
 import com.zch.api.vo.order.OrderVO;
+import com.zch.api.vo.trade.order.OrderDetailVO;
 import com.zch.api.vo.trade.order.OrderEndFullVO;
 import com.zch.common.mvc.result.Response;
 import com.zch.trade.service.IOrderService;
@@ -60,6 +61,16 @@ public class OrderController {
                                                     @RequestParam(value = "createdTime", required = false) List<String> createdTime,
                                                     @RequestParam(value = "payment", required = false) String payment) {
         return Response.success(orderService.getEndOrderList(pageNum, pageSize, sort, order, orderId, goodsName, isRefund, status, createdTime, payment));
+    }
+
+    /**
+     * 订单详情
+     * @param orderId
+     * @return
+     */
+    @GetMapping("/{id}/detail")
+    public Response<OrderDetailVO> getOrderDetail(@PathVariable("id") Long orderId) {
+        return Response.success(orderService.getOrderDetail(orderId));
     }
 
 }

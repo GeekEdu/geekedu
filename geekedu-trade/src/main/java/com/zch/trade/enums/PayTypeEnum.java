@@ -10,10 +10,10 @@ import lombok.Getter;
 @Getter
 public enum PayTypeEnum {
 
-    ALIPAY(1, "支付宝"),
-    WX_PAY(2, "微信"),
+    ALIPAY(1, "ALIPAY"),
+    WX_PAY(2, "WX_PAY"),
     ACCOUNT(3, "余额"),
-    OTHER(4, "手动打款"),
+    OTHER(4, "OTHER"),
     ;
 
     @EnumValue

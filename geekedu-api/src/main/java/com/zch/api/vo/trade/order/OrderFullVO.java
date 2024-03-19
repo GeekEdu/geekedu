@@ -36,6 +36,11 @@ public class OrderFullVO extends BaseVO {
     private String orderNumber;
 
     /**
+     * 支付类型
+     */
+    private String payment;
+
+    /**
      * 支付类型文本
      */
     private String payTypeText;

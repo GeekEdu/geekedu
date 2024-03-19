@@ -16,6 +16,7 @@ import com.zch.api.vo.course.live.LiveCourseVO;
 import com.zch.api.vo.order.OrderVO;
 import com.zch.api.vo.path.LearnPathVO;
 import com.zch.api.vo.trade.order.GoodsVO;
+import com.zch.api.vo.trade.order.OrderDetailVO;
 import com.zch.api.vo.trade.order.OrderEndFullVO;
 import com.zch.api.vo.trade.order.OrderFullVO;
 import com.zch.api.vo.user.UserSimpleVO;
@@ -123,6 +124,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         vo.setCountMap(getCountMap());
         // 存放用户信息
         Map<Long, UserSimpleVO> users = getUsers();
+        vo.setUsers(users);
         // 查询数量
         long count = count();
         LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<>();
@@ -142,7 +144,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         if (ObjectUtils.isNotNull(status) && ObjectUtils.isNotNull(OrderStatusEnum.getByCode(status))) {
             wrapper.eq(Order::getOrderStatus, OrderStatusEnum.getByCode(status));
         }
-        if (ObjectUtils.isNotNull(createdTime) && !createdTime.isEmpty()) {
+        if (ObjectUtils.isNotNull(createdTime)  && createdTime.size() > 1 && StringUtils.isNotBlank(createdTime.get(0))
+            && StringUtils.isNotBlank(createdTime.get(1))) {
             // 时间格式化
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime start = LocalDateTime.parse(createdTime.get(0), formatter);
@@ -169,6 +172,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             BeanUtils.copyProperties(item, vo1);
             vo1.setIsRefund(item.getOrderStatus().equals(OrderStatusEnum.ORDERED_AND_REFUNDED));
             vo1.setPayTypeText(item.getPayType().getValue());
+            vo1.setPayment(item.getPayType().getValue());
             vo1.setOrderStatusText(item.getOrderStatus().getValue());
             // 判断商品类型，查找对应的商品信息
             if (VIP.equals(item.getGoodsType())) {
@@ -231,6 +235,85 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         }).collect(Collectors.toList());
         vo.getData().setData(list);
         vo.getData().setTotal(count);
+        return vo;
+    }
+
+    @Override
+    public OrderDetailVO getOrderDetail(Long orderId) {
+        Order order = getById(orderId);
+        if (ObjectUtils.isNull(order)) {
+            return new OrderDetailVO();
+        }
+        OrderDetailVO vo = new OrderDetailVO();
+        OrderFullVO vo1 = new OrderFullVO();
+        vo1.setOrderId(orderId);
+        vo1.setUserId(order.getUserId());
+        vo1.setAmount(order.getAmount());
+        vo1.setOrderNumber(order.getOrderNumber());
+        vo1.setPayment(order.getPayType().getValue());
+        vo1.setPayTypeText(order.getPayType().getValue());
+        vo1.setOrderStatusText(order.getOrderStatus().getValue());
+        vo1.setCreatedTime(order.getCreatedTime());
+        vo1.setIsRefund(order.getOrderStatus().equals(OrderStatusEnum.ORDERED_AND_REFUNDED));
+        // 判断商品类型，查找对应的商品信息
+        if (VIP.equals(order.getGoodsType())) {
+            VipVO data = userFeignClient.getVipById(order.getGoodsId()).getData();
+            GoodsVO goods = new GoodsVO();
+            goods.setOrderNumber(order.getOrderNumber());
+            goods.setGoodsType(VIP.getValue());
+            goods.setGoodsPrice(data.getPrice());
+            goods.setGoodsId(data.getId());
+            goods.setGoodsName(data.getName());
+            vo1.setGoods(goods);
+        } else if (REPLAY_COURSE.equals(order.getGoodsType())) {
+            CourseVO data = courseFeignClient.getCourseById(order.getGoodsId()).getData();
+            GoodsVO goods = new GoodsVO();
+            goods.setOrderNumber(order.getOrderNumber());
+            goods.setGoodsType(VIP.getValue());
+            goods.setGoodsPrice(data.getPrice());
+            goods.setGoodsId(data.getId());
+            goods.setGoodsName(data.getTitle());
+            goods.setGoodsCover(data.getCoverLink());
+            vo1.setGoods(goods);
+        } else if (LIVE_COURSE.equals(order.getGoodsType())) {
+            LiveCourseVO data = courseFeignClient.getLiveCourseDetail(order.getGoodsId()).getData();
+            GoodsVO goods = new GoodsVO();
+            goods.setOrderNumber(order.getOrderNumber());
+            goods.setGoodsType(VIP.getValue());
+            goods.setGoodsPrice(data.getPrice());
+            goods.setGoodsId(data.getId());
+            goods.setGoodsName(data.getTitle());
+            vo1.setGoods(goods);
+        } else if (IMAGE_TEXT.equals(order.getGoodsType())) {
+            ImageTextVO data = bookFeignClient.getImageTextById(order.getGoodsId()).getData();
+            GoodsVO goods = new GoodsVO();
+            goods.setOrderNumber(order.getOrderNumber());
+            goods.setGoodsType(VIP.getValue());
+            goods.setGoodsPrice(data.getPrice());
+            goods.setGoodsId(data.getId());
+            goods.setGoodsName(data.getTitle());
+            vo1.setGoods(goods);
+        } else if (LEARN_PATH.equals(order.getGoodsType())) {
+            LearnPathVO data = bookFeignClient.getPathDetail(order.getGoodsId()).getData();
+            GoodsVO goods = new GoodsVO();
+            goods.setOrderNumber(order.getOrderNumber());
+            goods.setGoodsType(VIP.getValue());
+            goods.setGoodsPrice(data.getPrice());
+            goods.setGoodsId(data.getId());
+            goods.setGoodsName(data.getName());
+            vo1.setGoods(goods);
+        } else if (E_BOOK.equals(order.getGoodsType())) {
+            EBookVO data = bookFeignClient.getEBookById(order.getGoodsId()).getData();
+            GoodsVO goods = new GoodsVO();
+            goods.setOrderNumber(order.getOrderNumber());
+            goods.setGoodsType(VIP.getValue());
+            goods.setGoodsPrice(data.getPrice());
+            goods.setGoodsId(data.getId());
+            goods.setGoodsName(data.getName());
+            vo1.setGoods(goods);
+        }
+        vo.setOrder(vo1);
+        vo.setUser(userFeignClient.getUserById(order.getUserId() + "").getData());
         return vo;
     }
 
