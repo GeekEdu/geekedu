@@ -4,6 +4,8 @@ import com.zch.api.dto.trade.CreateOrderForm;
 import com.zch.api.vo.order.OrderVO;
 import com.zch.api.vo.trade.order.OrderDetailVO;
 import com.zch.api.vo.trade.order.OrderEndFullVO;
+import com.zch.api.vo.trade.order.OrderFullVO;
+import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import com.zch.trade.service.IOrderService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,19 @@ public class OrderController {
     @PostMapping("/create")
     public Response<OrderVO> createOrder(@RequestBody CreateOrderForm form) {
         return Response.success(orderService.createOrder(form));
+    }
+
+    /**
+     * 订单列表
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/v2/list")
+    public PageResult<OrderFullVO> getOrderPage(@RequestParam("userId") Long userId,
+                                                @RequestParam("pageNum") Integer pageNum,
+                                                @RequestParam("pageSize") Integer pageSize) {
+        return PageResult.success(orderService.getOrderPage(userId, pageNum, pageSize));
     }
 
     // ================================================================================

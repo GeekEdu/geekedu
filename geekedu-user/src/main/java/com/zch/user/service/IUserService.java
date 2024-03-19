@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.user.*;
 import com.zch.api.vo.order.OrderVO;
+import com.zch.api.vo.trade.order.OrderFullVO;
 import com.zch.api.vo.user.*;
+import com.zch.common.mvc.result.PageResult;
 import com.zch.user.domain.po.User;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -58,6 +60,14 @@ public interface IUserService extends IService<User> {
      * @return
      */
     Boolean updateUserAvatar(MultipartFile file);
+
+    /**
+     * 获取用户订单列表
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    PageResult<OrderFullVO> getOrderPage(Integer pageNum, Integer pageSize);
 
     /**
      * 前台 签到 返回积分

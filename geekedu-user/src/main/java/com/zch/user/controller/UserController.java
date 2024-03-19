@@ -4,10 +4,12 @@ import com.zch.api.dto.user.ChangePwdForm;
 import com.zch.api.dto.user.CodeLoginForm;
 import com.zch.api.dto.user.LoginForm;
 import com.zch.api.dto.user.PwdLoginForm;
+import com.zch.api.vo.trade.order.OrderFullVO;
 import com.zch.api.vo.user.CaptchaVO;
 import com.zch.api.vo.user.LoginVO;
 import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.api.vo.user.UserVO;
+import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import com.zch.user.domain.po.User;
 import com.zch.user.service.IUserService;
@@ -91,6 +93,18 @@ public class UserController {
     @PostMapping("/v2/avatar/update")
     public Response updateUserAvatar(@RequestParam("file") MultipartFile file) {
         return Response.success(userService.updateUserAvatar(file));
+    }
+
+    /**
+     * 获取用户订单列表
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/v2/order/list")
+    public PageResult<OrderFullVO> getMemberOrderList(@RequestParam("pageNum") Integer pageNum,
+                                                      @RequestParam("pageSize") Integer pageSize) {
+        return userService.getOrderPage(pageNum, pageSize);
     }
 
     /**

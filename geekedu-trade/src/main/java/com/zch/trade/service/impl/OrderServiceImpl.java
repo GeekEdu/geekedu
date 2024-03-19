@@ -116,6 +116,90 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
     @Override
+    public Page<OrderFullVO> getOrderPage(Long userId, Integer pageNum, Integer pageSize) {
+        Page<OrderFullVO> vo = new Page<>();
+        Page<Order> page = page(new Page<>(pageNum, pageSize), new LambdaQueryWrapper<Order>()
+                .eq(Order::getUserId, userId));
+        if (ObjectUtils.isNull(page) || ObjectUtils.isNull(page.getRecords()) || CollUtils.isEmpty(page.getRecords())) {
+            vo.setRecords(new ArrayList<>(0));
+            vo.setTotal(0);
+            return vo;
+        }
+        vo.setRecords(page.getRecords().stream().map(item -> {
+            OrderFullVO vo1 = new OrderFullVO();
+            vo1.setOrderId(item.getOrderId());
+            vo1.setUserId(userId);
+            vo1.setAmount(item.getAmount());
+            vo1.setOrderNumber(item.getOrderNumber());
+            vo1.setPayment(item.getPayType().getValue());
+            vo1.setPayTypeText(item.getPayType().getValue());
+            vo1.setOrderStatusText(item.getOrderStatus().getValue());
+            vo1.setCreatedTime(item.getCreatedTime());
+            vo1.setIsRefund(item.getOrderStatus().equals(OrderStatusEnum.ORDERED_AND_REFUNDED));
+            // 判断商品类型，查找对应的商品信息
+            if (VIP.equals(item.getGoodsType())) {
+                VipVO data = userFeignClient.getVipById(item.getGoodsId()).getData();
+                GoodsVO goods = new GoodsVO();
+                goods.setOrderNumber(item.getOrderNumber());
+                goods.setGoodsType(VIP.getValue());
+                goods.setGoodsPrice(data.getPrice());
+                goods.setGoodsId(data.getId());
+                goods.setGoodsName(data.getName());
+                vo1.setGoods(goods);
+            } else if (REPLAY_COURSE.equals(item.getGoodsType())) {
+                CourseVO data = courseFeignClient.getCourseById(item.getGoodsId()).getData();
+                GoodsVO goods = new GoodsVO();
+                goods.setOrderNumber(item.getOrderNumber());
+                goods.setGoodsType(VIP.getValue());
+                goods.setGoodsPrice(data.getPrice());
+                goods.setGoodsId(data.getId());
+                goods.setGoodsName(data.getTitle());
+                goods.setGoodsCover(data.getCoverLink());
+                vo1.setGoods(goods);
+            } else if (LIVE_COURSE.equals(item.getGoodsType())) {
+                LiveCourseVO data = courseFeignClient.getLiveCourseDetail(item.getGoodsId()).getData();
+                GoodsVO goods = new GoodsVO();
+                goods.setOrderNumber(item.getOrderNumber());
+                goods.setGoodsType(VIP.getValue());
+                goods.setGoodsPrice(data.getPrice());
+                goods.setGoodsId(data.getId());
+                goods.setGoodsName(data.getTitle());
+                vo1.setGoods(goods);
+            } else if (IMAGE_TEXT.equals(item.getGoodsType())) {
+                ImageTextVO data = bookFeignClient.getImageTextById(item.getGoodsId()).getData();
+                GoodsVO goods = new GoodsVO();
+                goods.setOrderNumber(item.getOrderNumber());
+                goods.setGoodsType(VIP.getValue());
+                goods.setGoodsPrice(data.getPrice());
+                goods.setGoodsId(data.getId());
+                goods.setGoodsName(data.getTitle());
+                vo1.setGoods(goods);
+            } else if (LEARN_PATH.equals(item.getGoodsType())) {
+                LearnPathVO data = bookFeignClient.getPathDetail(item.getGoodsId()).getData();
+                GoodsVO goods = new GoodsVO();
+                goods.setOrderNumber(item.getOrderNumber());
+                goods.setGoodsType(VIP.getValue());
+                goods.setGoodsPrice(data.getPrice());
+                goods.setGoodsId(data.getId());
+                goods.setGoodsName(data.getName());
+                vo1.setGoods(goods);
+            } else if (E_BOOK.equals(item.getGoodsType())) {
+                EBookVO data = bookFeignClient.getEBookById(item.getGoodsId()).getData();
+                GoodsVO goods = new GoodsVO();
+                goods.setOrderNumber(item.getOrderNumber());
+                goods.setGoodsType(VIP.getValue());
+                goods.setGoodsPrice(data.getPrice());
+                goods.setGoodsId(data.getId());
+                goods.setGoodsName(data.getName());
+                vo1.setGoods(goods);
+            }
+            return vo1;
+        }).collect(Collectors.toList()));
+        vo.setTotal(count());
+        return vo;
+    }
+
+    @Override
     public OrderEndFullVO getEndOrderList(Integer pageNum, Integer pageSize, String sort, String order,
                                           String orderId, String goodsName, Integer isRefund, Integer status,
                                           List<String> createdTime, String payment) {

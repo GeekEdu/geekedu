@@ -6,13 +6,16 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.user.*;
 import com.zch.api.feignClient.resources.MediaFeignClient;
+import com.zch.api.feignClient.trade.TradeFeignClient;
 import com.zch.api.utils.AddressUtils;
 import com.zch.api.vo.order.OrderVO;
 import com.zch.api.vo.resources.FileUploadVO;
+import com.zch.api.vo.trade.order.OrderFullVO;
 import com.zch.api.vo.user.*;
 import com.zch.common.core.utils.*;
 import com.zch.common.core.utils.encrypt.EncryptUtils;
 import com.zch.common.mvc.exception.CommonException;
+import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import com.zch.common.mvc.utils.CommonServletUtils;
 import com.zch.common.redis.utils.RedisUtils;
@@ -64,6 +67,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private final ApplicationContext applicationContext;
 
     private final MediaFeignClient mediaFeignClient;
+
+    private final TradeFeignClient tradeFeignClient;
 
     @Override
     public CaptchaVO getCaptcha() {
@@ -184,6 +189,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return true;
         }
         return false;
+    }
+
+    @Override
+    public PageResult<OrderFullVO> getOrderPage(Integer pageNum, Integer pageSize) {
+        // Long userId = UserContext.getLoginId();
+        Long userId = 1745747394693820416L;
+        return tradeFeignClient.getOrderPage(userId, pageNum, pageSize);
     }
 
     @Override

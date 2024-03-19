@@ -5,7 +5,9 @@ import com.zch.api.dto.trade.CreateOrderForm;
 import com.zch.api.vo.order.OrderVO;
 import com.zch.api.vo.trade.order.OrderDetailVO;
 import com.zch.api.vo.trade.order.OrderEndFullVO;
+import com.zch.api.vo.trade.order.OrderFullVO;
 import com.zch.trade.domain.po.Order;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import java.util.List;
 
@@ -22,6 +24,31 @@ public interface IOrderService extends IService<Order> {
      */
     OrderVO createOrder(CreateOrderForm form);
 
+    /**
+     * 前台获取订单列表
+     * @param userId
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    Page<OrderFullVO> getOrderPage(Long userId, Integer pageNum, Integer pageSize);
+
+    //===================================================
+
+    /**
+     * 后台 获取订单列表
+     * @param pageNum
+     * @param pageSize
+     * @param sort
+     * @param order
+     * @param orderId
+     * @param goodsName
+     * @param isRefund
+     * @param status
+     * @param createdTime
+     * @param payment
+     * @return
+     */
     OrderEndFullVO getEndOrderList(Integer pageNum, Integer pageSize, String sort, String order,
                                    String orderId, String goodsName, Integer isRefund, Integer status,
                                    List<String> createdTime, String payment);
