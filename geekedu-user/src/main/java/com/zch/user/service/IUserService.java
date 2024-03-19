@@ -6,6 +6,7 @@ import com.zch.api.dto.user.*;
 import com.zch.api.vo.order.OrderVO;
 import com.zch.api.vo.user.*;
 import com.zch.user.domain.po.User;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -50,6 +51,13 @@ public interface IUserService extends IService<User> {
      * @return
      */
     UserVO getLoginUserDetail();
+
+    /**
+     * 修改头像
+     * @param file
+     * @return
+     */
+    Boolean updateUserAvatar(MultipartFile file);
 
     /**
      * 前台 签到 返回积分

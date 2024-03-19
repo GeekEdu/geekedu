@@ -13,6 +13,7 @@ import com.zch.user.domain.po.User;
 import com.zch.user.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author Poison02
@@ -80,6 +81,16 @@ public class UserController {
     @GetMapping("/v2/detail")
     public Response<UserVO> getUserDetail() {
         return Response.success(userService.getLoginUserDetail());
+    }
+
+    /**
+     * 前台 修改用户头像
+     * @param file
+     * @return
+     */
+    @PostMapping("/v2/avatar/update")
+    public Response updateUserAvatar(@RequestParam("file") MultipartFile file) {
+        return Response.success(userService.updateUserAvatar(file));
     }
 
     /**

@@ -5,12 +5,15 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.user.*;
+import com.zch.api.feignClient.resources.MediaFeignClient;
 import com.zch.api.utils.AddressUtils;
 import com.zch.api.vo.order.OrderVO;
+import com.zch.api.vo.resources.FileUploadVO;
 import com.zch.api.vo.user.*;
 import com.zch.common.core.utils.*;
 import com.zch.common.core.utils.encrypt.EncryptUtils;
 import com.zch.common.mvc.exception.CommonException;
+import com.zch.common.mvc.result.Response;
 import com.zch.common.mvc.utils.CommonServletUtils;
 import com.zch.common.redis.utils.RedisUtils;
 import com.zch.common.satoken.context.UserContext;
@@ -23,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
@@ -58,6 +62,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private final IVipInfoService vipInfoService;
 
     private final ApplicationContext applicationContext;
+
+    private final MediaFeignClient mediaFeignClient;
 
     @Override
     public CaptchaVO getCaptcha() {
@@ -162,6 +168,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             vo.setVip(vip);
         }
         return vo;
+    }
+
+    @Override
+    public Boolean updateUserAvatar(MultipartFile file) {
+        // 上传图片得到结果
+        Response<FileUploadVO> response = mediaFeignClient.uploadFile(file, 0);
+        if (ObjectUtils.isNotNull(response) && ObjectUtils.isNotNull(response.getData())) {
+            User user = new User();
+            // Long userId = UserContext.getLoginId();
+            Long userId = 1745747394693820416L;
+            user.setId(userId);
+            user.setAvatar(response.getData().getLink());
+            updateById(user);
+            return true;
+        }
+        return false;
     }
 
     @Override
