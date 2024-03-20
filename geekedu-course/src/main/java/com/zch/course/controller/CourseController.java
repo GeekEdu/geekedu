@@ -17,6 +17,7 @@ import com.zch.course.service.ICourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -307,8 +308,28 @@ public class CourseController {
      * @return
      */
     @PostMapping("/v2/{id}/video/record")
-    public Response<Boolean> recordVideo(@PathVariable("id") Integer id, LearnRecordForm form) {
+    public Response<Boolean> recordVideo(@PathVariable("id") Integer id, @RequestBody LearnRecordForm form) {
         return Response.success(courseService.courseRecord(id, form));
+    }
+
+    /**
+     * 课程收藏
+     * @param id
+     * @return
+     */
+    @PostMapping("/v2/{id}/collect")
+    public Response<Boolean> courseCollect(@PathVariable("id") Integer id) {
+        return Response.success(courseService.courseCollect(id));
+    }
+
+    /**
+     * 查询课程价格
+     * @param id
+     * @return
+     */
+    @PostMapping("/v2/{id}/price")
+    public Response<BigDecimal> queryCoursePrice(@PathVariable("id") Integer id) {
+        return Response.success(courseService.queryCoursePrice(id));
     }
 
 }

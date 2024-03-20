@@ -8,17 +8,16 @@ import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.course.ChapterForm;
 import com.zch.api.dto.course.DelSectionBatchForm;
 import com.zch.api.dto.course.LearnRecordForm;
+import com.zch.api.dto.user.CollectForm;
 import com.zch.api.feignClient.comments.CommentsFeignClient;
 import com.zch.api.feignClient.label.LabelFeignClient;
 import com.zch.api.feignClient.resources.MediaFeignClient;
+import com.zch.api.feignClient.trade.TradeFeignClient;
 import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.ask.CommentsVO;
 import com.zch.api.vo.course.*;
-import com.zch.api.vo.course.record.PlayUrlVO;
-import com.zch.api.vo.course.record.RecordCourseVO;
-import com.zch.api.vo.course.record.RecordSectionVO;
-import com.zch.api.vo.course.record.TestVO;
+import com.zch.api.vo.course.record.*;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.common.core.utils.BeanUtils;
@@ -37,6 +36,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -64,6 +64,8 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     private final MediaFeignClient mediaFeignClient;
 
     private final ILearnRecordService learnRecordService;
+
+    private final TradeFeignClient tradeFeignClient;
 
     @Override
     public CourseAndCategoryVO getCoursePage(Integer pageNum, Integer pageSize, String sort, String order, String keywords, Integer cid, Integer id) {
@@ -305,6 +307,8 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         if (ObjectUtils.isNull(id)) {
             return vo;
         }
+        // Long userId = UserContext.getLoginId();
+        Long userId = 1745747394693820416L;
         // 查询是否存在该课程
         Course course = courseMapper.selectById(id);
         if (ObjectUtils.isNull(course)) {
@@ -355,10 +359,28 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
             }
         }
         vo.setVideos(videos);
-        // TODO 是否购买课程
-        // TODO 是否收藏课程
+        // 是否购买课程
+        Response<Boolean> res1 = tradeFeignClient.queryOrderIsPay(userId, course.getId(), "REPLAY_COURSE");
+        if (ObjectUtils.isNotNull(res1.getData())) {
+            vo.setIsBuy(res1.getData());
+        }
+        // 是否收藏课程
+        Response<Boolean> res2 = userFeignClient.checkCollectStatus(course.getId(), "REPLAY_COURSE");
+        if (ObjectUtils.isNotNull(res2.getData())) {
+            vo.setIsCollect(res2.getData());
+        }
         // TODO 附件
-        // TODO 视频观看进度
+        // 视频观看进度
+        if (vo.getIsBuy()) {
+            Map<Integer, LearnRecordVO> videoWatchedProgress = new HashMap<>();
+            sections.stream().forEach(item -> {
+                LearnRecordVO record = learnRecordService.getLearnRecord(id, item.getId(), userId,  "VOD");
+                if (ObjectUtils.isNotNull(record)) {
+                    videoWatchedProgress.put(item.getId(), record);
+                }
+            });
+            vo.setVideoWatchedProgress(videoWatchedProgress);
+        }
         return vo;
     }
 
@@ -383,6 +405,8 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         if (ObjectUtils.isNull(sectionId)) {
             return vo;
         }
+        // Long userId = UserContext.getLoginId();
+        Long userId = 1745747394693820416L;
         // 查询是否存在该课时
         CourseSectionVO section = sectionService.getSectionById(sectionId);
         if (ObjectUtils.isNull(section)) {
@@ -439,6 +463,22 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
             }
         }
         vo.setVideos(videos);
+        // 是否购买课程
+        Response<Boolean> res1 = tradeFeignClient.queryOrderIsPay(userId, course.getId(), "REPLAY_COURSE");
+        if (ObjectUtils.isNotNull(res1.getData())) {
+            vo.setIsWatch(res1.getData());
+        }
+        // 视频观看进度
+        if (vo.getIsWatch()) {
+            Map<Integer, LearnRecordVO> videoWatchedProgress = new HashMap<>();
+            sections.stream().forEach(item -> {
+                LearnRecordVO record = learnRecordService.getLearnRecord(section.getCourseId(), item.getId(), userId,  "VOD");
+                if (ObjectUtils.isNotNull(record)) {
+                    videoWatchedProgress.put(item.getId(), record);
+                }
+            });
+            vo.setVideoWatchedProgress(videoWatchedProgress);
+        }
         return vo;
     }
 
@@ -469,6 +509,23 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         // Long userId = UserContext.getLoginId();
         Long userId = 1745747394693820416L;
         return learnRecordService.updateLearnRecord(courseId, form.getVideoId(), form.getDuration(), userId, "VOD");
+    }
+
+    @Override
+    public Boolean courseCollect(Integer id) {
+        CollectForm form = new CollectForm();
+        form.setId(id);
+        form.setType("REPLAY_COURSE");
+        return userFeignClient.hitCollectIcon(form).getData();
+    }
+
+    @Override
+    public BigDecimal queryCoursePrice(Integer id) {
+        Course course = getById(id);
+        if (ObjectUtils.isNull(course)) {
+            return BigDecimal.ZERO;
+        }
+        return course.getPrice();
     }
 
 

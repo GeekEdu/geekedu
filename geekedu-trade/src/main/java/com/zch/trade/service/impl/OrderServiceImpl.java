@@ -26,7 +26,6 @@ import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
 import com.zch.common.mvc.result.Response;
-import com.zch.common.satoken.context.UserContext;
 import com.zch.trade.domain.po.Order;
 import com.zch.trade.enums.OrderStatusEnum;
 import com.zch.trade.enums.PayStatusEnum;
@@ -79,10 +78,20 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 vo.setGoodsPrice(res.getData());
             }
             vo.setGoodsType(VIP.getValue());
+        } else if (Objects.equals(REPLAY_COURSE, ProductTypeEnum.valueOf(form.getGoodsType()))) {
+            // 录播课
+            Response<BigDecimal> res = courseFeignClient.queryCoursePrice(form.getGoodsId());
+            if (ObjectUtils.isNotNull(res) && ObjectUtils.isNotNull(res.getData())) {
+                vo.setGoodsPrice(res.getData());
+            }
+            vo.setGoodsType(REPLAY_COURSE.getValue());
         }
         // 用户id
-        Long userId = UserContext.getLoginId();
+        // Long userId = UserContext.getLoginId();
+        Long userId = 1745747394693820416L;
         vo.setUserId(userId);
+        // 商品名
+        vo.setGoodsName(form.getGoodsName());
         // 订单备注
         vo.setOrderNotes(form.getGoodsType());
         // 查找优惠券 TODO
@@ -197,6 +206,18 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         }).collect(Collectors.toList()));
         vo.setTotal(count());
         return vo;
+    }
+
+    @Override
+    public Boolean queryOrderIsPay(Long userId, Integer goodsId, String goodsType) {
+        Order one = getOne(new LambdaQueryWrapper<Order>()
+                .eq(Order::getUserId, userId)
+                .eq(Order::getGoodsId, goodsId)
+                .eq(Order::getGoodsType, ProductTypeEnum.valueOf(goodsType)));
+        if (ObjectUtils.isNotNull(one)) {
+            return one.getOrderStatus().equals(OrderStatusEnum.ORDERED_AND_PAID);
+        }
+        return false;
     }
 
     @Override

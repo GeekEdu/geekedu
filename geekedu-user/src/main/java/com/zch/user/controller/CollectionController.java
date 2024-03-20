@@ -19,13 +19,13 @@ public class CollectionController {
 
     /**
      * 查询是否收藏
-     * @param bookId
+     * @param relationId
      * @param type
      * @return
      */
     @GetMapping("/status")
-    public Response<Boolean> checkCollectStatus(@RequestParam("id") Integer bookId, @RequestParam("type") String type) {
-        return Response.success(collectionService.checkCollectionStatus(bookId, type));
+    public Response<Boolean> checkCollectStatus(@RequestParam("id") Integer relationId, @RequestParam("type") String type) {
+        return Response.success(collectionService.checkCollectionStatus(relationId, type));
     }
 
     /**

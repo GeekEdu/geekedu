@@ -24,6 +24,11 @@ public class CreateOrderForm implements Serializable {
     private String goodsType;
 
     /**
+     * 商品名
+     */
+    private String goodsName;
+
+    /**
      * 优惠码 / 优惠券id
      */
     private String promoCode;

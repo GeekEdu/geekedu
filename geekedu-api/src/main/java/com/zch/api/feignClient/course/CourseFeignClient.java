@@ -9,6 +9,9 @@ import com.zch.common.mvc.result.Response;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import java.math.BigDecimal;
 
 /**
  * @author Poison02
@@ -43,5 +46,13 @@ public interface CourseFeignClient {
      */
     @GetMapping("/api/live/course/{id}/detail")
     Response<LiveCourseVO> getLiveCourseDetail(@PathVariable("id") Integer courseId);
+
+    /**
+     * 查询课程价格
+     * @param id
+     * @return
+     */
+    @PostMapping("/api/v2/{id}/price")
+    Response<BigDecimal> queryCoursePrice(@PathVariable("id") Integer id);
 
 }

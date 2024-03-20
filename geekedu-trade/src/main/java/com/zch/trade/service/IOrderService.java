@@ -33,6 +33,14 @@ public interface IOrderService extends IService<Order> {
      */
     Page<OrderFullVO> getOrderPage(Long userId, Integer pageNum, Integer pageSize);
 
+    /**
+     * 前台判断订单是否存在，且购买
+     * @param userId
+     * @param goodsId
+     * @param
+     */
+    Boolean queryOrderIsPay(Long userId, Integer goodsId, String goodsType);
+
     //===================================================
 
     /**

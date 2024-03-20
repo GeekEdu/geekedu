@@ -38,12 +38,12 @@ public class RecordCourseVO extends BaseVO {
     /**
      * 是否购买课程
      */
-    private Boolean isBuy = true;
+    private Boolean isBuy = false;
 
     /**
      * 是否收藏课程
      */
-    private Boolean isCollect = true;
+    private Boolean isCollect = false;
 
     /**
      * 附件
@@ -53,6 +53,6 @@ public class RecordCourseVO extends BaseVO {
     /**
      * 视频观看进度
      */
-    private Map<Integer, CourseSectionVO> videoWatchedProgress = new HashMap<>(0);
+    private Map<Integer, LearnRecordVO> videoWatchedProgress = new HashMap<>(0);
 
 }

@@ -4,6 +4,7 @@ import com.zch.api.dto.trade.pay.PayInfoForm;
 import com.zch.api.interceptor.FeignInterceptor;
 import com.zch.api.vo.trade.order.OrderFullVO;
 import com.zch.common.mvc.result.PageResult;
+import com.zch.common.mvc.result.Response;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,5 +34,17 @@ public interface TradeFeignClient {
     @GetMapping("/api/order/v2/list")
     PageResult<OrderFullVO> getOrderPage(@RequestParam("userId") Long userId, @RequestParam("pageNum") Integer pageNum,
                                          @RequestParam("pageSize") Integer pageSize);
+
+    /**
+     * 订单是否已支付
+     * @param userId
+     * @param goodsId
+     * @param goodsType
+     * @return
+     */
+    @GetMapping("/api/order/v2/queryIsPay")
+    Response<Boolean> queryOrderIsPay(@RequestParam("userId") Long userId,
+                                             @RequestParam("goodsId") Integer goodsId,
+                                             @RequestParam("goodsType") String goodsType);
 
 }

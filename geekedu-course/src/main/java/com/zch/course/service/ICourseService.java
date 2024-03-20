@@ -15,6 +15,7 @@ import com.zch.api.vo.course.record.RecordSectionVO;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.course.domain.po.Course;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -215,5 +216,19 @@ public interface ICourseService extends IService<Course> {
      * @return
      */
     Boolean courseRecord(Integer courseId, LearnRecordForm form);
+
+    /**
+     * 课程收藏
+     * @param id
+     * @return
+     */
+    Boolean courseCollect(Integer id);
+
+    /**
+     * 查询课程价格
+     * @param id
+     * @return
+     */
+    BigDecimal queryCoursePrice(Integer id);
 
 }

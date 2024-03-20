@@ -37,13 +37,13 @@ public class RecordSectionVO extends BaseVO {
     /**
      * 视频观看进度
      */
-    private Map<Integer, CourseSectionVO> videoWatchedProgress = new HashMap<>(0);
+    private Map<Integer, LearnRecordVO> videoWatchedProgress = new HashMap<>(0);
 
     /**
      * 视频信息
      */
     private CourseSectionVO video;
 
-    private Boolean isWatch = true;
+    private Boolean isWatch = false;
 
 }

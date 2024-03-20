@@ -47,6 +47,20 @@ public class OrderController {
         return PageResult.success(orderService.getOrderPage(userId, pageNum, pageSize));
     }
 
+    /**
+     * 订单是否已支付
+     * @param userId
+     * @param goodsId
+     * @param goodsType
+     * @return
+     */
+    @GetMapping("/v2/queryIsPay")
+    public Response<Boolean> queryOrderIsPay(@RequestParam("userId") Long userId,
+                                              @RequestParam("goodsId") Integer goodsId,
+                                              @RequestParam("goodsType") String goodsType) {
+        return Response.success(orderService.queryOrderIsPay(userId, goodsId, goodsType));
+    }
+
     // ================================================================================
     // 后台
 
