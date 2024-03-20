@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.path.LearnPathForm;
 import com.zch.api.dto.path.StepForm;
 import com.zch.api.feignClient.label.LabelFeignClient;
+import com.zch.api.feignClient.trade.TradeFeignClient;
 import com.zch.api.vo.path.*;
 import com.zch.book.domain.po.LearnPath;
 import com.zch.book.mapper.LearnPathMapper;
@@ -15,6 +16,7 @@ import com.zch.common.core.utils.BeanUtils;
 import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
+import com.zch.common.mvc.result.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,8 @@ public class LearnPathServiceImpl extends ServiceImpl<LearnPathMapper, LearnPath
     private final LabelFeignClient labelFeignClient;
 
     private final IStepsService stepsService;
+
+    private final TradeFeignClient tradeFeignClient;
 
     @Override
     public Page<LearnPathVO> getPathList(Integer pageNum, Integer pageSize, String keywords, Integer categoryId) {
@@ -178,6 +182,13 @@ public class LearnPathServiceImpl extends ServiceImpl<LearnPathMapper, LearnPath
         LearnPathVO data = getPathDetail(id);
         vo.setData(data);
         vo.setSteps(stepsService.getStepFullList(data.getId()));
+        // Long userId = UserContext.getLoginId();
+        Long userId = 1745747394693820416L;
+        // 查看是否购买
+        Response<Boolean> res = tradeFeignClient.queryOrderIsPay(userId, id, "LEARN_PATH");
+        if (ObjectUtils.isNotNull(res) && ObjectUtils.isNotNull(res.getData())) {
+            vo.setIsBuy(res.getData());
+        }
         return vo;
     }
 }

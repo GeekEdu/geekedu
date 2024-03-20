@@ -20,6 +20,6 @@ public class LearnPathDetailVO extends BaseVO {
 
     private List<StepForm> steps = new ArrayList<>(0);
 
-    private Boolean isBuy = true;
+    private Boolean isBuy = false;
 
 }
