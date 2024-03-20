@@ -4,6 +4,7 @@ import com.zch.api.dto.ask.AddCommentForm;
 import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.course.ChapterForm;
 import com.zch.api.dto.course.DelSectionBatchForm;
+import com.zch.api.dto.course.LearnRecordForm;
 import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.course.*;
 import com.zch.api.vo.course.record.PlayUrlVO;
@@ -297,6 +298,17 @@ public class CourseController {
     public Response<PlayUrlVO> getSectionPlayUrl(@PathVariable("id") Integer id,
                                                  @RequestParam("isTry") Integer isTry) {
         return Response.success(courseService.getSectionPlayUrl(id, isTry));
+    }
+
+    /**
+     * 记录学习时长
+     * @param id
+     * @param form
+     * @return
+     */
+    @PostMapping("/v2/{id}/video/record")
+    public Response<Boolean> recordVideo(@PathVariable("id") Integer id, LearnRecordForm form) {
+        return Response.success(courseService.courseRecord(id, form));
     }
 
 }

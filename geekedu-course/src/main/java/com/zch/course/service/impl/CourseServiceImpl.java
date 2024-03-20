@@ -7,6 +7,7 @@ import com.zch.api.dto.ask.AddCommentForm;
 import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.course.ChapterForm;
 import com.zch.api.dto.course.DelSectionBatchForm;
+import com.zch.api.dto.course.LearnRecordForm;
 import com.zch.api.feignClient.comments.CommentsFeignClient;
 import com.zch.api.feignClient.label.LabelFeignClient;
 import com.zch.api.feignClient.resources.MediaFeignClient;
@@ -31,6 +32,7 @@ import com.zch.course.mapper.CourseMapper;
 import com.zch.course.service.ICourseChapterService;
 import com.zch.course.service.ICourseSectionService;
 import com.zch.course.service.ICourseService;
+import com.zch.course.service.ILearnRecordService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -60,6 +62,8 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     private final ICourseSectionService sectionService;
 
     private final MediaFeignClient mediaFeignClient;
+
+    private final ILearnRecordService learnRecordService;
 
     @Override
     public CourseAndCategoryVO getCoursePage(Integer pageNum, Integer pageSize, String sort, String order, String keywords, Integer cid, Integer id) {
@@ -458,6 +462,13 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         url.add(test);
         vo.setUrl(url);
         return vo;
+    }
+
+    @Override
+    public Boolean courseRecord(Integer courseId, LearnRecordForm form) {
+        // Long userId = UserContext.getLoginId();
+        Long userId = 1745747394693820416L;
+        return learnRecordService.updateLearnRecord(courseId, form.getVideoId(), form.getDuration(), userId, "VOD");
     }
 
 

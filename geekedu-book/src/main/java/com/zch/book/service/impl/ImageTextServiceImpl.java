@@ -22,6 +22,7 @@ import com.zch.book.domain.po.ImageText;
 import com.zch.book.mapper.ImageTextMapper;
 import com.zch.book.service.IBCommentService;
 import com.zch.book.service.IImageTextService;
+import com.zch.book.service.ILearnRecordService;
 import com.zch.common.core.utils.BeanUtils;
 import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
@@ -54,6 +55,8 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
     private final IBCommentService commentService;
 
     private final UserFeignClient userFeignClient;
+
+    private final ILearnRecordService learnRecordService;
 
     private static final String IMAGE_TEXT = "IMAGE_TEXT";
 
@@ -321,6 +324,8 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
         if (ObjectUtils.isNull(id)) {
             return new ImageTextSingleVO();
         }
+        // Long userId = UserContext.getLoginId();
+        Long userId = 1745747394693820416L;
         ImageText one = imageTextMapper.selectById(id);
         if (ObjectUtils.isNull(one)) {
             return new ImageTextSingleVO();
@@ -350,6 +355,8 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
         // 更新阅读数
         one.setReadCount(one.getReadCount() + 1);
         updateById(one);
+        // 记录图文学习
+        learnRecordService.updateLearnRecord(null, null, one.getId(), userId, "TOPIC");
         return vo;
     }
 

@@ -19,10 +19,7 @@ import com.zch.api.vo.label.CategoryVO;
 import com.zch.book.domain.po.EBook;
 import com.zch.book.domain.po.EBookArticle;
 import com.zch.book.mapper.EBookMapper;
-import com.zch.book.service.IBCommentService;
-import com.zch.book.service.IEBookArticleService;
-import com.zch.book.service.IEBookChapterService;
-import com.zch.book.service.IEBookService;
+import com.zch.book.service.*;
 import com.zch.common.core.utils.BeanUtils;
 import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
@@ -57,6 +54,8 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
     private final IEBookChapterService chapterService;
 
     private final IEBookArticleService articleService;
+
+    private final ILearnRecordService learnRecordService;
 
     @Override
     public EBookAndCategoryVO getEBookPageByCondition(Integer pageNum, Integer pageSize, String sort, String order,
@@ -463,6 +462,8 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
     public ArticleFullVO readArticle(Integer articleId) {
         // 构建返回对象
         ArticleFullVO vo = new ArticleFullVO();
+        // Long userId = UserContext.getLoginId();
+        Long userId = 1745747394693820416L;
         // 根据id获取文章明细
         EBookArticleVO article = articleService.getEBookArticleById(articleId);
         if (ObjectUtils.isNull(article)) {
@@ -513,6 +514,8 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
             vo.setPrevId(ids.get(index - 1));
             vo.setNextId(ids.get(index + 1));
         }
+        // 记录学习记录
+        learnRecordService.updateLearnRecord(article.getBookId(), articleId, null, userId, "BOOK");
         return vo;
     }
 

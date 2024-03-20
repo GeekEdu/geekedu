@@ -6,6 +6,7 @@ import com.zch.api.dto.ask.AddCommentForm;
 import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.course.ChapterForm;
 import com.zch.api.dto.course.DelSectionBatchForm;
+import com.zch.api.dto.course.LearnRecordForm;
 import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.course.*;
 import com.zch.api.vo.course.record.PlayUrlVO;
@@ -206,5 +207,13 @@ public interface ICourseService extends IService<Course> {
      * @return
      */
     PlayUrlVO getSectionPlayUrl(Integer sectionId, Integer isTry);
+
+    /**
+     * 课程学习记录
+     * @param courseId
+     * @param form
+     * @return
+     */
+    Boolean courseRecord(Integer courseId, LearnRecordForm form);
 
 }
