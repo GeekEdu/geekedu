@@ -16,7 +16,7 @@ public class EBookFullVO extends BaseVO {
 
     private EBookVO book = new EBookVO();
 
-    private Boolean isBuy = true;
+    private Boolean isBuy = false;
 
     private List<EBookChapterVO> chapters = new ArrayList<>(0);
 

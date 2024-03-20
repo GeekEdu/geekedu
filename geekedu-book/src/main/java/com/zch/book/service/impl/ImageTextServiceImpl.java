@@ -9,6 +9,7 @@ import com.zch.api.dto.label.CategoryForm;
 import com.zch.api.dto.user.CollectForm;
 import com.zch.api.dto.user.ThumbForm;
 import com.zch.api.feignClient.label.LabelFeignClient;
+import com.zch.api.feignClient.trade.TradeFeignClient;
 import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.vo.book.ImageTextAndCategoryVO;
 import com.zch.api.vo.book.ImageTextSimpleVO;
@@ -57,6 +58,8 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
     private final UserFeignClient userFeignClient;
 
     private final ILearnRecordService learnRecordService;
+
+    private final TradeFeignClient tradeFeignClient;
 
     private static final String IMAGE_TEXT = "IMAGE_TEXT";
 
@@ -333,6 +336,13 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
         ImageTextVO vo1 = new ImageTextVO();
         BeanUtils.copyProperties(one, vo1);
         ImageTextSingleVO vo = new ImageTextSingleVO();
+        // 查询是否购买
+        if (! BigDecimal.ZERO.equals(one.getPrice())) {
+            Response<Boolean> res = tradeFeignClient.queryOrderIsPay(userId, id, "IMAGE_TEXT");
+            if (ObjectUtils.isNotNull(res) && ObjectUtils.isNotNull(res.getData())) {
+                vo.setIsBuy(res.getData());
+            }
+        }
         // 查询图文点赞信息
         Response<Boolean> isThumb = userFeignClient.queryIsVote(id, "IMAGE_TEXT");
         Response<Long> thumbCount = userFeignClient.queryCount(id, "IMAGE_TEXT");

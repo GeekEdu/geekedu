@@ -359,9 +359,11 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
         }
         vo.setVideos(videos);
         // 是否购买课程
-        Response<Boolean> res1 = tradeFeignClient.queryOrderIsPay(userId, course.getId(), "LIVE_COURSE");
-        if (ObjectUtils.isNotNull(res1) && ObjectUtils.isNotNull(res1.getData())) {
-            vo.setIsBuy(res1.getData());
+        if (!BigDecimal.ZERO.equals(course.getPrice())) {
+            Response<Boolean> res1 = tradeFeignClient.queryOrderIsPay(userId, course.getId(), "LIVE_COURSE");
+            if (ObjectUtils.isNotNull(res1) && ObjectUtils.isNotNull(res1.getData())) {
+                vo.setIsBuy(res1.getData());
+            }
         }
         // 是否收藏课程
         Response<Boolean> res2 = userFeignClient.checkCollectStatus(course.getId(), "LIVE_COURSE");

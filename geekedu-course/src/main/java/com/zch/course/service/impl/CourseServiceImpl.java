@@ -360,9 +360,11 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         }
         vo.setVideos(videos);
         // 是否购买课程
-        Response<Boolean> res1 = tradeFeignClient.queryOrderIsPay(userId, course.getId(), "REPLAY_COURSE");
-        if (ObjectUtils.isNotNull(res1.getData())) {
-            vo.setIsBuy(res1.getData());
+        if (!BigDecimal.ZERO.equals(course.getPrice())) {
+            Response<Boolean> res1 = tradeFeignClient.queryOrderIsPay(userId, course.getId(), "REPLAY_COURSE");
+            if (ObjectUtils.isNotNull(res1.getData())) {
+                vo.setIsBuy(res1.getData());
+            }
         }
         // 是否收藏课程
         Response<Boolean> res2 = userFeignClient.checkCollectStatus(course.getId(), "REPLAY_COURSE");

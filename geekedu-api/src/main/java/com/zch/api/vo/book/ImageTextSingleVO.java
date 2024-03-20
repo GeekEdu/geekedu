@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
 @Data
 public class ImageTextSingleVO extends BaseVO {
 
-    private Boolean isBuy = true;
+    private Boolean isBuy = false;
 
     private Boolean isCollect = false;
 

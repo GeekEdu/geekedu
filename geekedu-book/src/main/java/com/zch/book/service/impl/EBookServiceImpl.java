@@ -9,6 +9,7 @@ import com.zch.api.dto.book.EBookForm;
 import com.zch.api.dto.label.CategoryForm;
 import com.zch.api.dto.user.CollectForm;
 import com.zch.api.feignClient.label.LabelFeignClient;
+import com.zch.api.feignClient.trade.TradeFeignClient;
 import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.vo.book.*;
 import com.zch.api.vo.book.comment.BCommentFullVO;
@@ -56,6 +57,8 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
     private final IEBookArticleService articleService;
 
     private final ILearnRecordService learnRecordService;
+
+    private final TradeFeignClient tradeFeignClient;
 
     @Override
     public EBookAndCategoryVO getEBookPageByCondition(Integer pageNum, Integer pageSize, String sort, String order,
@@ -373,6 +376,8 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
         if (ObjectUtils.isNull(id)) {
             return new EBookFullVO();
         }
+        // Long userId = UserContext.getLoginId();
+        Long userId = 1745747394693820416L;
         EBook eBook = bookMapper.selectById(id);
         if (ObjectUtils.isNull(eBook)) {
             return new EBookFullVO();
@@ -385,6 +390,13 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
             vo1.setCategory(null);
         }
         vo1.setCategory(res.getData());
+        // 查找是否购买
+        if (! BigDecimal.ZERO.equals(eBook.getPrice())) {
+            Response<Boolean> res1 = tradeFeignClient.queryOrderIsPay(userId, id, "E_BOOK");
+            if (ObjectUtils.isNotNull(res1) && ObjectUtils.isNotNull(res1.getData())) {
+                vo.setIsBuy(res1.getData());
+            }
+        }
         // 查找章节
         boolean hasChapter = true;
         List<EBookChapterVO> chapters = chapterService.getChapterListByBookId(eBook.getId());
