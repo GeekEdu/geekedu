@@ -8,9 +8,11 @@ import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.course.ChapterForm;
 import com.zch.api.dto.course.live.LiveCourseForm;
 import com.zch.api.dto.course.live.LiveVideoForm;
+import com.zch.api.dto.user.CollectForm;
 import com.zch.api.feignClient.comments.CommentsFeignClient;
 import com.zch.api.feignClient.label.LabelFeignClient;
 import com.zch.api.feignClient.resources.MediaFeignClient;
+import com.zch.api.feignClient.trade.TradeFeignClient;
 import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.ask.CommentsVO;
@@ -58,6 +60,8 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
     private final MediaFeignClient mediaFeignClient;
 
     private final LiveCourseMapper courseMapper;
+
+    private final TradeFeignClient tradeFeignClient;
 
     @Override
     public LiveCourseFullVO getLiveCourseFullList(Integer pageNum, Integer pageSize, String sort, String order,
@@ -301,6 +305,8 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
         if (ObjectUtils.isNull(id)) {
             return vo;
         }
+        // Long userId = UserContext.getLoginId();
+        Long userId = 1745747394693820416L;
         // 查询是否存在该课程
         LiveCourse course = courseMapper.selectById(id);
         if (ObjectUtils.isNull(course)) {
@@ -352,10 +358,21 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
             }
         }
         vo.setVideos(videos);
-        // TODO 是否购买课程
-        // TODO 是否收藏课程
-        // TODO 附件
-        // TODO 视频观看进度
+        // 是否购买课程
+        Response<Boolean> res1 = tradeFeignClient.queryOrderIsPay(userId, course.getId(), "LIVE_COURSE");
+        if (ObjectUtils.isNotNull(res1) && ObjectUtils.isNotNull(res1.getData())) {
+            vo.setIsBuy(res1.getData());
+        }
+        // 是否收藏课程
+        Response<Boolean> res2 = userFeignClient.checkCollectStatus(course.getId(), "LIVE_COURSE");
+        if (ObjectUtils.isNotNull(res2) && ObjectUtils.isNotNull(res2.getData())) {
+            vo.setIsCollect(res2.getData());
+        }
+        // 是否是会员
+        Response<Boolean> res3 = userFeignClient.queryIsVip(userId);
+        if (ObjectUtils.isNotNull(res3) && ObjectUtils.isNotNull(res3.getData())) {
+            vo.setIsVip(res3.getData());
+        }
         return vo;
     }
 
@@ -384,6 +401,14 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
         chat.setChannel("geekedu-live-chat");
         vo.setChat(chat);
         return vo;
+    }
+
+    @Override
+    public Boolean courseCollect(Integer id) {
+        CollectForm form = new CollectForm();
+        form.setId(id);
+        form.setType("LIVE_COURSE");
+        return userFeignClient.hitCollectIcon(form).getData();
     }
 
     /**

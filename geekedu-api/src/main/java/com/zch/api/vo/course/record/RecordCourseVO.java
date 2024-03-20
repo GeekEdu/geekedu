@@ -45,6 +45,8 @@ public class RecordCourseVO extends BaseVO {
      */
     private Boolean isCollect = false;
 
+    private Boolean isVip = false;
+
     /**
      * 附件
      */

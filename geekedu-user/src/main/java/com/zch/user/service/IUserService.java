@@ -191,4 +191,11 @@ public interface IUserService extends IService<User> {
      */
     List<UserSimpleVO> getTeacherList();
 
+    /**
+     * 是否是VIP
+     * @param id
+     * @return
+     */
+    Boolean queryIsVip(Long id);
+
 }

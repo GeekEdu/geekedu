@@ -200,6 +200,18 @@ public interface ILiveCourseService extends IService<LiveCourse> {
      */
     Boolean addCourseComment(Integer id, AddCommentForm form);
 
+    /**
+     * 获取直播信息
+     * @param id
+     * @return
+     */
     LiveVO getPlayInfo(Integer id);
+
+    /**
+     * 课程收藏
+     * @param id
+     * @return
+     */
+    Boolean courseCollect(Integer id);
 
 }

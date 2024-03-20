@@ -23,6 +23,10 @@ public class LiveDetailVO extends BaseVO {
 
     Map<Integer, List<LiveVideoVO>> videos = new HashMap<>(0);
 
-    private Boolean isBuy = true;
+    private Boolean isBuy = false;
+
+    private Boolean isCollect = false;
+
+    private Boolean isVip = false;
 
 }

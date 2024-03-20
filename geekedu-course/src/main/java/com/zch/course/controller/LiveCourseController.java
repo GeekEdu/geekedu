@@ -290,4 +290,14 @@ public class LiveCourseController {
         return Response.success(courseService.addCourseComment(id, form));
     }
 
+    /**
+     * 课程收藏
+     * @param id
+     * @return
+     */
+    @PostMapping("/v2/{id}/collect")
+    public Response<Boolean> courseCollect(@PathVariable("id") Integer id) {
+        return Response.success(courseService.courseCollect(id));
+    }
+
 }

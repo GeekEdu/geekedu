@@ -599,6 +599,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }).collect(Collectors.toList());
     }
 
+    @Override
+    public Boolean queryIsVip(Long id) {
+        User user = getById(id);
+        if (ObjectUtils.isNull(user)) {
+            return false;
+        }
+        return user.getVipId() != 0;
+    }
+
     /**
      * 校验验证码是否相同
      * @param imageCaptcha

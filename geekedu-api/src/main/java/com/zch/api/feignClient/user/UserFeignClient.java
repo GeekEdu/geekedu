@@ -113,6 +113,14 @@ public interface UserFeignClient {
      * @return
      */
     @GetMapping("/api/member/vip/{id}")
-    public Response<VipVO> getVipById(@PathVariable("id") Integer id);
+    Response<VipVO> getVipById(@PathVariable("id") Integer id);
+
+    /**
+     * 判断是否是vip
+     * @param id
+     * @return
+     */
+    @GetMapping("/api/member/{id}/isVip")
+    Response<Boolean> queryIsVip(@PathVariable("id") Long id);
 
 }

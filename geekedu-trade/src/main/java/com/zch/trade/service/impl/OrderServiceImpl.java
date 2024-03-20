@@ -447,9 +447,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
      */
     private void handle2MySQL(CreateOrderForm form, OrderVO vo) {
         Order order = new Order();
+        order.setUserId(vo.getUserId());
         order.setOrderNumber(vo.getOrderId());
         order.setGoodsPrice(vo.getGoodsPrice());
-        order.setGoodsName(vo.getGoodsName());
+        order.setGoodsName(form.getGoodsName());
         order.setAmount(vo.getAmount());
         order.setPayType(PayTypeEnum.valueOf(form.getPayment()));
         order.setOrderNotes(vo.getOrderNotes());

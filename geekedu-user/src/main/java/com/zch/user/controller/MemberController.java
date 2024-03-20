@@ -152,4 +152,14 @@ public class MemberController {
         return Response.success(vipInfoService.getVipPrice(id));
     }
 
+    /**
+     * 判断是否是vip
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}/isVip")
+    public Response<Boolean> queryIsVip(@PathVariable("id") Long id) {
+        return Response.success(userService.queryIsVip(id));
+    }
+
 }

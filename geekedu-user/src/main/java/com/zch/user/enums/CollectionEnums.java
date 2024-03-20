@@ -13,6 +13,7 @@ public enum CollectionEnums {
     E_BOOK(1, "电子书收藏"),
     IMAGE_TEXT(2, "图文收藏"),
     REPLAY_COURSE(3, "录播课收藏"),
+    LIVE_COURSE(4, "直播课收藏"),
     ;
 
     @EnumValue

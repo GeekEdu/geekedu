@@ -381,6 +381,11 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
             });
             vo.setVideoWatchedProgress(videoWatchedProgress);
         }
+        // 是否是会员
+        Response<Boolean> res3 = userFeignClient.queryIsVip(userId);
+        if (ObjectUtils.isNotNull(res3) && ObjectUtils.isNotNull(res3.getData())) {
+            vo.setIsVip(res3.getData());
+        }
         return vo;
     }
 
