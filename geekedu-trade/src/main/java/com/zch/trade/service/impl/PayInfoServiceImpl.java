@@ -16,6 +16,11 @@ import com.zch.trade.service.IPayInfoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.rocketmq.client.producer.SendCallback;
+import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +39,8 @@ public class PayInfoServiceImpl extends ServiceImpl<PayInfoMapper, PayInfo> impl
     private final PayAdapter payAdapter;
 
     private final IOrderService orderService;
+
+    private final RocketMQTemplate rocketMQTemplate;
 
     @Override
     public String handleAliPay(String orderId, String scene, String payment, String redirect) {
@@ -83,8 +90,10 @@ public class PayInfoServiceImpl extends ServiceImpl<PayInfoMapper, PayInfo> impl
             form.setPayAmount(StringUtils.isBlank(notify.getTotal_amount()) ? BigDecimal.ZERO : new BigDecimal(notify.getTotal_amount()));
             form.setOrderId(notify.getOut_trade_no());
             form.setIsPaid(false);
-            // 更新订单信息
+            // 更新支付信息
             updatePayInfo(form);
+            // 同时更新订单信息
+            sendUpdateOrderMsg(notify.getOut_trade_no());
         }
     }
 
@@ -104,8 +113,10 @@ public class PayInfoServiceImpl extends ServiceImpl<PayInfoMapper, PayInfo> impl
             form.setIsPaid(false);
             form.setPayAmount(new BigDecimal(aliPay.getTotal_amount()));
             form.setOrderId(aliPay.getOut_trade_no());
-            // 更新订单信息
+            // 更新支付信息
             updatePayInfo(form);
+            // 同时更新订单信息
+            sendUpdateOrderMsg(aliPay.getOut_trade_no());
             return true;
         }
         return false;
@@ -145,6 +156,25 @@ public class PayInfoServiceImpl extends ServiceImpl<PayInfoMapper, PayInfo> impl
                 updateById(payInfo);
             }
         }
+    }
+
+    /**
+     * 发送更新订单消息
+     * @param orderNumber
+     */
+    private void sendUpdateOrderMsg(String orderNumber) {
+        Message<String> msg = MessageBuilder.withPayload(orderNumber).build();
+        rocketMQTemplate.asyncSend("orderInfo-update-topic", msg, new SendCallback() {
+            @Override
+            public void onSuccess(SendResult sendResult) {
+                log.debug("更新订单信息-消息发送成功");
+            }
+
+            @Override
+            public void onException(Throwable throwable) {
+                log.debug("更新订单信息-消息发送成功");
+            }
+        });
     }
 
 }

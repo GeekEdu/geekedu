@@ -42,57 +42,20 @@ alipay:
   alipayPublicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhS0WfyW3/4sSe9lgZXTKKjiQvz6l+oxxoqwKb/KRxv5QswIuvajk8JTgmjJisW6AA+oBNMBsbLaM5CAFRtvjIvVXvFH4sZG8QhO1eRzDXb4i+cw/ksSNwgdtiGnkFoRDflsixdzGDNj0wVVG9h7QiwJBSLunhqiQWE36c6Kni29UXEXchPKiJ6ayzlmryaRaJ7EoVgCPXAs63umi3X3GPEeyfzfLmrk6GEkgWL/XZUhrZaDFeaVVP1lfbyZpUjK7oDG+v81lWlwETh8seNshD4iQFEYt2jero4ja63z9/ZvL/aYxpfo26BVajulhx6oNE1Bm1IxRo1rkdQcZlI3wJwIDAQAB
   notifyUrl: https://6968y1r161.yicp.fun/trade/api/pay/notify
 
-#RocketMQ配置
-# 自定义消息参数
-mq:
-  # 订单
-  order:
-    # 订单确认
-    confirm:
-      topic: orderConfirmTopic
-      tag:
-        confirm: order_confirm
-      consumer:
-        group:
-          name: order_confirm_group
-        callback:
-          group: order_confirm_callback_group
-          topic: orderConfirmCallbackGroup
-          tag: order_config_callback
-    consumer:
-      group:
-        name:order_orderTopic_cancel_group
-    topic: orderTopic
-    tag:
-      cacel: order_cancel
-  # 支付
-  pay:
-    consumer:
-      group:
-        name: pay_payTopic_group
-    topic: payTopic
-    tag: paid
-  # 商品库存扣减
-  goods:
-    consumer:
-      group:
-        name: goods_goodsTopic_reduce_group
-    topic: goodsNumTopic
-    tag:
-      reduce: reduce_goods_num
-
-  rocketmq:
-    name-server: 8.137.103.164:9876
-    producer:
-      group: tradeProducerGroup
-      send-message-timeout: 50000
-      transaction:
-        group: transaction_group
-    consumer:
-      group:
-        name: tradeConsumerGroup
-      topic: TransactionTopic
-      tag: '*'
-      consumeThreadMin: 20
-      consumeThreadMax: 64
-
+rocketmq:
+  name-server: 8.137.103.164:9876
+  producer:
+    #生产者组名，规定在一个应用里面必须时唯一的(这里直接引用项目名称,或者自定义唯一组名)。
+    group: trade-service-group
+    #消息发送的超时时间，毫米级别，默认为3S
+    send-message-timeout: 3000
+    #消息达到4096字节的时候，消息就会被压缩。默认就是4096，有利于网络传输，提升性能。
+    compress-message-body-threshold: 4096
+    #最大的消息限制 默认为128K
+    max-message-size: 4194304
+    #同步消息发送失败重试次数
+    retry-times-when-send-failed: 3
+    #在内部发送失败时是否重试其他代理。 源码：setRetryAnotherBrokerWhenNotStoreOK，就是指：发送到broker-a失败是否发送到broker-b。这个参数在有多个broker才生效。
+    retry-next-server: true
+    #异步消息发送失败重试的次数
+    retry-times-when-send-async-failed: 3

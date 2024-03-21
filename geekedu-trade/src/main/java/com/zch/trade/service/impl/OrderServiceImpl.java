@@ -36,6 +36,11 @@ import com.zch.trade.service.IOrderService;
 import com.zch.trade.utils.IDWorker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.rocketmq.client.producer.SendCallback;
+import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -62,6 +67,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private final BookFeignClient bookFeignClient;
 
     private final CourseFeignClient courseFeignClient;
+
+    private final RocketMQTemplate rocketMQTemplate;
 
     @Override
     public OrderVO createOrder(CreateOrderForm form) {
@@ -110,7 +117,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         // 订单编号 使用 IDWorker 设置
         String orderId = generateOrderId(now);
         vo.setOrderId(orderId);
-        // TODO 通知消息队列
+        // 通知消息队列
         // 写入支付信息
         PayInfoForm form1 = new PayInfoForm();
         form1.setPayName(vo.getGoodsName());
@@ -118,6 +125,18 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         form1.setPayChannel(form.getPayment());
         form1.setPayAmount(vo.getAmount());
         form1.setOrderId(vo.getOrderId());
+        Message<PayInfoForm> payInfoMsg = MessageBuilder.withPayload(form1).build();
+        rocketMQTemplate.asyncSend("payInfo-2Mysql-topic", payInfoMsg, new SendCallback() {
+            @Override
+            public void onSuccess(SendResult sendResult) {
+                log.debug("写入支付信息-消息发送成功");
+            }
+
+            @Override
+            public void onException(Throwable throwable) {
+                log.error("写入支付信息-消息发送失败");
+            }
+        });
         tradeFeignClient.createPayInfo(form1);
         // 存入数据库
         handle2MySQL(form, vo);
@@ -216,6 +235,19 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 .eq(Order::getGoodsType, ProductTypeEnum.valueOf(goodsType)));
         if (ObjectUtils.isNotNull(one)) {
             return one.getOrderStatus().equals(OrderStatusEnum.ORDERED_AND_PAID);
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean updateOrderStatus(String orderNumber) {
+        Order order = getOne(new LambdaQueryWrapper<Order>()
+                .eq(Order::getOrderNumber, orderNumber));
+        if (ObjectUtils.isNotNull(order)) {
+            order.setOrderStatus(OrderStatusEnum.ORDERED_AND_PAID);
+            order.setPayStatus(PayStatusEnum.HAVE_PAID);
+            updateById(order);
+            return true;
         }
         return false;
     }

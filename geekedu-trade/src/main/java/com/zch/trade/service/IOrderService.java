@@ -41,6 +41,13 @@ public interface IOrderService extends IService<Order> {
      */
     Boolean queryOrderIsPay(Long userId, Integer goodsId, String goodsType);
 
+    /**
+     * 更新订单信息
+     * @param orderNumber
+     * @return
+     */
+    Boolean updateOrderStatus(String orderNumber);
+
     //===================================================
 
     /**

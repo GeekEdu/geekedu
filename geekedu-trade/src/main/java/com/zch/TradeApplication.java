@@ -5,6 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.ApplicationContext;
 
 /**
  * @author Poison02
@@ -16,6 +17,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @MapperScan("com.zch.trade.mapper")
 public class TradeApplication {
     public static void main(String[] args) {
-        SpringApplication.run(TradeApplication.class, args);
+        System.setProperty("rocketmq.client.logUseSlf4j", "true");
+        ApplicationContext context = SpringApplication.run(TradeApplication.class, args);
     }
 }
