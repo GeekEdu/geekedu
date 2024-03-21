@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -94,5 +95,14 @@ public class CollectionServiceImpl extends ServiceImpl<CollectionMapper, Collect
             return 0L;
         }
         return (long) collections.size();
+    }
+
+    @Override
+    public List<Collection> queryList(Long userId, String type) {
+        List<Collection> list = list(new LambdaQueryWrapper<Collection>()
+                .eq(Collection::getUserId, userId)
+                .eq(Collection::getType, CollectionEnums.valueOf(type))
+                .eq(Collection::getIsCancel, false));
+        return CollUtils.isEmpty(list) ? new ArrayList<>(0) : list;
     }
 }

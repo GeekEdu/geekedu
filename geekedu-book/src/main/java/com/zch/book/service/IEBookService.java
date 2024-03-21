@@ -11,6 +11,7 @@ import com.zch.api.vo.book.*;
 import com.zch.api.vo.book.comment.BCommentFullVO;
 import com.zch.api.vo.book.comment.BCommentVO;
 import com.zch.api.vo.book.comment.CommentVO;
+import com.zch.api.vo.book.record.StudyRecordVO;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.api.vo.label.CategoryVO;
 import com.zch.book.domain.po.EBook;
@@ -235,5 +236,11 @@ public interface IEBookService extends IService<EBook> {
      * @return
      */
     Integer addArticleComment(Integer articleId, AddCommentForm form);
+
+    /**
+     * 在学习电子书
+     * @return
+     */
+    List<StudyRecordVO> getStudyImageText();
 
 }

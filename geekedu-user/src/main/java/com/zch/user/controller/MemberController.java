@@ -1,6 +1,7 @@
 package com.zch.user.controller;
 
 import com.zch.api.dto.user.VipForm;
+import com.zch.api.vo.book.record.StudyRecordVO;
 import com.zch.api.vo.order.OrderVO;
 import com.zch.api.vo.user.*;
 import com.zch.common.mvc.result.PageResult;
@@ -160,6 +161,15 @@ public class MemberController {
     @GetMapping("/{id}/isVip")
     public Response<Boolean> queryIsVip(@PathVariable("id") Long id) {
         return Response.success(userService.queryIsVip(id));
+    }
+
+    /**
+     * 获取收藏列表
+     * @return
+     */
+    @GetMapping("/topic/collect/list")
+    public Response<List<StudyRecordVO>> queryTopicCollectList(@RequestParam("type") String type) {
+        return Response.success(userService.queryCollectList(type));
     }
 
 }

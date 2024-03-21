@@ -3,6 +3,7 @@ package com.zch.user.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.user.*;
+import com.zch.api.vo.book.record.StudyRecordVO;
 import com.zch.api.vo.order.OrderVO;
 import com.zch.api.vo.trade.order.OrderFullVO;
 import com.zch.api.vo.user.*;
@@ -197,5 +198,11 @@ public interface IUserService extends IService<User> {
      * @return
      */
     Boolean queryIsVip(Long id);
+
+    /**
+     * 获取收藏图文列表
+     * @return
+     */
+    List<StudyRecordVO> queryCollectList(String type);
 
 }

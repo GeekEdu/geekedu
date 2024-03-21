@@ -1,9 +1,11 @@
 package com.zch.book.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.book.domain.po.LearnRecord;
 import com.zch.book.mapper.LearnRecordMapper;
 import com.zch.book.service.ILearnRecordService;
+import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Poison02
@@ -47,6 +51,15 @@ public class LearnRecordServiceImpl extends ServiceImpl<LearnRecordMapper, Learn
             }
         }
         return false;
+    }
+
+    @Override
+    public List<LearnRecord> queryLearnRecord(Long userId, String type) {
+        // 查询电子书学习记录
+        List<LearnRecord> list = list(new LambdaQueryWrapper<LearnRecord>()
+                .eq(LearnRecord::getUserId, userId)
+                .eq(LearnRecord::getType, type));
+        return CollUtils.isEmpty(list) ? new ArrayList<>(0) : list;
     }
 
 }

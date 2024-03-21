@@ -17,9 +17,11 @@ import com.zch.api.vo.book.ImageTextSingleVO;
 import com.zch.api.vo.book.ImageTextVO;
 import com.zch.api.vo.book.comment.BCommentVO;
 import com.zch.api.vo.book.comment.CommentVO;
+import com.zch.api.vo.book.record.StudyRecordVO;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.api.vo.label.CategoryVO;
 import com.zch.book.domain.po.ImageText;
+import com.zch.book.domain.po.LearnRecord;
 import com.zch.book.mapper.ImageTextMapper;
 import com.zch.book.service.IBCommentService;
 import com.zch.book.service.IImageTextService;
@@ -366,7 +368,7 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
         one.setReadCount(one.getReadCount() + 1);
         updateById(one);
         // 记录图文学习
-        learnRecordService.updateLearnRecord(null, null, one.getId(), userId, "TOPIC");
+        learnRecordService.updateLearnRecord(null, null, id, userId, "TOPIC");
         return vo;
     }
 
@@ -408,5 +410,29 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
             return false;
         }
         return userFeignClient.hitCollectIcon(form).getData();
+    }
+
+    @Override
+    public List<StudyRecordVO> getStudyImageText() {
+        // 用户id
+        // Long userId = UserContext.getLoginId();
+        Long userId = 1745747394693820416L;
+        List<StudyRecordVO> vo = new ArrayList<>();
+        // 查找所有学习记录
+        List<LearnRecord> list = learnRecordService.queryLearnRecord(userId, "TOPIC");
+        if (ObjectUtils.isNull(list) || CollUtils.isEmpty(list)) {
+            return vo;
+        }
+        list.forEach(item -> {
+            StudyRecordVO vo1 = new StudyRecordVO();
+            ImageTextVO topic = getImageTextById(item.getTopicId());
+            vo1.setId(item.getId());
+            vo1.setUserId(userId);
+            vo1.setTopicId(item.getTopicId());
+            vo1.setLastViewTime(item.getLatestViewTime());
+            vo1.setTopic(topic);
+            vo.add(vo1);
+        });
+        return vo;
     }
 }

@@ -7,6 +7,7 @@ import com.zch.api.vo.book.*;
 import com.zch.api.vo.book.comment.BCommentFullVO;
 import com.zch.api.vo.book.comment.BCommentVO;
 import com.zch.api.vo.book.comment.CommentVO;
+import com.zch.api.vo.book.record.StudyRecordVO;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.api.vo.label.CategoryVO;
 import com.zch.book.service.IEBookArticleService;
@@ -433,6 +434,15 @@ public class EBookController {
     @PostMapping("/v2/article/{id}/comment")
     public Response addArticleComment(@PathVariable("id") Integer articleId, @RequestBody AddCommentForm form) {
         return Response.success(eBookService.addArticleComment(articleId, form));
+    }
+
+    /**
+     * 在学习电子书列表
+     * @return
+     */
+    @GetMapping("/v2/study/list")
+    public Response<List<StudyRecordVO>> queryStudyTopic() {
+        return Response.success(eBookService.getStudyImageText());
     }
 
 }

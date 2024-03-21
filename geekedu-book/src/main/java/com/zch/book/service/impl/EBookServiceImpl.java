@@ -15,10 +15,12 @@ import com.zch.api.vo.book.*;
 import com.zch.api.vo.book.comment.BCommentFullVO;
 import com.zch.api.vo.book.comment.BCommentVO;
 import com.zch.api.vo.book.comment.CommentVO;
+import com.zch.api.vo.book.record.StudyRecordVO;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.api.vo.label.CategoryVO;
 import com.zch.book.domain.po.EBook;
 import com.zch.book.domain.po.EBookArticle;
+import com.zch.book.domain.po.LearnRecord;
 import com.zch.book.mapper.EBookMapper;
 import com.zch.book.service.*;
 import com.zch.common.core.utils.BeanUtils;
@@ -555,6 +557,30 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
             return 0;
         }
         return commentService.addComment(articleId, form, "E_BOOK_ARTICLE");
+    }
+
+    @Override
+    public List<StudyRecordVO> getStudyImageText() {
+        // 用户id
+        // Long userId = UserContext.getLoginId();
+        Long userId = 1745747394693820416L;
+        List<StudyRecordVO> vo = new ArrayList<>();
+        // 查找所有学习记录
+        List<LearnRecord> list = learnRecordService.queryLearnRecord(userId, "BOOK");
+        if (ObjectUtils.isNull(list) || CollUtils.isEmpty(list)) {
+            return vo;
+        }
+        list.forEach(item -> {
+            StudyRecordVO vo1 = new StudyRecordVO();
+            EBookVO book = getEBookById(item.getTopicId());
+            vo1.setId(item.getId());
+            vo1.setUserId(userId);
+            vo1.setBookId(item.getTopicId());
+            vo1.setLastViewTime(item.getLatestViewTime());
+            vo1.setBook(book);
+            vo.add(vo1);
+        });
+        return vo;
     }
 
     public static void main(String[] args) {

@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.user.CollectForm;
 import com.zch.user.domain.po.Collection;
 
+import java.util.List;
+
 /**
  * @author Poison02
  * @date 2024/3/16
@@ -32,5 +34,13 @@ public interface ICollectionService extends IService<Collection> {
      * @return
      */
     Long queryCount(Integer relationId, String type);
+
+    /**
+     * 查询收藏列表
+     * @param userId
+     * @param type
+     * @return
+     */
+    List<Collection> queryList(Long userId, String type);
 
 }

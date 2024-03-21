@@ -13,6 +13,7 @@ import com.zch.api.vo.book.ImageTextSingleVO;
 import com.zch.api.vo.book.ImageTextVO;
 import com.zch.api.vo.book.comment.BCommentVO;
 import com.zch.api.vo.book.comment.CommentVO;
+import com.zch.api.vo.book.record.StudyRecordVO;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.api.vo.label.CategoryVO;
 import com.zch.book.domain.po.ImageText;
@@ -172,5 +173,11 @@ public interface IImageTextService extends IService<ImageText> {
      * @return
      */
     Boolean collect(CollectForm form);
+
+    /**
+     * 在学习图文
+     * @return
+     */
+    List<StudyRecordVO> getStudyImageText();
 
 }

@@ -11,6 +11,7 @@ import com.zch.api.vo.book.ImageTextSingleVO;
 import com.zch.api.vo.book.ImageTextVO;
 import com.zch.api.vo.book.comment.BCommentVO;
 import com.zch.api.vo.book.comment.CommentVO;
+import com.zch.api.vo.book.record.StudyRecordVO;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.api.vo.label.CategoryVO;
 import com.zch.book.service.IImageTextService;
@@ -250,6 +251,15 @@ public class ImageTextController {
     @PostMapping("/v2/collect")
     public Response<Boolean> collect(@RequestBody CollectForm form) {
         return Response.success(imageTextService.collect(form));
+    }
+
+    /**
+     * 在学习图文列表
+     * @return
+     */
+    @GetMapping("/v2/study/list")
+    public Response<List<StudyRecordVO>> queryStudyTopic() {
+        return Response.success(imageTextService.getStudyImageText());
     }
 
 }

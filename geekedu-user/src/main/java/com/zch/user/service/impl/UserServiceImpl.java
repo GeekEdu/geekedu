@@ -5,9 +5,16 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.user.*;
+import com.zch.api.feignClient.book.BookFeignClient;
+import com.zch.api.feignClient.course.CourseFeignClient;
 import com.zch.api.feignClient.resources.MediaFeignClient;
 import com.zch.api.feignClient.trade.TradeFeignClient;
 import com.zch.api.utils.AddressUtils;
+import com.zch.api.vo.book.EBookVO;
+import com.zch.api.vo.book.ImageTextVO;
+import com.zch.api.vo.book.record.StudyRecordVO;
+import com.zch.api.vo.course.CourseVO;
+import com.zch.api.vo.course.live.LiveCourseVO;
 import com.zch.api.vo.order.OrderVO;
 import com.zch.api.vo.resources.FileUploadVO;
 import com.zch.api.vo.trade.order.OrderFullVO;
@@ -20,9 +27,11 @@ import com.zch.common.mvc.result.Response;
 import com.zch.common.mvc.utils.CommonServletUtils;
 import com.zch.common.redis.utils.RedisUtils;
 import com.zch.common.satoken.context.UserContext;
+import com.zch.user.domain.po.Collection;
 import com.zch.user.domain.po.SysPermission;
 import com.zch.user.domain.po.SysRole;
 import com.zch.user.domain.po.User;
+import com.zch.user.enums.CollectionEnums;
 import com.zch.user.mapper.UserMapper;
 import com.zch.user.service.*;
 import lombok.RequiredArgsConstructor;
@@ -69,6 +78,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private final MediaFeignClient mediaFeignClient;
 
     private final TradeFeignClient tradeFeignClient;
+
+    private final ICollectionService collectionService;
+
+    private final BookFeignClient bookFeignClient;
+
+    private final CourseFeignClient courseFeignClient;
 
     @Override
     public CaptchaVO getCaptcha() {
@@ -606,6 +621,52 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return false;
         }
         return user.getVipId() != 0;
+    }
+
+    @Override
+    public List<StudyRecordVO> queryCollectList(String type) {
+        // 用户id
+        // Long userId = UserContext.getLoginId();
+        Long userId = 1745747394693820416L;
+        // 查询收藏表
+        List<Collection> list = collectionService.queryList(userId, type);
+        if (ObjectUtils.isNull(list) || CollUtils.isEmpty(list)) {
+            return new ArrayList<>(0);
+        }
+        List<StudyRecordVO> vo = new ArrayList<>();
+        list.forEach(item -> {
+            StudyRecordVO vo1 = new StudyRecordVO();
+            vo1.setCollectTime(item.getUpdatedTime());
+            vo1.setUserId(userId);
+            vo1.setId(item.getId());
+            if (CollectionEnums.IMAGE_TEXT.equals(CollectionEnums.valueOf(type))) {
+                Response<ImageTextVO> res = bookFeignClient.getImageTextById(item.getRelationId());
+                if (ObjectUtils.isNotNull(res) && ObjectUtils.isNotNull(res.getData())) {
+                    vo1.setTopicId(item.getRelationId());
+                    vo1.setTopic(res.getData());
+                }
+            } else if (CollectionEnums.E_BOOK.equals(CollectionEnums.valueOf(type))) {
+                Response<EBookVO> res = bookFeignClient.getEBookById(item.getRelationId());
+                if (ObjectUtils.isNotNull(res) && ObjectUtils.isNotNull(res.getData())) {
+                    vo1.setBookId(item.getRelationId());
+                    vo1.setBook(res.getData());
+                }
+            } else if (CollectionEnums.LIVE_COURSE.equals(CollectionEnums.valueOf(type))) {
+                Response<LiveCourseVO> res = courseFeignClient.getLiveCourseDetail(item.getRelationId());
+                if (ObjectUtils.isNotNull(res) && ObjectUtils.isNotNull(res.getData())) {
+                    vo1.setLiveCourseId(item.getRelationId());
+                    vo1.setLiveCourse(res.getData());
+                }
+            } else if (CollectionEnums.REPLAY_COURSE.equals(CollectionEnums.valueOf(type))) {
+                Response<CourseVO> res = courseFeignClient.getCourseById(item.getRelationId());
+                if (ObjectUtils.isNotNull(res) && ObjectUtils.isNotNull(res.getData())) {
+                    vo1.setCourseId(item.getRelationId());
+                    vo1.setCourse(res.getData());
+                }
+            }
+            vo.add(vo1);
+        });
+        return vo;
     }
 
     /**
