@@ -14,6 +14,7 @@
 		<module>common-pay</module>
 		<module>common-mq</module>
         <module>common-elasticsearch</module>
+        <module>common-job</module>
     </modules>
 	<parent>
 		<groupId>com.zch</groupId>

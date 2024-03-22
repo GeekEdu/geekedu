@@ -76,6 +76,9 @@
 		<!--搜索-->
 		<elasticsearch.version>7.12.1</elasticsearch.version>
 
+		<!--定时任务-->
+		<xxl-job.version>2.3.1</xxl-job.version>
+
 	</properties>
 
     <dependencyManagement>
@@ -229,6 +232,13 @@
 				<groupId>org.elasticsearch.client</groupId>
 				<artifactId>elasticsearch-rest-high-level-client</artifactId>
 				<version>${elasticsearch.version}</version>
+			</dependency>
+
+			<!--定时任务-->
+			<dependency>
+				<groupId>com.xuxueli</groupId>
+				<artifactId>xxl-job-core</artifactId>
+				<version>${xxl-job.version}</version>
 			</dependency>
         </dependencies>
     </dependencyManagement>

@@ -42,8 +42,25 @@ geekedu:
     host: 127.0.0.1
 #    host: 192.168.150.101
 
+# ES 配置
 es:
   cluster:
     esConfigs[0]:
       name: 21389dddfe0e
       nodes: 8.137.103.164:9200
+
+# XXL 配置
+xxl:
+  job:
+    admin:
+      addresses: http://127.0.0.1:9088/xxl-job-admin
+    accessToken: default_token
+    executor:
+      appname: ${spring.application.name}
+      address: http://10.7.86.178:9999
+      # 主机地址
+      ip: 10.7.86.178
+      # 随机端口
+      port: 9999
+      logpath: /Users/poison02/logs/xxl-job
+      logretentiondays: 30
