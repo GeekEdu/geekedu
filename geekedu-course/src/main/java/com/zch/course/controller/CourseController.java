@@ -5,6 +5,7 @@ import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.course.ChapterForm;
 import com.zch.api.dto.course.DelSectionBatchForm;
 import com.zch.api.dto.course.LearnRecordForm;
+import com.zch.api.dto.course.vod.CourseForm;
 import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.course.*;
 import com.zch.api.vo.course.record.PlayUrlVO;
@@ -13,6 +14,7 @@ import com.zch.api.vo.course.record.RecordSectionVO;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
+import com.zch.course.domain.repository.CourseInfoEs;
 import com.zch.course.service.ICourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -58,6 +60,16 @@ public class CourseController {
     @GetMapping("/getCourseById/{id}")
     public Response<CourseVO> getCourseById(@PathVariable("id") Integer id) {
         return Response.success(courseService.getCourseById(id));
+    }
+
+    /**
+     * 新增课程
+     * @param form
+     * @return
+     */
+    @PostMapping("/add")
+    public Response<Boolean> addCourse(@RequestBody CourseForm form) {
+        return Response.success(courseService.addCourse(form));
     }
 
     /**
@@ -330,6 +342,11 @@ public class CourseController {
     @PostMapping("/v2/{id}/price")
     public Response<BigDecimal> queryCoursePrice(@PathVariable("id") Integer id) {
         return Response.success(courseService.queryCoursePrice(id));
+    }
+
+    @GetMapping("/v2/search")
+    public Response<List<CourseInfoEs>> esSearchCourse(@RequestParam("keyword") String keyword) {
+        return Response.success(courseService.searchCourse(keyword));
     }
 
 }

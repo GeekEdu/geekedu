@@ -8,6 +8,7 @@ import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.course.ChapterForm;
 import com.zch.api.dto.course.DelSectionBatchForm;
 import com.zch.api.dto.course.LearnRecordForm;
+import com.zch.api.dto.course.vod.CourseForm;
 import com.zch.api.dto.user.CollectForm;
 import com.zch.api.feignClient.comments.CommentsFeignClient;
 import com.zch.api.feignClient.label.LabelFeignClient;
@@ -27,11 +28,10 @@ import com.zch.common.core.utils.StringUtils;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import com.zch.course.domain.po.Course;
+import com.zch.course.domain.repository.CourseInfoEs;
 import com.zch.course.mapper.CourseMapper;
-import com.zch.course.service.ICourseChapterService;
-import com.zch.course.service.ICourseSectionService;
-import com.zch.course.service.ICourseService;
-import com.zch.course.service.ILearnRecordService;
+import com.zch.course.service.*;
+import com.zch.course.utils.IDWorkerUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -66,6 +66,8 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     private final ILearnRecordService learnRecordService;
 
     private final TradeFeignClient tradeFeignClient;
+
+    private final EsCourseInfoService esCourseInfoService;
 
     @Override
     public CourseAndCategoryVO getCoursePage(Integer pageNum, Integer pageSize, String sort, String order, String keywords, Integer cid, Integer id) {
@@ -145,6 +147,30 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         BeanUtils.copyProperties(course, vo);
         vo.setCategory(labelFeignClient.getCategoryById(course.getCategoryId(), "REPLAY_COURSE").getData());
         return vo;
+    }
+
+    @Override
+    public Boolean addCourse(CourseForm form) {
+        Course course = new Course();
+        BeanUtils.copyProperties(form, course);
+        save(course);
+        Course one = getOne(new LambdaQueryWrapper<Course>()
+                .eq(Course::getTitle, form.getTitle())
+                .eq(Course::getCategoryId, form.getCategoryId()));
+        CourseInfoEs esInfo = new CourseInfoEs();
+        esInfo.setCourseId(one.getId());
+        esInfo.setTitle(one.getTitle());
+        esInfo.setPrice(one.getPrice());
+        esInfo.setIntro(one.getIntro());
+        esInfo.setCoverLink(course.getCoverLink());
+        esInfo.setDescription(one.getDescription());
+        esInfo.setGroundingTime(one.getGroundingTime());
+        esInfo.setCreatedTime(one.getCreatedTime());
+        esInfo.setCategoryId(one.getCategoryId());
+        esInfo.setUpdatedTime(one.getUpdatedTime());
+        esInfo.setDocId(new IDWorkerUtil(1, 1, 1).nextId());
+        esCourseInfoService.insert(esInfo);
+        return true;
     }
 
     @Override
@@ -533,6 +559,13 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
             return BigDecimal.ZERO;
         }
         return course.getPrice();
+    }
+
+    @Override
+    public List<CourseInfoEs> searchCourse(String keyword) {
+        CourseInfoEs courseInfoEs = new CourseInfoEs();
+        courseInfoEs.setKeyword(keyword);
+        return esCourseInfoService.queryCourseInfoList(courseInfoEs);
     }
 
 

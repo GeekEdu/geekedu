@@ -1,4 +1,4 @@
-package com.zch.common.config;
+package com.zch.course.config;
 
 import lombok.Data;
 

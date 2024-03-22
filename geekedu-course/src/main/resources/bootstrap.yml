@@ -13,6 +13,8 @@ spring:
 
   application:
     name: course-service
+  elasticsearch:
+    uris: http://8.137.103.164:9200
   cloud:
     nacos:
       config:
@@ -39,3 +41,9 @@ geekedu:
   redis:
     host: 127.0.0.1
 #    host: 192.168.150.101
+
+es:
+  cluster:
+    esConfigs[0]:
+      name: 21389dddfe0e
+      nodes: 8.137.103.164:9200

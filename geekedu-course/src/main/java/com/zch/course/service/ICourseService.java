@@ -7,6 +7,7 @@ import com.zch.api.dto.ask.CommentsBatchDelForm;
 import com.zch.api.dto.course.ChapterForm;
 import com.zch.api.dto.course.DelSectionBatchForm;
 import com.zch.api.dto.course.LearnRecordForm;
+import com.zch.api.dto.course.vod.CourseForm;
 import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.course.*;
 import com.zch.api.vo.course.record.PlayUrlVO;
@@ -14,6 +15,7 @@ import com.zch.api.vo.course.record.RecordCourseVO;
 import com.zch.api.vo.course.record.RecordSectionVO;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.course.domain.po.Course;
+import com.zch.course.domain.repository.CourseInfoEs;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -43,6 +45,13 @@ public interface ICourseService extends IService<Course> {
      * @return
      */
     CourseVO getCourseById(Integer id);
+
+    /**
+     * 新增课程
+     * @param form
+     * @return
+     */
+    Boolean addCourse(CourseForm form);
 
     /**
      * 根据id删除课程
@@ -230,5 +239,7 @@ public interface ICourseService extends IService<Course> {
      * @return
      */
     BigDecimal queryCoursePrice(Integer id);
+
+    List<CourseInfoEs> searchCourse(String keyword);
 
 }

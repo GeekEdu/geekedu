@@ -1,4 +1,4 @@
-package com.zch.common.config;
+package com.zch.course.config;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -230,8 +230,8 @@ public class EsRestClient {
         try {
             BoolQueryBuilder bq = esSearchRequest.getBq();
             String[] fields = esSearchRequest.getFields();
-            int from = esSearchRequest.getFrom();
-            int size = esSearchRequest.getSize();
+            // int from = esSearchRequest.getFrom();
+            // int size = esSearchRequest.getSize();
             Long minutes = esSearchRequest.getMinutes();
             Boolean needScroll = esSearchRequest.getNeedScroll();
             String sortName = esSearchRequest.getSortName();
@@ -239,7 +239,8 @@ public class EsRestClient {
 
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
             searchSourceBuilder.query(bq);
-            searchSourceBuilder.fetchSource(fields, null).from(from).size(size);
+            // searchSourceBuilder.fetchSource(fields, null).from(from).size(size);
+            searchSourceBuilder.fetchSource(fields, null);
 
             if (Objects.nonNull(esSearchRequest.getHighlightBuilder())) {
                 searchSourceBuilder.highlighter(esSearchRequest.getHighlightBuilder());
