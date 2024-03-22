@@ -54,6 +54,14 @@ public interface ICourseService extends IService<Course> {
     Boolean addCourse(CourseForm form);
 
     /**
+     * 更新课程
+     * @param id
+     * @param form
+     * @return
+     */
+    Boolean updateCourse(Integer id, CourseForm form);
+
+    /**
      * 根据id删除课程
      * @param id
      * @return

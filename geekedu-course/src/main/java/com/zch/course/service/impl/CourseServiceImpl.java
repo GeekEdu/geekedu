@@ -174,6 +174,21 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     }
 
     @Override
+    public Boolean updateCourse(Integer id, CourseForm form) {
+        Course course = getById(id);
+        course.setTitle(form.getTitle());
+        course.setCategoryId(form.getCategoryId());
+        course.setCoverLink(form.getCoverLink());
+        course.setGroundingTime(form.getGroundingTime());
+        course.setIsFree(form.getIsFree());
+        course.setIsShow(form.getIsShow());
+        course.setPrice(form.getPrice());
+        course.setDescription(form.getDescription());
+        course.setIntro(form.getIntro());
+        return updateById(course);
+    }
+
+    @Override
     public Boolean deleteCourseById(Integer id) {
         if (ObjectUtils.isNull(id)) {
             return false;

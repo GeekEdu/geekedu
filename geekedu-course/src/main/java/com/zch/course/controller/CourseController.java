@@ -72,6 +72,11 @@ public class CourseController {
         return Response.success(courseService.addCourse(form));
     }
 
+    @PostMapping("/update/{id}")
+    public Response<Boolean> updateCourse(@PathVariable("id") Integer id, @RequestBody CourseForm form) {
+        return Response.success(courseService.updateCourse(id, form));
+    }
+
     /**
      * 根据id删除课程
      * @param id
