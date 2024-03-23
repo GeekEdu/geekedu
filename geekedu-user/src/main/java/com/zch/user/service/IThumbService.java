@@ -32,4 +32,9 @@ public interface IThumbService extends IService<Thumb> {
      */
     Long queryCount(Integer relationId, String type);
 
+    /**
+     * 同步点赞数据
+     */
+    void syncThumb();
+
 }

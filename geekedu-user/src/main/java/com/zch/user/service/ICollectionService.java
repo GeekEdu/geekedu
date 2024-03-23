@@ -43,4 +43,9 @@ public interface ICollectionService extends IService<Collection> {
      */
     List<Collection> queryList(Long userId, String type);
 
+    /**
+     * 同步收藏数据
+     */
+    void syncCollection();
+
 }

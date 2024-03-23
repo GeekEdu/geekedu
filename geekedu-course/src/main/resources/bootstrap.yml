@@ -57,10 +57,10 @@ xxl:
     accessToken: default_token
     executor:
       appname: ${spring.application.name}
-      address: http://10.7.86.178:9999
+      address: http://10.7.114.38:9089
       # 主机地址
-      ip: 10.7.86.178
+      ip: 10.7.114.38
       # 随机端口
-      port: 9999
+      port: 9089
       logpath: /Users/poison02/logs/xxl-job
       logretentiondays: 30

@@ -12,9 +12,16 @@ import com.zch.user.mapper.ThumbMapper;
 import com.zch.user.service.IThumbService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RScoredSortedSet;
+import org.redisson.client.protocol.ScoredEntry;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+
+import static com.zch.common.redis.constants.RedisConstants.IMAGE_TEXT_Z_SET;
+import static com.zch.common.redis.constants.RedisConstants.QA_COMMENT_Z_SET;
 import static com.zch.user.enums.ThumbEnums.IMAGE_TEXT;
+import static com.zch.user.enums.ThumbEnums.QA_COMMENT;
 
 /**
  * @author Poison02
@@ -46,7 +53,7 @@ public class ThumbServiceImpl extends ServiceImpl<ThumbMapper, Thumb> implements
          *
          */
         String key = ThumbEnums.valueOf(form.getType()).equals(IMAGE_TEXT)
-                ? RedisConstants.IMAGE_TEXT_Z_SET + form.getRelationId()
+                ? IMAGE_TEXT_Z_SET + form.getRelationId()
                 : RedisConstants.QA_COMMENT_Z_SET + form.getRelationId();
         long cur = System.currentTimeMillis();
         boolean isExists = RedisUtils.rSetContainSingle(key, userId);
@@ -98,7 +105,7 @@ public class ThumbServiceImpl extends ServiceImpl<ThumbMapper, Thumb> implements
         // Long userId = UserContext.getLoginId();
         Long userId = 1745747394693820416L;
         String key = ThumbEnums.valueOf(type).equals(IMAGE_TEXT)
-                ? RedisConstants.IMAGE_TEXT_Z_SET + relationId
+                ? IMAGE_TEXT_Z_SET + relationId
                 : RedisConstants.QA_COMMENT_Z_SET + relationId;
         boolean isExists = RedisUtils.rSetContainSingle(key, userId);
         if (isExists) {
@@ -130,7 +137,7 @@ public class ThumbServiceImpl extends ServiceImpl<ThumbMapper, Thumb> implements
         }
         Long userId = 1745747394693820416L;
         String key = ThumbEnums.valueOf(type).equals(IMAGE_TEXT)
-                ? RedisConstants.IMAGE_TEXT_Z_SET + relationId
+                ? IMAGE_TEXT_Z_SET + relationId
                 : RedisConstants.QA_COMMENT_Z_SET + relationId;
         return (long) RedisUtils.rSetSize(key);
 //        List<Thumb> thumbs = thumbMapper.selectList(new LambdaQueryWrapper<Thumb>()
@@ -141,5 +148,50 @@ public class ThumbServiceImpl extends ServiceImpl<ThumbMapper, Thumb> implements
 //            return 0L;
 //        }
 //        return (long) thumbs.size();
+    }
+
+    @Override
+    public void syncThumb() {
+        syncTopic();
+        syncQaComment();
+    }
+    public void syncTopic() {
+        Iterable<String> keyPattern = RedisUtils.keys(IMAGE_TEXT_Z_SET + "*");
+        for (String key : keyPattern) {
+            RScoredSortedSet<String> set = RedisUtils.getClient().getScoredSortedSet(key);
+            Collection<ScoredEntry<String>> scoredEntries = set.entryRange(0, -1);
+            Integer relationId = Integer.valueOf(key.substring(key.lastIndexOf(":") + 1));
+            scoredEntries.forEach(item -> {
+                // 分数 就是时间戳
+                Double score = item.getScore();
+                // value  是用户id
+                String value = item.getValue();
+                Thumb thumb = new Thumb();
+                thumb.setType(IMAGE_TEXT);
+                thumb.setUserId(Long.valueOf(value));
+                thumb.setRelationId(relationId);
+                save(thumb);
+            });
+        }
+    }
+
+    public void syncQaComment() {
+        Iterable<String> keyPattern = RedisUtils.keys(QA_COMMENT_Z_SET + "*");
+        for (String key : keyPattern) {
+            RScoredSortedSet<String> set = RedisUtils.getClient().getScoredSortedSet(key);
+            Collection<ScoredEntry<String>> scoredEntries = set.entryRange(0, -1);
+            Integer relationId = Integer.valueOf(key.substring(key.lastIndexOf(":") + 1));
+            scoredEntries.forEach(item -> {
+                // 分数 就是时间戳
+                Double score = item.getScore();
+                // value  是用户id
+                String value = item.getValue();
+                Thumb thumb = new Thumb();
+                thumb.setType(QA_COMMENT);
+                thumb.setUserId(Long.valueOf(value));
+                thumb.setRelationId(relationId);
+                save(thumb);
+            });
+        }
     }
 }

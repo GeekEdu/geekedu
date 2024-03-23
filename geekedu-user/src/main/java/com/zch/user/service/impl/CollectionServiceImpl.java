@@ -13,6 +13,8 @@ import com.zch.user.mapper.CollectionMapper;
 import com.zch.user.service.ICollectionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RScoredSortedSet;
+import org.redisson.client.protocol.ScoredEntry;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -141,5 +143,92 @@ public class CollectionServiceImpl extends ServiceImpl<CollectionMapper, Collect
                 .eq(Collection::getType, CollectionEnums.valueOf(type))
                 .eq(Collection::getIsCancel, false));
         return CollUtils.isEmpty(list) ? new ArrayList<>(0) : list;
+    }
+
+    @Override
+    public void syncCollection() {
+        syncBook();
+        syncTopic();
+        syncVod();
+        syncLive();
+    }
+    public void syncBook() {
+        Iterable<String> keyPattern = RedisUtils.keys(E_BOOK_SET + "*");
+        for (String key : keyPattern) {
+            RScoredSortedSet<String> set = RedisUtils.getClient().getScoredSortedSet(key);
+            java.util.Collection<ScoredEntry<String>> scoredEntries = set.entryRange(0, -1);
+            Integer relationId = Integer.valueOf(key.substring(key.lastIndexOf(":") + 1));
+            scoredEntries.forEach(item -> {
+                // 分数 就是时间戳
+                Double score = item.getScore();
+                // value  是用户id
+                String value = item.getValue();
+                Collection collection = new Collection();
+                collection.setUserId(Long.valueOf(value));
+                collection.setRelationId(relationId);
+                collection.setType(CollectionEnums.E_BOOK);
+                save(collection);
+            });
+        }
+    }
+
+    public void syncTopic() {
+        Iterable<String> keyPattern = RedisUtils.keys(IMAGE_TEXT_SET + "*");
+        for (String key : keyPattern) {
+            RScoredSortedSet<String> set = RedisUtils.getClient().getScoredSortedSet(key);
+            java.util.Collection<ScoredEntry<String>> scoredEntries = set.entryRange(0, -1);
+            Integer relationId = Integer.valueOf(key.substring(key.lastIndexOf(":") + 1));
+            scoredEntries.forEach(item -> {
+                // 分数 就是时间戳
+                Double score = item.getScore();
+                // value  是用户id
+                String value = item.getValue();
+                Collection collection = new Collection();
+                collection.setUserId(Long.valueOf(value));
+                collection.setRelationId(relationId);
+                collection.setType(CollectionEnums.IMAGE_TEXT);
+                save(collection);
+            });
+        }
+    }
+
+    public void syncVod() {
+        Iterable<String> keyPattern = RedisUtils.keys(REPLAY_COURSE_SET + "*");
+        for (String key : keyPattern) {
+            RScoredSortedSet<String> set = RedisUtils.getClient().getScoredSortedSet(key);
+            java.util.Collection<ScoredEntry<String>> scoredEntries = set.entryRange(0, -1);
+            Integer relationId = Integer.valueOf(key.substring(key.lastIndexOf(":") + 1));
+            scoredEntries.forEach(item -> {
+                // 分数 就是时间戳
+                Double score = item.getScore();
+                // value  是用户id
+                String value = item.getValue();
+                Collection collection = new Collection();
+                collection.setUserId(Long.valueOf(value));
+                collection.setRelationId(relationId);
+                collection.setType(CollectionEnums.REPLAY_COURSE);
+                save(collection);
+            });
+        }
+    }
+
+    public void syncLive() {
+        Iterable<String> keyPattern = RedisUtils.keys(LIVE_COURSE_SET + "*");
+        for (String key : keyPattern) {
+            RScoredSortedSet<String> set = RedisUtils.getClient().getScoredSortedSet(key);
+            java.util.Collection<ScoredEntry<String>> scoredEntries = set.entryRange(0, -1);
+            Integer relationId = Integer.valueOf(key.substring(key.lastIndexOf(":") + 1));
+            scoredEntries.forEach(item -> {
+                // 分数 就是时间戳
+                Double score = item.getScore();
+                // value  是用户id
+                String value = item.getValue();
+                Collection collection = new Collection();
+                collection.setUserId(Long.valueOf(value));
+                collection.setRelationId(relationId);
+                collection.setType(CollectionEnums.LIVE_COURSE);
+                save(collection);
+            });
+        }
     }
 }

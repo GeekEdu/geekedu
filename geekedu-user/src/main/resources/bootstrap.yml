@@ -38,3 +38,19 @@ geekedu:
   redis:
     host: 127.0.0.1
 #    host: 192.168.150.101
+
+# XXL 配置
+xxl:
+  job:
+    admin:
+      addresses: http://127.0.0.1:9088/xxl-job-admin
+    accessToken: default_token
+    executor:
+      appname: ${spring.application.name}
+      address: http://10.7.16.101:9090
+      # 主机地址
+      ip: 10.7.16.101
+      # 随机端口
+      port: 9090
+      logpath: /Users/poison02/logs/xxl-job
+      logretentiondays: 30
