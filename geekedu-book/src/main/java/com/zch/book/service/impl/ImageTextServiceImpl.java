@@ -406,7 +406,7 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
 
     @Override
     public Boolean collect(CollectForm form) {
-        if (ObjectUtils.isNull(form) || ObjectUtils.isNull(form.getId()) || StringUtils.isBlank(form.getType())) {
+        if (ObjectUtils.isNull(form) || ObjectUtils.isNull(form.getRelationId()) || StringUtils.isBlank(form.getType())) {
             return false;
         }
         return userFeignClient.hitCollectIcon(form).getData();

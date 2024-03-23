@@ -456,7 +456,7 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
 
     @Override
     public Boolean hitBookCollectionIcon(CollectForm form) {
-        if (ObjectUtils.isNull(form) || ObjectUtils.isNull(form.getId()) || StringUtils.isBlank(form.getType())) {
+        if (ObjectUtils.isNull(form) || ObjectUtils.isNull(form.getRelationId()) || StringUtils.isBlank(form.getType())) {
             return false;
         }
         return userFeignClient.hitCollectIcon(form).getData();
