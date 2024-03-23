@@ -8,14 +8,19 @@
 <p align="center">
 GeekEdu
 </p>
-<center>
-<img src="./assets/logo.png" alt="logo">
-</center>
+<div style="text-align: center;">
+    <img src="./assets/logo.png" alt="logo" style="margin: 0 auto; display: block;">
+</div>
 
 基于JDK17和SpringBoot2.7.3搭建的SpringBoot应用，使用微服务架构，SpringCloud和SpringCloudAlibaba版本分别为：2021.0.3和2021.0.1.0
+# 模块
+该项目是本人的2024本科毕设，采用微服务架构，共有以下几个模块
+## 课程模块
+### 录播课
+### 直播课
+## 学习路径模块
+## 电子书模块
+## 图文模块
+## 问答模块
 
-# 当前进度
 
-2024.2.9 完成录播课的分类的CRUD，并且前后端均完成。
-
-2024.2.10 将MySQL数据从Mac系统本地同步到Windows中的Linux虚拟机中。
