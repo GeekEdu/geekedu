@@ -11,6 +11,8 @@ import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.api.vo.user.UserVO;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
+import com.zch.common.redis.annotation.RateLimiter;
+import com.zch.common.redis.enums.LimitType;
 import com.zch.user.domain.po.User;
 import com.zch.user.service.IUserService;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +43,7 @@ public class UserController {
      * 返回图片二维码
      * @return
      */
+    @RateLimiter(time = 60, count = 5, limitType = LimitType.IP)
     @GetMapping("/captcha/image")
     public Response<CaptchaVO> getCaptcha() {
         return Response.success(userService.getCaptcha());

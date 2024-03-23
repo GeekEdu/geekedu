@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
+import com.zch.common.redis.aspect.RateLimiterAspect;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
@@ -102,6 +103,11 @@ public class RedissonConfig {
             }
         }
         return nodes.toArray(new String[0]);
+    }
+
+    @Bean
+    public RateLimiterAspect rateLimiterAspect() {
+        return new RateLimiterAspect();
     }
 
 }

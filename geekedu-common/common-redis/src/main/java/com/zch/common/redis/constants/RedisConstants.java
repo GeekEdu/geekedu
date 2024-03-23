@@ -57,4 +57,9 @@ public interface RedisConstants {
 
     String LIVE_COURSE_SET = "live:collection:";
 
+    /**
+     * 限流 redis key
+     */
+    String RATE_LIMIT_KEY = "global:rate_limit:";
+
 }
