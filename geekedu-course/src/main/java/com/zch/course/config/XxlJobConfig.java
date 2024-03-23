@@ -6,6 +6,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
 
 /**
  * @author Poison02
@@ -14,6 +21,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class XxlJobConfig {
     private Logger logger = LoggerFactory.getLogger(XxlJobConfig.class);
+
+    @Resource
+    private Environment environment;
 
     @Value("${xxl.job.admin.addresses}")
     private String adminAddresses;
@@ -39,6 +49,12 @@ public class XxlJobConfig {
     @Value("${xxl.job.executor.logretentiondays}")
     private int logRetentionDays;
 
+    @PostConstruct
+    public void init() {
+        ip = findHostAddress();
+        address = "http://" + ip + ":" + port;
+    }
+
 
     @Bean
     public XxlJobSpringExecutor xxlJobExecutor() {
@@ -54,6 +70,30 @@ public class XxlJobConfig {
         xxlJobSpringExecutor.setLogRetentionDays(logRetentionDays);
 
         return xxlJobSpringExecutor;
+    }
+
+    /**
+     * 用于获取本机真实ip
+     * @return
+     * @throws Exception
+     */
+    private static String findHostAddress() {
+        try {
+            Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();
+            while (netInterfaces.hasMoreElements()) {
+                NetworkInterface ni = netInterfaces.nextElement();
+                Enumeration<InetAddress> addresses = ni.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    InetAddress addr = addresses.nextElement();
+                    if (!addr.isLoopbackAddress() && !addr.isLinkLocalAddress() && addr.isSiteLocalAddress()) {
+                        return addr.getHostAddress();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
