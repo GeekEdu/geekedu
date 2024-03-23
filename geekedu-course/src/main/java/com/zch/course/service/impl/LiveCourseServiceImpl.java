@@ -408,7 +408,7 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
     @Override
     public Boolean courseCollect(Integer id) {
         CollectForm form = new CollectForm();
-        form.setId(id);
+        form.setRelationId(id);
         form.setType("LIVE_COURSE");
         return userFeignClient.hitCollectIcon(form).getData();
     }

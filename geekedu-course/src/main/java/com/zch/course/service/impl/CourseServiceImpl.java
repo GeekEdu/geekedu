@@ -562,7 +562,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Override
     public Boolean courseCollect(Integer id) {
         CollectForm form = new CollectForm();
-        form.setId(id);
+        form.setRelationId(id);
         form.setType("REPLAY_COURSE");
         return userFeignClient.hitCollectIcon(form).getData();
     }
