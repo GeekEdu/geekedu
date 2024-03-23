@@ -46,8 +46,8 @@ public class ThumbServiceImpl extends ServiceImpl<ThumbMapper, Thumb> implements
          *
          */
         String key = ThumbEnums.valueOf(form.getType()).equals(IMAGE_TEXT)
-                ? RedisConstants.IMAGE_TEXT_SET + form.getRelationId()
-                : RedisConstants.QA_COMMENT_SET + form.getRelationId();
+                ? RedisConstants.IMAGE_TEXT_Z_SET + form.getRelationId()
+                : RedisConstants.QA_COMMENT_Z_SET + form.getRelationId();
         long cur = System.currentTimeMillis();
         boolean isExists = RedisUtils.rSetContainSingle(key, userId);
         if (isExists) {
@@ -98,8 +98,8 @@ public class ThumbServiceImpl extends ServiceImpl<ThumbMapper, Thumb> implements
         // Long userId = UserContext.getLoginId();
         Long userId = 1745747394693820416L;
         String key = ThumbEnums.valueOf(type).equals(IMAGE_TEXT)
-                ? RedisConstants.IMAGE_TEXT_SET + relationId
-                : RedisConstants.QA_COMMENT_SET + relationId;
+                ? RedisConstants.IMAGE_TEXT_Z_SET + relationId
+                : RedisConstants.QA_COMMENT_Z_SET + relationId;
         boolean isExists = RedisUtils.rSetContainSingle(key, userId);
         if (isExists) {
             // 返回点赞
@@ -130,8 +130,8 @@ public class ThumbServiceImpl extends ServiceImpl<ThumbMapper, Thumb> implements
         }
         Long userId = 1745747394693820416L;
         String key = ThumbEnums.valueOf(type).equals(IMAGE_TEXT)
-                ? RedisConstants.IMAGE_TEXT_SET + relationId
-                : RedisConstants.QA_COMMENT_SET + relationId;
+                ? RedisConstants.IMAGE_TEXT_Z_SET + relationId
+                : RedisConstants.QA_COMMENT_Z_SET + relationId;
         return (long) RedisUtils.rSetSize(key);
 //        List<Thumb> thumbs = thumbMapper.selectList(new LambdaQueryWrapper<Thumb>()
 //                .eq(Thumb::getRelationId, relationId)

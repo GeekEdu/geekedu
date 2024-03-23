@@ -39,11 +39,22 @@ public interface RedisConstants {
     /**
      * 图文点赞集合
      */
-    String IMAGE_TEXT_SET = "topic:thumb:";
+    String IMAGE_TEXT_Z_SET = "topic:thumb:";
 
     /**
      * 问答评论点赞集合
      */
-    String QA_COMMENT_SET = "qa:comment:thumb:";
+    String QA_COMMENT_Z_SET = "qa:comment:thumb:";
+
+    /**
+     * 电子书收藏集合
+     */
+    String E_BOOK_SET = "book:collection:";
+
+    String IMAGE_TEXT_SET = "topic:collection:";
+
+    String REPLAY_COURSE_SET = "vod:collection:";
+
+    String LIVE_COURSE_SET = "live:collection:";
 
 }
