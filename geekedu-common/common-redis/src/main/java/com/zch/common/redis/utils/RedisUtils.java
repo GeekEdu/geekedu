@@ -575,4 +575,46 @@ public class RedisUtils {
         RBitSet set = CLIENT.getBitSet(key);
         return set.getUnsigned(val, 0);
     }
+
+    //=====================================================================
+    // ZSet 集合
+    public static void addRSetSingle(String key, double score, Long userId) {
+        RScoredSortedSet<Object> set = CLIENT.getScoredSortedSet(key);
+        set.add(score, userId);
+    }
+
+    public static void addRSetObject(String key, double score, String setName) {
+        RScoredSortedSet<Object> set = CLIENT.getScoredSortedSet(key);
+        set.add(score, setName);
+    }
+
+    public static boolean rSetContainSingle(String key, Long userId) {
+        RScoredSortedSet<Object> set = CLIENT.getScoredSortedSet(key);
+        return set.contains(userId);
+    }
+
+    public static boolean rSetContainObject(String key, String setName) {
+        RScoredSortedSet<Object> set = CLIENT.getScoredSortedSet(key);
+        return set.contains(setName);
+    }
+
+    public static int rSetSize(String key) {
+        RScoredSortedSet<Object> set = CLIENT.getScoredSortedSet(key);
+        return set.size();
+    }
+
+    public static void removeRSetSingle(String key, Long userId) {
+        RScoredSortedSet<Object> set = CLIENT.getScoredSortedSet(key);
+        set.remove(userId);
+    }
+
+    public static void removeRSetObject(String key, String setName) {
+        RScoredSortedSet<Object> set = CLIENT.getScoredSortedSet(key);
+        set.remove(setName);
+    }
+
+    public static Collection<Object> returnRSet(String key) {
+        RScoredSortedSet<Object> set = CLIENT.getScoredSortedSet(key);
+        return set.valueRange(0, -1);
+    }
 }

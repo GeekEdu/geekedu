@@ -36,4 +36,14 @@ public interface RedisConstants {
 
     String USER_SIGN_KEY = "user:sign:";
 
+    /**
+     * 图文点赞集合
+     */
+    String IMAGE_TEXT_SET = "topic:thumb:";
+
+    /**
+     * 问答评论点赞集合
+     */
+    String QA_COMMENT_SET = "qa:comment:thumb:";
+
 }
