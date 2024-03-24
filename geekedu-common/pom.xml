@@ -15,6 +15,7 @@
 		<module>common-mq</module>
         <module>common-elasticsearch</module>
         <module>common-job</module>
+        <module>common-logstash</module>
     </modules>
 	<parent>
 		<groupId>com.zch</groupId>

@@ -8,4 +8,5 @@ spring:
         ip: 127.0.0.1
 logging:
   level:
-    com.zch: debug
+    com.zch: info
+  config: classpath:logback-spring.xml
