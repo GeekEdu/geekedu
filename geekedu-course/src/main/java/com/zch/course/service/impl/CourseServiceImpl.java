@@ -9,6 +9,7 @@ import com.zch.api.dto.course.ChapterForm;
 import com.zch.api.dto.course.DelSectionBatchForm;
 import com.zch.api.dto.course.LearnRecordForm;
 import com.zch.api.dto.course.vod.CourseForm;
+import com.zch.api.dto.course.vod.CourseSectionForm;
 import com.zch.api.dto.user.CollectForm;
 import com.zch.api.feignClient.comments.CommentsFeignClient;
 import com.zch.api.feignClient.label.LabelFeignClient;
@@ -281,6 +282,16 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Override
     public Boolean deleteSectionBatch(DelSectionBatchForm form) {
         return sectionService.deleteSectionBatch(form);
+    }
+
+    @Override
+    public Boolean addSection(CourseSectionForm form) {
+        return sectionService.addSection(form);
+    }
+
+    @Override
+    public Boolean updateSection(Integer sectionId, CourseSectionForm form) {
+        return sectionService.updateSection(sectionId, form);
     }
 
     @Override

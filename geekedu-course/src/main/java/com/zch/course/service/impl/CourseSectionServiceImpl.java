@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.course.DelSectionBatchForm;
+import com.zch.api.dto.course.vod.CourseSectionForm;
 import com.zch.api.vo.course.CourseChapterVO;
 import com.zch.api.vo.course.CourseSectionVO;
 import com.zch.api.vo.course.CourseSimpleVO;
@@ -129,6 +130,41 @@ public class CourseSectionServiceImpl extends ServiceImpl<CourseSectionMapper, C
             return false;
         }
         return removeBatchByIds(form.getIds());
+    }
+
+    @Override
+    public Boolean addSection(CourseSectionForm form) {
+        CourseSection section = new CourseSection();
+        section.setCourseId(form.getCourseId());
+        section.setChapterId(form.getChapterId());
+        section.setTitle(form.getTitle());
+        section.setDuration(form.getDuration());
+        section.setGroundingTime(form.getGroundingTime());
+        section.setFreeSeconds(form.getFreeSeconds());
+        section.setBanDrag(form.getBanDrag());
+        section.setIsShow(form.getIsShow());
+        section.setTencentId(form.getTencentVideoId());
+        section.setVideoId(form.getVideoId());
+        return save(section);
+    }
+
+    @Override
+    public Boolean updateSection(Integer sectionId, CourseSectionForm form) {
+        CourseSection section = getById(sectionId);
+        if (ObjectUtils.isNull(section)) {
+            return false;
+        }
+        section.setCourseId(form.getCourseId());
+        section.setChapterId(form.getChapterId());
+        section.setTitle(form.getTitle());
+        section.setDuration(form.getDuration());
+        section.setGroundingTime(form.getGroundingTime());
+        section.setFreeSeconds(form.getFreeSeconds());
+        section.setBanDrag(form.getBanDrag());
+        section.setIsShow(form.getIsShow());
+        section.setTencentId(form.getTencentVideoId());
+        section.setVideoId(form.getVideoId());
+        return updateById(section);
     }
 
     @Override

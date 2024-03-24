@@ -6,6 +6,7 @@ import com.zch.api.dto.course.ChapterForm;
 import com.zch.api.dto.course.DelSectionBatchForm;
 import com.zch.api.dto.course.LearnRecordForm;
 import com.zch.api.dto.course.vod.CourseForm;
+import com.zch.api.dto.course.vod.CourseSectionForm;
 import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.course.*;
 import com.zch.api.vo.course.record.PlayUrlVO;
@@ -214,6 +215,27 @@ public class CourseController {
     @PostMapping("/section/delete/batch")
     public Response<Boolean> deleteSectionBatch(@RequestBody DelSectionBatchForm form) {
         return Response.success(courseService.deleteSectionBatch(form));
+    }
+
+    /**
+     * 新增课时
+     * @param form
+     * @return
+     */
+    @PostMapping("/section/add")
+    public Response<Boolean> addSection(@RequestBody CourseSectionForm form) {
+        return Response.success(courseService.addSection(form));
+    }
+
+    /**
+     * 修改课时
+     * @param id
+     * @param form
+     * @return
+     */
+    @PostMapping("/section/{id}/update")
+    public Response<Boolean> updateSection(@PathVariable("id") Integer id, @RequestBody CourseSectionForm form) {
+        return Response.success(courseService.updateSection(id, form));
     }
 
     //=======================================================================================

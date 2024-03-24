@@ -8,6 +8,7 @@ import com.zch.api.dto.course.ChapterForm;
 import com.zch.api.dto.course.DelSectionBatchForm;
 import com.zch.api.dto.course.LearnRecordForm;
 import com.zch.api.dto.course.vod.CourseForm;
+import com.zch.api.dto.course.vod.CourseSectionForm;
 import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.course.*;
 import com.zch.api.vo.course.record.PlayUrlVO;
@@ -155,6 +156,20 @@ public interface ICourseService extends IService<Course> {
      * @return
      */
     Boolean deleteSectionBatch(DelSectionBatchForm form);
+
+    /**
+     * 新增课时
+     * @param form
+     * @return
+     */
+    Boolean addSection(CourseSectionForm form);
+
+    /**
+     * 更新课时
+     * @param form
+     * @return
+     */
+    Boolean updateSection(Integer sectionId, CourseSectionForm form);
 
 // ================================================================================================
 // 前台

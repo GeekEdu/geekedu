@@ -3,6 +3,7 @@ package com.zch.course.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.course.DelSectionBatchForm;
+import com.zch.api.dto.course.vod.CourseSectionForm;
 import com.zch.api.vo.course.CourseSectionVO;
 import com.zch.course.domain.po.CourseSection;
 
@@ -38,6 +39,20 @@ public interface ICourseSectionService extends IService<CourseSection> {
      * @return
      */
     Boolean deleteSectionBatch(DelSectionBatchForm form);
+
+    /**
+     * 新增课时
+     * @param form
+     * @return
+     */
+    Boolean addSection(CourseSectionForm form);
+
+    /**
+     * 更新课时
+     * @param form
+     * @return
+     */
+    Boolean updateSection(Integer sectionId, CourseSectionForm form);
 
     //====================================================================
     // 前台
