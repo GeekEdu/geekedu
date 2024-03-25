@@ -221,18 +221,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         Map<String, Object> res = spliceKey(userId);
         String key = res.get("key").toString();
         int day = (int) res.get("day");
-        // 增加MQ 写入数据库测试 后续重构 TODO
-//        DefaultMQProducer producer = (DefaultMQProducer) applicationContext.getBean("save2MysqlProducer");
-//        User user = userMapper.selectById(userId);
-//        JSONObject json = new JSONObject();
-//        Message msg = new Message();
-//        msg.setTopic(MQConstants.SAVE_TO_MYSQL_TOPIC);
-        // 这里判断的前提是：今天是本月第一天，查看今天是否签到，如果已经签了 则返回对应积分，若没有，则进行签到，再返回对应积分
         if (day == 1 && isSign()) {
-//            user.setPoints(user.getPoints() + 1);
-//            json.put("message", user);
-//            msg.setBody(json.toJSONString().getBytes(StandardCharsets.UTF_8));
-//            RocketMQUtils.asyncSendMsg(producer, msg);
+            // 写入数据库中
+            updateUserPoint(userId, 1L);
             return 1;
         }
         // 写入redis中 签到使用 BitMap 数据结构
@@ -251,10 +242,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         // 1. 获取用户本月签到天数
         long signDays = RedisUtils.getBitCount(key);
         if (signDays < 2) {
-//            user.setPoints(user.getPoints() + 1);
-//            json.put("message", user);
-//            msg.setBody(json.toJSONString().getBytes(StandardCharsets.UTF_8));
-//            RocketMQUtils.asyncSendMsg(producer, msg);
+            // 写入数据库中
+            updateUserPoint(userId, 1L);
             return 1;
         }
         // 2. 获取截止当前日期，本月签到情况整数值。后续转为二进制进行比较
@@ -266,6 +255,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (longSignDays < 2) {
             // 如果最大连续签到天数已经小于2天 则直接计算签到天数的积分即可
             // 这种情况则是没有连续签到的情况
+            // 写入数据库中
+            updateUserPoint(userId, signDays);
             return Math.toIntExact(signDays);
         } {
             // 存在连续签到的情况
@@ -276,12 +267,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             for (Integer e : signRes.values()) {
                 credit += e;
             }
-//            user.setPoints(user.getPoints() + credit);
-//            json.put("message", user);
-//            msg.setBody(json.toJSONString().getBytes(StandardCharsets.UTF_8));
-//            RocketMQUtils.asyncSendMsg(producer, msg);
+            // 写入数据库中
+            updateUserPoint(userId, (long) credit);
             return credit;
         }
+    }
+
+    @Override
+    public void updateUserPoint(Long userId, Long point) {
+        User user = getById(userId);
+        user.setPoints(point);
+        updateById(user);
     }
 
     @Override

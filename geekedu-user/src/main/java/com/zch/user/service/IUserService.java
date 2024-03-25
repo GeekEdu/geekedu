@@ -77,6 +77,13 @@ public interface IUserService extends IService<User> {
     Integer signIn();
 
     /**
+     * 更新用户积分
+     * @param userId
+     * @param point
+     */
+    void updateUserPoint(Long userId, Long point);
+
+    /**
      * 是否签到
      * @return
      */
