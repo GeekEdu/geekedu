@@ -21,6 +21,7 @@ import com.zch.api.vo.ask.CommentsVO;
 import com.zch.api.vo.course.*;
 import com.zch.api.vo.course.record.*;
 import com.zch.api.vo.label.CategorySimpleVO;
+import com.zch.api.vo.resources.AttachVO;
 import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.common.core.utils.BeanUtils;
 import com.zch.common.core.utils.CollUtils;
@@ -387,7 +388,11 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         if (ObjectUtils.isNotNull(res2.getData())) {
             vo.setIsCollect(res2.getData());
         }
-        // TODO 附件
+        // 附件
+        Response<List<AttachVO>> attach = mediaFeignClient.queryAttachList(id);
+        if (ObjectUtils.isNotNull(attach) && ObjectUtils.isNotNull(attach.getData())) {
+            vo.setAttach(attach.getData());
+        }
         // 是否是会员
         Response<Boolean> res3 = userFeignClient.queryIsVip(userId);
         if (ObjectUtils.isNotNull(res3) && ObjectUtils.isNotNull(res3.getData())) {

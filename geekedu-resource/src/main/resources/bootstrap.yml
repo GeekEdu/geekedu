@@ -59,3 +59,8 @@ geekedu:
       bucket: geekedu
       multipartUploadThreshold: 5242880 # 5mb，触发分片上传的阈值
       minimumUploadPartSize: 1048576 # 1mb，分片的最小大小
+  minio:
+    endpoint: http://8.137.103.164:9000 # Minio服务所在地址
+    bucketName: geekedu # 存储桶名称
+    accessKey: admin # 访问的key
+    secretKey: admin123 # 访问的秘钥

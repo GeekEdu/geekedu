@@ -3,6 +3,7 @@ package com.zch.api.vo.course.record;
 import com.zch.api.vo.course.CourseChapterVO;
 import com.zch.api.vo.course.CourseSectionVO;
 import com.zch.api.vo.course.CourseVO;
+import com.zch.api.vo.resources.AttachVO;
 import com.zch.common.mvc.entity.BaseVO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -50,7 +51,7 @@ public class RecordCourseVO extends BaseVO {
     /**
      * 附件
      */
-    private List<String> attach = new ArrayList<>(0);
+    private List<AttachVO> attach = new ArrayList<>(0);
 
     /**
      * 视频观看进度
