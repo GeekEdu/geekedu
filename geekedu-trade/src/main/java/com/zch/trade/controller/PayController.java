@@ -2,7 +2,9 @@ package com.zch.trade.controller;
 
 import com.zch.api.dto.trade.pay.PayInfoForm;
 import com.zch.api.vo.trade.PayChannelVO;
+import com.zch.api.vo.trade.pay.PayInfoVO;
 import com.zch.common.mvc.result.Response;
+import com.zch.trade.domain.po.PayInfo;
 import com.zch.trade.service.IPayChannelService;
 import com.zch.trade.service.IPayInfoService;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +38,14 @@ public class PayController {
         return Response.success(payChannelService.getPayChannelList());
     }
 
+    /**
+     * 支付宝支付
+     * @param orderId
+     * @param scene
+     * @param payment
+     * @param redirect
+     * @param response
+     */
     @GetMapping("/aliPay")
     public void pay(@RequestParam("orderId") String orderId,
                     @RequestParam("scene") String scene,
@@ -85,6 +95,16 @@ public class PayController {
     @PostMapping("/create/payInfo")
     public void createPayInfo(@RequestBody PayInfoForm form) {
         payInfoService.createPayInfo(form);
+    }
+
+    /**
+     * 查询支付信息
+     * @param orderId
+     * @return
+     */
+    @GetMapping("/info")
+    public Response<PayInfoVO> queryPayInfo(@RequestParam("orderId") String orderId) {
+        return Response.success(payInfoService.queryPayInfo(orderId));
     }
 
 }

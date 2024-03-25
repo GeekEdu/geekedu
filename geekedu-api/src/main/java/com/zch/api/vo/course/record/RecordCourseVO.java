@@ -28,7 +28,7 @@ public class RecordCourseVO extends BaseVO {
     /**
      * 章节
      */
-    private List<CourseChapterVO> chapters;
+    private List<CourseChapterVO> chapters = new ArrayList<>(0);
 
     /**
      * 视频

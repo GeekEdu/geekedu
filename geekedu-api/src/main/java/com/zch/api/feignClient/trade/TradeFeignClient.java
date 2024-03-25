@@ -3,6 +3,7 @@ package com.zch.api.feignClient.trade;
 import com.zch.api.dto.trade.pay.PayInfoForm;
 import com.zch.api.interceptor.FeignInterceptor;
 import com.zch.api.vo.trade.order.OrderFullVO;
+import com.zch.api.vo.trade.pay.PayInfoVO;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -46,5 +47,13 @@ public interface TradeFeignClient {
     Response<Boolean> queryOrderIsPay(@RequestParam("userId") Long userId,
                                              @RequestParam("goodsId") Integer goodsId,
                                              @RequestParam("goodsType") String goodsType);
+
+    /**
+     * 查询支付信息
+     * @param orderId
+     * @return
+     */
+    @GetMapping("/api/pay/info")
+    Response<PayInfoVO> queryPayInfo(@RequestParam("orderId") String orderId);
 
 }

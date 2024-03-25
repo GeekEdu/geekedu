@@ -375,6 +375,24 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         if (ObjectUtils.isNotNull(chapters) && CollUtils.isNotEmpty(chapters)) {
             vo.setChapters(chapters);
         }
+        // 是否购买课程
+        if (!BigDecimal.ZERO.equals(course.getPrice())) {
+            Response<Boolean> res1 = tradeFeignClient.queryOrderIsPay(userId, course.getId(), "REPLAY_COURSE");
+            if (ObjectUtils.isNotNull(res1.getData())) {
+                vo.setIsBuy(res1.getData());
+            }
+        }
+        // 是否收藏课程
+        Response<Boolean> res2 = userFeignClient.checkCollectStatus(course.getId(), "REPLAY_COURSE");
+        if (ObjectUtils.isNotNull(res2.getData())) {
+            vo.setIsCollect(res2.getData());
+        }
+        // TODO 附件
+        // 是否是会员
+        Response<Boolean> res3 = userFeignClient.queryIsVip(userId);
+        if (ObjectUtils.isNotNull(res3) && ObjectUtils.isNotNull(res3.getData())) {
+            vo.setIsVip(res3.getData());
+        }
         // 查询课程对应的视频小节
         // 1. 如果没有章节
         Map<Integer, List<CourseSectionVO>> videos = new HashMap<>(0);
@@ -411,19 +429,6 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
             }
         }
         vo.setVideos(videos);
-        // 是否购买课程
-        if (!BigDecimal.ZERO.equals(course.getPrice())) {
-            Response<Boolean> res1 = tradeFeignClient.queryOrderIsPay(userId, course.getId(), "REPLAY_COURSE");
-            if (ObjectUtils.isNotNull(res1.getData())) {
-                vo.setIsBuy(res1.getData());
-            }
-        }
-        // 是否收藏课程
-        Response<Boolean> res2 = userFeignClient.checkCollectStatus(course.getId(), "REPLAY_COURSE");
-        if (ObjectUtils.isNotNull(res2.getData())) {
-            vo.setIsCollect(res2.getData());
-        }
-        // TODO 附件
         // 视频观看进度
         if (vo.getIsBuy()) {
             Map<Integer, LearnRecordVO> videoWatchedProgress = new HashMap<>();
@@ -434,11 +439,6 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
                 }
             });
             vo.setVideoWatchedProgress(videoWatchedProgress);
-        }
-        // 是否是会员
-        Response<Boolean> res3 = userFeignClient.queryIsVip(userId);
-        if (ObjectUtils.isNotNull(res3) && ObjectUtils.isNotNull(res3.getData())) {
-            vo.setIsVip(res3.getData());
         }
         return vo;
     }

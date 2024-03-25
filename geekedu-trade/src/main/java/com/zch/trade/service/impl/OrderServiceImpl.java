@@ -19,6 +19,7 @@ import com.zch.api.vo.trade.order.GoodsVO;
 import com.zch.api.vo.trade.order.OrderDetailVO;
 import com.zch.api.vo.trade.order.OrderEndFullVO;
 import com.zch.api.vo.trade.order.OrderFullVO;
+import com.zch.api.vo.trade.pay.PayInfoVO;
 import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.api.vo.user.VipVO;
 import com.zch.common.core.utils.BeanUtils;
@@ -234,7 +235,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 .eq(Order::getGoodsId, goodsId)
                 .eq(Order::getGoodsType, ProductTypeEnum.valueOf(goodsType)));
         if (ObjectUtils.isNotNull(one)) {
-            return one.getOrderStatus().equals(OrderStatusEnum.ORDERED_AND_PAID);
+            // 查询支付信息表
+            Response<PayInfoVO> res = tradeFeignClient.queryPayInfo(one.getOrderNumber());
+            if (ObjectUtils.isNull(res) || ObjectUtils.isNull(res.getData())) {
+                return false;
+            }
+            return one.getOrderStatus().equals(OrderStatusEnum.ORDERED_AND_PAID) && res.getData().getIsPaid();
         }
         return false;
     }

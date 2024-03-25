@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.trade.pay.PayInfoForm;
 import com.zch.api.feignClient.user.UserFeignClient;
+import com.zch.api.vo.trade.pay.PayInfoVO;
+import com.zch.common.core.utils.BeanUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.trade.adapter.PayAdapter;
 import com.zch.trade.domain.po.AliReturnPay;
@@ -164,6 +166,18 @@ public class PayInfoServiceImpl extends ServiceImpl<PayInfoMapper, PayInfo> impl
                 userFeignClient.updateUserPoint(payInfo.getUserId(), point);
             }
         }
+    }
+
+    @Override
+    public PayInfoVO queryPayInfo(String orderId) {
+        PayInfo one = getOne(new LambdaQueryWrapper<PayInfo>()
+                .eq(PayInfo::getOrderId, orderId));
+        if (ObjectUtils.isNull(one)) {
+            return null;
+        }
+        PayInfoVO vo = new PayInfoVO();
+        BeanUtils.copyProperties(one, vo);
+        return vo;
     }
 
     /**

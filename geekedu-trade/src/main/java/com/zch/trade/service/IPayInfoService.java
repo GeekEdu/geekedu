@@ -2,6 +2,7 @@ package com.zch.trade.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.trade.pay.PayInfoForm;
+import com.zch.api.vo.trade.pay.PayInfoVO;
 import com.zch.trade.domain.po.PayInfo;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,5 +54,12 @@ public interface IPayInfoService extends IService<PayInfo> {
      * @param form
      */
     void updatePayInfo(PayInfoForm form);
+
+    /**
+     * 查询支付信息
+     * @param orderId
+     * @return
+     */
+    PayInfoVO queryPayInfo(String orderId);
 
 }
