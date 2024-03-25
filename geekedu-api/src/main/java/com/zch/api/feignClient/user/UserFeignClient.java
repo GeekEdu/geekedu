@@ -123,4 +123,13 @@ public interface UserFeignClient {
     @GetMapping("/api/member/{id}/isVip")
     Response<Boolean> queryIsVip(@PathVariable("id") Long id);
 
+    /**
+     * 更新用户积分
+     * @param userId
+     * @param point
+     * @return
+     */
+    @PostMapping("/api/v2/updatePoint")
+    Response<Void> updateUserPoint(@RequestParam("userId") Long userId, @RequestParam("point") Long point);
+
 }

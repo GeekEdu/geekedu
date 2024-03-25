@@ -120,6 +120,18 @@ public class UserController {
     }
 
     /**
+     * 更新用户积分
+     * @param userId
+     * @param point
+     * @return
+     */
+    @PostMapping("/v2/updatePoint")
+    public Response<Void> updateUserPoint(@RequestParam("userId") Long userId, @RequestParam("point") Long point) {
+        userService.updateUserPoint(userId, point);
+        return Response.success();
+    }
+
+    /**
      * 前台 查看用户是否签到
      * @return
      */

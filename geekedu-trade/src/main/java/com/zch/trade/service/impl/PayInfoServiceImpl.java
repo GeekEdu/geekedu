@@ -3,6 +3,7 @@ package com.zch.trade.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.trade.pay.PayInfoForm;
+import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.trade.adapter.PayAdapter;
 import com.zch.trade.domain.po.AliReturnPay;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 
 /**
@@ -41,6 +43,8 @@ public class PayInfoServiceImpl extends ServiceImpl<PayInfoMapper, PayInfo> impl
     private final IOrderService orderService;
 
     private final RocketMQTemplate rocketMQTemplate;
+
+    private final UserFeignClient userFeignClient;
 
     @Override
     public String handleAliPay(String orderId, String scene, String payment, String redirect) {
@@ -154,6 +158,10 @@ public class PayInfoServiceImpl extends ServiceImpl<PayInfoMapper, PayInfo> impl
                 payInfo.setIsPaid(true);
                 payInfo.setPayTime(LocalDateTime.now());
                 updateById(payInfo);
+                // 更新用户积分
+                Long point = payInfo.getPayAmount().divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP)
+                        .setScale(0, RoundingMode.HALF_UP).longValue();
+                userFeignClient.updateUserPoint(payInfo.getUserId(), point);
             }
         }
     }
