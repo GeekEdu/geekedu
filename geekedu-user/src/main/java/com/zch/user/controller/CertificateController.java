@@ -49,7 +49,7 @@ public class CertificateController {
      * @return
      */
     @PostMapping("/add")
-    public Response<Boolean> addCertificate(@RequestParam("form") CertificateForm form) {
+    public Response<Boolean> addCertificate(@RequestBody CertificateForm form) {
         return Response.success(certificateService.addCertificate(form));
     }
 
@@ -59,10 +59,20 @@ public class CertificateController {
      * @param form
      * @return
      */
-    @GetMapping("/{id}/update")
+    @PostMapping("/{id}/update")
     public Response<Boolean> updateCertificate(@PathVariable("id") Integer id,
-                                               @RequestParam("form") CertificateForm form) {
+                                               @RequestBody CertificateForm form) {
         return Response.success(certificateService.updateCertificate(id, form));
+    }
+
+    /**
+     * 删除证书
+     * @param id
+     * @return
+     */
+    @PostMapping("/{id}/delete")
+    public Response<Boolean> deleteCertificate(@PathVariable("id") Integer id) {
+        return Response.success();
     }
 
 }

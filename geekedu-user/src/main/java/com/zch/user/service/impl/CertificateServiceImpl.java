@@ -58,7 +58,7 @@ public class CertificateServiceImpl extends ServiceImpl<CertificateMapper, Certi
     @Override
     public CertificateVO getCertificateById(Integer id) {
         Certificate certificate = getById(id);
-        if (ObjectUtils.isNotNull(certificate)) {
+        if (ObjectUtils.isNull(certificate)) {
             return new CertificateVO();
         }
         CertificateVO vo = new CertificateVO();
@@ -85,5 +85,10 @@ public class CertificateServiceImpl extends ServiceImpl<CertificateMapper, Certi
         certificate.setParams(form.getParams());
         certificate.setTemplateImage(form.getTemplateImage());
         return updateById(certificate);
+    }
+
+    @Override
+    public Boolean deleteCertificate(Integer id) {
+        return removeById(id);
     }
 }

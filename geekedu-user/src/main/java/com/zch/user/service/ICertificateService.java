@@ -43,4 +43,11 @@ public interface ICertificateService extends IService<Certificate> {
      */
     Boolean updateCertificate(Integer id, CertificateForm form);
 
+    /**
+     * 删除证书
+     * @param id
+     * @return
+     */
+    Boolean deleteCertificate(Integer id);
+
 }
