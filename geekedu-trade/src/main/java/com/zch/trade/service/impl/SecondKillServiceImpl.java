@@ -3,6 +3,7 @@ package com.zch.trade.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zch.api.dto.trade.seckill.SecKillForm;
 import com.zch.api.vo.trade.seckill.SecondKillVO;
 import com.zch.common.core.utils.BeanUtils;
 import com.zch.common.core.utils.CollUtils;
@@ -68,5 +69,63 @@ public class SecondKillServiceImpl extends ServiceImpl<SecondKillMapper, SecondK
         }).collect(Collectors.toList()));
         vo.setTotal(count);
         return vo;
+    }
+
+    @Override
+    public SecondKillVO querySecKillDetail(Integer id) {
+        SecondKill kill = getById(id);
+        if (ObjectUtils.isNull(kill)) {
+            return null;
+        }
+        SecondKillVO vo = new SecondKillVO();
+        BeanUtils.copyProperties(kill, vo);
+        return vo;
+    }
+
+    @Override
+    public Boolean addSecKill(SecKillForm form) {
+        SecondKill kill = new SecondKill();
+        kill.setTotal(form.getTotal());
+        kill.setGoodsCover(form.getGoodsCover());
+        kill.setGoodsId(form.getGoodsId());
+        kill.setGoodsTitle(form.getGoodsTitle());
+        kill.setGoodsType(form.getGoodsType());
+        kill.setOriginPrice(form.getOriginPrice());
+        kill.setPrice(form.getPrice());
+        kill.setStock(form.getStock());
+        kill.setEndAt(form.getEndAt());
+        kill.setStartAt(form.getStartAt());
+        switch (kill.getGoodsType()) {
+            case "course" -> kill.setGoodsTypeText("录播课程");
+            case "live" -> kill.setGoodsTypeText("直播课程");
+            case "book" -> kill.setGoodsTypeText("电子书");
+        }
+        return save(kill);
+    }
+
+    @Override
+    public Boolean updateSecKill(Integer id, SecKillForm form) {
+        SecondKill kill = getById(id);
+        kill.setTotal(form.getTotal());
+        kill.setGoodsCover(form.getGoodsCover());
+        kill.setGoodsId(form.getGoodsId());
+        kill.setGoodsTitle(form.getGoodsTitle());
+        kill.setGoodsType(form.getGoodsType());
+        kill.setOriginPrice(form.getOriginPrice());
+        kill.setPrice(form.getPrice());
+        kill.setStock(form.getStock());
+        kill.setEndAt(form.getEndAt());
+        kill.setStartAt(form.getStartAt());
+        switch (kill.getGoodsType()) {
+            case "course" -> kill.setGoodsTypeText("录播课程");
+            case "live" -> kill.setGoodsTypeText("直播课程");
+            case "book" -> kill.setGoodsTypeText("电子书");
+        }
+        return updateById(kill);
+    }
+
+    @Override
+    public Boolean deleteSecKill(Integer id) {
+        return removeById(id);
     }
 }

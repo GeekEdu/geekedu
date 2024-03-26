@@ -2,6 +2,7 @@ package com.zch.trade.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zch.api.dto.trade.seckill.SecKillForm;
 import com.zch.api.vo.trade.seckill.SecondKillVO;
 import com.zch.trade.domain.po.SecondKill;
 
@@ -21,5 +22,34 @@ public interface ISecondKillService extends IService<SecondKill> {
      * @return
      */
     Page<SecondKillVO> querySecKillList(Integer pageNum, Integer pageSize, String sort, String order, String keywords);
+
+    /**
+     * 查询秒杀详情
+     * @param id
+     * @return
+     */
+    SecondKillVO querySecKillDetail(Integer id);
+
+    /**
+     * 添加秒杀
+     * @param form
+     * @return
+     */
+    Boolean addSecKill(SecKillForm form);
+
+    /**
+     * 更新秒杀
+     * @param id
+     * @param form
+     * @return
+     */
+    Boolean updateSecKill(Integer id, SecKillForm form);
+
+    /**
+     * 删除秒杀
+     * @param id
+     * @return
+     */
+    Boolean deleteSecKill(Integer id);
 
 }

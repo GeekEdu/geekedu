@@ -1,13 +1,12 @@
 package com.zch.trade.controller;
 
+import com.zch.api.dto.trade.seckill.SecKillForm;
 import com.zch.api.vo.trade.seckill.SecondKillVO;
 import com.zch.common.mvc.result.PageResult;
+import com.zch.common.mvc.result.Response;
 import com.zch.trade.service.ISecondKillService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Poison02
@@ -36,6 +35,47 @@ public class SecKillController {
                                                      @RequestParam(value = "order", required = false) String order,
                                                      @RequestParam(value = "keywords", required = false) String keywords) {
         return PageResult.success(secondKillService.querySecKillList(pageNum, pageSize, sort, order, keywords));
+    }
+
+    /**
+     * 秒杀详情
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}/detail")
+    public Response<SecondKillVO> querySecKillDetail(@PathVariable("id") Integer id) {
+        return Response.success(secondKillService.querySecKillDetail(id));
+    }
+
+    /**
+     * 更新秒杀
+     * @param id
+     * @param form
+     * @return
+     */
+    @PostMapping("/{id}/update")
+    public Response<Boolean> updateSecKill(@PathVariable("id") Integer id, @RequestBody SecKillForm form) {
+        return Response.success(secondKillService.updateSecKill(id, form));
+    }
+
+    /**
+     * 删除秒杀
+     * @param id
+     * @return
+     */
+    @PostMapping("/{id}/delete")
+    public Response<Boolean> deleteSecKill(@PathVariable("id") Integer id) {
+        return Response.success(secondKillService.deleteSecKill(id));
+    }
+
+    /**
+     * 新增秒杀
+     * @param form
+     * @return
+     */
+    @PostMapping("/add")
+    public Response<Boolean> addSecKill(@RequestBody SecKillForm form) {
+        return Response.success(secondKillService.addSecKill(form));
     }
 
 }
