@@ -78,4 +78,18 @@ public class SecKillController {
         return Response.success(secondKillService.addSecKill(form));
     }
 
+    //==========================================================================================
+
+    /**
+     * 前台秒杀详情
+     * @param goodsId
+     * @param goodsType
+     * @return
+     */
+    @GetMapping("/v2/detail")
+    public Response<SecondKillVO> getV2Detail(@RequestParam("goodsId") Integer goodsId,
+                                              @RequestParam("goodsType") String goodsType) {
+        return Response.success(secondKillService.getV2Detail(goodsId, goodsType));
+    }
+
 }

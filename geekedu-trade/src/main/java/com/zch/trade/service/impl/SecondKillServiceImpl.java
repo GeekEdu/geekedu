@@ -79,6 +79,18 @@ public class SecondKillServiceImpl extends ServiceImpl<SecondKillMapper, SecondK
         }
         SecondKillVO vo = new SecondKillVO();
         BeanUtils.copyProperties(kill, vo);
+        // 看当前秒杀是否开始
+        if (LocalDateTime.now().isBefore(kill.getStartAt())) {
+            vo.setIsStart(false);
+        } else {
+            vo.setIsStart(true);
+        }
+        // 看当前秒杀是否结束
+        if (LocalDateTime.now().isAfter(kill.getEndAt())) {
+            vo.setIsOver(true);
+        } else {
+            vo.setIsOver(false);
+        }
         return vo;
     }
 
@@ -127,5 +139,33 @@ public class SecondKillServiceImpl extends ServiceImpl<SecondKillMapper, SecondK
     @Override
     public Boolean deleteSecKill(Integer id) {
         return removeById(id);
+    }
+
+    @Override
+    public SecondKillVO getV2Detail(Integer goodsId, String goodsType) {
+        SecondKill secondKill = getOne(new LambdaQueryWrapper<SecondKill>()
+                .eq(SecondKill::getGoodsId, goodsId)
+                .eq(SecondKill::getGoodsType, goodsType)
+                // 找出未过期的秒杀
+                .gt(SecondKill::getEndAt, LocalDateTime.now())
+                .last("limit 1"));
+        if (ObjectUtils.isNull(secondKill)) {
+            return new SecondKillVO();
+        }
+        SecondKillVO vo = new SecondKillVO();
+        BeanUtils.copyProperties(secondKill, vo);
+        // 看当前秒杀是否开始
+        if (LocalDateTime.now().isBefore(secondKill.getStartAt())) {
+            vo.setIsStart(false);
+        } else {
+            vo.setIsStart(true);
+        }
+        // 看当前秒杀是否结束
+        if (LocalDateTime.now().isAfter(secondKill.getEndAt())) {
+            vo.setIsOver(true);
+        } else {
+            vo.setIsOver(false);
+        }
+        return vo;
     }
 }

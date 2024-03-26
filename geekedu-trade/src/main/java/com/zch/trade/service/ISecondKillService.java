@@ -52,4 +52,13 @@ public interface ISecondKillService extends IService<SecondKill> {
      */
     Boolean deleteSecKill(Integer id);
 
+    //=========================================================================
+    /**
+     * 前台秒杀详情
+     * @param goodsId
+     * @param goodsType
+     * @return
+     */
+    SecondKillVO getV2Detail(Integer goodsId, String goodsType);
+
 }
