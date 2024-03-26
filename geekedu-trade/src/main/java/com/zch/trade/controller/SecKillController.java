@@ -1,6 +1,8 @@
 package com.zch.trade.controller;
 
+import com.zch.api.dto.trade.seckill.CaptchaForm;
 import com.zch.api.dto.trade.seckill.SecKillForm;
+import com.zch.api.vo.trade.seckill.SecKillV2VO;
 import com.zch.api.vo.trade.seckill.SecondKillVO;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
@@ -87,9 +89,21 @@ public class SecKillController {
      * @return
      */
     @GetMapping("/v2/detail")
-    public Response<SecondKillVO> getV2Detail(@RequestParam("goodsId") Integer goodsId,
-                                              @RequestParam("goodsType") String goodsType) {
+    public Response<SecKillV2VO> getV2Detail(@RequestParam("goodsId") Integer goodsId,
+                                             @RequestParam("goodsType") String goodsType) {
         return Response.success(secondKillService.getV2Detail(goodsId, goodsType));
+    }
+
+    /**
+     * 开始秒杀
+     * @param id
+     * @param form
+     * @return
+     */
+    @PostMapping("/v2/{id}/start")
+    public Response<String> startSecKill(@PathVariable("id") Integer id,
+                                         @RequestBody CaptchaForm form) {
+        return Response.success();
     }
 
 }

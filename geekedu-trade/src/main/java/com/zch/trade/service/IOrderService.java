@@ -48,6 +48,16 @@ public interface IOrderService extends IService<Order> {
      */
     Boolean updateOrderStatus(String orderNumber);
 
+    /**
+     * 根据商品查询订单
+     * @param goodsId
+     * @param goodsType
+     * @param userId
+     * @param isSeckill
+     * @return
+     */
+    OrderVO queryOrderByGoods(Integer goodsId, String goodsType, Long userId, Boolean isSeckill);
+
     //===================================================
 
     /**

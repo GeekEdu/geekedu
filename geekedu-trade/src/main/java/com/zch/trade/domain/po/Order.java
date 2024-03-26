@@ -105,6 +105,11 @@ public class Order extends BaseEntity {
      */
     private LocalDateTime cancelTime;
 
+    /**
+     * 是否秒杀
+     */
+    private Boolean isSeckill;
+
     @TableLogic
     private Boolean isDelete;
 

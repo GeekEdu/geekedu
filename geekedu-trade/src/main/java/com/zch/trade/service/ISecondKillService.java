@@ -2,7 +2,9 @@ package com.zch.trade.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zch.api.dto.trade.seckill.CaptchaForm;
 import com.zch.api.dto.trade.seckill.SecKillForm;
+import com.zch.api.vo.trade.seckill.SecKillV2VO;
 import com.zch.api.vo.trade.seckill.SecondKillVO;
 import com.zch.trade.domain.po.SecondKill;
 
@@ -59,6 +61,14 @@ public interface ISecondKillService extends IService<SecondKill> {
      * @param goodsType
      * @return
      */
-    SecondKillVO getV2Detail(Integer goodsId, String goodsType);
+    SecKillV2VO getV2Detail(Integer goodsId, String goodsType);
+
+    /**
+     * 开始秒杀
+     * @param id
+     * @param form
+     * @return
+     */
+    String startSecKill(Integer id, CaptchaForm form);
 
 }

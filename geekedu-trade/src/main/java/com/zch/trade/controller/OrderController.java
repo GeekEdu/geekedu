@@ -61,6 +61,22 @@ public class OrderController {
         return Response.success(orderService.queryOrderIsPay(userId, goodsId, goodsType));
     }
 
+    /**
+     * 根据商品信息查询订单
+     * @param goodsId
+     * @param goodsType
+     * @param userId
+     * @param isSeckill
+     * @return
+     */
+    @GetMapping("/v2/queryOrderByGoods")
+    public Response<OrderVO> queryOrderInfoByGoods(@RequestParam("goodsId") Integer goodsId,
+                                                   @RequestParam("goodsType") String goodsType,
+                                                   @RequestParam("userId") Long userId,
+                                                   @RequestParam("isSeckill") Boolean isSeckill) {
+        return Response.success(orderService.queryOrderByGoods(goodsId, goodsType, userId, isSeckill));
+    }
+
     // ================================================================================
     // 后台
 

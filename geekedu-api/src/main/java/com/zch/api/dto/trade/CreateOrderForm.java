@@ -38,4 +38,9 @@ public class CreateOrderForm implements Serializable {
      */
     private String payment;
 
+    /**
+     * 是否秒杀
+     */
+    private Boolean isSeckill;
+
 }

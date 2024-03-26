@@ -259,6 +259,31 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
     @Override
+    public OrderVO queryOrderByGoods(Integer goodsId, String goodsType, Long userId, Boolean isSeckill) {
+        ProductTypeEnum type = REPLAY_COURSE;
+        switch (goodsType) {
+            case "course" -> type = REPLAY_COURSE;
+            case "live" -> type = LIVE_COURSE;
+            case "imageText" -> type = IMAGE_TEXT;
+            case "learnPath" -> type = LEARN_PATH;
+            case "book" -> type = E_BOOK;
+            case "vip" -> type = VIP;
+        }
+        Order one = getOne(new LambdaQueryWrapper<Order>()
+                .eq(Order::getGoodsId, goodsId)
+                .eq(Order::getGoodsType, type)
+                .eq(Order::getUserId, userId)
+                .eq(Order::getIsSeckill, isSeckill)
+                .last(" limit 1"));
+        if (ObjectUtils.isNull(one)) {
+            return null;
+        }
+        OrderVO vo = new OrderVO();
+        BeanUtils.copyProperties(one, vo);
+        return vo;
+    }
+
+    @Override
     public OrderEndFullVO getEndOrderList(Integer pageNum, Integer pageSize, String sort, String order,
                                           String orderId, String goodsName, Integer isRefund, Integer status,
                                           List<String> createdTime, String payment) {

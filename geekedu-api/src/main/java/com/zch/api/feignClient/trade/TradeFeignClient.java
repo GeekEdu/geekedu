@@ -2,6 +2,7 @@ package com.zch.api.feignClient.trade;
 
 import com.zch.api.dto.trade.pay.PayInfoForm;
 import com.zch.api.interceptor.FeignInterceptor;
+import com.zch.api.vo.order.OrderVO;
 import com.zch.api.vo.trade.order.OrderFullVO;
 import com.zch.api.vo.trade.pay.PayInfoVO;
 import com.zch.common.mvc.result.PageResult;
@@ -55,5 +56,19 @@ public interface TradeFeignClient {
      */
     @GetMapping("/api/pay/info")
     Response<PayInfoVO> queryPayInfo(@RequestParam("orderId") String orderId);
+
+    /**
+     * 根据商品信息查询订单
+     * @param goodsId
+     * @param goodsType
+     * @param userId
+     * @param isSeckill
+     * @return
+     */
+    @GetMapping("/api/order/v2/queryOrderByGoods")
+    Response<OrderVO> queryOrderInfoByGoods(@RequestParam("goodsId") Integer goodsId,
+                                                   @RequestParam("goodsType") String goodsType,
+                                                   @RequestParam("userId") Long userId,
+                                                   @RequestParam("isSeckill") Boolean isSeckill);
 
 }
