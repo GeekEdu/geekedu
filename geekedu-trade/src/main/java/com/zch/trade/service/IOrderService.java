@@ -6,6 +6,7 @@ import com.zch.api.vo.order.OrderVO;
 import com.zch.api.vo.trade.order.OrderDetailVO;
 import com.zch.api.vo.trade.order.OrderEndFullVO;
 import com.zch.api.vo.trade.order.OrderFullVO;
+import com.zch.api.vo.trade.order.SellCountTopVO;
 import com.zch.trade.domain.po.Order;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
@@ -120,5 +121,7 @@ public interface IOrderService extends IService<Order> {
      * @return
      */
     Map<LocalDate, BigDecimal> everyDayOrderMoney();
+
+    Page<SellCountTopVO> querySellCountVO(Integer pageNum, Integer pageSize, String startAt, String endAt, String goodsType);
 
 }

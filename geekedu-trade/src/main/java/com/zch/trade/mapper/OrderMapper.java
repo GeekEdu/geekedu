@@ -1,10 +1,13 @@
 package com.zch.trade.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.zch.api.vo.trade.order.SellCountTopVO;
 import com.zch.trade.domain.dto.OrderCountDTO;
 import com.zch.trade.domain.dto.PayCountDTO;
 import com.zch.trade.domain.po.Order;
+import org.apache.ibatis.annotations.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -30,5 +33,32 @@ public interface OrderMapper extends BaseMapper<Order> {
      * @return
      */
     List<PayCountDTO> queryPayMoney();
+
+    /**
+     * 销售额Top总量
+     * @param startAt
+     * @param endAt
+     * @param goodsType
+     * @return
+     */
+    long sellTopCount(
+                      @Param("startAt") LocalDateTime startAt,
+                      @Param("endAt") LocalDateTime endAt,
+                      @Param("goodsType") Integer goodsType);
+
+    /**
+     * 销售额Top数据
+     * @param pageNum
+     * @param pageSize
+     * @param startAt
+     * @param endAt
+     * @param goodsType
+     * @return
+     */
+    List<SellCountTopVO> getSellTopPage(@Param("pageNum") Integer pageNum,
+                                        @Param("pageSize") Integer pageSize,
+                                        @Param("startAt") LocalDateTime startAt,
+                                        @Param("endAt") LocalDateTime endAt,
+                                        @Param("goodsType") Integer goodsType);
 
 }

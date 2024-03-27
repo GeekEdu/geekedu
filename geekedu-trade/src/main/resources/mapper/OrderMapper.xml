@@ -55,4 +55,41 @@
 			DATE(created_time) DESC
     </select>
 
+	<select id="sellTopCount" resultType="_long">
+		SELECT
+			count(*)
+		FROM
+			t_order
+		WHERE
+			created_time BETWEEN #{startAt} AND #{endAt}
+		  AND
+			goods_type = #{goodsType}
+		  AND
+			order_status = 3
+		  AND
+			pay_status = 1
+	</select>
+
+	<select id="getSellTopPage" resultType="com.zch.api.vo.trade.order.SellCountTopVO">
+		SELECT
+			goods_name AS goodsName,
+			COUNT(*) AS orderCount,
+			SUM(amount) AS payTotal
+		FROM
+			t_order
+		WHERE
+			created_time BETWEEN #{startAt} AND #{endAt}
+		  AND
+			goods_type = #{goodsType}
+		  AND
+			order_status = 3
+		  AND
+			pay_status = 1
+		GROUP BY
+			goods_name
+		ORDER BY
+			payTotal DESC, orderCount DESC
+		LIMIT #{pageNum}, #{pageSize};
+	</select>
+
 </mapper>

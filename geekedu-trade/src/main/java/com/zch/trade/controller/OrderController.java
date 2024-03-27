@@ -5,6 +5,7 @@ import com.zch.api.vo.order.OrderVO;
 import com.zch.api.vo.trade.order.OrderDetailVO;
 import com.zch.api.vo.trade.order.OrderEndFullVO;
 import com.zch.api.vo.trade.order.OrderFullVO;
+import com.zch.api.vo.trade.order.SellCountTopVO;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import com.zch.trade.service.IOrderService;
@@ -171,6 +172,24 @@ public class OrderController {
     @GetMapping("/date/orderMoney")
     public Response<Map<LocalDate, BigDecimal>> everyDayOrderMoney() {
         return Response.success(orderService.everyDayOrderMoney());
+    }
+
+    /**
+     * 前10销量商品
+     * @param pageNum
+     * @param pageSize
+     * @param startAt
+     * @param endAt
+     * @param goodsType
+     * @return
+     */
+    @GetMapping("/stat/sellCountTop")
+    public PageResult<SellCountTopVO> querySellCountTop(@RequestParam("pageNum") Integer pageNum,
+                                                        @RequestParam("pageSize") Integer pageSize,
+                                                        @RequestParam("startAt") String startAt,
+                                                        @RequestParam("endAt") String endAt,
+                                                        @RequestParam("goodsType") String goodsType) {
+        return PageResult.success(orderService.querySellCountVO(pageNum, pageSize, startAt, endAt, goodsType));
     }
 
 }

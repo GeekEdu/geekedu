@@ -15,10 +15,7 @@ import com.zch.api.vo.course.CourseVO;
 import com.zch.api.vo.course.live.LiveCourseVO;
 import com.zch.api.vo.order.OrderVO;
 import com.zch.api.vo.path.LearnPathVO;
-import com.zch.api.vo.trade.order.GoodsVO;
-import com.zch.api.vo.trade.order.OrderDetailVO;
-import com.zch.api.vo.trade.order.OrderEndFullVO;
-import com.zch.api.vo.trade.order.OrderFullVO;
+import com.zch.api.vo.trade.order.*;
 import com.zch.api.vo.trade.pay.PayInfoVO;
 import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.api.vo.user.VipVO;
@@ -628,6 +625,27 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             }
         }
         return result;
+    }
+
+    @Override
+    public Page<SellCountTopVO> querySellCountVO(Integer pageNum, Integer pageSize, String startAt, String endAt, String goodsType) {
+        Integer type = ProductTypeEnum.valueOf(goodsType).getCode();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        // 将字符串解析为 LocalDateTime 对象
+        LocalDateTime dateTime = LocalDateTime.parse(startAt, formatter);
+        LocalDateTime dateTime1 = LocalDateTime.parse(endAt, formatter);
+        // 查询
+        Page<SellCountTopVO> vo = new Page<>();
+        long count = orderMapper.sellTopCount(dateTime, dateTime1, type);
+        if (count == 0) {
+            vo.setTotal(0);
+            vo.setRecords(new ArrayList<>(0));
+            return vo;
+        }
+        List<SellCountTopVO> list = orderMapper.getSellTopPage(0, pageSize, dateTime, dateTime1, type);
+        vo.setRecords(list);
+        vo.setTotal(count);
+        return vo;
     }
 
     /**
