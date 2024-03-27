@@ -27,6 +27,8 @@ import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
 import com.zch.common.mvc.result.Response;
+import com.zch.trade.domain.dto.OrderCountDTO;
+import com.zch.trade.domain.dto.PayCountDTO;
 import com.zch.trade.domain.po.Order;
 import com.zch.trade.enums.OrderStatusEnum;
 import com.zch.trade.enums.PayStatusEnum;
@@ -45,9 +47,12 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.zch.trade.enums.ProductTypeEnum.*;
@@ -71,10 +76,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     private final RocketMQTemplate rocketMQTemplate;
 
+    private final OrderMapper orderMapper;
+
     @Override
     public OrderVO createOrder(CreateOrderForm form) {
         if (ObjectUtils.isNull(form) || ObjectUtils.isNull(form.getGoodsId()) || StringUtils.isEmpty(form.getGoodsType())
-            || ObjectUtils.isNull(ProductTypeEnum.valueOf(form.getGoodsType()))) {
+                || ObjectUtils.isNull(ProductTypeEnum.valueOf(form.getGoodsType()))) {
             return null;
         }
         OrderVO vo = new OrderVO();
@@ -317,8 +324,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         if (ObjectUtils.isNotNull(status) && ObjectUtils.isNotNull(OrderStatusEnum.getByCode(status))) {
             wrapper.eq(Order::getOrderStatus, OrderStatusEnum.getByCode(status));
         }
-        if (ObjectUtils.isNotNull(createdTime)  && createdTime.size() > 1 && StringUtils.isNotBlank(createdTime.get(0))
-            && StringUtils.isNotBlank(createdTime.get(1))) {
+        if (ObjectUtils.isNotNull(createdTime) && createdTime.size() > 1 && StringUtils.isNotBlank(createdTime.get(0))
+                && StringUtils.isNotBlank(createdTime.get(1))) {
             // 时间格式化
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime start = LocalDateTime.parse(createdTime.get(0), formatter);
@@ -490,11 +497,145 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         return vo;
     }
 
+    @Override
+    public BigDecimal orderStatCount(Integer type) {
+        LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<Order>()
+                .eq(Order::getOrderStatus, OrderStatusEnum.ORDERED_AND_PAID)
+                .eq(Order::getPayStatus, PayStatusEnum.HAVE_PAID);
+        // 获取上个月的第一天
+        LocalDate startOfLastMonth = LocalDate.now().minusMonths(1).with(TemporalAdjusters.firstDayOfMonth());
+        // 获取上个月的最后一天
+        LocalDate endOfLastMonth = LocalDate.now().minusMonths(1).with(TemporalAdjusters.lastDayOfMonth());
+        // 如果需要 LocalDateTime
+        LocalDateTime startOfLastMonthAtStartOfDay = startOfLastMonth.atStartOfDay();
+        LocalDateTime endOfLastMonthAtEndOfDay = endOfLastMonth.atTime(23, 59, 59);
+
+        // 获取本月的第一天
+        LocalDate startOfThisMonth = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
+        // 获取本月的最后一天
+        LocalDate endOfThisMonth = LocalDate.now().with(TemporalAdjusters.lastDayOfMonth());
+        // 如果需要 LocalDateTime
+        LocalDateTime startOfThisMonthAtStartOfDay = startOfThisMonth.atStartOfDay();
+        LocalDateTime endOfThisMonthAtEndOfDay = endOfThisMonth.atTime(23, 59, 59);
+        LocalDate today = LocalDate.now();
+
+        // 今天开始的时间
+        LocalDateTime startOfToday = today.atStartOfDay();
+        // 今天结束的时间
+        LocalDateTime endOfToday = today.atTime(23, 59, 59);
+        BigDecimal moneyCount = new BigDecimal(0);
+        List<Order> list = new ArrayList<>();
+        switch (type) {
+            case 1 ->
+                    list = list(wrapper.between(Order::getCreatedTime, startOfLastMonthAtStartOfDay, endOfLastMonthAtEndOfDay));
+            case 2 ->
+                    list = list((wrapper.between(Order::getCreatedTime, startOfThisMonthAtStartOfDay, endOfThisMonthAtEndOfDay)));
+            case 3 -> list = list((wrapper.between(Order::getCreatedTime, startOfToday, endOfToday)));
+        }
+        if (ObjectUtils.isNotNull(list) && CollUtils.isNotEmpty(list)) {
+            for (Order item : list) {
+                moneyCount = moneyCount.add(item.getAmount());
+            }
+        }
+        return moneyCount;
+    }
+
+    @Override
+    public Long userStatCount(Integer type) {
+        LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<Order>()
+                .eq(Order::getOrderStatus, OrderStatusEnum.ORDERED_AND_PAID)
+                .eq(Order::getPayStatus, PayStatusEnum.HAVE_PAID);
+        LocalDate today = LocalDate.now();
+        // 今天开始的时间
+        LocalDateTime startOfToday = today.atStartOfDay();
+        // 今天结束的时间
+        LocalDateTime endOfToday = today.atTime(23, 59, 59);
+
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        // 昨天开始的时间
+        LocalDateTime startOfYesterday = yesterday.atStartOfDay();
+        // 昨天结束的时间
+        LocalDateTime endOfYesterday = yesterday.atTime(23, 59, 59);
+        Collection<Order> list = new ArrayList<>(0);
+        switch (type) {
+            case 1 -> list = list(wrapper.between(Order::getCreatedTime, startOfToday, endOfToday));
+            case 2, 3 -> list = list((wrapper.between(Order::getCreatedTime, startOfYesterday, endOfYesterday)));
+        }
+        if (ObjectUtils.isNotNull(list) && CollUtils.isNotEmpty(list)) {
+            if (type == 1) {
+                // 今日支付用户数
+                list = list.stream().collect(Collectors.toMap(Order::getUserId, Function.identity(), (i, e) -> i, LinkedHashMap::new)).values();
+            } else if (type == 2) {
+                // 昨日支付用户数
+                list = list.stream().collect(Collectors.toMap(Order::getUserId, Function.identity(), (i, e) -> i, LinkedHashMap::new)).values();
+            }
+        }
+        return (long) list.size();
+    }
+
+    @Override
+    public Map<LocalDate, Long> everyDayOrderCount() {
+        // 创建一个Map来存储过去七天的日期和订单数量
+        Map<LocalDate, Long> result = new LinkedHashMap<>();
+        List<OrderCountDTO> list = orderMapper.queryOrderCount();
+        LocalDate today = LocalDate.now();
+        for (int i = 0; i < 7; i++) {
+            LocalDate date = today.minusDays(i);
+            result.put(date, 0L); // 使用0初始化订单数量
+        }
+        if (ObjectUtils.isNotNull(list) && CollUtils.isNotEmpty(list)) {
+            // 使用数据库的结果更新Map
+            for (OrderCountDTO item : list) {
+                result.put(item.getOrderDate(), item.getCount());
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public Map<LocalDate, Long> everyDayOrderPay() {
+        // 创建一个Map来存储过去七天的日期和订单数量
+        Map<LocalDate, Long> result = new LinkedHashMap<>();
+        List<OrderCountDTO> list = orderMapper.queryPayCount();
+        LocalDate today = LocalDate.now();
+        for (int i = 0; i < 7; i++) {
+            LocalDate date = today.minusDays(i);
+            result.put(date, 0L); // 使用0初始化订单数量
+        }
+        if (ObjectUtils.isNotNull(list) && CollUtils.isNotEmpty(list)) {
+            // 使用数据库的结果更新Map
+            for (OrderCountDTO item : list) {
+                result.put(item.getOrderDate(), item.getCount());
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public Map<LocalDate, BigDecimal> everyDayOrderMoney() {
+        // 创建一个Map来存储过去七天的日期和订单数量
+        Map<LocalDate, BigDecimal> result = new LinkedHashMap<>();
+        List<PayCountDTO> list = orderMapper.queryPayMoney();
+        LocalDate today = LocalDate.now();
+        for (int i = 0; i < 7; i++) {
+            LocalDate date = today.minusDays(i);
+            result.put(date, new BigDecimal(0)); // 使用0初始化订单数量
+        }
+        if (ObjectUtils.isNotNull(list) && CollUtils.isNotEmpty(list)) {
+            // 使用数据库的结果更新Map
+            for (PayCountDTO item : list) {
+                result.put(item.getOrderDate(), item.getAmount());
+            }
+        }
+        return result;
+    }
+
     /**
      * 生成订单id，订单id使用下面的规则生成
-     *   - 订单id一共设置成 19 位
-     *   - 前14位是当前时间 yyyyMMddHHmmss
-     *   - 后5位基于当前时间戳 使用IDWorker工具类生成
+     * - 订单id一共设置成 19 位
+     * - 前14位是当前时间 yyyyMMddHHmmss
+     * - 后5位基于当前时间戳 使用IDWorker工具类生成
+     *
      * @param now
      * @return
      */
@@ -510,6 +651,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     /**
      * 将订单存入数据库
+     *
      * @param form
      * @param vo
      */
@@ -525,7 +667,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         order.setGoodsId(form.getGoodsId());
         order.setOrderStatus(OrderStatusEnum.ORDERED_NO_PAY);
         order.setGoodsType(ProductTypeEnum.valueOf(form.getGoodsType()));
-        order.setIsUseCoupon(! vo.getGoodsDiscount().equals(BigDecimal.ZERO));
+        order.setIsUseCoupon(!vo.getGoodsDiscount().equals(BigDecimal.ZERO));
         order.setCouponId(StringUtils.isBlank(form.getPromoCode()) ? null : Long.valueOf(form.getPromoCode()));
         order.setPayStatus(PayStatusEnum.NON_PAYMENT);
         order.setCancelTime(vo.getCancelTime());
@@ -534,6 +676,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     /**
      * 返回所有状态的订单数量
+     *
      * @return
      */
     private Map<Integer, Long> getCountMap() {
@@ -556,6 +699,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     /**
      * 获取所有订单的用户信息
+     *
      * @return
      */
     private Map<Long, UserSimpleVO> getUsers() {

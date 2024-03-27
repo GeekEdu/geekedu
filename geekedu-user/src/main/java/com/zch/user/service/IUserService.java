@@ -11,7 +11,9 @@ import com.zch.common.mvc.result.PageResult;
 import com.zch.user.domain.po.User;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -113,6 +115,24 @@ public interface IUserService extends IService<User> {
      * @return
      */
     UserSimpleVO getUserById(String userId);
+
+    /**
+     * 返回总学员数量
+     * @return
+     */
+    Long getMemberCount();
+
+    /**
+     * 今日注册用户数
+     * @return
+     */
+    Long todayRegisterCount();
+
+    /**
+     * 统计用户注册数
+     * @return
+     */
+    Map<LocalDate, Long> statRegisterCount();
 
     /**
      * 后台返回学员列表

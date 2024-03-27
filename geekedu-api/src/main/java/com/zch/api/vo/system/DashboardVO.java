@@ -4,6 +4,8 @@ import com.zch.common.mvc.entity.BaseVO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
+
 /**
  * @author Poison02
  * @date 2024/1/22
@@ -12,20 +14,44 @@ import lombok.EqualsAndHashCode;
 @Data
 public class DashboardVO extends BaseVO {
 
-    private Integer lastMonthPaidSum;
+    /**
+     * 上月收入
+     */
+    private BigDecimal lastMonthPaidSum;
 
-    private Integer thisMonthPaidSum;
+    /**
+     * 本月收入
+     */
+    private BigDecimal thisMonthPaidSum;
 
-    private Integer todayPaidSum;
+    /**
+     * 今日收入
+     */
+    private BigDecimal todayPaidSum;
 
-    private Integer todayPaidUserNum;
+    /**
+     * 今日支付用户数
+     */
+    private Long todayPaidUserNum;
 
-    private Integer todayRegisterUserCount;
+    /**
+     * 今日注册用户数
+     */
+    private Long todayRegisterUserCount;
 
-    private Integer userCount;
+    /**
+     * 总学员数
+     */
+    private Long userCount;
 
-    private Integer yesterdayPaidSum;
+    /**
+     * 昨日支付数
+     */
+    private Long yesterdayPaidSum;
 
-    private Integer yesterdayPaidUserNum;
+    /**
+     * 昨日支付用户数
+     */
+    private Long yesterdayPaidUserNum;
 
 }

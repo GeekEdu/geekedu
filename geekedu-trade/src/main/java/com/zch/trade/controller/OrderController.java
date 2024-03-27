@@ -11,8 +11,11 @@ import com.zch.trade.service.IOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Poison02
@@ -119,6 +122,55 @@ public class OrderController {
     @GetMapping("/{id}/detail")
     public Response<OrderDetailVO> getOrderDetail(@PathVariable("id") Long orderId) {
         return Response.success(orderService.getOrderDetail(orderId));
+    }
+
+    //================================================
+    // 统计数据
+    /**
+     * 用于统计订单金额相关数据
+     * @param type 1-上月收入 2-本月收入 3-今日收入
+     * @return
+     */
+    @GetMapping("/stat/moneyCount")
+    public Response<BigDecimal> orderStatCount(@RequestParam("type") Integer type) {
+        return Response.success(orderService.orderStatCount(type));
+    }
+
+    /**
+     * 用于统计订单用户总数
+     * @param type 1-今日支付用户数 2-昨日支付数 3-昨日支付用户数
+     * @return
+     */
+    @GetMapping("/stat/userCount")
+    public Response<Long> userStatCount(@RequestParam("type") Integer type) {
+        return Response.success(orderService.userStatCount(type));
+    }
+
+    /**
+     * 每日创建订单数
+     * @return
+     */
+    @GetMapping("/date/orderCount")
+    public Response<Map<LocalDate, Long>> everyDayOrderCount() {
+        return Response.success(orderService.everyDayOrderCount());
+    }
+
+    /**
+     * 每日已支付订单
+     * @return
+     */
+    @GetMapping("/date/orderPay")
+    public Response<Map<LocalDate, Long>> everyDayOrderPay() {
+        return Response.success(orderService.everyDayOrderPay());
+    }
+
+    /**
+     * 每日收入
+     * @return
+     */
+    @GetMapping("/date/orderMoney")
+    public Response<Map<LocalDate, BigDecimal>> everyDayOrderMoney() {
+        return Response.success(orderService.everyDayOrderMoney());
     }
 
 }

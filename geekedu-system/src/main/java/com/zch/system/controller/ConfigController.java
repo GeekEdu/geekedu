@@ -1,5 +1,6 @@
 package com.zch.system.controller;
 
+import com.zch.api.vo.system.GraphVO;
 import com.zch.api.vo.system.notice.NoticeVO;
 import com.zch.common.mvc.result.Response;
 import com.zch.system.service.IAddonsService;
@@ -158,14 +159,11 @@ public class ConfigController {
 
     /**
      * 后台统计图信息
-     * @param startAt
-     * @param endAt
      * @return
      */
     @GetMapping("/dashboard/graph")
-    public Response getGraph(@RequestParam("start_at") String startAt,
-                             @RequestParam("end_at") String endAt) {
-        return Response.success(pcConfigService.getGraph(startAt, endAt));
+    public Response<GraphVO> getGraph() {
+        return Response.success(pcConfigService.getGraph());
     }
 
 }

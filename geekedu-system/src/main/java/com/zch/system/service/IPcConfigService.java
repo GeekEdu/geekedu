@@ -24,7 +24,11 @@ public interface IPcConfigService extends IService<PcConfig> {
 
     List<Sliders> getSliders(String platform);
 
-    GraphVO getGraph(String startAt, String endAt);
+    /**
+     * 图表统计
+     * @return
+     */
+    GraphVO getGraph();
 
     /**
      * 前台 获取问答自定义配置

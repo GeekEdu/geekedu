@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 /**
  * @author Poison02
@@ -74,5 +77,42 @@ public interface TradeFeignClient {
                                                    @RequestParam("isSeckill") Boolean isSeckill,
                                             @RequestParam(value = "startAt", required = false) LocalDateTime startAt,
                                             @RequestParam(value = "endAt", required = false) LocalDateTime endAt);
+
+    /**
+     * 用于统计订单金额相关数据
+     * @param type 1-上月收入 2-本月收入 3-今日收入
+     * @return
+     */
+    @GetMapping("/api/order/stat/moneyCount")
+    Response<BigDecimal> orderStatCount(@RequestParam("type") Integer type);
+
+    /**
+     * 用于统计订单用户总数
+     * @param type 1-今日支付用户数 2-昨日支付数 3-昨日支付用户数
+     * @return
+     */
+    @GetMapping("/api/order/stat/userCount")
+    Response<Long> userStatCount(@RequestParam("type") Integer type);
+
+    /**
+     * 每日创建订单数
+     * @return
+     */
+    @GetMapping("/api/order/date/orderCount")
+    Response<Map<LocalDate, Long>> everyDayOrderCount();
+
+    /**
+     * 每日已支付订单
+     * @return
+     */
+    @GetMapping("/api/order/date/orderPay")
+    Response<Map<LocalDate, Long>> everyDayOrderPay();
+
+    /**
+     * 每日收入
+     * @return
+     */
+    @GetMapping("/api/order/date/orderMoney")
+    Response<Map<LocalDate, BigDecimal>> everyDayOrderMoney();
 
 }

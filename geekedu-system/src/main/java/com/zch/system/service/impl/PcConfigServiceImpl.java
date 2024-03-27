@@ -2,8 +2,12 @@ package com.zch.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zch.api.feignClient.trade.TradeFeignClient;
+import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.vo.system.GraphVO;
 import com.zch.api.vo.system.ask.AskDiyConfigVO;
+import com.zch.common.core.utils.ObjectUtils;
+import com.zch.common.mvc.result.Response;
 import com.zch.system.domain.po.*;
 import com.zch.system.mapper.*;
 import com.zch.system.service.IPcConfigService;
@@ -11,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -33,6 +38,10 @@ public class PcConfigServiceImpl extends ServiceImpl<PcConfigMapper, PcConfig> i
     private final LinksMapper linksMapper;
 
     private final NoticeMapper noticeMapper;
+
+    private final TradeFeignClient tradeFeignClient;
+
+    private final UserFeignClient userFeignClient;
 
     @Override
     public PcConfig getPcConfig() {
@@ -104,12 +113,24 @@ public class PcConfigServiceImpl extends ServiceImpl<PcConfigMapper, PcConfig> i
     }
 
     @Override
-    public GraphVO getGraph(String startAt, String endAt) {
+    public GraphVO getGraph() {
         GraphVO vo = new GraphVO();
-//        vo.setOrderCreated(generateDate(startAt, endAt));
-//        vo.setOrderSum(generateDate(startAt, endAt));
-//        vo.setOrderPaid(generateDate(startAt, endAt));
-//        vo.setUserRegister(generateDate(startAt, endAt));
+        Response<Map<LocalDate, Long>> res1 = tradeFeignClient.everyDayOrderCount();
+        Response<Map<LocalDate, Long>> res2 = tradeFeignClient.everyDayOrderPay();
+        Response<Map<LocalDate, BigDecimal>> res3 = tradeFeignClient.everyDayOrderMoney();
+        Response<Map<LocalDate, Long>> res4 = userFeignClient.statRegisterCount();
+        if (ObjectUtils.isNotNull(res1) && ObjectUtils.isNotNull(res2.getData())) {
+            vo.setOrderCreated(res1.getData());
+        }
+        if (ObjectUtils.isNotNull(res2) && ObjectUtils.isNotNull(res2.getData())) {
+            vo.setOrderPaid(res2.getData());
+        }
+        if (ObjectUtils.isNotNull(res3) && ObjectUtils.isNotNull(res3.getData())) {
+            vo.setOrderSum(res3.getData());
+        }
+        if (ObjectUtils.isNotNull(res4) && ObjectUtils.isNotNull(res4.getData())) {
+            vo.setUserRegister(res4.getData());
+        }
         return vo;
     }
 

@@ -12,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Poison02
@@ -26,6 +28,33 @@ public class MemberController {
     private final IUserService userService;
 
     private final IVipInfoService vipInfoService;
+
+    /**
+     * 返回总学员数
+     * @return
+     */
+    @GetMapping("/count")
+    public Response<Long> getMemberCount() {
+        return Response.success(userService.getMemberCount());
+    }
+
+    /**
+     * 今日注册用户数
+     * @return
+     */
+    @GetMapping("/register/count")
+    public Response<Long> todayRegisterCount() {
+        return Response.success(userService.todayRegisterCount());
+    }
+
+    /**
+     * 统计注册用户数
+     * @return
+     */
+    @GetMapping("/stat/regisCount")
+    public Response<Map<LocalDate, Long>> statRegisterCount() {
+        return Response.success(userService.statRegisterCount());
+    }
 
     /**
      * 后台返回学员列表

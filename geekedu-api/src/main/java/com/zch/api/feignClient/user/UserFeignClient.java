@@ -11,7 +11,9 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Poison02
@@ -131,5 +133,28 @@ public interface UserFeignClient {
      */
     @PostMapping("/api/v2/updatePoint")
     Response<Void> updateUserPoint(@RequestParam("userId") Long userId, @RequestParam("point") Long point);
+
+    //=-=====--------------============================
+    // 统计分析
+    /**
+     * 返回总学员数
+     * @return
+     */
+    @GetMapping("/api/member/count")
+    Response<Long> getMemberCount();
+
+    /**
+     * 今日注册用户数
+     * @return
+     */
+    @GetMapping("/api/member/register/count")
+    Response<Long> todayRegisterCount();
+
+    /**
+     * 统计注册用户数
+     * @return
+     */
+    @GetMapping("/api/member/stat/regisCount")
+    Response<Map<LocalDate, Long>> statRegisterCount();
 
 }

@@ -9,8 +9,11 @@ import com.zch.api.vo.trade.order.OrderFullVO;
 import com.zch.trade.domain.po.Order;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Poison02
@@ -85,5 +88,37 @@ public interface IOrderService extends IService<Order> {
      * @return
      */
     OrderDetailVO getOrderDetail(Long orderId);
+
+    /**
+     * 统计订单数据
+     * @param type
+     * @return
+     */
+    BigDecimal orderStatCount(Integer type);
+
+    /**
+     * 统计用户数据
+     * @param type
+     * @return
+     */
+    Long userStatCount(Integer type);
+
+    /**
+     * 每日创建订单数
+     * @return
+     */
+    Map<LocalDate, Long> everyDayOrderCount();
+
+    /**
+     * 每日已支付订单
+     * @return
+     */
+    Map<LocalDate, Long> everyDayOrderPay();
+
+    /**
+     * 每日收入
+     * @return
+     */
+    Map<LocalDate, BigDecimal> everyDayOrderMoney();
 
 }

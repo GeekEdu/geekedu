@@ -27,6 +27,7 @@ import com.zch.common.mvc.result.Response;
 import com.zch.common.mvc.utils.CommonServletUtils;
 import com.zch.common.redis.utils.RedisUtils;
 import com.zch.common.satoken.context.UserContext;
+import com.zch.user.domain.dto.UserCountDTO;
 import com.zch.user.domain.po.Collection;
 import com.zch.user.domain.po.SysPermission;
 import com.zch.user.domain.po.SysRole;
@@ -448,6 +449,41 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         vo.setOs(os);
         vo.setUserId(user.getId());
         return vo;
+    }
+
+    @Override
+    public Long getMemberCount() {
+        return count(new LambdaQueryWrapper<User>()
+                .eq(User::getIsDelete, 0));
+    }
+
+    @Override
+    public Long todayRegisterCount() {
+        // 返回今日注册用户数
+        LocalDateTime start = LocalDateTime.now().toLocalDate().atStartOfDay();
+        LocalDateTime end = start.plusDays(1);
+        return count(new LambdaQueryWrapper<User>()
+                .between(User::getCreatedTime, start, end)
+                .eq(User::getIsDelete, 0));
+    }
+
+    @Override
+    public Map<LocalDate, Long> statRegisterCount() {
+        // 创建一个Map来存储过去七天的日期和订单数量
+        Map<LocalDate, Long> result = new LinkedHashMap<>();
+        List<UserCountDTO> list = userMapper.queryRegisterCount();
+        LocalDate today = LocalDate.now();
+        for (int i = 0; i < 7; i++) {
+            LocalDate date = today.minusDays(i);
+            result.put(date, 0L); // 使用0初始化订单数量
+        }
+        if (ObjectUtils.isNotNull(list) && CollUtils.isNotEmpty(list)) {
+            // 使用数据库的结果更新Map
+            for (UserCountDTO item : list) {
+                result.put(item.getOrderDate(), item.getCount());
+            }
+        }
+        return result;
     }
 
     @Override

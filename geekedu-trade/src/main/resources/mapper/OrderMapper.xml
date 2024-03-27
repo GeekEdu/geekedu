@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zch.trade.mapper.OrderMapper">
+
+	<select id="queryOrderCount" resultType="com.zch.trade.domain.dto.OrderCountDTO">
+		SELECT
+			DATE(created_time) AS orderDate, COUNT(*) AS count
+		FROM
+			t_order
+		WHERE
+			created_time &gt;= NOW() - INTERVAL 7 DAY
+		AND
+			created_time &lt; NOW() + INTERVAL 1 DAY
+		GROUP BY
+			DATE(created_time)
+		ORDER BY
+			DATE(created_time) DESC
+	</select>
+
+	<select id="queryPayCount" resultType="com.zch.trade.domain.dto.OrderCountDTO">
+		SELECT
+			DATE(created_time) AS orderDate, COUNT(*) AS count
+		FROM
+			t_order
+		WHERE
+			order_status = 3
+		AND
+			pay_status = 1
+		AND
+			created_time &gt;= NOW() - INTERVAL 7 DAY
+		AND
+			created_time &lt; NOW() + INTERVAL 1 DAY
+		GROUP BY
+			DATE(created_time)
+		ORDER BY
+			DATE(created_time) DESC
+	</select>
+
+	<select id="queryPayMoney" resultType="com.zch.trade.domain.dto.PayCountDTO">
+        SELECT DATE(created_time) AS orderDate, SUM(amount) AS amount
+        FROM t_order
+        WHERE
+			order_status = 3
+          AND
+			pay_status = 1
+          AND
+			created_time &gt;= NOW() - INTERVAL 7 DAY
+          AND
+			created_time &lt; NOW() + INTERVAL 1 DAY
+        GROUP BY
+			DATE(created_time)
+        ORDER BY
+			DATE(created_time) DESC
+    </select>
+
+</mapper>
