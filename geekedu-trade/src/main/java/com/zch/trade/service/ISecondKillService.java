@@ -69,6 +69,6 @@ public interface ISecondKillService extends IService<SecondKill> {
      * @param form
      * @return
      */
-    String startSecKill(Integer id, CaptchaForm form);
+    Integer startSecKill(Integer id, CaptchaForm form);
 
 }

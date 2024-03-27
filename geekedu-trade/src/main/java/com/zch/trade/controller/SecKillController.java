@@ -101,9 +101,9 @@ public class SecKillController {
      * @return
      */
     @PostMapping("/v2/{id}/start")
-    public Response<String> startSecKill(@PathVariable("id") Integer id,
+    public Response<Integer> startSecKill(@PathVariable("id") Integer id,
                                          @RequestBody CaptchaForm form) {
-        return Response.success();
+        return Response.success(secondKillService.startSecKill(id, form));
     }
 
 }

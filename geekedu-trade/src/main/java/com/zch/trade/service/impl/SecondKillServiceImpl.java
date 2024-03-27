@@ -1,6 +1,7 @@
 package com.zch.trade.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.trade.seckill.CaptchaForm;
@@ -23,6 +24,7 @@ import com.zch.trade.mapper.SecondKillMapper;
 import com.zch.trade.service.ISecondKillService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -45,6 +47,8 @@ import static com.zch.common.redis.constants.RedisConstants.CAPTCHA_MAP;
 public class SecondKillServiceImpl extends ServiceImpl<SecondKillMapper, SecondKill> implements ISecondKillService {
 
     private final TradeFeignClient tradeFeignClient;
+
+    private final RocketMQTemplate rocketMQTemplate;
 
     @Override
     public Page<SecondKillVO> querySecKillList(Integer pageNum, Integer pageSize, String sort, String order, String keywords) {
@@ -168,7 +172,7 @@ public class SecondKillServiceImpl extends ServiceImpl<SecondKillMapper, SecondK
                 .gt(SecondKill::getEndAt, LocalDateTime.now())
                 .last("limit 1"));
         if (ObjectUtils.isNull(secondKill)) {
-            return new SecKillV2VO();
+            return null;
         }
         SecKillV2VO vo = new SecKillV2VO();
         SecondKillVO vo1 = new SecondKillVO();
@@ -189,7 +193,7 @@ public class SecondKillServiceImpl extends ServiceImpl<SecondKillMapper, SecondK
         // 查询用户支付信息，若下了秒杀单，就会产生支付信息
         // Long userId = UserContext.getLoginId();
         Long userId = 1745747394693820416L;
-        Response<OrderVO> res = tradeFeignClient.queryOrderInfoByGoods(goodsId, goodsType, userId, true);
+        Response<OrderVO> res = tradeFeignClient.queryOrderInfoByGoods(goodsId, goodsType, userId, true, null, null);
         if (ObjectUtils.isNull(res) || ObjectUtils.isNull(res.getData())) {
             return vo;
         }
@@ -204,7 +208,10 @@ public class SecondKillServiceImpl extends ServiceImpl<SecondKillMapper, SecondK
     }
 
     @Override
-    public String startSecKill(Integer id, CaptchaForm form) {
+    public Integer startSecKill(Integer id, CaptchaForm form) {
+        // 用户id
+        // Long userId = UserContext.getLoginId();
+        Long userId = 1745747394693820416L;
         Map<String, String> cacheObject = RedisUtils.getCacheMap(CAPTCHA_MAP);
         if (ObjectUtils.isEmpty(cacheObject)) {
             throw new CommonException(EXPIRE_CAPTCHA_CODE);
@@ -214,9 +221,63 @@ public class SecondKillServiceImpl extends ServiceImpl<SecondKillMapper, SecondK
         if (! checkCaptcha) {
             throw new CommonException(INVALID_VERIFY_CODE);
         }
-        // 返回商品id，跳转到订单页面
-        // 需要发送RocketMQ消息，秒杀成功
-        return null;
+        /**
+         * 秒杀逻辑
+         * 1. 判断是否在秒杀时间范围内
+         * 2. 判断库存
+         * 3. 做到一人一单，同一个用户只能下单一单
+         * 4. 解决分布式集群问题，使用分布式锁
+         * 5. 创建订单
+         */
+        SecondKill secondKill = getById(id);
+        // 判断秒杀时间
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime start = secondKill.getStartAt();
+        LocalDateTime end = secondKill.getEndAt();
+        if (start.isAfter(now)) {
+            throw new CommonException("秒杀还未开始！");
+        }
+        if (end.isBefore(now)) {
+            throw new CommonException("秒杀已经结束！");
+        }
+        // 判断库存 使用CAS乐观锁机制控制并发问题
+        if (secondKill.getStock() <= 0) {
+            throw new CommonException("库存不足，请下次再来！");
+        } else {
+            // 扣减库存
+            update(new LambdaUpdateWrapper<SecondKill>()
+                    .eq(SecondKill::getId, id)
+                    .gt(SecondKill::getStock, 0)
+                    .set(SecondKill::getStock, secondKill.getStock() - 1));
+        }
+        // 确保一人一单，这里去查订单库，条件是：用户id，商品id，秒杀，创建时间在秒杀时间段内，最后一个条件很重要
+        // 因为同一用户会下不同的订单，查出来的订单可能很多，那么只能限制在当前秒杀时间内
+        Response<OrderVO> orderInfo = tradeFeignClient.queryOrderInfoByGoods(secondKill.getGoodsId(), secondKill.getGoodsType(), userId,
+                true, start, end);
+        if (ObjectUtils.isNotNull(orderInfo) && ObjectUtils.isNotNull(orderInfo.getData())) {
+            throw new CommonException("禁止重复下单！");
+        }
+        // 创建订单，通过使用MQ通知
+        /*CreateOrderForm formMsg = new CreateOrderForm();
+        formMsg.setGoodsId(secondKill.getGoodsId());
+        formMsg.setGoodsType(secondKill.getGoodsType());
+        formMsg.setGoodsName(secondKill.getGoodsTitle());
+        formMsg.setPromoCode("");
+        formMsg.setPayment("alipay");
+        formMsg.setIsSeckill(true);
+        Message<CreateOrderForm> msg = MessageBuilder.withPayload(formMsg).build();
+        rocketMQTemplate.asyncSend("seckill-2MySQL-topic", msg, new SendCallback() {
+            @Override
+            public void onSuccess(SendResult sendResult) {
+                log.debug("秒杀成功，准备创建订单！");
+            }
+
+            @Override
+            public void onException(Throwable throwable) {
+                log.error("秒杀失败！，请重新秒杀！");
+            }
+        });*/
+        return secondKill.getGoodsId();
     }
 
     /**

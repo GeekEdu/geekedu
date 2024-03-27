@@ -9,6 +9,7 @@ import com.zch.api.vo.trade.order.OrderFullVO;
 import com.zch.trade.domain.po.Order;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -56,7 +57,7 @@ public interface IOrderService extends IService<Order> {
      * @param isSeckill
      * @return
      */
-    OrderVO queryOrderByGoods(Integer goodsId, String goodsType, Long userId, Boolean isSeckill);
+    OrderVO queryOrderByGoods(Integer goodsId, String goodsType, Long userId, Boolean isSeckill, LocalDateTime startAt, LocalDateTime endAt);
 
     //===================================================
 

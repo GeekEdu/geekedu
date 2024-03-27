@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
+
 /**
  * @author Poison02
  * @date 2024/3/18
@@ -69,6 +71,8 @@ public interface TradeFeignClient {
     Response<OrderVO> queryOrderInfoByGoods(@RequestParam("goodsId") Integer goodsId,
                                                    @RequestParam("goodsType") String goodsType,
                                                    @RequestParam("userId") Long userId,
-                                                   @RequestParam("isSeckill") Boolean isSeckill);
+                                                   @RequestParam("isSeckill") Boolean isSeckill,
+                                            @RequestParam(value = "startAt", required = false) LocalDateTime startAt,
+                                            @RequestParam(value = "endAt", required = false) LocalDateTime endAt);
 
 }

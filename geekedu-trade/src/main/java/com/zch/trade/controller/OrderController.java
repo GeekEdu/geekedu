@@ -11,6 +11,7 @@ import com.zch.trade.service.IOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -73,8 +74,10 @@ public class OrderController {
     public Response<OrderVO> queryOrderInfoByGoods(@RequestParam("goodsId") Integer goodsId,
                                                    @RequestParam("goodsType") String goodsType,
                                                    @RequestParam("userId") Long userId,
-                                                   @RequestParam("isSeckill") Boolean isSeckill) {
-        return Response.success(orderService.queryOrderByGoods(goodsId, goodsType, userId, isSeckill));
+                                                   @RequestParam("isSeckill") Boolean isSeckill,
+                                                   @RequestParam(value = "startAt", required = false) LocalDateTime startAt,
+                                                   @RequestParam(value = "endAt", required = false) LocalDateTime endAt) {
+        return Response.success(orderService.queryOrderByGoods(goodsId, goodsType, userId, isSeckill, startAt, endAt));
     }
 
     // ================================================================================

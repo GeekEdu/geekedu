@@ -259,7 +259,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
     @Override
-    public OrderVO queryOrderByGoods(Integer goodsId, String goodsType, Long userId, Boolean isSeckill) {
+    public OrderVO queryOrderByGoods(Integer goodsId, String goodsType, Long userId, Boolean isSeckill, LocalDateTime startAt, LocalDateTime endAt) {
         ProductTypeEnum type = REPLAY_COURSE;
         switch (goodsType) {
             case "course" -> type = REPLAY_COURSE;
@@ -269,12 +269,17 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             case "book" -> type = E_BOOK;
             case "vip" -> type = VIP;
         }
-        Order one = getOne(new LambdaQueryWrapper<Order>()
+        LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<Order>()
                 .eq(Order::getGoodsId, goodsId)
                 .eq(Order::getGoodsType, type)
                 .eq(Order::getUserId, userId)
-                .eq(Order::getIsSeckill, isSeckill)
-                .last(" limit 1"));
+                .eq(Order::getIsSeckill, isSeckill);
+        // 是开始秒杀场景时，传秒杀的时间段
+        if (ObjectUtils.isNotNull(startAt) && ObjectUtils.isNotNull(endAt)) {
+            wrapper.between(Order::getCreatedTime, startAt, endAt);
+        }
+        wrapper.last(" limit 1");
+        Order one = getOne(wrapper);
         if (ObjectUtils.isNull(one)) {
             return null;
         }
