@@ -56,40 +56,120 @@
     </select>
 
 	<select id="sellTopCount" resultType="_long">
-		SELECT
-			count(*)
-		FROM
-			t_order
-		WHERE
-			created_time BETWEEN #{startAt} AND #{endAt}
-		  AND
-			goods_type = #{goodsType}
-		  AND
-			order_status = 3
-		  AND
-			pay_status = 1
-	</select>
+        SELECT
+        	count(*)
+        FROM
+        	t_order
+        WHERE
+        	created_time BETWEEN #{startAt} AND #{endAt}
+        	<if test="goodsType != null">
+            	AND
+            		goods_type = #{goodsType}
+       		</if>
+        AND
+        	order_status = 3
+        AND
+        	pay_status = 1
+    </select>
 
 	<select id="getSellTopPage" resultType="com.zch.api.vo.trade.order.SellCountTopVO">
+        SELECT
+        	goods_name AS goodsName,
+        	COUNT(*) AS orderCount,
+        	SUM(amount) AS payTotal
+        FROM
+        	t_order
+        WHERE
+        	created_time BETWEEN #{startAt} AND #{endAt}
+        	<if test="goodsType != null">
+            	AND
+            	goods_type = #{goodsType}
+        	</if>
+        AND
+        	order_status = 3
+        AND
+        	pay_status = 1
+        GROUP BY
+        	goods_name
+        ORDER BY
+        	payTotal DESC, orderCount DESC
+        LIMIT #{pageNum}, #{pageSize};
+    </select>
+
+	<select id="queryFixedPayCount" resultType="com.zch.trade.domain.dto.OrderCountDTO">
 		SELECT
-			goods_name AS goodsName,
-			COUNT(*) AS orderCount,
-			SUM(amount) AS payTotal
+			DATE(created_time) AS orderDate, COUNT(*) AS count
 		FROM
 			t_order
 		WHERE
-			created_time BETWEEN #{startAt} AND #{endAt}
-		  AND
-			goods_type = #{goodsType}
-		  AND
 			order_status = 3
-		  AND
+		AND
 			pay_status = 1
+		AND
+			created_time &gt;= #{startAt}
+		AND
+			created_time &lt; #{endAt}
 		GROUP BY
-			goods_name
+			DATE(created_time)
 		ORDER BY
-			payTotal DESC, orderCount DESC
-		LIMIT #{pageNum}, #{pageSize};
+			DATE(created_time) DESC
 	</select>
+
+	<select id="queryFixedPayNum" resultType="com.zch.trade.domain.dto.OrderCountDTO">
+		SELECT
+			DATE(created_time) AS orderDate,
+			COUNT(DISTINCT user_id) AS count
+		FROM
+			t_order
+		WHERE
+			order_status = 3
+		AND
+			pay_status = 1
+		AND
+			created_time &gt;= #{startAt}
+		AND
+			created_time &lt; #{endAt}
+		GROUP BY
+			DATE(created_time)
+		ORDER BY
+			DATE(created_time) DESC
+	</select>
+
+	<select id="queryFixedPayAmount" resultType="com.zch.trade.domain.dto.PayCountDTO">
+		SELECT
+			DATE(created_time) AS orderDate,
+			SUM(amount) AS totalAmount
+		FROM
+			t_order
+		WHERE
+			order_status = 3
+		AND
+			pay_status = 1
+		AND
+			created_time &gt;= #{startAt}
+		AND
+			created_time &lt; #{endAt}
+		GROUP BY
+			DATE(created_time)
+		ORDER BY
+			DATE(created_time) DESC
+	</select>
+
+	<select id="queryFixedPayAvg" resultType="com.zch.trade.domain.dto.PayCountDTO">
+        WITH UserTotalAmount AS (SELECT user_id,
+                                        DATE(created_time) AS orderDate,
+                                        SUM(amount)        AS totalAmount
+                                 FROM t_order
+                                 WHERE order_status = 3
+                                   AND pay_status = 1
+                                   AND created_time &gt;= #{startAt}
+                                   AND created_time &lt; #{endAt}
+                                 GROUP BY user_id, DATE(created_time))
+        SELECT orderDate,
+               AVG(totalAmount) AS amount
+        FROM UserTotalAmount
+        GROUP BY orderDate
+        ORDER BY orderDate DESC
+    </select>
 
 </mapper>

@@ -61,4 +61,36 @@ public interface OrderMapper extends BaseMapper<Order> {
                                         @Param("endAt") LocalDateTime endAt,
                                         @Param("goodsType") Integer goodsType);
 
+    /**
+     * 支付订单数
+     * @param startAt
+     * @param endAt
+     * @return
+     */
+    List<OrderCountDTO> queryFixedPayCount(LocalDateTime startAt, LocalDateTime endAt);
+
+    /**
+     * 支付人数
+     * @param startAt
+     * @param endAt
+     * @return
+     */
+    List<OrderCountDTO> queryFixedPayNum(LocalDateTime startAt, LocalDateTime endAt);
+
+    /**
+     * 支付总金额
+     * @param startAt
+     * @param endAt
+     * @return
+     */
+    List<PayCountDTO> queryFixedPayAmount(LocalDateTime startAt, LocalDateTime endAt);
+
+    /**
+     * 客单均价
+     * @param startAt
+     * @param endAt
+     * @return
+     */
+    List<PayCountDTO> queryFixedPayAvg(LocalDateTime startAt, LocalDateTime endAt);
+
 }

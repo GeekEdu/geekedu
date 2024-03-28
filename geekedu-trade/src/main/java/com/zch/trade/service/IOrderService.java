@@ -3,10 +3,7 @@ package com.zch.trade.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.trade.CreateOrderForm;
 import com.zch.api.vo.order.OrderVO;
-import com.zch.api.vo.trade.order.OrderDetailVO;
-import com.zch.api.vo.trade.order.OrderEndFullVO;
-import com.zch.api.vo.trade.order.OrderFullVO;
-import com.zch.api.vo.trade.order.SellCountTopVO;
+import com.zch.api.vo.trade.order.*;
 import com.zch.trade.domain.po.Order;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
@@ -122,6 +119,23 @@ public interface IOrderService extends IService<Order> {
      */
     Map<LocalDate, BigDecimal> everyDayOrderMoney();
 
+    /**
+     * 营销数据
+     * @param pageNum
+     * @param pageSize
+     * @param startAt
+     * @param endAt
+     * @param goodsType
+     * @return
+     */
     Page<SellCountTopVO> querySellCountVO(Integer pageNum, Integer pageSize, String startAt, String endAt, String goodsType);
+
+    /**
+     * 订单统计图
+     * @param startAt
+     * @param endAt
+     * @return
+     */
+    OrderGraphVO getOrderGraph(String startAt, String endAt);
 
 }

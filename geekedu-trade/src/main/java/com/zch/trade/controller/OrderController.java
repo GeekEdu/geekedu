@@ -2,10 +2,7 @@ package com.zch.trade.controller;
 
 import com.zch.api.dto.trade.CreateOrderForm;
 import com.zch.api.vo.order.OrderVO;
-import com.zch.api.vo.trade.order.OrderDetailVO;
-import com.zch.api.vo.trade.order.OrderEndFullVO;
-import com.zch.api.vo.trade.order.OrderFullVO;
-import com.zch.api.vo.trade.order.SellCountTopVO;
+import com.zch.api.vo.trade.order.*;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import com.zch.trade.service.IOrderService;
@@ -188,8 +185,20 @@ public class OrderController {
                                                         @RequestParam("pageSize") Integer pageSize,
                                                         @RequestParam("startAt") String startAt,
                                                         @RequestParam("endAt") String endAt,
-                                                        @RequestParam("goodsType") String goodsType) {
+                                                        @RequestParam(value = "goodsType", required = false) String goodsType) {
         return PageResult.success(orderService.querySellCountVO(pageNum, pageSize, startAt, endAt, goodsType));
+    }
+
+    /**
+     * 订单统计图
+     * @param startAt
+     * @param endAt
+     * @return
+     */
+    @GetMapping("/stat/orderGraph")
+    public Response<OrderGraphVO> getStatOrderGraph(@RequestParam("startAt") String startAt,
+                                                    @RequestParam("endAt") String endAt) {
+        return Response.success(orderService.getOrderGraph(startAt, endAt));
     }
 
 }

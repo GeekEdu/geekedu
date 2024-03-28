@@ -629,7 +629,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Override
     public Page<SellCountTopVO> querySellCountVO(Integer pageNum, Integer pageSize, String startAt, String endAt, String goodsType) {
-        Integer type = ProductTypeEnum.valueOf(goodsType).getCode();
+        Integer type = null;
+        if (StringUtils.isNotBlank(goodsType)) {
+            type = ProductTypeEnum.valueOf(goodsType).getCode();
+        }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         // 将字符串解析为 LocalDateTime 对象
         LocalDateTime dateTime = LocalDateTime.parse(startAt, formatter);
@@ -645,6 +648,70 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         List<SellCountTopVO> list = orderMapper.getSellTopPage(0, pageSize, dateTime, dateTime1, type);
         vo.setRecords(list);
         vo.setTotal(count);
+        return vo;
+    }
+
+    @Override
+    public OrderGraphVO getOrderGraph(String startAt, String endAt) {
+        OrderGraphVO vo = new OrderGraphVO();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        // 将字符串解析为 LocalDateTime 对象
+        LocalDateTime start = LocalDateTime.parse(startAt, formatter);
+        LocalDateTime end = LocalDateTime.parse(endAt, formatter);
+        // 支付金额数
+        Map<LocalDate, BigDecimal> orderPayAmount = new HashMap<>(0);
+        // 支付订单数
+        Map<LocalDate, Long> orderPayCount = new HashMap<>(0);
+        // 支付人数
+        Map<LocalDate, Long> orderPayNum = new HashMap<>(0);
+        // 支付均价
+        Map<LocalDate, BigDecimal> orderPayAvg = new HashMap<>(0);
+        // 初始化map数据
+        // 遍历时间段内的每一天
+        LocalDateTime current = start;
+        while (!current.isAfter(end)) {
+            LocalDate currentDate = current.toLocalDate();
+            // 假设初始数据为0，根据实际需要调整
+            orderPayCount.putIfAbsent(currentDate, 0L);
+            orderPayNum.putIfAbsent(currentDate, 0L);
+            orderPayAmount.putIfAbsent(currentDate, new BigDecimal(0));
+            orderPayAvg.putIfAbsent(currentDate, new BigDecimal(0));
+            // 增加一天
+            current = current.plusDays(1);
+        }
+        // 查询获得数据
+        List<OrderCountDTO> list1 = orderMapper.queryFixedPayCount(start, end); // 支付订单数
+        List<PayCountDTO> list2 = orderMapper.queryFixedPayAvg(start, end); // 支付均价
+        List<PayCountDTO> list3 = orderMapper.queryFixedPayAmount(start, end); // 支付金额
+        List<OrderCountDTO> list4 = orderMapper.queryFixedPayNum(start, end); // 支付人数
+        if (ObjectUtils.isNotNull(list1) && CollUtils.isNotEmpty(list1)) {
+            // 使用数据库的结果更新Map
+            for (OrderCountDTO item : list1) {
+                orderPayCount.put(item.getOrderDate(), item.getCount());
+            }
+        }
+        if (ObjectUtils.isNotNull(list2) && CollUtils.isNotEmpty(list2)) {
+            // 使用数据库的结果更新Map
+            for (PayCountDTO item : list2) {
+                orderPayAvg.put(item.getOrderDate(), item.getAmount());
+            }
+        }
+        if (ObjectUtils.isNotNull(list3) && CollUtils.isNotEmpty(list3)) {
+            // 使用数据库的结果更新Map
+            for (PayCountDTO item : list3) {
+                orderPayAmount.put(item.getOrderDate(), item.getAmount());
+            }
+        }
+        if (ObjectUtils.isNotNull(list4) && CollUtils.isNotEmpty(list4)) {
+            // 使用数据库的结果更新Map
+            for (OrderCountDTO item : list4) {
+                orderPayNum.put(item.getOrderDate(), item.getCount());
+            }
+        }
+        vo.setOrderPayAmount(orderPayAmount);
+        vo.setOrderPayCount(orderPayCount);
+        vo.setOrderPayAvg(orderPayAvg);
+        vo.setOrderPayNum(orderPayNum);
         return vo;
     }
 
