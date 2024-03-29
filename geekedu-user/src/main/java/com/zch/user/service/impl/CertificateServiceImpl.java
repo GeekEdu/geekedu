@@ -102,6 +102,14 @@ public class CertificateServiceImpl extends ServiceImpl<CertificateMapper, Certi
     }
 
     @Override
+    public Boolean conferCertificate(Integer id, Long userId) {
+        // 保存用户证书关联表
+        // 将证书中的模版信息需要进行更换，更换为相关的用户信息
+        // 将该用户的证书上传到minio，后续可在前台进行下载
+        return null;
+    }
+
+    @Override
     public Page<CertificateVO> queryMemberCertificatePage(Integer pageNum, Integer pageSize) {
         // Long userId = UserContext.getLoginId();
         Long userId = 1745747394693820416L;

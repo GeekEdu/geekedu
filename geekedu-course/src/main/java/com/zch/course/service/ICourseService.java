@@ -250,6 +250,13 @@ public interface ICourseService extends IService<Course> {
     Boolean courseRecord(Integer courseId, LearnRecordForm form);
 
     /**
+     * 课程学习
+     * @param id
+     * @return
+     */
+    Boolean courseStudy(Integer id);
+
+    /**
      * 课程收藏
      * @param id
      * @return

@@ -51,6 +51,14 @@ public interface ICertificateService extends IService<Certificate> {
     Boolean deleteCertificate(Integer id);
 
     /**
+     * 授予证书
+     * @param id
+     * @param userId
+     * @return
+     */
+    Boolean conferCertificate(Integer id, Long userId);
+
+    /**
      * 查找我的证书列表
      * @param pageNum
      * @param pageSize

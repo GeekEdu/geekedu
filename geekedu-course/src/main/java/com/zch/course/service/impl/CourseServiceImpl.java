@@ -576,6 +576,11 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     }
 
     @Override
+    public Boolean courseStudy(Integer id) {
+        return null;
+    }
+
+    @Override
     public Boolean courseCollect(Integer id) {
         CollectForm form = new CollectForm();
         form.setRelationId(id);

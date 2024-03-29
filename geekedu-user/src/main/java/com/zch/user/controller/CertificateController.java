@@ -72,7 +72,17 @@ public class CertificateController {
      */
     @PostMapping("/{id}/delete")
     public Response<Boolean> deleteCertificate(@PathVariable("id") Integer id) {
-        return Response.success();
+        return Response.success(certificateService.deleteCertificate(id));
+    }
+
+    /**
+     * 授予某个用户证书 TODO
+     * @param id
+     * @return
+     */
+    @PostMapping("/{id}/confer")
+    public Response<Boolean> conferCertificate(@PathVariable("id") Integer id, @RequestParam("userId") Long userId) {
+        return Response.success(certificateService.conferCertificate(id, userId));
     }
 
     //=======================================================================

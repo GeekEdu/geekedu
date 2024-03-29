@@ -352,6 +352,16 @@ public class CourseController {
     }
 
     /**
+     * 课程学习 TODO
+     * @param id
+     * @return
+     */
+    @PostMapping("/v2/{id}/study")
+    public Response<Boolean> courseStudy(@PathVariable("id") Integer id) {
+        return Response.success(courseService.courseStudy(id));
+    }
+
+    /**
      * 课程收藏
      * @param id
      * @return
