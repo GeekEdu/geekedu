@@ -50,4 +50,12 @@ public interface ICertificateService extends IService<Certificate> {
      */
     Boolean deleteCertificate(Integer id);
 
+    /**
+     * 查找我的证书列表
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    Page<CertificateVO> queryMemberCertificatePage(Integer pageNum, Integer pageSize);
+
 }

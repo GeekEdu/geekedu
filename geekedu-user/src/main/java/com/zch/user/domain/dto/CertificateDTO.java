@@ -1,19 +1,18 @@
-package com.zch.api.vo.user.certificate;
+package com.zch.user.domain.dto;
 
-import com.zch.common.mvc.entity.BaseVO;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * @author Poison02
- * @date 2024/3/24
+ * @date 2024/3/29
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class CertificateVO extends BaseVO {
+public class CertificateDTO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private Integer id;
 
@@ -40,7 +39,5 @@ public class CertificateVO extends BaseVO {
     private Long userId;
 
     private LocalDateTime createdTime;
-
-    private List<Object> relation;
 
 }

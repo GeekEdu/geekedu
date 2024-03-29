@@ -75,4 +75,12 @@ public class CertificateController {
         return Response.success();
     }
 
+    //=======================================================================
+    // 前台 返回 我的证书列表
+    @GetMapping("/member/list")
+    public PageResult<CertificateVO> getMyCertificatePage(@RequestParam("pageNum") Integer pageNum,
+                                                          @RequestParam("pageSize") Integer pageSize) {
+        return PageResult.success(certificateService.queryMemberCertificatePage(pageNum, pageSize));
+    }
+
 }
