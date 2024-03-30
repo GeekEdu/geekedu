@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zch.user.mapper.UserCertificateMapper">
+
+	<select id="selectCertificatesBycId" resultType="com.zch.user.domain.dto.UserCertDTO">
+		SELECT
+			uc.id,
+			uc.c_id,
+			uc.c_num,
+			uc.user_id,
+			uc.created_time
+		FROM
+			user_certificate uc
+		WHERE
+			uc.c_id = #{cId}
+	</select>
+
+</mapper>

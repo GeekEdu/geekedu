@@ -1,7 +1,9 @@
 package com.zch.user.controller;
 
+import com.zch.api.dto.user.certificate.CancelForm;
 import com.zch.api.dto.user.certificate.CertificateForm;
 import com.zch.api.vo.user.certificate.CertificateVO;
+import com.zch.api.vo.user.certificate.UserCertificateVO;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import com.zch.user.service.ICertificateService;
@@ -83,6 +85,30 @@ public class CertificateController {
     @PostMapping("/{id}/confer")
     public Response<Boolean> conferCertificate(@PathVariable("id") Integer id, @RequestParam("userId") Long userId) {
         return Response.success(certificateService.conferCertificate(id, userId));
+    }
+
+    /**
+     * 返回某个证书授予的用户列表
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}/members")
+    public PageResult<UserCertificateVO> getCertificateMembers(@PathVariable("id") Integer id,
+                                                               @RequestParam("pageNum") Integer pageNum,
+                                                               @RequestParam("pageSize") Integer pageSize) {
+        return PageResult.success(certificateService.getCertificateMembers(id, pageNum, pageSize));
+    }
+
+    /**
+     * 批量撤销用户证书授予
+     * @param id
+     * @param form
+     * @return
+     */
+    @PostMapping("/{id}/cancel/batch")
+    public Response<Boolean> cancelCertificateBatch(@PathVariable("id") Integer id,
+                                                    @RequestBody CancelForm form) {
+        return Response.success(certificateService.cancelCertificateBatch(id, form));
     }
 
     //=======================================================================

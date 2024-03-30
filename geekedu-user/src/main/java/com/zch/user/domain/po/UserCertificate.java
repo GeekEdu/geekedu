@@ -21,10 +21,24 @@ public class UserCertificate {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
+    /**
+     * 用户id
+     */
     private Long userId;
 
+    /**
+     * 证书id
+     */
     private Integer cId;
 
+    /**
+     * 证书编号，每个用户得到的某个证书都有一个编号 由系统随机生成
+     */
+    private String cNum;
+
+    /**
+     * 授予时间
+     */
     private LocalDateTime createdTime;
 
 }

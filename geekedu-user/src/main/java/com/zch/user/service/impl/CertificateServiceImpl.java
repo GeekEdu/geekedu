@@ -4,16 +4,23 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zch.api.dto.user.certificate.CancelForm;
 import com.zch.api.dto.user.certificate.CertificateForm;
+import com.zch.api.feignClient.user.UserFeignClient;
+import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.api.vo.user.certificate.CertificateVO;
+import com.zch.api.vo.user.certificate.UserCertificateVO;
 import com.zch.common.core.utils.BeanUtils;
 import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
+import com.zch.common.mvc.result.Response;
 import com.zch.common.redis.utils.StringUtils;
 import com.zch.user.domain.dto.CertificateDTO;
+import com.zch.user.domain.dto.UserCertDTO;
 import com.zch.user.domain.po.Certificate;
 import com.zch.user.domain.po.UserCertificate;
 import com.zch.user.mapper.CertificateMapper;
+import com.zch.user.mapper.UserCertificateMapper;
 import com.zch.user.service.ICertificateService;
 import com.zch.user.service.IUserCertificateService;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +42,10 @@ public class CertificateServiceImpl extends ServiceImpl<CertificateMapper, Certi
     private final IUserCertificateService userCertificateService;
 
     private final CertificateMapper certificateMapper;
+
+    private final UserCertificateMapper userCertificateMapper;
+
+    private final UserFeignClient userFeignClient;
 
     @Override
     public Page<CertificateVO> getCertificateList(Integer pageNum, Integer pageSize, String keywords) {
@@ -107,6 +118,56 @@ public class CertificateServiceImpl extends ServiceImpl<CertificateMapper, Certi
         // 将证书中的模版信息需要进行更换，更换为相关的用户信息
         // 将该用户的证书上传到minio，后续可在前台进行下载
         return null;
+    }
+
+    @Override
+    public Page<UserCertificateVO> getCertificateMembers(Integer id, Integer pageNum, Integer pageSize) {
+        Page<UserCertificateVO> vo = new Page<>();
+        if (ObjectUtils.isNull(id)) {
+            vo.setTotal(0);
+            vo.setRecords(new ArrayList<>(0));
+            return vo;
+        }
+        long count = userCertificateService.count(new LambdaQueryWrapper<UserCertificate>()
+                .eq(UserCertificate::getCId, id));
+        if (count == 0) {
+            vo.setRecords(new ArrayList<>(0));
+            vo.setTotal(0);
+            return vo;
+        }
+        Page<UserCertificate> page = new Page<>(pageNum, pageSize);
+        IPage<UserCertDTO> pages = userCertificateMapper.selectCertificatesBycId(page, id);
+        if (ObjectUtils.isNull(pages) || ObjectUtils.isNull(pages.getRecords()) || CollUtils.isEmpty(pages.getRecords())) {
+            vo.setTotal(0);
+            vo.setRecords(new ArrayList<>(0));
+            return vo;
+        }
+        vo.setRecords(pages.getRecords().stream().map(item -> {
+            UserCertificateVO vo1 = new UserCertificateVO();
+            BeanUtils.copyProperties(item, vo1);
+            // 查找用户相关信息
+            Response<UserSimpleVO> res = userFeignClient.getUserById(item.getUserId() + "");
+            if (ObjectUtils.isNotNull(res) && ObjectUtils.isNotNull(res.getData())) {
+                vo1.setUser(res.getData());
+            }
+            return vo1;
+        }).collect(Collectors.toList()));
+        vo.setTotal(count);
+        return vo;
+    }
+
+    @Override
+    public Boolean cancelCertificateBatch(Integer id, CancelForm form) {
+        Certificate certificate = getById(id);
+        if (ObjectUtils.isNull(certificate)) {
+            return false;
+        }
+        if (ObjectUtils.isNull(form) || ObjectUtils.isNull(form.getIds()) || CollUtils.isEmpty(form.getIds())) {
+            return false;
+        }
+        userCertificateService.deleteBatchByUserId(form.getIds());
+        certificate.setUserCount(certificate.getUserCount() - form.getIds().size());
+        return updateById(certificate);
     }
 
     @Override

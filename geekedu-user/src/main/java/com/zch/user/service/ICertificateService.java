@@ -2,8 +2,10 @@ package com.zch.user.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zch.api.dto.user.certificate.CancelForm;
 import com.zch.api.dto.user.certificate.CertificateForm;
 import com.zch.api.vo.user.certificate.CertificateVO;
+import com.zch.api.vo.user.certificate.UserCertificateVO;
 import com.zch.user.domain.po.Certificate;
 
 /**
@@ -58,6 +60,17 @@ public interface ICertificateService extends IService<Certificate> {
      */
     Boolean conferCertificate(Integer id, Long userId);
 
+    Page<UserCertificateVO> getCertificateMembers(Integer id, Integer pageNum, Integer pageSize);
+
+    /**
+     * 批量撤销用户证书授予
+     * @param id
+     * @param form
+     * @return
+     */
+    Boolean cancelCertificateBatch(Integer id, CancelForm form);
+
+    //==================================================================
     /**
      * 查找我的证书列表
      * @param pageNum
