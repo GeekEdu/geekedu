@@ -252,9 +252,10 @@ public interface ICourseService extends IService<Course> {
     /**
      * 课程学习
      * @param id
+     * @param type
      * @return
      */
-    Boolean courseStudy(Integer id);
+    Boolean courseStudy(Integer id, String type);
 
     /**
      * 课程收藏

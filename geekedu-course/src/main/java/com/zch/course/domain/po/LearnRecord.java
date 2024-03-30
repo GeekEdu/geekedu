@@ -20,15 +20,35 @@ public class LearnRecord extends BaseEntity {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
+    /**
+     * 课程id
+     */
     private Integer courseId;
 
+    /**
+     * 课程小节id
+     */
     private Integer videoId;
 
+    /**
+     * 课程类型 course live
+     */
     private String type;
 
+    /**
+     * 用户id
+     */
     private Long userId;
 
+    /**
+     * 观看时长
+     */
     private Integer duration;
+
+    /**
+     * 总时长 直播课就为0
+     */
+    private Integer total;
 
     @TableLogic
     private Boolean isDelete;

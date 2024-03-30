@@ -354,11 +354,12 @@ public class CourseController {
     /**
      * 课程学习 TODO
      * @param id
+     * @param type
      * @return
      */
     @PostMapping("/v2/{id}/study")
-    public Response<Boolean> courseStudy(@PathVariable("id") Integer id) {
-        return Response.success(courseService.courseStudy(id));
+    public Response<Boolean> courseStudy(@PathVariable("id") Integer id, @RequestParam("type") String type) {
+        return Response.success(courseService.courseStudy(id, type));
     }
 
     /**

@@ -30,6 +30,7 @@ import com.zch.common.core.utils.StringUtils;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import com.zch.course.domain.po.Course;
+import com.zch.course.domain.po.LearnRecord;
 import com.zch.course.domain.repository.CourseInfoEs;
 import com.zch.course.mapper.CourseMapper;
 import com.zch.course.service.*;
@@ -576,8 +577,30 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     }
 
     @Override
-    public Boolean courseStudy(Integer id) {
-        return null;
+    public Boolean courseStudy(Integer id, String type) {
+        // 将课程学习记录进行初始化
+        // Long userId = UserContext.getLoginId();
+        Long userId = 1745747394693820416L;
+        // 查询课程信息，拿到对应的课程小节信息
+        Course course = getById(id);
+        if (ObjectUtils.isNotNull(course) && course.getSectionCount() != 0) {
+            // 该课程存在视频
+            // 查出课程的所有视频
+            List<CourseSectionVO> sectionList = sectionService.getSectionList(id, 0);
+            if (ObjectUtils.isNotNull(sectionList) && CollUtils.isNotEmpty(sectionList)) {
+                sectionList.forEach(item -> {
+                    LearnRecord learnRecord = new LearnRecord();
+                    learnRecord.setCourseId(id);
+                    learnRecord.setVideoId(item.getId());
+                    learnRecord.setUserId(userId);
+                    learnRecord.setType("VOD");
+                    learnRecord.setDuration(0);
+                    learnRecord.setTotal(Math.toIntExact(item.getDuration()));
+                    learnRecordService.save(learnRecord);
+                });
+            }
+        }
+        return true;
     }
 
     @Override
