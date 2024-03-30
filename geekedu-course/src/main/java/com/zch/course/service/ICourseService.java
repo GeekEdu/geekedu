@@ -11,9 +11,7 @@ import com.zch.api.dto.course.vod.CourseForm;
 import com.zch.api.dto.course.vod.CourseSectionForm;
 import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.course.*;
-import com.zch.api.vo.course.record.PlayUrlVO;
-import com.zch.api.vo.course.record.RecordCourseVO;
-import com.zch.api.vo.course.record.RecordSectionVO;
+import com.zch.api.vo.course.record.*;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.course.domain.po.Course;
 import com.zch.course.domain.repository.CourseInfoEs;
@@ -256,6 +254,21 @@ public interface ICourseService extends IService<Course> {
      * @return
      */
     Boolean courseStudy(Integer id, String type);
+
+    /**
+     * 在学课程 查询
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    List<LearnedCourseVO> getLearnedCourse(Integer pageNum, Integer pageSize);
+
+    /**
+     * 获取学习详情
+     * @param id
+     * @return
+     */
+    List<LearnedDetailVO> getLearnDetail(Integer id);
 
     /**
      * 课程收藏

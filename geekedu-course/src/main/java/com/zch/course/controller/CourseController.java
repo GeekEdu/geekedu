@@ -9,9 +9,7 @@ import com.zch.api.dto.course.vod.CourseForm;
 import com.zch.api.dto.course.vod.CourseSectionForm;
 import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.course.*;
-import com.zch.api.vo.course.record.PlayUrlVO;
-import com.zch.api.vo.course.record.RecordCourseVO;
-import com.zch.api.vo.course.record.RecordSectionVO;
+import com.zch.api.vo.course.record.*;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
@@ -360,6 +358,28 @@ public class CourseController {
     @PostMapping("/v2/{id}/study")
     public Response<Boolean> courseStudy(@PathVariable("id") Integer id, @RequestParam("type") String type) {
         return Response.success(courseService.courseStudy(id, type));
+    }
+
+    /**
+     * 查询在学课程
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/v2/learnedCourse")
+    public Response<List<LearnedCourseVO>> queryLearnedCourses(@RequestParam("pageNum") Integer pageNum,
+                                                           @RequestParam("pageSize") Integer pageSize) {
+        return Response.success(courseService.getLearnedCourse(pageNum, pageSize));
+    }
+
+    /**
+     * 课程学习详情
+     * @param id
+     * @return
+     */
+    @GetMapping("/v2/{id}/learnedDetail")
+    public Response<List<LearnedDetailVO>> queryLearnedDetail(@PathVariable("id") Integer id) {
+        return Response.success(courseService.getLearnDetail(id));
     }
 
     /**

@@ -1,26 +1,25 @@
-package com.zch.api.vo.course;
+package com.zch.api.vo.course.record;
 
 import com.zch.common.mvc.entity.BaseVO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.math.BigDecimal;
-
 /**
  * @author Poison02
- * @date 2024/2/26
+ * @date 2024/3/30
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class CourseSimpleVO extends BaseVO {
+public class LearnedDetailVO extends BaseVO {
 
     private Integer id;
 
     private String title;
 
-    private String coverLink;
+    private Integer duration;
 
-    private BigDecimal price;
+    private Integer total;
 
-    private Integer sectionCount;
+    private Integer videoId;
+
 }

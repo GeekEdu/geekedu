@@ -30,6 +30,7 @@ import com.zch.common.core.utils.StringUtils;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import com.zch.course.domain.po.Course;
+import com.zch.course.domain.po.CourseSection;
 import com.zch.course.domain.po.LearnRecord;
 import com.zch.course.domain.repository.CourseInfoEs;
 import com.zch.course.mapper.CourseMapper;
@@ -329,7 +330,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
                 wrapper.orderBy(true, false, Course::getSellNum);
             }
         }
-        if (! Objects.equals(categoryId, 0)) {
+        if (!Objects.equals(categoryId, 0)) {
             wrapper.eq(Course::getCategoryId, categoryId);
         }
         Page<Course> page = page(new Page<Course>(pageNum, pageSize), wrapper);
@@ -439,7 +440,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         if (vo.getIsBuy()) {
             Map<Integer, LearnRecordVO> videoWatchedProgress = new HashMap<>();
             sections.stream().forEach(item -> {
-                LearnRecordVO record = learnRecordService.getLearnRecord(id, item.getId(), userId,  "VOD");
+                LearnRecordVO record = learnRecordService.getLearnRecord(id, item.getId(), userId, "VOD");
                 if (ObjectUtils.isNotNull(record)) {
                     videoWatchedProgress.put(item.getId(), record);
                 }
@@ -537,7 +538,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         if (vo.getIsWatch()) {
             Map<Integer, LearnRecordVO> videoWatchedProgress = new HashMap<>();
             sections.stream().forEach(item -> {
-                LearnRecordVO record = learnRecordService.getLearnRecord(section.getCourseId(), item.getId(), userId,  "VOD");
+                LearnRecordVO record = learnRecordService.getLearnRecord(section.getCourseId(), item.getId(), userId, "VOD");
                 if (ObjectUtils.isNotNull(record)) {
                     videoWatchedProgress.put(item.getId(), record);
                 }
@@ -601,6 +602,77 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
             }
         }
         return true;
+    }
+
+    @Override
+    public List<LearnedCourseVO> getLearnedCourse(Integer pageNum, Integer pageSize) {
+        // Long userId = UserContext.getLoginId();
+        Long userId = 1745747394693820416L;
+        List<LearnRecord> records = learnRecordService.list(new LambdaQueryWrapper<LearnRecord>()
+                .eq(LearnRecord::getUserId, userId)
+                .eq(LearnRecord::getType, "VOD"));
+        List<LearnedCourseVO> vo = new ArrayList<>();
+        if (ObjectUtils.isNotNull(records) && CollUtils.isNotEmpty(records)) {
+            List<Integer> courseIds = records.stream().map(LearnRecord::getCourseId).distinct().collect(Collectors.toList());
+            courseIds.forEach(item -> {
+                LearnedCourseVO vo1 = new LearnedCourseVO();
+                Course course = getById(item);
+                CourseSimpleVO cs = new CourseSimpleVO();
+                BeanUtils.copyProperties(course, cs);
+                vo1.setCourse(cs);
+                // 根据课程id，将课程对应的小节查出来
+                List<LearnRecord> records1 = learnRecordService.list(new LambdaQueryWrapper<LearnRecord>()
+                        .eq(LearnRecord::getCourseId, item));
+                if (ObjectUtils.isNotNull(records1) && CollUtils.isNotEmpty(records1)) {
+                    // 使用一个集合，记录每个小节是否观看完
+                    List<Boolean> isOk = new ArrayList<>();
+                    records1.forEach(e -> {
+                        // 判断观看时长是否有总时长的 2/3 如果有 则代表看完了
+                        if (e.getDuration() >= Math.toIntExact(e.getTotal() * 2 / 3)) {
+                            isOk.add(true);
+                        } else {
+                            isOk.add(false);
+                        }
+                    });
+                    // 遍历 isOk 遇到true则将观看小节数 + 1
+                    isOk.forEach(e -> {
+                        if (e) {
+                            vo1.setLearnedCount(vo1.getLearnedCount() + 1);
+                        }
+                    });
+                    // 计算 progress 等于 learnedCount / sectionCount
+                    vo1.setProgress((vo1.getLearnedCount() * 100 / course.getSectionCount()));
+                    vo1.setIsOver(vo1.getProgress() >= 100);
+                }
+                vo.add(vo1);
+            });
+        }
+        return vo;
+    }
+
+    @Override
+    public List<LearnedDetailVO> getLearnDetail(Integer id) {
+        List<LearnRecord> records = learnRecordService.list(new LambdaQueryWrapper<LearnRecord>()
+                .eq(LearnRecord::getCourseId, id));
+        if (ObjectUtils.isNull(records) || CollUtils.isEmpty(records)) {
+            return new ArrayList<>(0);
+        }
+        List<LearnedDetailVO> vo = new ArrayList<>(records.size());
+        records.forEach(item -> {
+            // 查询每个小节的信息
+            LearnedDetailVO vo1 = new LearnedDetailVO();
+            CourseSection section = sectionService.getOne(new LambdaQueryWrapper<CourseSection>()
+                    .eq(CourseSection::getId, item.getVideoId())
+                    .eq(CourseSection::getCourseId, item.getCourseId())
+                    .select(CourseSection::getTitle, CourseSection::getDuration));
+            vo1.setTitle(section.getTitle());
+            vo1.setId(item.getId());
+            vo1.setTotal(Math.toIntExact(section.getDuration()));
+            vo1.setDuration(item.getDuration());
+            vo1.setVideoId(item.getVideoId());
+            vo.add(vo1);
+        });
+        return vo;
     }
 
     @Override
