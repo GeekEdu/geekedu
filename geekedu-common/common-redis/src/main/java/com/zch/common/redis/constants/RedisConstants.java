@@ -28,6 +28,8 @@ public interface RedisConstants {
      */
     Long CAPTCHA_KEY_TTL = 60L;
 
+    String SMS_CODE_KEY = "sms:";
+
     String PERMISSION_MAP = "permissionMap:";
 
     String ROLE_LIST = "roleList:";

@@ -30,6 +30,11 @@ public class UserController {
 
     private final IUserService userService;
 
+    @GetMapping("/sms/phone")
+    public Response<String> getSmsCode(@RequestParam("phone") String phone) {
+        return Response.success(userService.getPhoneCode(phone));
+    }
+
     /**
      * 获取用户的所有权限
      * @return

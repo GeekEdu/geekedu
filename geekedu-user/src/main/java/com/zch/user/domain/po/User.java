@@ -1,5 +1,6 @@
 package com.zch.user.domain.po;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zch.common.mvc.entity.BaseEntity;
@@ -21,7 +22,7 @@ public class User extends BaseEntity {
     /**
      * 主键
      */
-    @TableId("id")
+    @TableId(value = "id", type = IdType.INPUT)
     private Long id;
 
     /**

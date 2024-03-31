@@ -23,6 +23,13 @@ import java.util.Map;
 public interface IUserService extends IService<User> {
 
     /**
+     * 获取手机验证码
+     * @param phone
+     * @return
+     */
+    String getPhoneCode(String phone);
+
+    /**
      * 生成验证码
      *
      * @return
@@ -232,4 +239,26 @@ public interface IUserService extends IService<User> {
      */
     List<StudyRecordVO> queryCollectList(String type);
 
+    //===================================================
+    // 小程序端
+
+    /**
+     * 小程序端登录
+     * @param form
+     * @return
+     */
+    WxLoginVO wxLogin(LoginForm form);
+
+    /**
+     * 小程序端注册
+     * @param form
+     * @return
+     */
+    WxLoginVO wxRegister(WxRegForm form);
+
+    /**
+     * 小程序端退出
+     * @return
+     */
+    Boolean wxLogout();
 }

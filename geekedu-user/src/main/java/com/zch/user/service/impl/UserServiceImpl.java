@@ -27,6 +27,7 @@ import com.zch.common.mvc.result.Response;
 import com.zch.common.mvc.utils.CommonServletUtils;
 import com.zch.common.redis.utils.RedisUtils;
 import com.zch.common.satoken.context.UserContext;
+import com.zch.common.sms.adapter.SmsAdapter;
 import com.zch.user.domain.dto.UserCountDTO;
 import com.zch.user.domain.po.Collection;
 import com.zch.user.domain.po.SysPermission;
@@ -49,6 +50,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import static com.zch.common.core.constants.ErrorInfo.Msg.EXPIRE_CAPTCHA_CODE;
@@ -85,6 +87,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private final BookFeignClient bookFeignClient;
 
     private final CourseFeignClient courseFeignClient;
+
+    private final SmsAdapter smsAdapter;
+
+    @Override
+    public String getPhoneCode(String phone) {
+        // 获取当前登录用户id
+        // Long userId = UserContext.getLoginId();
+        Long userId = 1745747394693820416L;
+        // 1. 生成验证码
+        String code = String.valueOf(ThreadLocalRandom.current().nextInt(100000, 1000000));
+        // 2. 保存redis中
+        RedisUtils.setCacheObject(SMS_CODE_KEY + userId, code, Duration.ofSeconds(60));
+        // 3. 发送验证码
+        smsAdapter.send(code, 60 + "", phone, null, null);
+        return code;
+    }
 
     @Override
     public CaptchaVO getCaptcha() {
@@ -699,6 +717,61 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             vo.add(vo1);
         });
         return vo;
+    }
+
+    @Override
+    public WxLoginVO wxLogin(LoginForm form) {
+        WxLoginVO vo = new WxLoginVO();
+        if (ObjectUtils.isNotNull(form) && StringUtils.isNotBlank(form.getUsername()) && StringUtils.isNotBlank(form.getPassword())) {
+            User user = getOne(new LambdaQueryWrapper<User>()
+                    .eq(User::getUserName, form.getUsername()));
+            if (ObjectUtils.isNotNull(user)) {
+                // 使用盐值将输入的密码加密和从数据库中查出来的密码进行对比
+                String encrypt = EncryptUtils.md5Encrypt(form.getPassword(), user.getSalt());
+                if (Objects.equals(form.getPassword(), encrypt)) {
+                    // 登录成功
+                    StpUtil.login(user.getId());
+                    BeanUtils.copyProperties(user, vo);
+                    String token = StpUtil.getTokenValue();
+                    vo.setToken(token);
+                    vo.setSex(ObjectUtils.isNotNull(user.getGender()) ? (user.getGender() ? "女" : "男") : "未知");
+                    return vo;
+                }
+            }
+        }
+        return vo;
+    }
+
+    @Override
+    public WxLoginVO wxRegister(WxRegForm form) {
+        WxLoginVO vo = new WxLoginVO();
+        if (ObjectUtils.isNotNull(form) && StringUtils.isNotBlank(form.getUserName())
+          && StringUtils.isNotBlank(form.getPassword()) && StringUtils.isNotBlank(form.getRePassword())) {
+            User one = getOne(new LambdaQueryWrapper<User>()
+                    .eq(User::getUserName, form.getUserName()));
+            if (ObjectUtils.isNull(one)) {
+                User user = new User();
+                user.setUserName(form.getUserName());
+                String key = EncryptUtils.generateKey();
+                user.setPassword(EncryptUtils.md5Encrypt(form.getPassword(), key));
+                user.setId(IdUtils.getId());
+                save(user);
+                vo.setUserName(form.getUserName());
+                vo.setSex("未知");
+                vo.setPhone("");
+                return vo;
+            }
+        }
+        return vo;
+    }
+
+    @Override
+    public Boolean wxLogout() {
+        if (StpUtil.isLogin()) {
+            StpUtil.logout();
+            return true;
+        }
+        return false;
     }
 
     /**

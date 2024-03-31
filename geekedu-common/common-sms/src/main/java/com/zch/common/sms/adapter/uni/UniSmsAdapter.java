@@ -5,6 +5,7 @@ import com.apistd.uni.UniResponse;
 import com.apistd.uni.sms.UniMessage;
 import com.apistd.uni.sms.UniSMS;
 import com.zch.common.sms.adapter.SmsAdapter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -16,6 +17,13 @@ import java.util.Map;
  */
 @Component
 public class UniSmsAdapter implements SmsAdapter {
+
+    @Value("${sms.signature}")
+    private String SIGNATURE;
+
+    @Value("${sms.template}")
+    private String TEMPLATE;
+
     @Override
     public void send(String code, String ttl, String phone, String signature, String template) {
         // 设置自定义参数 (变量短信)
@@ -26,8 +34,8 @@ public class UniSmsAdapter implements SmsAdapter {
         // 构建信息
         UniMessage message = UniSMS.buildMessage()
                 .setTo(phone)
-                .setSignature(signature)
-                .setTemplateId(template)
+                .setSignature(("".equals(signature) || signature == null) ? SIGNATURE : signature)
+                .setTemplateId(("".equals(template) || template == null) ? TEMPLATE : template)
                 .setTemplateData(templateData);
 
         // 发送短信
