@@ -2,11 +2,14 @@ package com.zch.trade.controller;
 
 import com.zch.api.dto.trade.coupon.CouponForm;
 import com.zch.api.vo.trade.coupon.CouponVO;
+import com.zch.api.vo.trade.coupon.UserCouponVO;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import com.zch.trade.service.ICouponService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author Poison02
@@ -41,6 +44,18 @@ public class CouponController {
     @PostMapping("/add")
     public Response<Boolean> addCoupon(@RequestBody CouponForm form) {
         return Response.judge(couponService.addCoupon(form));
+    }
+
+    //===================================
+    // 前台
+
+    /**
+     * 我的优惠券列表
+     * @return
+     */
+    @GetMapping("/member/list")
+    public Response<List<UserCouponVO>> getMemberCouponList() {
+        return Response.success(couponService.getUserCounponList());
     }
 
 }

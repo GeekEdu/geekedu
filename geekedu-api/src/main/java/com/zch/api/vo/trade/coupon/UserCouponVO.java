@@ -9,16 +9,41 @@ import java.time.LocalDateTime;
 
 /**
  * @author Poison02
- * @date 2024/3/19
+ * @date 2024/3/31
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class CouponVO extends BaseVO {
+public class UserCouponVO extends BaseVO {
 
     /**
      * 优惠券id
      */
     private Long couponId;
+
+    /**
+     * 用户id
+     */
+    private Long userId;
+
+    /**
+     * 领取时间
+     */
+    private LocalDateTime receiveTime;
+
+    /**
+     * 是否使用
+     */
+    private Boolean isUsed;
+
+    /**
+     * 是否过期
+     */
+    private Boolean isExpired;
+
+    /**
+     * 优惠券使用时间
+     */
+    private LocalDateTime usedTime;
 
     /**
      * 优惠券金额
@@ -34,11 +59,6 @@ public class CouponVO extends BaseVO {
      * 优惠券描述
      */
     private String couponDesc;
-
-    /**
-     * 优惠券数量
-     */
-    private Integer couponTotal;
 
     /**
      * 优惠券使用限制
@@ -58,6 +78,6 @@ public class CouponVO extends BaseVO {
     /**
      * 优惠券过期时间
      */
-    private LocalDateTime expireTime;
+    private LocalDateTime expiredTime;
 
 }

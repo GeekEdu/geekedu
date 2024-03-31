@@ -4,7 +4,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zch.api.dto.trade.coupon.CouponForm;
 import com.zch.api.vo.trade.coupon.CouponVO;
+import com.zch.api.vo.trade.coupon.UserCouponVO;
 import com.zch.trade.domain.po.Coupon;
+
+import java.util.List;
 
 /**
  * @author Poison02
@@ -27,5 +30,11 @@ public interface ICouponService extends IService<Coupon> {
      * @return
      */
     Boolean addCoupon(CouponForm form);
+
+    /**
+     * 我的优惠券列表
+     * @return
+     */
+    List<UserCouponVO> getUserCounponList();
 
 }
