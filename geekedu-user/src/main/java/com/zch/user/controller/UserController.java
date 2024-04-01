@@ -154,8 +154,8 @@ public class UserController {
      * @return
      */
     @GetMapping("/logout")
-    public Response logout() {
-        return Response.success();
+    public Response<Boolean> logout() {
+        return Response.success(userService.logout());
     }
 
     /**

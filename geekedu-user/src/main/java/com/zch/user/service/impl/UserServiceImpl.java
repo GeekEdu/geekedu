@@ -335,11 +335,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public void logout() {
+    public Boolean logout() {
         Long userId = UserContext.getLoginId();
         if (StpUtil.isLogin()) {
             StpUtil.logout(userId);
+            return true;
         }
+        return false;
     }
 
     /**

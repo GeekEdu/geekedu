@@ -108,7 +108,7 @@ public interface IUserService extends IService<User> {
     /**
      * 退出登录
      */
-    void logout();
+    Boolean logout();
 
     /**
      * 修改密码
