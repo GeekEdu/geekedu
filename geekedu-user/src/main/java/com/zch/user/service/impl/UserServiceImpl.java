@@ -105,6 +105,32 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
+    public WxLoginVO bindPhone(BindPhoneForm form) {
+        WxLoginVO vo = new WxLoginVO();
+        // 登录用户
+        Long userId = UserContext.getLoginId();
+        if (ObjectUtils.isNotNull(form) && StringUtils.isNotBlank(form.getPhone()) && StringUtils.isNotBlank(form.getCode())) {
+            // 从redis中拿出来，若能拿到则ok
+            String codeCache = RedisUtils.getCacheObject(SMS_CODE_KEY + userId);
+            if (StringUtils.isNotBlank(codeCache)) {
+                // 查询用户信息
+                User user = getById(userId);
+                if (Objects.equals(form.getCode(), codeCache)) {
+                    user.setPhone(form.getPhone());
+                    updateById(user);
+                    vo.setUserName(user.getUserName());
+                    vo.setPhone(form.getPhone());
+                    vo.setId(user.getId());
+                    vo.setSex((ObjectUtils.isNotNull(user.getGender()) ? (user.getGender() ? "女" : "男") : "未知"));
+                    vo.setAvatar(user.getAvatar());
+                    return vo;
+                }
+            }
+        }
+        return vo;
+    }
+
+    @Override
     public CaptchaVO getCaptcha() {
         Map<String, String> captcha = CaptchaUtils.createPicCaptcha();
         String img = captcha.get("img");
@@ -308,6 +334,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return RedisUtils.getBigMap(res.get("key").toString(),  ((int) res.get("day")) - 1);
     }
 
+    @Override
+    public void logout() {
+        Long userId = UserContext.getLoginId();
+        if (StpUtil.isLogin()) {
+            StpUtil.logout(userId);
+        }
+    }
+
     /**
      * 拼接用户签到 Key
      * @param userId
@@ -430,14 +464,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public boolean addUser(User user) {
+    public boolean addUser(RegForm form) {
         // 生成每个用户的 盐值
         String key = EncryptUtils.generateKey();
-        user.setSalt(key);
-        user.setPassword(EncryptUtils.md5Encrypt(user.getPassword(), key));
-        user.setId(IdUtils.getId());
-        userMapper.insert(user);
-        return true;
+        User user = new User();
+        // 不能重名
+        if (StringUtils.isNotBlank(form.getUserName())) {
+            User one = getOne(new LambdaQueryWrapper<User>()
+                    .eq(User::getUserName, form.getUserName()));
+            if (ObjectUtils.isNotNull(one)) {
+                user.setSalt(key);
+                user.setPassword(EncryptUtils.md5Encrypt(user.getPassword(), key));
+                user.setId(IdUtils.getId());
+                save(user);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override

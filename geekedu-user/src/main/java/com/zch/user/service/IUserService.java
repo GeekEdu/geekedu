@@ -30,6 +30,13 @@ public interface IUserService extends IService<User> {
     String getPhoneCode(String phone);
 
     /**
+     * 绑定手机号
+     * @param form
+     * @return
+     */
+    WxLoginVO bindPhone(BindPhoneForm form);
+
+    /**
      * 生成验证码
      *
      * @return
@@ -99,6 +106,11 @@ public interface IUserService extends IService<User> {
     Boolean isSign();
 
     /**
+     * 退出登录
+     */
+    void logout();
+
+    /**
      * 修改密码
      *
      * @param form
@@ -106,7 +118,12 @@ public interface IUserService extends IService<User> {
      */
     Boolean changePwd(ChangePwdForm form);
 
-    boolean addUser(User user);
+    /**
+     * 新增用户
+     * @param form
+     * @return
+     */
+    boolean addUser(RegForm form);
 
     /**
      * 获取用户所有权限

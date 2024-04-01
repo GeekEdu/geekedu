@@ -1,14 +1,8 @@
 package com.zch.user.controller;
 
-import com.zch.api.dto.user.ChangePwdForm;
-import com.zch.api.dto.user.CodeLoginForm;
-import com.zch.api.dto.user.LoginForm;
-import com.zch.api.dto.user.PwdLoginForm;
+import com.zch.api.dto.user.*;
 import com.zch.api.vo.trade.order.OrderFullVO;
-import com.zch.api.vo.user.CaptchaVO;
-import com.zch.api.vo.user.LoginVO;
-import com.zch.api.vo.user.UserSimpleVO;
-import com.zch.api.vo.user.UserVO;
+import com.zch.api.vo.user.*;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import com.zch.common.redis.annotation.RateLimiter;
@@ -33,6 +27,16 @@ public class UserController {
     @GetMapping("/sms/phone")
     public Response<String> getSmsCode(@RequestParam("phone") String phone) {
         return Response.success(userService.getPhoneCode(phone));
+    }
+
+    /**
+     * 绑定手机号
+     * @param form
+     * @return
+     */
+    @PostMapping("/phone/bind")
+    public Response<WxLoginVO> bingPhone(@RequestBody BindPhoneForm form) {
+        return Response.success(userService.bindPhone(form));
     }
 
     /**
@@ -154,6 +158,11 @@ public class UserController {
         return Response.success();
     }
 
+    /**
+     * 更改密码
+     * @param form
+     * @return
+     */
     @PostMapping("/changePwd")
     public Response editPwd(@RequestBody ChangePwdForm form) {
         return Response.success(userService.changePwd(form));
@@ -161,12 +170,12 @@ public class UserController {
 
     /**
      * 新增用户
-     * @param user
+     * @param form
      * @return
      */
     @PostMapping("/add")
-    public Response addUser(@RequestBody User user) {
-        return Response.judge(userService.addUser(user));
+    public Response addUser(@RequestBody RegForm form) {
+        return Response.judge(userService.addUser(form));
     }
 
     /**
