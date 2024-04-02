@@ -11,9 +11,9 @@ import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.course.*;
 import com.zch.api.vo.course.record.*;
 import com.zch.api.vo.label.CategorySimpleVO;
+import com.zch.api.vo.system.search.SearchFullVO;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
-import com.zch.course.domain.repository.CourseInfoEs;
 import com.zch.course.service.ICourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -402,9 +402,20 @@ public class CourseController {
         return Response.success(courseService.queryCoursePrice(id));
     }
 
+    /**
+     * 全文检索课程
+     * @param offset
+     * @param limit
+     * @param type
+     * @param keyword
+     * @return
+     */
     @GetMapping("/v2/search")
-    public Response<List<CourseInfoEs>> esSearchCourse(@RequestParam("keyword") String keyword) {
-        return Response.success(courseService.searchCourse(keyword));
+    public Response<SearchFullVO> esSearchCourse(@RequestParam("offset") Integer offset,
+                                                 @RequestParam("limit") Integer limit,
+                                                 @RequestParam("type") String type,
+                                                 @RequestParam("keyword") String keyword) {
+        return Response.success(courseService.searchCourse(offset, limit, type, keyword));
     }
 
 }

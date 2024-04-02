@@ -3,18 +3,14 @@ package com.zch.user.controller;
 import com.zch.api.dto.user.*;
 import com.zch.api.vo.trade.order.OrderFullVO;
 import com.zch.api.vo.user.*;
-import com.zch.common.meilisearch.service.IndexService;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import com.zch.common.redis.annotation.RateLimiter;
 import com.zch.common.redis.enums.LimitType;
-import com.zch.user.domain.po.User;
 import com.zch.user.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Map;
 
 /**
  * @author Poison02
@@ -26,13 +22,6 @@ import java.util.Map;
 public class UserController {
 
     private final IUserService userService;
-
-    private final IndexService indexService;
-
-    @GetMapping("/test")
-    public Map<String, Object> test() {
-        return indexService.all();
-    }
 
     @GetMapping("/sms/phone")
     public Response<String> getSmsCode(@RequestParam("phone") String phone) {

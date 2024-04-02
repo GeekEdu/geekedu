@@ -13,8 +13,8 @@ import com.zch.api.vo.ask.CommentsFullVO;
 import com.zch.api.vo.course.*;
 import com.zch.api.vo.course.record.*;
 import com.zch.api.vo.label.CategorySimpleVO;
+import com.zch.api.vo.system.search.SearchFullVO;
 import com.zch.course.domain.po.Course;
-import com.zch.course.domain.repository.CourseInfoEs;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -284,6 +284,14 @@ public interface ICourseService extends IService<Course> {
      */
     BigDecimal queryCoursePrice(Integer id);
 
-    List<CourseInfoEs> searchCourse(String keyword);
+    /**
+     * 全文检索
+     * @param offset
+     * @param limit
+     * @param type
+     * @param keyword
+     * @return
+     */
+    SearchFullVO searchCourse(Integer offset, Integer limit, String type, String keyword);
 
 }

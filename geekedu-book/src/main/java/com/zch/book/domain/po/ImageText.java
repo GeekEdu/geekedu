@@ -3,6 +3,8 @@ package com.zch.book.domain.po;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.zch.common.meilisearch.annotation.MsField;
+import com.zch.common.meilisearch.annotation.MsIndex;
 import com.zch.common.mvc.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,19 +19,23 @@ import java.time.LocalDateTime;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@MsIndex(uid = "topic", primaryKey = "id")
 public class ImageText extends BaseEntity {
 
     @TableId(value = "id", type = IdType.AUTO)
+    @MsField(openSort = true, openFilter = true, key = "id", description = "主键")
     private Integer id;
 
     /**
      * 标题
      */
+    @MsField(openSort = true, openFilter = true, key = "title", description = "标题")
     private String title;
 
     /**
      * 封面链接
      */
+    @MsField(openSort = true, openFilter = true, key = "coverLink", description = "封面链接")
     private String coverLink;
 
     /**
@@ -85,21 +91,25 @@ public class ImageText extends BaseEntity {
     /**
      * 付费原内容 也是文章内容
      */
+    @MsField(openSort = true, openFilter = true, key = "originalContent", description = "付费原内容")
     private String originalContent;
 
     /**
      * 付费渲染内容
      */
+    @MsField(openSort = true, openFilter = true, key = "renderContent", description = "付费渲染内容")
     private String renderContent;
 
     /**
      * 免费原内容
      */
+    @MsField(openSort = true, openFilter = true, key = "freeContent", description = "免费原内容")
     private String freeContent;
 
     /**
      * 免费渲染内容
      */
+    @MsField(openSort = true, openFilter = true, key = "freeRenderContent", description = "免费渲染内容")
     private String freeRenderContent;
 
     /**

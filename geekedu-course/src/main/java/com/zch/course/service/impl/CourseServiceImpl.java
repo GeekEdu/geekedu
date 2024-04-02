@@ -22,20 +22,23 @@ import com.zch.api.vo.course.*;
 import com.zch.api.vo.course.record.*;
 import com.zch.api.vo.label.CategorySimpleVO;
 import com.zch.api.vo.resources.AttachVO;
+import com.zch.api.vo.system.search.SearchFullVO;
+import com.zch.api.vo.system.search.SearchVO;
 import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.common.core.utils.BeanUtils;
 import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
+import com.zch.common.meilisearch.result.SearchResult;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
+import com.zch.course.domain.dto.CourseMSDTO;
+import com.zch.course.domain.dto.LiveCourseMSDTO;
 import com.zch.course.domain.po.Course;
 import com.zch.course.domain.po.CourseSection;
 import com.zch.course.domain.po.LearnRecord;
-import com.zch.course.domain.repository.CourseInfoEs;
 import com.zch.course.mapper.CourseMapper;
 import com.zch.course.service.*;
-import com.zch.course.utils.IDWorkerUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -71,7 +74,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     private final TradeFeignClient tradeFeignClient;
 
-    private final EsCourseInfoService esCourseInfoService;
+    private final MeiliSearchService meiliSearchService;
 
     @Override
     public CourseAndCategoryVO getCoursePage(Integer pageNum, Integer pageSize, String sort, String order, String keywords, Integer cid, Integer id) {
@@ -158,22 +161,22 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         Course course = new Course();
         BeanUtils.copyProperties(form, course);
         save(course);
-        Course one = getOne(new LambdaQueryWrapper<Course>()
-                .eq(Course::getTitle, form.getTitle())
-                .eq(Course::getCategoryId, form.getCategoryId()));
-        CourseInfoEs esInfo = new CourseInfoEs();
-        esInfo.setCourseId(one.getId());
-        esInfo.setTitle(one.getTitle());
-        esInfo.setPrice(one.getPrice());
-        esInfo.setIntro(one.getIntro());
-        esInfo.setCoverLink(course.getCoverLink());
-        esInfo.setDescription(one.getDescription());
-        esInfo.setGroundingTime(one.getGroundingTime());
-        esInfo.setCreatedTime(one.getCreatedTime());
-        esInfo.setCategoryId(one.getCategoryId());
-        esInfo.setUpdatedTime(one.getUpdatedTime());
-        esInfo.setDocId(new IDWorkerUtil(1, 1, 1).nextId());
-        esCourseInfoService.insert(esInfo);
+        //Course one = getOne(new LambdaQueryWrapper<Course>()
+        //        .eq(Course::getTitle, form.getTitle())
+        //        .eq(Course::getCategoryId, form.getCategoryId()));
+        //CourseInfoEs esInfo = new CourseInfoEs();
+        //esInfo.setCourseId(one.getId());
+        //esInfo.setTitle(one.getTitle());
+        //esInfo.setPrice(one.getPrice());
+        //esInfo.setIntro(one.getIntro());
+        //esInfo.setCoverLink(course.getCoverLink());
+        //esInfo.setDescription(one.getDescription());
+        //esInfo.setGroundingTime(one.getGroundingTime());
+        //esInfo.setCreatedTime(one.getCreatedTime());
+        //esInfo.setCategoryId(one.getCategoryId());
+        //esInfo.setUpdatedTime(one.getUpdatedTime());
+        //esInfo.setDocId(new IDWorkerUtil(1, 1, 1).nextId());
+        //esCourseInfoService.insert(esInfo);
         return true;
     }
 
@@ -693,10 +696,56 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     }
 
     @Override
-    public List<CourseInfoEs> searchCourse(String keyword) {
-        CourseInfoEs courseInfoEs = new CourseInfoEs();
-        courseInfoEs.setKeyword(keyword);
-        return esCourseInfoService.queryCourseInfoList(courseInfoEs);
+    public SearchFullVO searchCourse(Integer offset, Integer limit, String type, String keyword) {
+        // 查询录播课和直播课
+        SearchResult<CourseMSDTO> courseResult = meiliSearchService.courseSearch(offset, limit, keyword);
+        SearchResult<LiveCourseMSDTO> liveResult = meiliSearchService.liveCourseSearch(offset, limit, keyword);
+        SearchFullVO vo = new SearchFullVO();
+        List<SearchVO> vos = new ArrayList<>();
+        List<SearchVO> vos1 = new ArrayList<>();
+        List<SearchVO> vos2 = new ArrayList<>();
+        if (StringUtils.isNotBlank(type)) {
+            if (ObjectUtils.isNotNull(courseResult) && ObjectUtils.isNotNull(courseResult.getHits())
+                    && CollUtils.isNotEmpty(courseResult.getHits())) {
+                courseResult.getHits().forEach(item -> {
+                    SearchVO vo1 = new SearchVO();
+                    vo1.setId(item.getId());
+                    vo1.setResourceId(item.getId());
+                    vo1.setTitle(item.getTitle());
+                    vo1.setResourceType("vod");
+                    vo1.setDescription(item.getDescription());
+                    vos1.add(vo1);
+                });
+            }
+            if (ObjectUtils.isNotNull(liveResult) && ObjectUtils.isNotNull(liveResult.getHits())
+                    && CollUtils.isNotEmpty(liveResult.getHits())) {
+                liveResult.getHits().forEach(item -> {
+                    SearchVO vo1 = new SearchVO();
+                    vo1.setId(item.getId());
+                    vo1.setResourceId(item.getId());
+                    vo1.setTitle(item.getTitle());
+                    vo1.setResourceType("vod");
+                    vo1.setDescription(item.getIntro());
+                    vos2.add(vo1);
+                });
+            }
+            if ("all".equals(type)) {
+                vos.addAll(vos1);
+                vos.addAll(vos2);
+                vo.setData(vos);
+                vo.setTotal((long) vos.size());
+                return vo;
+            } else if ("vod".equals(type)) {
+                vo.setData(vos1);
+                vo.setTotal((long) vos1.size());
+                return vo;
+            } else if ("live".equals(type)) {
+                vo.setData(vos2);
+                vo.setTotal((long) vos2.size());
+                return vo;
+            }
+        }
+        return vo;
     }
 
 

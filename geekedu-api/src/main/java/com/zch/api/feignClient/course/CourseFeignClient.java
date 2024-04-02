@@ -5,11 +5,13 @@ import com.zch.api.vo.course.CourseSimpleVO;
 import com.zch.api.vo.course.CourseVO;
 import com.zch.api.vo.course.live.LiveCourseSimpleVO;
 import com.zch.api.vo.course.live.LiveCourseVO;
+import com.zch.api.vo.system.search.SearchFullVO;
 import com.zch.common.mvc.result.Response;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 
@@ -54,5 +56,19 @@ public interface CourseFeignClient {
      */
     @PostMapping("/api/v2/{id}/price")
     Response<BigDecimal> queryCoursePrice(@PathVariable("id") Integer id);
+
+    /**
+     * 全文检索课程
+     * @param offset
+     * @param limit
+     * @param type
+     * @param keyword
+     * @return
+     */
+    @GetMapping("/v2/search")
+    Response<SearchFullVO> esSearchCourse(@RequestParam("offset") Integer offset,
+                                                 @RequestParam("limit") Integer limit,
+                                                 @RequestParam("type") String type,
+                                                 @RequestParam("keyword") String keyword);
 
 }
