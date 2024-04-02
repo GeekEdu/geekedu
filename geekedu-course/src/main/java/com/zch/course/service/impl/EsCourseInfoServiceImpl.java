@@ -1,29 +1,14 @@
 package com.zch.course.service.impl;
 
-import com.zch.course.config.EsIndexInfo;
-import com.zch.course.config.EsRestClient;
-import com.zch.course.config.EsSearchRequest;
-import com.zch.course.config.EsSourceData;
 import com.zch.course.domain.repository.CourseInfoEs;
-import com.zch.course.domain.repository.EsCourseFields;
 import com.zch.course.service.EsCourseInfoService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.MapUtils;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.common.text.Text;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.MatchQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.SearchHits;
-import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
-import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Poison02
@@ -34,15 +19,16 @@ import java.util.*;
 public class EsCourseInfoServiceImpl implements EsCourseInfoService {
     @Override
     public boolean insert(CourseInfoEs courseInfoEs) {
-        EsSourceData esSourceData = new EsSourceData();
+        /*EsSourceData esSourceData = new EsSourceData();
         Map<String, Object> data = convert2EsSourceData(courseInfoEs);
         esSourceData.setDocId(courseInfoEs.getDocId().toString());
         esSourceData.setData(data);
-        return EsRestClient.insertDoc(getEsIndexInfo(), esSourceData);
+        return EsRestClient.insertDoc(getEsIndexInfo(), esSourceData);*/
+        return true;
     }
 
     private Map<String, Object> convert2EsSourceData(CourseInfoEs subjectInfoEs) {
-        Map<String, Object> data = new HashMap<>();
+       /* Map<String, Object> data = new HashMap<>();
         data.put(EsCourseFields.COURSE_ID, subjectInfoEs.getCourseId());
         data.put(EsCourseFields.DOC_ID, subjectInfoEs.getDocId());
         data.put(EsCourseFields.TITLE, subjectInfoEs.getTitle());
@@ -54,12 +40,13 @@ public class EsCourseInfoServiceImpl implements EsCourseInfoService {
         data.put(EsCourseFields.CATEGORY_ID, subjectInfoEs.getCategoryId());
         data.put(EsCourseFields.CREATED_TIME, subjectInfoEs.getCreatedTime());
         data.put(EsCourseFields.UPDATED_TIME, subjectInfoEs.getUpdatedTime());
-        return data;
+        return data;*/
+        return new HashMap<>();
     }
 
     @Override
     public List<CourseInfoEs> queryCourseInfoList(CourseInfoEs courseInfoEs) {
-        EsSearchRequest esSearchRequest = createSearchListQuery(courseInfoEs);
+        /*EsSearchRequest esSearchRequest = createSearchListQuery(courseInfoEs);
         SearchResponse searchResponse = EsRestClient.searchWithTermQuery(getEsIndexInfo(), esSearchRequest);
 
         List<CourseInfoEs> subjectInfoEsList = new LinkedList<>();
@@ -74,10 +61,11 @@ public class EsCourseInfoServiceImpl implements EsCourseInfoService {
                 subjectInfoEsList.add(subjectInfoEs);
             }
         }
-        return subjectInfoEsList;
+        return subjectInfoEsList;*/
+        return new ArrayList<>();
     }
 
-    private CourseInfoEs convertResult(SearchHit hit) {
+    /*private CourseInfoEs convertResult(SearchHit hit) {
         Map<String, Object> sourceAsMap = hit.getSourceAsMap();
         if (CollectionUtils.isEmpty(sourceAsMap)) {
             return null;
@@ -153,5 +141,5 @@ public class EsCourseInfoServiceImpl implements EsCourseInfoService {
         esIndexInfo.setClusterName("21389dddfe0e");
         esIndexInfo.setIndexName("course_index");
         return esIndexInfo;
-    }
+    }*/
 }

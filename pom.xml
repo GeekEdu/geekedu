@@ -75,6 +75,7 @@
 
 		<!--搜索-->
 		<elasticsearch.version>7.12.1</elasticsearch.version>
+		<meilisearch.version>0.11.8</meilisearch.version>
 
 		<!--定时任务-->
 		<xxl-job.version>2.3.1</xxl-job.version>
@@ -235,6 +236,12 @@
 				<groupId>org.elasticsearch.client</groupId>
 				<artifactId>elasticsearch-rest-high-level-client</artifactId>
 				<version>${elasticsearch.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.meilisearch.sdk</groupId>
+				<artifactId>meilisearch-java</artifactId>
+				<version>${meilisearch.version}</version>
 			</dependency>
 
 			<!--定时任务-->

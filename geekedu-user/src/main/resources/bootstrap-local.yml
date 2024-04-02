@@ -9,5 +9,4 @@ spring:
 logging:
   level:
     com.zch: debug
-  config: classpath:logback-spring.xml
 

@@ -1,3 +1,4 @@
+/*
 package com.zch.course.config;
 
 import com.alibaba.fastjson.JSON;
@@ -40,10 +41,12 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.*;
 
+*/
 /**
  * @author Poison02
  * @date 2024/3/21
- */
+ *//*
+
 @Component
 @Slf4j
 public class EsRestClient {
@@ -320,9 +323,11 @@ public class EsRestClient {
         return true;
     }
 
-    /**
+    */
+/**
      * 分词方法
-     */
+     *//*
+
     public static List<String> getAnalyze(EsIndexInfo esIndexInfo, String text) throws Exception {
         List<String> list = new ArrayList<String>();
         Request request = new Request("GET", "_analyze");
@@ -342,3 +347,4 @@ public class EsRestClient {
 
 
 }
+*/

@@ -16,6 +16,7 @@
         <module>common-elasticsearch</module>
         <module>common-job</module>
         <module>common-logstash</module>
+        <module>common-meilisearch</module>
     </modules>
 	<parent>
 		<groupId>com.zch</groupId>

@@ -13,8 +13,6 @@ spring:
 
   application:
     name: course-service
-  elasticsearch:
-    uris: http://8.137.103.164:9200
   cloud:
     nacos:
       config:
@@ -43,11 +41,11 @@ geekedu:
 #    host: 192.168.150.101
 
 # ES 配置
-es:
-  cluster:
-    esConfigs[0]:
-      name: 21389dddfe0e
-      nodes: 8.137.103.164:9200
+#es:
+#  cluster:
+#    esConfigs[0]:
+#      name: 21389dddfe0e
+#      nodes: 8.137.103.164:9200
 
 # XXL 配置
 xxl:
