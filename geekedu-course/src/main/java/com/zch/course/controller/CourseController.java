@@ -411,7 +411,7 @@ public class CourseController {
      * @return
      */
     @GetMapping("/v2/search")
-    public Response<SearchFullVO> esSearchCourse(@RequestParam("offset") Integer offset,
+    public Response<SearchFullVO> searchCourse(@RequestParam("offset") Integer offset,
                                                  @RequestParam("limit") Integer limit,
                                                  @RequestParam("type") String type,
                                                  @RequestParam("keyword") String keyword) {

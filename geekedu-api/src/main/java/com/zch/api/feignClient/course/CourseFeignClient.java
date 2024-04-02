@@ -65,8 +65,8 @@ public interface CourseFeignClient {
      * @param keyword
      * @return
      */
-    @GetMapping("/v2/search")
-    Response<SearchFullVO> esSearchCourse(@RequestParam("offset") Integer offset,
+    @GetMapping("/api/v2/search")
+    Response<SearchFullVO> searchCourse(@RequestParam("offset") Integer offset,
                                                  @RequestParam("limit") Integer limit,
                                                  @RequestParam("type") String type,
                                                  @RequestParam("keyword") String keyword);

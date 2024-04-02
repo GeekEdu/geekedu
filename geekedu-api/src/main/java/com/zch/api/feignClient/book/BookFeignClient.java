@@ -69,7 +69,7 @@ public interface BookFeignClient {
      * @return
      */
     @GetMapping("/api/search/v2/search")
-    Response<SearchFullVO> esSearchBookOrTopic(@RequestParam("offset") Integer offset,
+    Response<SearchFullVO> searchBookOrTopic(@RequestParam("offset") Integer offset,
                                                       @RequestParam("limit") Integer limit,
                                                       @RequestParam("type") String type,
                                                       @RequestParam("keyword") String keyword);

@@ -29,7 +29,7 @@ public class SearchController {
      * @return
      */
     @GetMapping("/v2/search")
-    public Response<SearchFullVO> esSearchBookOrTopic(@RequestParam("offset") Integer offset,
+    public Response<SearchFullVO> searchBookOrTopic(@RequestParam("offset") Integer offset,
                                                  @RequestParam("limit") Integer limit,
                                                  @RequestParam("type") String type,
                                                  @RequestParam("keyword") String keyword) {
