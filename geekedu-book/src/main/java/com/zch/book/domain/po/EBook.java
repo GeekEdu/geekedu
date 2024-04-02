@@ -4,8 +4,6 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.zch.common.meilisearch.annotation.MsField;
-import com.zch.common.meilisearch.annotation.MsIndex;
 import com.zch.common.mvc.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,35 +18,29 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("e_book")
-@MsIndex(uid = "book", primaryKey = "id")
 public class EBook extends BaseEntity {
 
     @TableId(value = "id", type = IdType.AUTO)
-    @MsField(openSort = true, openFilter = true, key = "id", description = "主键")
     private Integer id;
 
     /**
      * 电子书名字
      */
-    @MsField(openSort = true, openFilter = true, key = "name", description = "电子书名字")
     private String name;
 
     /**
      * 简短介绍
      */
-    @MsField(openSort = true, openFilter = true, key = "shortDesc", description = "简短介绍")
     private String shortDesc;
 
     /**
      * 详细介绍
      */
-    @MsField(openSort = true, openFilter = true, key = "fullDesc", description = "详细介绍")
     private String fullDesc;
 
     /**
      * 封面链接
      */
-    @MsField(openSort = true, openFilter = true, key = "coverLink", description = "封面链接")
     private String coverLink;
 
     /**

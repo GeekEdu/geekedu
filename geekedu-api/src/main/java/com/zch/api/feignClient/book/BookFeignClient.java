@@ -6,10 +6,12 @@ import com.zch.api.vo.book.EBookVO;
 import com.zch.api.vo.book.ImageTextSimpleVO;
 import com.zch.api.vo.book.ImageTextVO;
 import com.zch.api.vo.path.LearnPathVO;
+import com.zch.api.vo.system.search.SearchFullVO;
 import com.zch.common.mvc.result.Response;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @author Poison02
@@ -57,5 +59,19 @@ public interface BookFeignClient {
      */
     @GetMapping("/api/path/{id}/detail")
     Response<LearnPathVO> getPathDetail(@PathVariable("id") Integer id);
+
+    /**
+     * 全文检索 电子书或图文
+     * @param offset
+     * @param limit
+     * @param type
+     * @param keyword
+     * @return
+     */
+    @GetMapping("/api/search/v2/search")
+    Response<SearchFullVO> esSearchBookOrTopic(@RequestParam("offset") Integer offset,
+                                                      @RequestParam("limit") Integer limit,
+                                                      @RequestParam("type") String type,
+                                                      @RequestParam("keyword") String keyword);
 
 }

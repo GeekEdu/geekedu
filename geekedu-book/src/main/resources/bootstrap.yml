@@ -33,5 +33,23 @@ geekedu:
     host: 127.0.0.1
     port: 3306
     database: geekedu-book
+    user: root
+    password: root
   redis:
     host: 127.0.0.1
+
+# XXL 配置
+xxl:
+  job:
+    admin:
+      addresses: http://127.0.0.1:9088/xxl-job-admin
+    accessToken: default_token
+    executor:
+      appname: ${spring.application.name}
+      address: http://127.0.0.1:9089
+      # 主机地址
+      ip: 127.0.0.1
+      # 随机端口
+      port: 9091
+      logpath: /Users/poison02/logs/xxl-job
+      logretentiondays: 30
