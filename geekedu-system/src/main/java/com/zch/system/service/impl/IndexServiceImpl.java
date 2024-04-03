@@ -1,6 +1,9 @@
 package com.zch.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.zch.api.feignClient.book.BookFeignClient;
 import com.zch.api.feignClient.course.CourseFeignClient;
 import com.zch.api.vo.book.EBookVO;
@@ -12,6 +15,8 @@ import com.zch.api.vo.system.index.BlockItemVO;
 import com.zch.api.vo.system.index.BlockVO;
 import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
+import com.zch.common.core.utils.StringUtils;
+import com.zch.common.redis.utils.RedisUtils;
 import com.zch.system.domain.po.Block;
 import com.zch.system.mapper.BlockMapper;
 import com.zch.system.service.IIndexService;
@@ -22,8 +27,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.zch.common.redis.constants.RedisConstants.FRONTED_INDEX_DATA_KEY;
 import static com.zch.system.constants.BlockConstants.*;
-import static com.zch.system.constants.BlockConstants.PC_BOOK_V1;
 
 /**
  * @author Poison02
@@ -42,11 +47,23 @@ public class IndexServiceImpl implements IIndexService {
 
     @Override
     public List<BlockVO> getBlockList() {
+        List<BlockVO> vo = new ArrayList<>();
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        // 先查缓存，再查数据库
+        String object = RedisUtils.getCacheObject(FRONTED_INDEX_DATA_KEY);
+        if (StringUtils.isNotBlank(object)) {
+            try {
+                vo = objectMapper.readValue(object, new TypeReference<List<BlockVO>>() {});
+                return vo;
+            } catch (Exception e) {
+                log.error("首页数据反序列化失败！" + e);
+            }
+        }
         List<Block> blocks = blockMapper.selectList(new LambdaQueryWrapper<Block>());
         if (ObjectUtils.isNull(blocks) || CollUtils.isEmpty(blocks)) {
-            return new ArrayList<>(0);
+            return vo;
         }
-        List<BlockVO> vo = new ArrayList<>();
         for (Block item : blocks) {
             BlockVO vo1 = new BlockVO<>();
             vo1.setId(item.getId());
@@ -107,6 +124,13 @@ public class IndexServiceImpl implements IIndexService {
                 vo1.setItems(path);
             }
             vo.add(vo1);
+        }
+        // 将vo序列化存入redis中
+        try {
+            String json = objectMapper.writeValueAsString(vo);
+            RedisUtils.setCacheObject(FRONTED_INDEX_DATA_KEY, json);
+        } catch (Exception e) {
+            log.error("首页数据json序列化失败！" + e);
         }
         return vo;
     }

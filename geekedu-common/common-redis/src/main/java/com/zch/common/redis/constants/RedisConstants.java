@@ -64,4 +64,6 @@ public interface RedisConstants {
      */
     String RATE_LIMIT_KEY = "global:rate_limit:";
 
+    String FRONTED_INDEX_DATA_KEY = "fronted:index:data";
+
 }
