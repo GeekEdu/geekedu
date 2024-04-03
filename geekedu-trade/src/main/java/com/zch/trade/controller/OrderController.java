@@ -81,6 +81,16 @@ public class OrderController {
         return Response.success(orderService.queryOrderByGoods(goodsId, goodsType, userId, isSeckill, startAt, endAt));
     }
 
+    /**
+     * 查询用户已支付订单信息
+     * @param userId
+     * @return
+     */
+    @GetMapping("/pay/list")
+    public Response<List<OrderVO>> queryPayOrderList(@RequestParam("userId") Long userId) {
+        return Response.success(orderService.queryPayOrderList(userId));
+    }
+
     // ================================================================================
     // 后台
 

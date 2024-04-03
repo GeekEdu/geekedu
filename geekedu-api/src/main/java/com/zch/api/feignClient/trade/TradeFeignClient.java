@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -77,6 +78,14 @@ public interface TradeFeignClient {
                                                    @RequestParam("isSeckill") Boolean isSeckill,
                                             @RequestParam(value = "startAt", required = false) LocalDateTime startAt,
                                             @RequestParam(value = "endAt", required = false) LocalDateTime endAt);
+
+    /**
+     * 查询用户已支付订单信息
+     * @param userId
+     * @return
+     */
+    @GetMapping("/api/order/pay/list")
+    Response<List<OrderVO>> queryPayOrderList(@RequestParam("userId") Long userId);
 
     /**
      * 用于统计订单金额相关数据

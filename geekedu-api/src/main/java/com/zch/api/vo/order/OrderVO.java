@@ -32,6 +32,13 @@ public class OrderVO extends BaseVO {
     private String orderNotes;
 
     /**
+     * 商品id
+     */
+    private Integer goodsId;
+
+    private Integer goodsCount = 0;
+
+    /**
      * 商品类型
      */
     private String goodsType;

@@ -293,6 +293,22 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
     @Override
+    public List<OrderVO> queryPayOrderList(Long userId) {
+        List<Order> list = list(new LambdaQueryWrapper<Order>()
+                .eq(Order::getOrderStatus, OrderStatusEnum.ORDERED_AND_PAID)
+                .eq(Order::getPayStatus, PayStatusEnum.HAVE_PAID)
+                .eq(Order::getUserId, userId));
+        if (ObjectUtils.isNotNull(list) && CollUtils.isNotEmpty(list)) {
+            return list.stream().map(item -> {
+                OrderVO vo = new OrderVO();
+                BeanUtils.copyProperties(item, vo);
+                return vo;
+            }).collect(Collectors.toList());
+        }
+        return new ArrayList<>(0);
+    }
+
+    @Override
     public OrderEndFullVO getEndOrderList(Integer pageNum, Integer pageSize, String sort, String order,
                                           String orderId, String goodsName, Integer isRefund, Integer status,
                                           List<String> createdTime, String payment) {

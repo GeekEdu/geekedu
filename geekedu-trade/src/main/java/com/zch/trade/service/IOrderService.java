@@ -60,6 +60,13 @@ public interface IOrderService extends IService<Order> {
      */
     OrderVO queryOrderByGoods(Integer goodsId, String goodsType, Long userId, Boolean isSeckill, LocalDateTime startAt, LocalDateTime endAt);
 
+    /**
+     * 查询用户已支付的订单信息
+     * @param userId
+     * @return
+     */
+    List<OrderVO> queryPayOrderList(Long userId);
+
     //===================================================
 
     /**
