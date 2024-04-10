@@ -79,4 +79,4 @@ start cmd /k "cd /d D:\dev\environment\xxl-job-2.4.0 && java -jar xxl-job-admin-
 # MacOS下部分环境配置
 待更新...
 # Linux下部分环境配置
-目前准备将Windows下的配置迁移到Linux下，正在学习安装和使用Manjaro，一个基于ArchLinux的Linux发行版本，因此Linux下的所有配置待更新
+未配置Linux，如果要部署，那么就会放在Linux上。
