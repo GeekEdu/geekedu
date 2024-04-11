@@ -77,6 +77,29 @@ start cmd /k "cd /d D:\dev\environment\nacos-server-2.1.2\bin && startup.cmd"
 start cmd /k "cd /d D:\dev\environment\xxl-job-2.4.0 && java -jar xxl-job-admin-2.4.0.jar"
 ```
 # MacOS下部分环境配置
-待更新...
+## MeiliSearch配置
+这是一个值得注重的地方，不太清楚为啥每次开机重启Docker之后，MeiliSearch就会出现报错，使用相同的秘钥进行连接就不行，以及上一次的数据不行，因此，每次开机都需要重置一下Docker环境。。。
+1.删除相应缓存
+```shell
+cd /Users/poison02/software/docker/meilisearch
+rm -rf *
+```
+2.删除Docker容器
+3.重新启动容器
+```shell
+docker run -d -it -p 7700:7700 \
+-e MEILI_ENV='development' \
+-e MEILI_MASTER_KEY='vGYHVruzupdS6SBD_Nrv3F8hnp4JETgp824odEZc5vA' \
+-v /Users/poison02/software/docker/meilisearch/data:/meili_data getmeili/meilisearch:v1.7
+```
+4.使用 `ApiFox` 新建索引
+请求 `http://127.0.0.1:7700/indexes` ，传入的`body`参数如下：(需要注意的是uid有：`course`、`liveCourse`、`book`、`topic`)
+```json
+{
+    "uid": "course",
+    "primaryKey": "id"
+}
+```
+5.使用`xxl-job`向`MeiliSearch`写入数据，只需要执行一次写入操作即可。
 # Linux下部分环境配置
 未配置Linux，如果要部署，那么就会放在Linux上。
