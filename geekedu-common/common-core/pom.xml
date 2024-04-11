@@ -69,11 +69,11 @@
 			<artifactId>common-job</artifactId>
 			<version>1.0</version>
 		</dependency>
-		<dependency>
-			<groupId>com.zch</groupId>
-			<artifactId>common-logstash</artifactId>
-			<version>1.0</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>com.zch</groupId>-->
+<!--			<artifactId>common-logstash</artifactId>-->
+<!--			<version>1.0</version>-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>org.lionsoul</groupId>
 			<artifactId>ip2region</artifactId>

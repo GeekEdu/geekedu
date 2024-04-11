@@ -36,8 +36,6 @@ geekedu:
 #    host: 192.168.150.101
     port: 3306
     database: geekedu-course
-    user: root
-    password: root
   redis:
     host: 127.0.0.1
 #    host: 192.168.150.101
