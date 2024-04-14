@@ -3,6 +3,7 @@ package com.zch.ask.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.houbb.sensitive.word.core.SensitiveWordHelper;
 import com.zch.api.dto.ask.CommentAnswerForm;
 import com.zch.api.dto.ask.ReplyQuestionForm;
 import com.zch.api.dto.user.ThumbForm;
@@ -103,6 +104,8 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
         for (Answer answer : answers) {
             AnswerAndCommentsVO vo = new AnswerAndCommentsVO();
             BeanUtils.copyProperties(answer, vo);
+            // 对回答做脱敏
+            vo.setContent(SensitiveWordHelper.replace(vo.getContent()));
             // 查询用户信息
             Response<UserSimpleVO> user = userFeignClient.getUserById(answer.getUserId() + "");
             if (ObjectUtils.isNull(user.getData())) {
