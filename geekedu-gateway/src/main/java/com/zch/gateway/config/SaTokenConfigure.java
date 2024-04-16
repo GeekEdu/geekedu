@@ -8,6 +8,7 @@ import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
 import com.zch.gateway.result.SaResult;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.server.ServerWebExchange;
 
@@ -17,7 +18,7 @@ import org.springframework.web.server.ServerWebExchange;
  * @author Poison02
  * @date 2024/1/16
  */
-// @Configuration
+@Configuration
 public class SaTokenConfigure {
 
     @Bean
@@ -33,6 +34,10 @@ public class SaTokenConfigure {
                             .notMatch("/user/api/v2/login/password")
                             .notMatch("/user/api/v2/login/code")
                             .notMatch("/system/api/v2/**")
+                            .notMatch("/system/api/index/v2/block")
+                            .notMatch("/user/api/member/vip/list")
+                            .notMatch("/course/api/v2/**")
+                            .notMatch("/course/api/live/**")
                             .check(r -> {
                                 ServerHttpRequest request = SaReactorSyncHolder.getContext().getRequest();
                                 String token = request.getHeaders().getFirst("Authorization");

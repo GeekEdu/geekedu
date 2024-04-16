@@ -8,6 +8,7 @@ import cn.dev33.satoken.util.SaResult;
 import com.zch.common.mvc.interceptor.LoginInterceptor;
 import com.zch.common.mvc.interceptor.RefreshTokenInterceptor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -15,7 +16,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author Poison02
  * @date 2024/1/21
  */
-// @Configuration
+@Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
@@ -24,7 +25,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(new SaInterceptor()).addPathPatterns("/**");
         // 自定义拦截器
         registry.addInterceptor(new LoginInterceptor())
-                .excludePathPatterns("/api/captcha/image", "/api/login", "/api/v2/**")
+                .excludePathPatterns("/api/captcha/image", "/api/login", "/api/v2/**", "/api/index/**", "/api/member/vip/list")
                 .order(1);
         // 刷新token拦截器
         registry.addInterceptor(new RefreshTokenInterceptor())
@@ -43,8 +44,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                     String token = SaHolder.getRequest().getHeader(SaSameUtil.SAME_TOKEN);
                     SaSameUtil.checkToken(token);
                 })
-                .setError(e -> SaResult.error(e.getMessage()))
-                ;
+                .setError(e -> SaResult.error(e.getMessage()));
     }
 
 }
