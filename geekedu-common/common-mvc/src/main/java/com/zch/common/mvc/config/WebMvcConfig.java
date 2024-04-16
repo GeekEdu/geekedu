@@ -25,10 +25,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(new SaInterceptor()).addPathPatterns("/**");
         // 自定义拦截器
         registry.addInterceptor(new LoginInterceptor())
-                .excludePathPatterns("/api/captcha/image", "/api/login", "/api/v2/**", "/api/index/**", "/api/member/vip/list")
+                .excludePathPatterns("/api/captcha/image", "/api/login", "/api/v2/**", "/api/index/**", "/api/member/vip/list",
+                        "/system/api/index/mobile", "/system/api/index/mobile/coupon")
                 .order(1);
         // 刷新token拦截器
         registry.addInterceptor(new RefreshTokenInterceptor())
+                .excludePathPatterns("/api/captcha/image", "/api/login", "/api/v2/**", "/api/index/**", "/api/member/vip/list",
+                        "/system/api/index/mobile", "/system/api/index/mobile/coupon")
                 .order(0);
     }
 

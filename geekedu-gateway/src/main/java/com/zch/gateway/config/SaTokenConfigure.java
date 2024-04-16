@@ -34,6 +34,8 @@ public class SaTokenConfigure {
                             .notMatch("/user/api/v2/login/password")
                             .notMatch("/user/api/v2/login/code")
                             .notMatch("/system/api/v2/**")
+                            .notMatch("/system/api/index/mobile")
+                            .notMatch("/system/api/index/mobile/coupon")
                             .notMatch("/system/api/index/v2/block")
                             .notMatch("/user/api/member/vip/list")
                             .notMatch("/course/api/v2/**")
