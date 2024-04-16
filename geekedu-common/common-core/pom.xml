@@ -82,6 +82,11 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.github.houbb</groupId>
+			<artifactId>sensitive-word</artifactId>
+			<version>0.14.0</version>
+		</dependency>
 	</dependencies>
 
 </project>
