@@ -10,19 +10,27 @@ import com.zch.common.core.utils.BeanUtils;
 import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
+import com.zch.common.redis.utils.RedisUtils;
 import com.zch.trade.domain.po.Coupon;
+import com.zch.trade.domain.po.CouponCode;
 import com.zch.trade.domain.po.UserCoupon;
 import com.zch.trade.mapper.CouponMapper;
+import com.zch.trade.service.ICouponCodeService;
 import com.zch.trade.service.ICouponService;
 import com.zch.trade.service.IUserCouponService;
+import com.zch.trade.utils.CodeUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.zch.common.redis.constants.RedisConstants.COUPON_CODE_SERIAL;
+import static com.zch.common.redis.constants.RedisConstants.COUPON_RANGE_KEY;
 
 /**
  * @author Poison02
@@ -34,6 +42,8 @@ import java.util.stream.Collectors;
 public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> implements ICouponService {
 
     private final IUserCouponService userCouponService;
+
+    private final ICouponCodeService couponCodeService;
 
     @Override
     public Page<CouponVO> getCouponList(Integer pageNum, Integer pageSize, String keywords) {
@@ -105,5 +115,31 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> impleme
             return vo1;
         }).collect(Collectors.toList());
         return vo;
+    }
+
+    @Async("generateCouponCodeExecutor")
+    @Override
+    public void asyncGenerateCode(Coupon coupon) {
+        // 发放数量
+        Integer totalNum = coupon.getCouponTotal();
+        // 获取Redis自增序列号
+        Long result = RedisUtils.getAtomIncrValue(COUPON_CODE_SERIAL, totalNum);
+        int maxSerialNum = result.intValue();
+        List<CouponCode> list = new ArrayList<>(totalNum);
+        for (int serialNum = maxSerialNum - totalNum + 1; serialNum <= maxSerialNum; serialNum++) {
+            // 生成兑换码
+            String code = CodeUtils.generateCode(serialNum, coupon.getCouponId());
+            CouponCode c = new CouponCode();
+            c.setCode(code);
+            c.setId(serialNum);
+            c.setCouponId(coupon.getCouponId());
+            c.setCreatedTime(coupon.getCreatedTime());
+            c.setExpiredTime(coupon.getExpiredTime());
+            list.add(c);
+        }
+        // 保存数据库
+        couponCodeService.saveBatch(list);
+        // 写入Redis缓存
+        RedisUtils.addRSetSingle(COUPON_RANGE_KEY, maxSerialNum, coupon.getCouponId());
     }
 }

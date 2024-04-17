@@ -617,4 +617,15 @@ public class RedisUtils {
         RScoredSortedSet<Object> set = CLIENT.getScoredSortedSet(key);
         return set.valueRange(0, -1);
     }
+
+    /**
+     * 获取自增序列值
+     * @param key
+     * @param total
+     * @return
+     */
+    public static Long getAtomIncrValue(String key, Integer total) {
+        RAtomicLong atomicLong = CLIENT.getAtomicLong(key);
+        return atomicLong.getAndAdd(total);
+    }
 }
