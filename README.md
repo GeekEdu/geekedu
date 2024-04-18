@@ -63,9 +63,10 @@ spring.datasource.password=root
 ## 运行
 为了不一个一个启动，我们写一个bat脚本，统一运行，脚本如下：
 ```bat
-start cmd /k "cd /d D:\dev\environment\redis && redis-server.exe redis.windows.conf"
-start cmd /k "cd /d D:\dev\environment\nacos-server-2.1.2\bin && startup.cmd"
-start cmd /k "cd /d D:\dev\environment\xxl-job-2.4.0 && java -jar xxl-job-admin-2.4.0.jar"
+start cmd /k "cd /d C:\env\redis && redis-server.exe redis.windows.conf"
+start cmd /k "cd /d C:\env\nacos\bin && startup.cmd"
+start cmd /k "cd /d C:\env\xxl-job && java -jar xxl-job-admin-2.4.0.jar"
+start cmd /k "cd /d C:\env\meilisearch && meilisearch-windows-amd64.exe --master-key vGYHVruzupdS6SBD_Nrv3F8hnp4JETgp824odEZc5vA"
 ```
 # MacOS下部分环境配置
 ## MeiliSearch配置
