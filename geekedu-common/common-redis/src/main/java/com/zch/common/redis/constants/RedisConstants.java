@@ -66,4 +66,11 @@ public interface RedisConstants {
 
     String FRONTED_INDEX_DATA_KEY = "fronted:index:data";
 
+    /**
+     * 优惠券相关
+     */
+    String COUPON_CODE_SERIAL = "coupon:code:serial";
+
+    String COUPON_RANGE_KEY = "coupon:code:range";
+
 }

@@ -35,6 +35,11 @@ public class Coupon {
     private String couponCode;
 
     /**
+     * 序列号
+     */
+    private Integer serialNum;
+
+    /**
      * 数量
      */
     private Integer couponTotal;
