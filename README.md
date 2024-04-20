@@ -95,5 +95,3 @@ docker run -d -it -p 7700:7700 \
 5.使用`xxl-job`向`MeiliSearch`写入数据，只需要执行一次写入操作即可。
 # Linux下部分环境配置
 未配置Linux，如果要部署，那么就会放在Linux上。
-
-111
