@@ -77,6 +77,8 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> impleme
     @Override
     public Boolean addCoupon(CouponForm form) {
         Coupon coupon = new Coupon();
+        // 生成优惠券时 会生成优惠码
+        // TODO
         BeanUtils.copyProperties(form, coupon);
         coupon.setCreatedTime(LocalDateTime.now());
         return save(coupon);
@@ -117,8 +119,11 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> impleme
         return vo;
     }
 
+    /**
+     * 异步生成优惠码
+     * @param coupon
+     */
     @Async("generateCouponCodeExecutor")
-    @Override
     public void asyncGenerateCode(Coupon coupon) {
         // 发放数量
         Integer totalNum = coupon.getCouponTotal();

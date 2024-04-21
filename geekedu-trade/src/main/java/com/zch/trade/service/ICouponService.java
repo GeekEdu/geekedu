@@ -37,10 +37,4 @@ public interface ICouponService extends IService<Coupon> {
      */
     List<UserCouponVO> getUserCounponList();
 
-    /**
-     * 异步生成优惠码
-     * @param coupon
-     */
-    void asyncGenerateCode(Coupon coupon);
-
 }
