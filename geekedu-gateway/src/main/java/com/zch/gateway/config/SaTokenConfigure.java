@@ -8,7 +8,6 @@ import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
 import com.zch.gateway.result.SaResult;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.server.ServerWebExchange;
 
@@ -18,7 +17,7 @@ import org.springframework.web.server.ServerWebExchange;
  * @author Poison02
  * @date 2024/1/16
  */
-@Configuration
+// @Configuration
 public class SaTokenConfigure {
 
     @Bean
