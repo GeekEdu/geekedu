@@ -16,9 +16,10 @@ GeekEdu
 
 # Windows下部分环境配置
 ## 下载
-1. xxl-job下载地址：https://github.com/xuxueli/xxl-job
-2. nacos下载地址：https://github.com/alibaba/nacos/releases?page=2
-3. redis下载地址：https://github.com/MicrosoftArchive/redis/releases
+1. xxl-job下载地址：[xxl-job](https://github.com/xuxueli/xxl-job)
+2. nacos下载地址：[nacos](https://github.com/alibaba/nacos/releases?page=2)
+3. redis下载地址：[redis](https://github.com/MicrosoftArchive/redis/releases)
+4. MeiliSearch下载地址：[meilisearch](https://github.com/meilisearch/meilisearch-java/releases/tag/v0.11.8)
 ---
 其中，xxl-job为2.4.0，nacos为2.1.2，redis直接用最新版即可。
 ## 环境安装

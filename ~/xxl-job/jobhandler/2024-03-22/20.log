@@ -1,0 +1,4 @@
+2024-03-22 17:27:56 [com.xxl.job.core.thread.JobThread#run]-[133]-[xxl-job, JobThread-2-1711099676753] <br>----------- xxl-job job execute start -----------<br>----------- Param:
+2024-03-22 17:27:56 [com.zch.course.job.TestJobHandler#testJobHandler]-[18]-[xxl-job, JobThread-2-1711099676753] testJobHandler.start
+2024-03-22 17:27:56 [com.xxl.job.core.thread.JobThread#run]-[179]-[xxl-job, JobThread-2-1711099676753] <br>----------- xxl-job job execute end(finish) -----------<br>----------- Result: handleCode=200, handleMsg = null
+2024-03-22 17:27:56 [com.xxl.job.core.thread.TriggerCallbackThread#callbackLog]-[197]-[xxl-job, executor TriggerCallbackThread] <br>----------- xxl-job job callback finish.

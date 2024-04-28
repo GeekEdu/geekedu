@@ -1,0 +1,269 @@
+12:53:34.399-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] com.zch.LabelApplication                 : The following 1 profile is active: "local"
+12:53:34.824-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+12:53:34.825-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+12:53:34.840-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 10 ms. Found 0 Redis repository interfaces.
+12:53:34.961-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=f3649c31-8715-3a7f-8623-bfb802767dcc
+12:53:35.321-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8082 (http)
+12:53:35.326-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+12:53:35.326-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.65]
+12:53:35.392-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+12:53:35.393-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 986 ms
+12:53:35.915-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] com.alibaba.nacos.client.naming          : initializer namespace from System Property :null
+12:53:35.915-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] com.alibaba.nacos.client.naming          : initializer namespace from System Environment :null
+12:53:35.915-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] com.alibaba.nacos.client.naming          : initializer namespace from System Property :null
+12:53:35.940-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [           main] c.z.common.redis.config.RedissonConfig   : 尝试初始化RedissonClient
+12:53:36.033-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] org.redisson.Version                     : Redisson 3.24.3
+12:53:36.105-[CaiHua-Mac.local][sys]-- INFO 85474 --- [isson-netty-2-5] o.r.c.pool.MasterPubSubConnectionPool    : 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+12:53:36.170-[CaiHua-Mac.local][sys]-- INFO 85474 --- [sson-netty-2-19] o.r.c.pool.MasterConnectionPool          : 24 connections initialized for 127.0.0.1/127.0.0.1:6379
+12:53:36.231-[CaiHua-Mac.local][sys]-- WARN 85474 --- [           main] o.a.r.s.a.RocketMQAutoConfiguration      : The necessary spring property 'rocketmq.name-server' is not defined, all rockertmq beans creation are skipped!
+12:53:36.475-[CaiHua-Mac.local][sys]-- WARN 85474 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+12:53:36.519-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint(s) beneath base path '/actuator'
+12:53:36.595-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8082 (http) with context path ''
+12:53:36.597-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] com.alibaba.nacos.client.naming          : [BEAT] adding beat: BeatInfo{port=8082, ip='127.0.0.1', weight=1.0, serviceName='DEFAULT_GROUP@@label-service', cluster='DEFAULT', metadata={preserved.register.source=SPRING_CLOUD}, scheduled=false, period=5000, stopped=false} to beat map.
+12:53:36.598-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] com.alibaba.nacos.client.naming          : [REGISTER-SERVICE] 0b9a59a8-3e92-4637-81ec-4f43304c767b registering service DEFAULT_GROUP@@label-service with instance: Instance{instanceId='null', ip='127.0.0.1', port=8082, weight=1.0, healthy=true, enabled=true, ephemeral=true, clusterName='DEFAULT', serviceName='null', metadata={preserved.register.source=SPRING_CLOUD}}
+12:53:36.609-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] c.a.c.n.registry.NacosServiceRegistry    : nacos registry, DEFAULT_GROUP label-service 127.0.0.1:8082 register finished
+12:53:36.621-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] com.zch.LabelApplication                 : Started LabelApplication in 2.876 seconds (JVM running for 3.284)
+12:53:36.628-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [           main] c.z.c.core.listener.AppStartupListener   : 
+==============================================================
+	App:	label-service
+	State:	app is running
+	PID:	85474
+	Date:	started at 2024-04-28 12:53:34.407
+	Auth:	GeekEdu
+	Email:	2069820192@qq.com
+	GitHub:	https://github.com/Poison02
+	AppInfo: https://127.0.0.1:8082/
+==============================================================
+12:53:36.629-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] c.a.n.client.config.impl.ClientWorker    : [fixed-127.0.0.1_8848] [subscribe] label-service-local.yaml+DEFAULT_GROUP
+12:53:36.630-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] c.a.nacos.client.config.impl.CacheData   : [fixed-127.0.0.1_8848] [add-listener] ok, tenant=, dataId=label-service-local.yaml, group=DEFAULT_GROUP, cnt=1
+12:53:36.630-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] c.a.c.n.refresh.NacosContextRefresher    : listening config: dataId=label-service-local.yaml, group=DEFAULT_GROUP
+12:53:36.630-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] c.a.n.client.config.impl.ClientWorker    : [fixed-127.0.0.1_8848] [subscribe] label-service.yaml+DEFAULT_GROUP
+12:53:36.630-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] c.a.nacos.client.config.impl.CacheData   : [fixed-127.0.0.1_8848] [add-listener] ok, tenant=, dataId=label-service.yaml, group=DEFAULT_GROUP, cnt=1
+12:53:36.630-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] c.a.c.n.refresh.NacosContextRefresher    : listening config: dataId=label-service.yaml, group=DEFAULT_GROUP
+12:53:36.630-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] c.a.n.client.config.impl.ClientWorker    : [fixed-127.0.0.1_8848] [subscribe] label-service+DEFAULT_GROUP
+12:53:36.630-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] c.a.nacos.client.config.impl.CacheData   : [fixed-127.0.0.1_8848] [add-listener] ok, tenant=, dataId=label-service, group=DEFAULT_GROUP, cnt=1
+12:53:36.630-[CaiHua-Mac.local][sys]-- INFO 85474 --- [           main] c.a.c.n.refresh.NacosContextRefresher    : listening config: dataId=label-service, group=DEFAULT_GROUP
+12:53:36.669-[CaiHua-Mac.local][sys]-- INFO 85474 --- [on(3)-127.0.0.1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+12:53:36.669-[CaiHua-Mac.local][sys]-- INFO 85474 --- [on(3)-127.0.0.1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+12:53:36.670-[CaiHua-Mac.local][sys]-- INFO 85474 --- [on(3)-127.0.0.1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+12:53:36.673-[CaiHua-Mac.local][sys]-- INFO 85474 --- [on(2)-127.0.0.1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+12:53:36.807-[CaiHua-Mac.local][sys]-- INFO 85474 --- [on(2)-127.0.0.1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+12:53:37.606-[CaiHua-Mac.local][sys]-- INFO 85474 --- [.naming.updater] com.alibaba.nacos.client.naming          : new ips(1) service: DEFAULT_GROUP@@label-service@@DEFAULT -> [{"instanceId":"127.0.0.1#8082#DEFAULT#DEFAULT_GROUP@@label-service","ip":"127.0.0.1","port":8082,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@label-service","metadata":{"preserved.register.source":"SPRING_CLOUD"},"ipDeleteTimeout":30000,"instanceHeartBeatInterval":5000,"instanceHeartBeatTimeOut":15000}]
+12:53:37.612-[CaiHua-Mac.local][sys]-- INFO 85474 --- [.naming.updater] com.alibaba.nacos.client.naming          : current ips:(1) service: DEFAULT_GROUP@@label-service@@DEFAULT -> [{"instanceId":"127.0.0.1#8082#DEFAULT#DEFAULT_GROUP@@label-service","ip":"127.0.0.1","port":8082,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@label-service","metadata":{"preserved.register.source":"SPRING_CLOUD"},"ipDeleteTimeout":30000,"instanceHeartBeatInterval":5000,"instanceHeartBeatTimeOut":15000}]
+12:55:11.217-[CaiHua-Mac.local][sys]-- WARN 85474 --- [nio-8082-exec-1] c.b.m.c.t.support.ReflectLambdaMeta      : Unable to make field private final java.lang.Class java.lang.invoke.SerializedLambda.capturingClass accessible: module java.base does not "opens java.lang.invoke" to unnamed module @37271612
+12:55:11.271-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-1] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,sort,name,type,parent_id FROM category WHERE is_delete=0 AND (type = ?) ORDER BY sort ASC
+12:55:11.271-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-2] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:55:11.286-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-2] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 1(Integer), 1(Integer), 0(Integer)
+12:55:11.286-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-1] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 1(Integer)
+12:55:11.312-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-2] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:55:11.313-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-1] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 8
+12:55:11.345-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:55:11.345-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 1(Integer), 1(Integer), 0(Integer)
+12:55:11.347-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:55:11.354-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-4] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:55:11.355-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-4] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 4(Integer), 1(Integer), 0(Integer)
+12:55:11.356-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-4] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:55:11.363-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-5] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:55:11.363-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-5] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 8(Integer), 1(Integer), 0(Integer)
+12:55:11.365-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-5] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:55:11.372-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-6] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:55:11.372-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-6] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 4(Integer), 1(Integer), 0(Integer)
+12:55:11.374-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-6] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:55:11.381-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-7] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:55:11.381-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-7] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 8(Integer), 1(Integer), 0(Integer)
+12:55:11.383-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-7] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:55:11.389-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-8] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:55:11.390-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-8] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 5(Integer), 1(Integer), 0(Integer)
+12:55:11.391-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-8] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:55:11.396-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-9] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:55:11.397-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-9] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 5(Integer), 1(Integer), 0(Integer)
+12:55:11.398-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-9] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:55:11.405-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [io-8082-exec-10] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:55:11.406-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [io-8082-exec-10] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 1(Integer), 1(Integer), 0(Integer)
+12:55:11.407-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [io-8082-exec-10] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:57:29.320-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,sort,name,type,parent_id FROM category WHERE is_delete=0 AND (is_delete = ? AND parent_id = ? AND type = ?) ORDER BY sort ASC
+12:57:29.324-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 0(Integer), 0(Integer), 1(Integer)
+12:57:29.327-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 4
+12:57:29.329-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,sort,name,type,parent_id FROM category WHERE is_delete=0 AND (is_delete = ? AND parent_id = ? AND type = ?) ORDER BY sort ASC
+12:57:29.329-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 0(Integer), 1(Integer), 1(Integer)
+12:57:29.331-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-4] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:57:29.331-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-4] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 1(Integer), 1(Integer), 0(Integer)
+12:57:29.331-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 2
+12:57:29.332-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-4] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:57:29.333-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,sort,name,type,parent_id FROM category WHERE is_delete=0 AND (is_delete = ? AND parent_id = ? AND type = ?) ORDER BY sort ASC
+12:57:29.334-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 0(Integer), 4(Integer), 1(Integer)
+12:57:29.337-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 2
+12:57:29.339-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,sort,name,type,parent_id FROM category WHERE is_delete=0 AND (is_delete = ? AND parent_id = ? AND type = ?) ORDER BY sort ASC
+12:57:29.340-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 0(Integer), 8(Integer), 1(Integer)
+12:57:29.341-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 0
+12:57:29.342-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,sort,name,type,parent_id FROM category WHERE is_delete=0 AND (is_delete = ? AND parent_id = ? AND type = ?) ORDER BY sort ASC
+12:57:29.344-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 0(Integer), 5(Integer), 1(Integer)
+12:57:29.345-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-5] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:57:29.345-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-5] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 5(Integer), 1(Integer), 0(Integer)
+12:57:29.345-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 0
+12:57:29.346-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-5] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:57:29.354-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-6] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:57:29.355-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-6] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 5(Integer), 1(Integer), 0(Integer)
+12:57:29.357-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-6] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:57:29.366-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-7] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:57:29.366-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-7] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 8(Integer), 1(Integer), 0(Integer)
+12:57:29.368-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-7] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:57:29.378-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-8] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:57:29.379-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-8] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 4(Integer), 1(Integer), 0(Integer)
+12:57:29.381-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-8] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:57:29.388-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-9] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:57:29.388-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-9] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 8(Integer), 1(Integer), 0(Integer)
+12:57:29.389-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-9] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:57:29.397-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [io-8082-exec-10] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:57:29.397-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [io-8082-exec-10] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 4(Integer), 1(Integer), 0(Integer)
+12:57:29.399-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [io-8082-exec-10] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:57:29.407-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-1] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:57:29.407-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-1] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 1(Integer), 1(Integer), 0(Integer)
+12:57:29.408-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-1] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:57:29.414-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-2] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:57:29.414-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-2] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 1(Integer), 1(Integer), 0(Integer)
+12:57:29.416-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-2] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:57:29.421-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-4] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,sort,name,type,parent_id FROM category WHERE is_delete=0 AND (type = ?) ORDER BY sort ASC
+12:57:29.421-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-4] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 1(Integer)
+12:57:29.423-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-4] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 8
+12:57:57.999-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-5] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:57:58.000-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-5] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 1(Integer), 1(Integer), 0(Integer)
+12:57:58.002-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-5] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:57:58.033-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:57:58.033-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 1(Integer), 1(Integer), 0(Integer)
+12:57:58.035-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:58:25.796-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-6] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,sort,name,type,parent_id FROM category WHERE is_delete=0 AND (type = ?) ORDER BY sort ASC
+12:58:25.796-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-6] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 3(Integer)
+12:58:25.798-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-6] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 2
+12:58:25.977-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-7] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:58:25.977-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-7] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 13(Integer), 3(Integer), 0(Integer)
+12:58:25.978-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-7] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:58:26.013-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-8] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:58:26.014-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-8] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 12(Integer), 3(Integer), 0(Integer)
+12:58:26.014-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-8] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:58:26.804-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-9] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,sort,name,type,parent_id FROM category WHERE is_delete=0 AND (type = ?) ORDER BY sort ASC
+12:58:26.805-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-9] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 4(Integer)
+12:58:26.806-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-9] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 2
+12:58:26.832-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [io-8082-exec-10] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:58:26.834-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [io-8082-exec-10] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 14(Integer), 4(Integer), 0(Integer)
+12:58:26.837-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [io-8082-exec-10] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:58:26.846-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-1] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:58:26.847-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-1] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 14(Integer), 4(Integer), 0(Integer)
+12:58:26.848-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-1] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:58:26.853-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-2] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:58:26.853-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-2] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 14(Integer), 4(Integer), 0(Integer)
+12:58:26.854-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-2] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:58:26.859-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-4] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:58:26.859-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-4] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 14(Integer), 4(Integer), 0(Integer)
+12:58:26.860-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-4] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:58:28.312-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-5] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,sort,name,type,parent_id FROM category WHERE is_delete=0 AND (type = ?) ORDER BY sort ASC
+12:58:28.312-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-5] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 6(Integer)
+12:58:28.314-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-5] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 2
+12:58:28.523-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:58:28.524-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 9(Integer), 6(Integer), 0(Integer)
+12:58:28.527-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:58:28.562-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-6] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:58:28.562-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-6] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 9(Integer), 6(Integer), 0(Integer)
+12:58:28.564-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-6] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:58:28.577-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-7] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:58:28.577-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-7] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 11(Integer), 6(Integer), 0(Integer)
+12:58:28.578-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-7] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:58:28.588-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-8] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:58:28.588-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-8] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 11(Integer), 6(Integer), 0(Integer)
+12:58:28.590-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-8] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+12:58:28.599-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-9] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+12:58:28.599-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-9] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 9(Integer), 6(Integer), 0(Integer)
+12:58:28.602-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-9] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+13:01:13.425-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-5] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,sort,name,type,parent_id FROM category WHERE is_delete=0 AND (type = ?) ORDER BY sort ASC
+13:01:13.426-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-5] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 1(Integer)
+13:01:13.430-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-5] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 8
+13:01:13.433-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+13:01:13.433-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 1(Integer), 1(Integer), 0(Integer)
+13:01:13.435-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+13:01:13.454-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-6] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+13:01:13.454-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-6] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 1(Integer), 1(Integer), 0(Integer)
+13:01:13.474-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-6] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+13:01:13.483-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-7] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+13:01:13.483-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-7] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 4(Integer), 1(Integer), 0(Integer)
+13:01:13.486-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-7] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+13:01:13.496-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-8] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+13:01:13.496-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-8] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 8(Integer), 1(Integer), 0(Integer)
+13:01:13.498-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-8] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+13:01:13.509-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-9] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+13:01:13.509-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-9] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 4(Integer), 1(Integer), 0(Integer)
+13:01:13.511-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-9] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+13:01:13.520-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [io-8082-exec-10] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+13:01:13.520-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [io-8082-exec-10] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 8(Integer), 1(Integer), 0(Integer)
+13:01:13.522-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [io-8082-exec-10] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+13:01:13.536-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-1] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+13:01:13.537-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-1] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 5(Integer), 1(Integer), 0(Integer)
+13:01:13.538-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-1] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+13:01:13.550-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-2] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+13:01:13.550-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-2] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 5(Integer), 1(Integer), 0(Integer)
+13:01:13.552-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-2] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+13:01:13.565-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-4] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+13:01:13.566-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-4] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 1(Integer), 1(Integer), 0(Integer)
+13:01:13.568-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-4] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+13:01:13.927-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-5] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,sort,name,type,parent_id FROM category WHERE is_delete=0 AND (type = ?) ORDER BY sort ASC
+13:01:13.927-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-5] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 2(Integer)
+13:01:13.930-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-5] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+13:01:13.994-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+13:01:13.994-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 17(Integer), 2(Integer), 0(Integer)
+13:01:13.996-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+13:01:24.888-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-6] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+13:01:24.888-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-6] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 17(Integer), 2(Integer), 0(Integer)
+13:01:24.890-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-6] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+13:01:49.876-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-7] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,sort,name,type,parent_id FROM category WHERE is_delete=0 AND (type = ?) ORDER BY sort ASC
+13:01:49.876-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-7] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 1(Integer)
+13:01:49.877-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-7] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 8
+13:01:49.887-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-8] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+13:01:49.888-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-8] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 1(Integer), 1(Integer), 0(Integer)
+13:01:49.889-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-8] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+13:01:49.896-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-9] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+13:01:49.897-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-9] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 1(Integer), 1(Integer), 0(Integer)
+13:01:49.899-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-9] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+13:01:49.909-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [io-8082-exec-10] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+13:01:49.910-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [io-8082-exec-10] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 4(Integer), 1(Integer), 0(Integer)
+13:01:49.912-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [io-8082-exec-10] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+13:01:49.919-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-1] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+13:01:49.920-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-1] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 8(Integer), 1(Integer), 0(Integer)
+13:01:49.921-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-1] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+13:01:49.926-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-2] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+13:01:49.926-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-2] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 4(Integer), 1(Integer), 0(Integer)
+13:01:49.928-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-2] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+13:01:49.934-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-4] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+13:01:49.934-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-4] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 8(Integer), 1(Integer), 0(Integer)
+13:01:49.939-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-4] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+13:01:49.946-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-5] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+13:01:49.947-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-5] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 5(Integer), 1(Integer), 0(Integer)
+13:01:49.949-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-5] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+13:01:49.955-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+13:01:49.956-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 5(Integer), 1(Integer), 0(Integer)
+13:01:49.958-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-3] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+13:01:49.965-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-6] c.z.l.mapper.CategoryMapper.selectList   : ==>  Preparing: SELECT id,name,sort,parent_id FROM category WHERE is_delete=0 AND (id = ? AND type = ? AND is_delete = ?)
+13:01:49.965-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-6] c.z.l.mapper.CategoryMapper.selectList   : ==> Parameters: 1(Integer), 1(Integer), 0(Integer)
+13:01:49.966-[CaiHua-Mac.local][sys]--DEBUG 85474 --- [nio-8082-exec-6] c.z.l.mapper.CategoryMapper.selectList   : <==      Total: 1
+13:02:00.306-[CaiHua-Mac.local][sys]-- WARN 85474 --- [      Thread-11] c.a.nacos.common.notify.NotifyCenter     : [NotifyCenter] Start destroying Publisher
+13:02:00.306-[CaiHua-Mac.local][sys]-- WARN 85474 --- [      Thread-11] c.a.nacos.common.notify.NotifyCenter     : [NotifyCenter] Destruction of the end
+13:02:00.307-[CaiHua-Mac.local][sys]-- WARN 85474 --- [       Thread-1] c.a.n.common.http.HttpClientBeanHolder   : [HttpClientBeanHolder] Start destroying common HttpClient
+13:02:00.307-[CaiHua-Mac.local][sys]-- WARN 85474 --- [       Thread-1] c.a.n.common.http.HttpClientBeanHolder   : [HttpClientBeanHolder] Destruction of the end
+13:02:01.343-[CaiHua-Mac.local][sys]-- INFO 85474 --- [ionShutdownHook] c.a.c.n.registry.NacosServiceRegistry    : De-registering from Nacos Server now...
+13:02:01.343-[CaiHua-Mac.local][sys]-- INFO 85474 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : [BEAT] removing beat: DEFAULT_GROUP@@label-service:127.0.0.1:8082 from beat map.
+13:02:01.343-[CaiHua-Mac.local][sys]-- INFO 85474 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : [DEREGISTER-SERVICE] 0b9a59a8-3e92-4637-81ec-4f43304c767b deregistering service DEFAULT_GROUP@@label-service with instance: Instance{instanceId='null', ip='127.0.0.1', port=8082, weight=1.0, healthy=true, enabled=true, ephemeral=true, clusterName='DEFAULT', serviceName='null', metadata={}}
+13:02:01.349-[CaiHua-Mac.local][sys]-- INFO 85474 --- [ionShutdownHook] c.a.c.n.registry.NacosServiceRegistry    : De-registration finished.
+13:02:01.349-[CaiHua-Mac.local][sys]-- INFO 85474 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : com.alibaba.nacos.client.naming.beat.BeatReactor do shutdown begin
+13:02:02.727-[CaiHua-Mac.local][sys]-- INFO 85474 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : com.alibaba.nacos.client.naming.beat.BeatReactor do shutdown stop
+13:02:02.727-[CaiHua-Mac.local][sys]-- INFO 85474 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : com.alibaba.nacos.client.naming.core.HostReactor do shutdown begin
+13:02:05.737-[CaiHua-Mac.local][sys]-- INFO 85474 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : com.alibaba.nacos.client.naming.core.PushReceiver do shutdown begin
+13:02:08.750-[CaiHua-Mac.local][sys]-- INFO 85474 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : com.alibaba.nacos.client.naming.core.PushReceiver do shutdown stop
+13:02:08.750-[CaiHua-Mac.local][sys]-- INFO 85474 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : com.alibaba.nacos.client.naming.backups.FailoverReactor do shutdown begin
+13:02:08.751-[CaiHua-Mac.local][sys]-- INFO 85474 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : com.alibaba.nacos.client.naming.backups.FailoverReactor do shutdown stop
+13:02:08.751-[CaiHua-Mac.local][sys]-- INFO 85474 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : com.alibaba.nacos.client.naming.core.HostReactor do shutdown stop
+13:02:08.751-[CaiHua-Mac.local][sys]-- INFO 85474 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : com.alibaba.nacos.client.naming.net.NamingProxy do shutdown begin
+13:02:08.751-[CaiHua-Mac.local][sys]-- WARN 85474 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : [NamingHttpClientManager] Start destroying NacosRestTemplate
+13:02:08.751-[CaiHua-Mac.local][sys]-- WARN 85474 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : [NamingHttpClientManager] Destruction of the end
+13:02:08.751-[CaiHua-Mac.local][sys]-- INFO 85474 --- [ionShutdownHook] c.a.n.client.identify.CredentialWatcher  : [null] CredentialWatcher is stopped
+13:02:08.751-[CaiHua-Mac.local][sys]-- INFO 85474 --- [ionShutdownHook] c.a.n.client.identify.CredentialService  : [null] CredentialService is freed
+13:02:08.751-[CaiHua-Mac.local][sys]-- INFO 85474 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : com.alibaba.nacos.client.naming.net.NamingProxy do shutdown stop
+13:02:08.754-[CaiHua-Mac.local][sys]-- INFO 85474 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+13:02:08.764-[CaiHua-Mac.local][sys]-- INFO 85474 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

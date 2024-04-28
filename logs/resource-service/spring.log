@@ -1,0 +1,98 @@
+12:53:38.499-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] com.zch.ResourceApplication              : The following 1 profile is active: "local"
+12:53:38.927-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+12:53:38.928-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+12:53:38.944-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 10 ms. Found 0 Redis repository interfaces.
+12:53:39.079-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=12870df6-4e72-306d-9c00-0735a1d9b40d
+12:53:39.378-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8081 (http)
+12:53:39.382-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+12:53:39.382-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.65]
+12:53:39.448-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+12:53:39.448-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 942 ms
+12:53:39.797-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] o.s.c.openfeign.FeignClientFactoryBean   : For 'trade-service' URL not provided. Will try picking an instance via load-balancing.
+12:53:40.351-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] com.alibaba.nacos.client.naming          : initializer namespace from System Property :null
+12:53:40.351-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] com.alibaba.nacos.client.naming          : initializer namespace from System Environment :null
+12:53:40.351-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] com.alibaba.nacos.client.naming          : initializer namespace from System Property :null
+12:53:40.378-[CaiHua-Mac.local][sys]--DEBUG 85501 --- [           main] c.z.common.redis.config.RedissonConfig   : 尝试初始化RedissonClient
+12:53:40.460-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] org.redisson.Version                     : Redisson 3.24.3
+12:53:40.539-[CaiHua-Mac.local][sys]-- INFO 85501 --- [isson-netty-2-5] o.r.c.pool.MasterPubSubConnectionPool    : 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+12:53:40.588-[CaiHua-Mac.local][sys]-- INFO 85501 --- [sson-netty-2-19] o.r.c.pool.MasterConnectionPool          : 24 connections initialized for 127.0.0.1/127.0.0.1:6379
+12:53:40.646-[CaiHua-Mac.local][sys]-- WARN 85501 --- [           main] o.a.r.s.a.RocketMQAutoConfiguration      : The necessary spring property 'rocketmq.name-server' is not defined, all rockertmq beans creation are skipped!
+12:53:40.826-[CaiHua-Mac.local][sys]-- WARN 85501 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+12:53:40.829-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint(s) beneath base path '/actuator'
+12:53:40.933-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8081 (http) with context path ''
+12:53:40.937-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] com.alibaba.nacos.client.naming          : [BEAT] adding beat: BeatInfo{port=8081, ip='127.0.0.1', weight=1.0, serviceName='DEFAULT_GROUP@@resource-service', cluster='DEFAULT', metadata={preserved.register.source=SPRING_CLOUD}, scheduled=false, period=5000, stopped=false} to beat map.
+12:53:40.937-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] com.alibaba.nacos.client.naming          : [REGISTER-SERVICE] 0b9a59a8-3e92-4637-81ec-4f43304c767b registering service DEFAULT_GROUP@@resource-service with instance: Instance{instanceId='null', ip='127.0.0.1', port=8081, weight=1.0, healthy=true, enabled=true, ephemeral=true, clusterName='DEFAULT', serviceName='null', metadata={preserved.register.source=SPRING_CLOUD}}
+12:53:40.944-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] c.a.c.n.registry.NacosServiceRegistry    : nacos registry, DEFAULT_GROUP resource-service 127.0.0.1:8081 register finished
+12:53:40.959-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] com.zch.ResourceApplication              : Started ResourceApplication in 3.252 seconds (JVM running for 3.602)
+12:53:40.969-[CaiHua-Mac.local][sys]--DEBUG 85501 --- [           main] c.z.c.core.listener.AppStartupListener   : 
+==============================================================
+	App:	resource-service
+	State:	app is running
+	PID:	85501
+	Date:	started at 2024-04-28 12:53:38.506
+	Auth:	GeekEdu
+	Email:	2069820192@qq.com
+	GitHub:	https://github.com/Poison02
+	AppInfo: https://127.0.0.1:8081/
+==============================================================
+12:53:40.971-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] c.a.n.client.config.impl.ClientWorker    : [fixed-127.0.0.1_8848] [subscribe] resource-service-local.yaml+DEFAULT_GROUP
+12:53:40.971-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] c.a.nacos.client.config.impl.CacheData   : [fixed-127.0.0.1_8848] [add-listener] ok, tenant=, dataId=resource-service-local.yaml, group=DEFAULT_GROUP, cnt=1
+12:53:40.971-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] c.a.c.n.refresh.NacosContextRefresher    : listening config: dataId=resource-service-local.yaml, group=DEFAULT_GROUP
+12:53:40.971-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] c.a.n.client.config.impl.ClientWorker    : [fixed-127.0.0.1_8848] [subscribe] resource-service+DEFAULT_GROUP
+12:53:40.971-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] c.a.nacos.client.config.impl.CacheData   : [fixed-127.0.0.1_8848] [add-listener] ok, tenant=, dataId=resource-service, group=DEFAULT_GROUP, cnt=1
+12:53:40.971-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] c.a.c.n.refresh.NacosContextRefresher    : listening config: dataId=resource-service, group=DEFAULT_GROUP
+12:53:40.971-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] c.a.n.client.config.impl.ClientWorker    : [fixed-127.0.0.1_8848] [subscribe] resource-service.yaml+DEFAULT_GROUP
+12:53:40.972-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] c.a.nacos.client.config.impl.CacheData   : [fixed-127.0.0.1_8848] [add-listener] ok, tenant=, dataId=resource-service.yaml, group=DEFAULT_GROUP, cnt=1
+12:53:40.972-[CaiHua-Mac.local][sys]-- INFO 85501 --- [           main] c.a.c.n.refresh.NacosContextRefresher    : listening config: dataId=resource-service.yaml, group=DEFAULT_GROUP
+12:53:41.215-[CaiHua-Mac.local][sys]-- INFO 85501 --- [on(2)-127.0.0.1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+12:53:41.216-[CaiHua-Mac.local][sys]-- INFO 85501 --- [on(2)-127.0.0.1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+12:53:41.217-[CaiHua-Mac.local][sys]-- INFO 85501 --- [on(2)-127.0.0.1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+12:53:41.223-[CaiHua-Mac.local][sys]-- INFO 85501 --- [on(3)-127.0.0.1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+12:53:41.413-[CaiHua-Mac.local][sys]-- INFO 85501 --- [on(3)-127.0.0.1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+12:53:41.950-[CaiHua-Mac.local][sys]-- INFO 85501 --- [.naming.updater] com.alibaba.nacos.client.naming          : new ips(1) service: DEFAULT_GROUP@@resource-service@@DEFAULT -> [{"instanceId":"127.0.0.1#8081#DEFAULT#DEFAULT_GROUP@@resource-service","ip":"127.0.0.1","port":8081,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@resource-service","metadata":{"preserved.register.source":"SPRING_CLOUD"},"ipDeleteTimeout":30000,"instanceHeartBeatInterval":5000,"instanceHeartBeatTimeOut":15000}]
+12:53:41.954-[CaiHua-Mac.local][sys]-- INFO 85501 --- [.naming.updater] com.alibaba.nacos.client.naming          : current ips:(1) service: DEFAULT_GROUP@@resource-service@@DEFAULT -> [{"instanceId":"127.0.0.1#8081#DEFAULT#DEFAULT_GROUP@@resource-service","ip":"127.0.0.1","port":8081,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@resource-service","metadata":{"preserved.register.source":"SPRING_CLOUD"},"ipDeleteTimeout":30000,"instanceHeartBeatInterval":5000,"instanceHeartBeatTimeOut":15000}]
+12:57:24.346-[CaiHua-Mac.local][sys]--DEBUG 85501 --- [nio-8081-exec-1] c.zch.oss.mapper.FileMapper.selectCount  : ==>  Preparing: SELECT COUNT( * ) AS total FROM file_resource WHERE is_delete=0
+12:57:24.360-[CaiHua-Mac.local][sys]--DEBUG 85501 --- [nio-8081-exec-1] c.zch.oss.mapper.FileMapper.selectCount  : ==> Parameters: 
+12:57:24.393-[CaiHua-Mac.local][sys]--DEBUG 85501 --- [nio-8081-exec-1] c.zch.oss.mapper.FileMapper.selectCount  : <==      Total: 1
+12:57:24.423-[CaiHua-Mac.local][sys]--DEBUG 85501 --- [nio-8081-exec-1] c.z.o.m.FileMapper.selectPage_mpCount    : ==>  Preparing: SELECT COUNT(*) AS total FROM file_resource WHERE is_delete = 0
+12:57:24.423-[CaiHua-Mac.local][sys]--DEBUG 85501 --- [nio-8081-exec-1] c.z.o.m.FileMapper.selectPage_mpCount    : ==> Parameters: 
+12:57:24.425-[CaiHua-Mac.local][sys]--DEBUG 85501 --- [nio-8081-exec-1] c.z.o.m.FileMapper.selectPage_mpCount    : <==      Total: 1
+12:57:24.427-[CaiHua-Mac.local][sys]--DEBUG 85501 --- [nio-8081-exec-1] c.zch.oss.mapper.FileMapper.selectPage   : ==>  Preparing: SELECT id,`key_id`,file_name,request_id,file_from,file_path,platform,created_by,updated_by,is_delete,created_time,updated_time FROM file_resource WHERE is_delete=0 LIMIT ?
+12:57:24.427-[CaiHua-Mac.local][sys]--DEBUG 85501 --- [nio-8081-exec-1] c.zch.oss.mapper.FileMapper.selectPage   : ==> Parameters: 32(Long)
+12:57:24.434-[CaiHua-Mac.local][sys]--DEBUG 85501 --- [nio-8081-exec-1] c.zch.oss.mapper.FileMapper.selectPage   : <==      Total: 11
+12:57:24.442-[CaiHua-Mac.local][sys]-- WARN 85501 --- [nio-8081-exec-1] c.b.m.c.t.support.ReflectLambdaMeta      : Unable to make field private final java.lang.Class java.lang.invoke.SerializedLambda.capturingClass accessible: module java.base does not "opens java.lang.invoke" to unnamed module @6a03bcb1
+12:57:24.444-[CaiHua-Mac.local][sys]--DEBUG 85501 --- [nio-8081-exec-1] c.zch.oss.mapper.FileMapper.selectList   : ==>  Preparing: SELECT file_from FROM file_resource WHERE is_delete=0 AND (is_delete = ?) GROUP BY file_from
+12:57:24.445-[CaiHua-Mac.local][sys]--DEBUG 85501 --- [nio-8081-exec-1] c.zch.oss.mapper.FileMapper.selectList   : ==> Parameters: 0(Integer)
+12:57:24.447-[CaiHua-Mac.local][sys]--DEBUG 85501 --- [nio-8081-exec-1] c.zch.oss.mapper.FileMapper.selectList   : <==      Total: 1
+12:57:27.874-[CaiHua-Mac.local][sys]--DEBUG 85501 --- [nio-8081-exec-2] c.z.o.m.MediaMapper.selectPage_mpCount   : ==>  Preparing: SELECT COUNT(*) AS total FROM media_resource WHERE is_delete = 0 AND (is_delete = ?)
+12:57:27.874-[CaiHua-Mac.local][sys]--DEBUG 85501 --- [nio-8081-exec-2] c.z.o.m.MediaMapper.selectPage_mpCount   : ==> Parameters: 0(Integer)
+12:57:27.879-[CaiHua-Mac.local][sys]--DEBUG 85501 --- [nio-8081-exec-2] c.z.o.m.MediaMapper.selectPage_mpCount   : <==      Total: 1
+12:57:27.879-[CaiHua-Mac.local][sys]--DEBUG 85501 --- [nio-8081-exec-2] c.zch.oss.mapper.MediaMapper.selectPage  : ==>  Preparing: SELECT id,media_id,media_name,media_link,cover_link,media_source,duration,request_id,size,size_mb,created_by,updated_by,is_delete,created_time,updated_time FROM media_resource WHERE is_delete=0 AND (is_delete = ?) LIMIT ?
+12:57:27.879-[CaiHua-Mac.local][sys]--DEBUG 85501 --- [nio-8081-exec-2] c.zch.oss.mapper.MediaMapper.selectPage  : ==> Parameters: 0(Integer), 10(Long)
+12:57:27.882-[CaiHua-Mac.local][sys]--DEBUG 85501 --- [nio-8081-exec-2] c.zch.oss.mapper.MediaMapper.selectPage  : <==      Total: 4
+13:02:00.251-[CaiHua-Mac.local][sys]-- WARN 85501 --- [      Thread-13] c.a.nacos.common.notify.NotifyCenter     : [NotifyCenter] Start destroying Publisher
+13:02:00.252-[CaiHua-Mac.local][sys]-- WARN 85501 --- [       Thread-1] c.a.n.common.http.HttpClientBeanHolder   : [HttpClientBeanHolder] Start destroying common HttpClient
+13:02:00.252-[CaiHua-Mac.local][sys]-- WARN 85501 --- [      Thread-13] c.a.nacos.common.notify.NotifyCenter     : [NotifyCenter] Destruction of the end
+13:02:00.253-[CaiHua-Mac.local][sys]-- WARN 85501 --- [       Thread-1] c.a.n.common.http.HttpClientBeanHolder   : [HttpClientBeanHolder] Destruction of the end
+13:02:01.294-[CaiHua-Mac.local][sys]-- INFO 85501 --- [ionShutdownHook] c.a.c.n.registry.NacosServiceRegistry    : De-registering from Nacos Server now...
+13:02:01.294-[CaiHua-Mac.local][sys]-- INFO 85501 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : [BEAT] removing beat: DEFAULT_GROUP@@resource-service:127.0.0.1:8081 from beat map.
+13:02:01.294-[CaiHua-Mac.local][sys]-- INFO 85501 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : [DEREGISTER-SERVICE] 0b9a59a8-3e92-4637-81ec-4f43304c767b deregistering service DEFAULT_GROUP@@resource-service with instance: Instance{instanceId='null', ip='127.0.0.1', port=8081, weight=1.0, healthy=true, enabled=true, ephemeral=true, clusterName='DEFAULT', serviceName='null', metadata={}}
+13:02:01.298-[CaiHua-Mac.local][sys]-- INFO 85501 --- [ionShutdownHook] c.a.c.n.registry.NacosServiceRegistry    : De-registration finished.
+13:02:01.299-[CaiHua-Mac.local][sys]-- INFO 85501 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : com.alibaba.nacos.client.naming.beat.BeatReactor do shutdown begin
+13:02:01.886-[CaiHua-Mac.local][sys]-- INFO 85501 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : com.alibaba.nacos.client.naming.beat.BeatReactor do shutdown stop
+13:02:01.886-[CaiHua-Mac.local][sys]-- INFO 85501 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : com.alibaba.nacos.client.naming.core.HostReactor do shutdown begin
+13:02:02.512-[CaiHua-Mac.local][sys]-- INFO 85501 --- [.naming.updater] com.alibaba.nacos.client.naming          : removed ips(1) service: DEFAULT_GROUP@@resource-service@@DEFAULT -> [{"instanceId":"127.0.0.1#8081#DEFAULT#DEFAULT_GROUP@@resource-service","ip":"127.0.0.1","port":8081,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@resource-service","metadata":{"preserved.register.source":"SPRING_CLOUD"},"ipDeleteTimeout":30000,"instanceHeartBeatInterval":5000,"instanceHeartBeatTimeOut":15000}]
+13:02:02.514-[CaiHua-Mac.local][sys]-- INFO 85501 --- [.naming.updater] com.alibaba.nacos.client.naming          : current ips:(0) service: DEFAULT_GROUP@@resource-service@@DEFAULT -> []
+13:02:02.515-[CaiHua-Mac.local][sys]-- INFO 85501 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : com.alibaba.nacos.client.naming.core.PushReceiver do shutdown begin
+13:02:05.524-[CaiHua-Mac.local][sys]-- INFO 85501 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : com.alibaba.nacos.client.naming.core.PushReceiver do shutdown stop
+13:02:05.525-[CaiHua-Mac.local][sys]-- INFO 85501 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : com.alibaba.nacos.client.naming.backups.FailoverReactor do shutdown begin
+13:02:05.528-[CaiHua-Mac.local][sys]-- INFO 85501 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : com.alibaba.nacos.client.naming.backups.FailoverReactor do shutdown stop
+13:02:05.528-[CaiHua-Mac.local][sys]-- INFO 85501 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : com.alibaba.nacos.client.naming.core.HostReactor do shutdown stop
+13:02:05.528-[CaiHua-Mac.local][sys]-- INFO 85501 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : com.alibaba.nacos.client.naming.net.NamingProxy do shutdown begin
+13:02:05.529-[CaiHua-Mac.local][sys]-- WARN 85501 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : [NamingHttpClientManager] Start destroying NacosRestTemplate
+13:02:05.529-[CaiHua-Mac.local][sys]-- WARN 85501 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : [NamingHttpClientManager] Destruction of the end
+13:02:05.529-[CaiHua-Mac.local][sys]-- INFO 85501 --- [ionShutdownHook] c.a.n.client.identify.CredentialWatcher  : [null] CredentialWatcher is stopped
+13:02:05.529-[CaiHua-Mac.local][sys]-- INFO 85501 --- [ionShutdownHook] c.a.n.client.identify.CredentialService  : [null] CredentialService is freed
+13:02:05.529-[CaiHua-Mac.local][sys]-- INFO 85501 --- [ionShutdownHook] com.alibaba.nacos.client.naming          : com.alibaba.nacos.client.naming.net.NamingProxy do shutdown stop
+13:02:05.545-[CaiHua-Mac.local][sys]-- INFO 85501 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+13:02:05.573-[CaiHua-Mac.local][sys]-- INFO 85501 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
