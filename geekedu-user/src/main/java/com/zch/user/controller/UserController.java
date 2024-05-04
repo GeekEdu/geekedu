@@ -23,9 +23,14 @@ public class UserController {
 
     private final IUserService userService;
 
-    @GetMapping("/sms/phone")
-    public Response<String> getSmsCode(@RequestParam("phone") String phone) {
-        return Response.success(userService.getPhoneCode(phone));
+    /**
+     * 获取手机验证码
+     * @param form
+     * @return
+     */
+    @PostMapping("/sms/phone")
+    public Response<String> getSmsCode(@RequestBody SendSmsForm form) {
+        return Response.success(userService.getPhoneCode(form));
     }
 
     /**
@@ -168,13 +173,13 @@ public class UserController {
     }
 
     /**
-     * 新增用户
+     * 手机号注册用户
      * @param form
      * @return
      */
-    @PostMapping("/add")
+    @PostMapping("/v2/register/sms")
     public Response addUser(@RequestBody RegForm form) {
-        return Response.judge(userService.addUser(form));
+        return Response.success(userService.addUser(form));
     }
 
     /**

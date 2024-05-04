@@ -13,12 +13,12 @@ public class RegForm implements Serializable {
 
     private static final Long serialVersionUID = 1L;
 
-    private String userName;
-
     private String phone;
 
     private String password;
 
-    private String code;
+    private String phoneCode;
+
+    private String scene;
 
 }

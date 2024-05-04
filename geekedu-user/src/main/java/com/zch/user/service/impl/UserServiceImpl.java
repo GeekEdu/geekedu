@@ -91,16 +91,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private final SmsAdapter smsAdapter;
 
     @Override
-    public String getPhoneCode(String phone) {
-        // 获取当前登录用户id
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+    public String getPhoneCode(SendSmsForm form) {
+        String phone = form.getPhone();
+        String imageCaptcha = form.getImageCaptcha();
+        String imageKey = form.getImageKey();
+        // 从redis中取出来验证码相关
+        Map<String, String> cacheObject = RedisUtils.getCacheMap(CAPTCHA_MAP);
+        if (ObjectUtils.isEmpty(cacheObject)) {
+            throw new CommonException(EXPIRE_CAPTCHA_CODE);
+        }
+        // 校验 验证码是否相同
+        boolean checkCaptcha = checkCaptcha(imageCaptcha, imageKey, cacheObject);
+        if (!checkCaptcha) {
+            throw new CommonException(INVALID_VERIFY_CODE);
+        }
         // 1. 生成验证码
         String code = String.valueOf(ThreadLocalRandom.current().nextInt(100000, 1000000));
         // 2. 保存redis中
-        RedisUtils.setCacheObject(SMS_CODE_KEY + userId, code, Duration.ofSeconds(60));
+        RedisUtils.setCacheObject(SMS_CODE_KEY + form.getScene() + phone, code, Duration.ofSeconds(120));
         // 3. 发送验证码
-        smsAdapter.send(code, 60 + "", phone, null, null);
+        smsAdapter.send(code, 120 + "", phone, null, null);
         return code;
     }
 
@@ -156,17 +166,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (ObjectUtils.isEmpty(cacheObject)) {
             throw new CommonException(EXPIRE_CAPTCHA_CODE);
         }
-        boolean result = false;
+        Long userId = 0L;
         if (StringUtils.isNotBlank(phone)) {
-            result = handlePhoneLogin(phone, password);
+            userId = handlePhoneLogin(phone, password);
         }
         // 校验 验证码是否相同
         boolean checkCaptcha = checkCaptcha(imageCaptcha, imageKey, cacheObject);
-        if (! checkCaptcha) {
+        if (!checkCaptcha) {
             throw new CommonException(INVALID_VERIFY_CODE);
         }
         // 进行登录
-        Long userId = handlePasswordLogin(username, password);
+        userId = handlePasswordLogin(username, password);
         if (userId > 0 && checkCaptcha) {
             // 登录成功，将token写入
             StpUtil.login(userId);
@@ -303,7 +313,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             // 写入数据库中
             updateUserPoint(userId, signDays);
             return Math.toIntExact(signDays);
-        } {
+        }
+        {
             // 存在连续签到的情况
             // 将所有签到情况汇总
             Map<Integer, Integer> signRes = collectSign(binarySign);
@@ -331,12 +342,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         // Long userId = UserContext.getLoginId();
         Long userId = 1745747394693820416L;
         Map<String, Object> res = spliceKey(userId);
-        return RedisUtils.getBigMap(res.get("key").toString(),  ((int) res.get("day")) - 1);
+        return RedisUtils.getBigMap(res.get("key").toString(), ((int) res.get("day")) - 1);
     }
 
     @Override
     public Boolean logout() {
-        Long userId = UserContext.getLoginId();
+        // Long userId = UserContext.getLoginId();
+        Long userId = 1745747394693820416L;
         if (StpUtil.isLogin()) {
             StpUtil.logout(userId);
             return true;
@@ -346,6 +358,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     /**
      * 拼接用户签到 Key
+     *
      * @param userId
      * @return
      */
@@ -366,6 +379,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     /**
      * 计算最大连续签到天数
+     *
      * @param binarySign
      * @return
      */
@@ -388,6 +402,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     /**
      * 汇总全部签到情况
+     *
      * @param binarySign
      * @return
      */
@@ -425,6 +440,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     /**
      * 根据天数 计算积分
+     *
      * @param day
      * @return
      */
@@ -450,12 +466,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         // 得到原来的密码和数据库中相比
         String oldPwd = form.getOldPassword();
         String decrypt = EncryptUtils.md5Encrypt(oldPwd, salt);
-        if (! user.getPassword().equals(decrypt)) {
+        if (!user.getPassword().equals(decrypt)) {
             return false;
         }
         String newPwd = form.getNewPassword();
         String newPwdConfirm = form.getNewPasswordConfirm();
-        if (StringUtils.isNotBlank(newPwd) && StringUtils.isNotBlank(newPwdConfirm) && ! newPwd.equals(newPwdConfirm)) {
+        if (StringUtils.isNotBlank(newPwd) && StringUtils.isNotBlank(newPwdConfirm) && !newPwd.equals(newPwdConfirm)) {
             return false;
         }
         // 加密之后存储
@@ -467,22 +483,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public boolean addUser(RegForm form) {
-        // 生成每个用户的 盐值
-        String key = EncryptUtils.generateKey();
-        User user = new User();
-        // 不能重名
-        if (StringUtils.isNotBlank(form.getUserName())) {
-            User one = getOne(new LambdaQueryWrapper<User>()
-                    .eq(User::getUserName, form.getUserName()));
-            if (ObjectUtils.isNotNull(one)) {
-                user.setSalt(key);
-                user.setPassword(EncryptUtils.md5Encrypt(user.getPassword(), key));
-                user.setId(IdUtils.getId());
-                save(user);
-                return true;
-            }
+        // 校验验证码
+        String code = RedisUtils.getCacheObject(SMS_CODE_KEY + form.getScene() + form.getPhone());
+        if (StringUtils.isNotBlank(code) && code.equals(form.getPhoneCode())) {
+            // 生成每个用户的 盐值
+            String key = EncryptUtils.generateKey();
+            User user = new User();
+            user.setPhone(form.getPhone());
+            user.setSalt(key);
+            user.setPassword(EncryptUtils.md5Encrypt(form.getPassword(), key));
+            user.setId(IdUtils.getId());
+            save(user);
+            return true;
         }
-
         return false;
     }
 
@@ -554,7 +567,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public MemberFullVO getMemberPage(Integer pageNum, Integer pageSize, String sort, String order,
                                       String keywords, Integer vipId, Integer tagId, List<String> createdTime) {
         if (ObjectUtils.isNull(pageNum) || ObjectUtils.isNull(pageSize)
-        || StringUtils.isBlank(sort) || StringUtils.isBlank(order)) {
+                || StringUtils.isBlank(sort) || StringUtils.isBlank(order)) {
             pageNum = 1;
             pageSize = 10;
             sort = "id";
@@ -584,7 +597,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
         // 时间处理
         if (ObjectUtils.isNotNull(createdTime) && CollUtils.isNotEmpty(createdTime) && createdTime.size() > 1
-            && StringUtils.isNotBlank(createdTime.get(0)) && StringUtils.isNotBlank(createdTime.get(0))) {
+                && StringUtils.isNotBlank(createdTime.get(0)) && StringUtils.isNotBlank(createdTime.get(0))) {
             List<LocalDateTime> times = timeHandle(createdTime);
             // 增加条件
             wrapper.between(User::getCreatedTime, times.get(0), times.get(1));
@@ -792,7 +805,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public WxLoginVO wxRegister(WxRegForm form) {
         WxLoginVO vo = new WxLoginVO();
         if (ObjectUtils.isNotNull(form) && StringUtils.isNotBlank(form.getUserName())
-          && StringUtils.isNotBlank(form.getPassword()) && StringUtils.isNotBlank(form.getRePassword())) {
+                && StringUtils.isNotBlank(form.getPassword()) && StringUtils.isNotBlank(form.getRePassword())) {
             User one = getOne(new LambdaQueryWrapper<User>()
                     .eq(User::getUserName, form.getUserName()));
             if (ObjectUtils.isNull(one)) {
@@ -822,6 +835,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     /**
      * 校验验证码是否相同
+     *
      * @param imageCaptcha
      * @param imageKey
      * @param cacheObject
@@ -831,7 +845,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         String redisCaptcha = cacheObject.get("code");
         String redisKey = cacheObject.get("key");
         if (StringUtils.isSameStringByUpperToLower(imageCaptcha, redisCaptcha)
-            && Objects.equals(imageKey, redisKey)) {
+                && Objects.equals(imageKey, redisKey)) {
             return true;
         }
         return false;
@@ -839,16 +853,32 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     /**
      * 处理 手机号登录
+     *
      * @param phone
-     * @param code
+     * @param password
      * @return
      */
-    private boolean handlePhoneLogin(String phone, String code) {
-        return false;
+    private Long handlePhoneLogin(String phone, String password) {
+        // 从数据库中使用username查找对应用户信息
+        User user = userMapper.selectOne(new LambdaQueryWrapper<User>()
+                .eq(StringUtils.isNotBlank(phone), User::getPhone, phone)
+                .select(User::getId, User::getUserName, User::getPassword, User::getSalt));
+        if (ObjectUtils.isNull(user)) {
+            return -1L;
+        }
+        // 使用盐值将输入的密码加密和从数据库中查出来的密码进行对比
+        String encrypt = EncryptUtils.md5Encrypt(password, user.getSalt());
+        if (!encrypt.equals(user.getPassword())) {
+            return -1L;
+        }
+        // 查找当前用户的权限，存入redis中
+        handleRP2Redis(user);
+        return user.getId();
     }
 
     /**
      * 处理 账号密码登录
+     *
      * @param username
      * @param password
      * @return
@@ -863,7 +893,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
         // 使用盐值将输入的密码加密和从数据库中查出来的密码进行对比
         String encrypt = EncryptUtils.md5Encrypt(password, user.getSalt());
-        if (! encrypt.equals(user.getPassword())) {
+        if (!encrypt.equals(user.getPassword())) {
             return -1L;
         }
         // 查找当前用户的权限，存入redis中
@@ -873,6 +903,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     /**
      * 处理角色和权限 存入redis中
+     *
      * @param user
      */
     private void handleRP2Redis(User user) {
@@ -903,15 +934,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             role.setPivot(pivotVO);
             roles.add(role);
         }
-        if (! RedisUtils.hasKey(ROLE_LIST + user.getId())) {
+        if (!RedisUtils.hasKey(ROLE_LIST + user.getId())) {
             // 将角色存入redis中
             RedisUtils.setCacheObject(ROLE_LIST + user.getId(), roles);
         }
-        if (! RedisUtils.hasKey(PERMISSION_MAP + user.getId())) {
+        if (!RedisUtils.hasKey(PERMISSION_MAP + user.getId())) {
             // 将权限存入redis中
             RedisUtils.setCacheMap(PERMISSION_MAP + user.getId(), permissionMap);
         }
-        if (! RedisUtils.hasKey(USERINFO + user.getId())) {
+        if (!RedisUtils.hasKey(USERINFO + user.getId())) {
             // 组装用户信息 存入redis
             UserRoleVO vo = new UserRoleVO();
             vo.setCreatedTime(user.getCreatedTime());
@@ -931,6 +962,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     /**
      * 对时间的处理
+     *
      * @param time
      * @return
      */

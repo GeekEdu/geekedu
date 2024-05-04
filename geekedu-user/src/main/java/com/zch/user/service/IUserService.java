@@ -24,10 +24,10 @@ public interface IUserService extends IService<User> {
 
     /**
      * 获取手机验证码
-     * @param phone
+     * @param form
      * @return
      */
-    String getPhoneCode(String phone);
+    String getPhoneCode(SendSmsForm form);
 
     /**
      * 绑定手机号
