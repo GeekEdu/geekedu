@@ -35,7 +35,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/api/eBook/v2/book/{id}/comments", "/api/eBook/v2/study/list", "/api/imageText/v2/list", "/api/imageText/v2/{id}/detail",
                         "/api/imageText/v2/{id}/comments", "/api/imageText/v2/study/list", "/api/path/v2/list", "/api/path/v2/{id}/detail",
                         "/api/question/v2/list", "/api/question/v2/category/list", "/api/question/v2/detail/{id}", "/api/comments/v2/list",
-                        "/api/category/getCategoryById", "/api/category/getCategoryList", "/api/category/getCategorySimpleList", "/api/category/getCategoryPage")
+                        "/api/category/getCategoryById", "/api/category/getCategoryList", "/api/category/getCategorySimpleList", "/api/category/getCategoryPage", "/live/course/{courseId}/video/{videoId}/token/{token}")
                 .order(1);
         // 刷新token拦截器
         registry.addInterceptor(new RefreshTokenInterceptor())
@@ -49,7 +49,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/api/eBook/v2/book/{id}/comments", "/api/eBook/v2/study/list", "/api/imageText/v2/list", "/api/imageText/v2/{id}/detail",
                         "/api/imageText/v2/{id}/comments", "//api/imageText/v2/study/list", "/api/path/v2/list", "/api/path/v2/{id}/detail",
                         "/api/question/v2/list", "/api/question/v2/category/list", "/api/question/v2/detail/{id}", "/api/comments/v2/list",
-                        "/api/category/getCategoryById", "/api/category/getCategoryList", "/api/category/getCategorySimpleList", "/api/category/getCategoryPage")
+                        "/api/category/getCategoryById", "/api/category/getCategoryList", "/api/category/getCategorySimpleList", "/api/category/getCategoryPage", "/live/course/{courseId}/video/{videoId}/token/{token}")
                 .order(0);
     }
 
