@@ -253,8 +253,18 @@ public class IndexController {
         topicData2.put("try", "<p>怎么说呢，需要你会前端三大件！</p><p>除此之外，还需要你有很多敲代码的经验。</p>");
         topicData2.put("type", "topic");
 
+        Map<String, Object> topicData3 = new HashMap<>();
+        topicData3.put("cover", "https://geekedu-1315662121.cos.ap-chengdu.myqcloud.com/all/02de37f42dc548ff8a45797da6603e28.png");
+        topicData3.put("id", 6);
+        topicData3.put("price", "9.98");
+        topicData3.put("t_price", "20.00");
+        topicData3.put("title", "VueCli实战在线教育后台系统");
+        topicData3.put("try", "<p>怎么说呢，需要你会前端三大件！</p><p>除此之外，还需要你有很多敲代码的经验。</p>");
+        topicData3.put("type", "topic");
+
         topicData.add(topicData1);
         topicData.add(topicData2);
+        topicData.add(topicData3);
 
         Map<String, Object> listMap2 = new HashMap<>();
         listMap2.put("type", "topic");

@@ -833,6 +833,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return false;
     }
 
+    @Override
+    public Boolean editNickName(EditNickNameForm form) {
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        User user = getById(userId);
+        if (ObjectUtils.isNotNull(user)) {
+            user.setName(form.getNickName());
+            updateById(user);
+            return true;
+        }
+        return false;
+    }
+
     /**
      * 校验验证码是否相同
      *

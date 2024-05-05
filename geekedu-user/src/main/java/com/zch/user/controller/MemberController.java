@@ -1,5 +1,6 @@
 package com.zch.user.controller;
 
+import com.zch.api.dto.user.EditNickNameForm;
 import com.zch.api.dto.user.VipForm;
 import com.zch.api.vo.book.record.StudyRecordVO;
 import com.zch.api.vo.order.OrderVO;
@@ -199,6 +200,16 @@ public class MemberController {
     @GetMapping("/topic/collect/list")
     public Response<List<StudyRecordVO>> queryTopicCollectList(@RequestParam("type") String type) {
         return Response.success(userService.queryCollectList(type));
+    }
+
+    /**
+     * 修改用户昵称
+     * @param form
+     * @return
+     */
+    @PostMapping("/v2/edit/nickname")
+    public Response editNickName(@RequestBody EditNickNameForm form) {
+        return Response.success(userService.editNickName(form));
     }
 
 }

@@ -278,4 +278,11 @@ public interface IUserService extends IService<User> {
      * @return
      */
     Boolean wxLogout();
+
+    /**
+     * 修改用户昵称
+     * @param form
+     * @return
+     */
+    Boolean editNickName(EditNickNameForm form);
 }
