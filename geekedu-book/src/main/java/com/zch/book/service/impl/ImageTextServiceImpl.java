@@ -1,5 +1,6 @@
 package com.zch.book.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -166,7 +167,7 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
             return false;
         }
         // 用户id
-        Long userId = UserContext.getLoginId();
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
         // 构造参数
         ImageText imageText = new ImageText();
         BeanUtils.copyProperties(form, imageText);
@@ -193,7 +194,7 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
             return false;
         }
         // 用户id
-        Long userId = UserContext.getLoginId();
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
         ImageText imageText = new ImageText();
         BeanUtils.copyProperties(form, imageText);
         // 注意 数据库定义是 0-免费 1-收费
@@ -329,8 +330,8 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
         if (ObjectUtils.isNull(id)) {
             return new ImageTextSingleVO();
         }
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         ImageText one = imageTextMapper.selectById(id);
         if (ObjectUtils.isNull(one)) {
             return new ImageTextSingleVO();
@@ -415,8 +416,8 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
     @Override
     public List<StudyRecordVO> getStudyImageText() {
         // 用户id
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         List<StudyRecordVO> vo = new ArrayList<>();
         // 查找所有学习记录
         List<LearnRecord> list = learnRecordService.queryLearnRecord(userId, "TOPIC");

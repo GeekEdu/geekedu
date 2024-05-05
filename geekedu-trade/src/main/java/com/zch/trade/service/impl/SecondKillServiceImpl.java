@@ -1,5 +1,6 @@
 package com.zch.trade.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -18,6 +19,7 @@ import com.zch.common.mvc.exception.CommonException;
 import com.zch.common.mvc.result.Response;
 import com.zch.common.redis.utils.RedisUtils;
 import com.zch.common.redis.utils.StringUtils;
+import com.zch.common.satoken.context.UserContext;
 import com.zch.trade.domain.po.SecondKill;
 import com.zch.trade.enums.OrderStatusEnum;
 import com.zch.trade.mapper.SecondKillMapper;
@@ -191,8 +193,8 @@ public class SecondKillServiceImpl extends ServiceImpl<SecondKillMapper, SecondK
         }
         vo.setData(vo1);
         // 查询用户支付信息，若下了秒杀单，就会产生支付信息
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         Response<OrderVO> res = tradeFeignClient.queryOrderInfoByGoods(goodsId, goodsType, userId, true, null, null);
         if (ObjectUtils.isNull(res) || ObjectUtils.isNull(res.getData())) {
             return vo;
@@ -210,8 +212,8 @@ public class SecondKillServiceImpl extends ServiceImpl<SecondKillMapper, SecondK
     @Override
     public Integer startSecKill(Integer id, CaptchaForm form) {
         // 用户id
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         Map<String, String> cacheObject = RedisUtils.getCacheMap(CAPTCHA_MAP);
         if (ObjectUtils.isEmpty(cacheObject)) {
             throw new CommonException(EXPIRE_CAPTCHA_CODE);

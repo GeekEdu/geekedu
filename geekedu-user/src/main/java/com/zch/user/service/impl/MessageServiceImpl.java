@@ -1,5 +1,6 @@
 package com.zch.user.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -10,6 +11,7 @@ import com.zch.common.core.utils.BeanUtils;
 import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
+import com.zch.common.satoken.context.UserContext;
 import com.zch.user.domain.po.Message;
 import com.zch.user.mapper.MessageMapper;
 import com.zch.user.service.IMessageService;
@@ -68,16 +70,16 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
         if (StringUtils.isBlank(messageId)) {
             return false;
         }
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         return read(messageId, userId);
     }
 
     @Override
     public Boolean readMessageBatch() {
         // 查找当前登录用户所有未读的消息
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         List<Message> list = messageMapper.selectList(new LambdaQueryWrapper<Message>()
                 .eq(Message::getIsRead, false)
                 .eq(Message::getUserId, userId));

@@ -1,11 +1,13 @@
 package com.zch.user.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.user.ThumbForm;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
 import com.zch.common.redis.constants.RedisConstants;
 import com.zch.common.redis.utils.RedisUtils;
+import com.zch.common.satoken.context.UserContext;
 import com.zch.user.domain.po.Thumb;
 import com.zch.user.enums.ThumbEnums;
 import com.zch.user.mapper.ThumbMapper;
@@ -17,6 +19,7 @@ import org.redisson.client.protocol.ScoredEntry;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Objects;
 
 import static com.zch.common.redis.constants.RedisConstants.IMAGE_TEXT_Z_SET;
 import static com.zch.common.redis.constants.RedisConstants.QA_COMMENT_Z_SET;
@@ -43,8 +46,11 @@ public class ThumbServiceImpl extends ServiceImpl<ThumbMapper, Thumb> implements
             return false;
         }
         // 当前登录用户
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
+        if (Objects.isNull(userId)) {
+            return false;
+        }
         // 查找点赞表中是否已经有该记录
         /*
          * 查询redis中是否已经有该记录
@@ -102,8 +108,11 @@ public class ThumbServiceImpl extends ServiceImpl<ThumbMapper, Thumb> implements
         if (ObjectUtils.isNull(relationId) || StringUtils.isBlank(type)) {
             return false;
         }
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
+        if (Objects.isNull(userId)) {
+            return false;
+        }
         String key = ThumbEnums.valueOf(type).equals(IMAGE_TEXT)
                 ? IMAGE_TEXT_Z_SET + relationId
                 : RedisConstants.QA_COMMENT_Z_SET + relationId;
@@ -131,11 +140,11 @@ public class ThumbServiceImpl extends ServiceImpl<ThumbMapper, Thumb> implements
 
     @Override
     public Long queryCount(Integer relationId, String type) {
-        // Long userId = UserContext.getLoginId();
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
         if (ObjectUtils.isNull(relationId) || StringUtils.isBlank(type)) {
             return 0L;
         }
-        Long userId = 1745747394693820416L;
+        // Long userId = 1745747394693820416L;
         String key = ThumbEnums.valueOf(type).equals(IMAGE_TEXT)
                 ? IMAGE_TEXT_Z_SET + relationId
                 : RedisConstants.QA_COMMENT_Z_SET + relationId;

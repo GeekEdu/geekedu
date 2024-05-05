@@ -1,5 +1,6 @@
 package com.zch.course.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.course.ChapterForm;
@@ -71,7 +72,7 @@ public class LiveChapterServiceImpl extends ServiceImpl<LiveChapterMapper, LiveC
         if (ObjectUtils.isNotNull(one)) {
             return false;
         }
-        Long userId = UserContext.getLoginId();
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
         LiveChapter chapter = new LiveChapter();
         chapter.setName(form.getName());
         chapter.setCourseId(form.getCourseId());
@@ -92,7 +93,7 @@ public class LiveChapterServiceImpl extends ServiceImpl<LiveChapterMapper, LiveC
         if (ObjectUtils.isNotNull(one)) {
             return false;
         }
-        Long userId = UserContext.getLoginId();
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
         LiveChapter chapter = new LiveChapter();
         chapter.setId(id);
         chapter.setName(form.getName());

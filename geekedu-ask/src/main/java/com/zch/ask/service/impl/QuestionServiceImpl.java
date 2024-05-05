@@ -1,5 +1,6 @@
 package com.zch.ask.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -281,8 +282,8 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         }
         QuestionFullVO vo = new QuestionFullVO();
         // 查看当前用户是否是该 question 的 Master
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         if (Objects.equals(userId, question.getUserId())) {
             vo.setIsMaster(true);
         }
@@ -321,7 +322,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         if (ObjectUtils.isNull(form)) {
             return 0;
         }
-        Long userId = UserContext.getLoginId();
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
         Question question = new Question();
         Question one = questionMapper.selectOne(new LambdaQueryWrapper<Question>()
                 .eq(Question::getTitle, form.getTitle())
@@ -379,8 +380,8 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
             return vo;
         }
         // 当前用户id
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         Page<Question> page = page(new Page<Question>(pageNum, pageSize), new LambdaQueryWrapper<Question>()
                 .eq(Question::getUserId, userId));
         if (ObjectUtils.isNull(page) || ObjectUtils.isNull(page.getRecords()) || CollUtils.isEmpty(page.getRecords())) {

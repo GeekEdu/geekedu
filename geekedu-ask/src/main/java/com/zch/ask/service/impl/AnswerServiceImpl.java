@@ -1,5 +1,6 @@
 package com.zch.ask.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -23,6 +24,7 @@ import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
 import com.zch.common.mvc.result.Response;
 import com.zch.common.mvc.utils.CommonServletUtils;
+import com.zch.common.satoken.context.UserContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -189,7 +191,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
 //        if (ObjectUtils.isNull(one)) {
 //            return false;
 //        }
-        // Long userId = UserContext.getLoginId();
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
         Answer answer = new Answer();
         answer.setContent(form.getContent());
         if (CollUtils.isNotEmpty(form.getImages())) {
@@ -197,9 +199,9 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
             answer.setImages(join);
         }
         answer.setQuestionId(id);
-        answer.setCreatedBy(1745747394693820416L);
-        answer.setUpdatedBy(1745747394693820416L);
-        answer.setUserId(1745747394693820416L);
+        answer.setCreatedBy(userId);
+        answer.setUpdatedBy(userId);
+        answer.setUserId(userId);
         return save(answer);
     }
 
@@ -249,8 +251,8 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
             return vo;
         }
         // 当前用户id
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         Page<Answer> page = page(new Page<Answer>(pageNum, pageSize), new LambdaQueryWrapper<Answer>()
                 .eq(Answer::getUserId, userId));
         if (ObjectUtils.isNull(page) || ObjectUtils.isNull(page.getRecords()) || CollUtils.isEmpty(page.getRecords())) {

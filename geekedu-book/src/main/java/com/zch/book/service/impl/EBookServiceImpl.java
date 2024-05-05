@@ -1,5 +1,6 @@
 package com.zch.book.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -150,7 +151,7 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
             return new EBookVO();
         }
         // 用户id
-        Long userId = UserContext.getLoginId();
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
         // 查询是否有该数据
         if (StringUtils.isBlank(form.getName())) {
             return new EBookVO();
@@ -195,7 +196,7 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
             return false;
         }
         // 用户id
-        Long userId = UserContext.getLoginId();
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
         EBook one = bookMapper.selectById(id);
         if (ObjectUtils.isNotNull(one)) {
             return false;
@@ -378,8 +379,8 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
         if (ObjectUtils.isNull(id)) {
             return new EBookFullVO();
         }
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         EBook eBook = bookMapper.selectById(id);
         if (ObjectUtils.isNull(eBook)) {
             return new EBookFullVO();
@@ -476,8 +477,8 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
     public ArticleFullVO readArticle(Integer articleId) {
         // 构建返回对象
         ArticleFullVO vo = new ArticleFullVO();
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         // 根据id获取文章明细
         EBookArticleVO article = articleService.getEBookArticleById(articleId);
         if (ObjectUtils.isNull(article)) {
@@ -562,8 +563,8 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
     @Override
     public List<StudyRecordVO> getStudyImageText() {
         // 用户id
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         List<StudyRecordVO> vo = new ArrayList<>();
         // 查找所有学习记录
         List<LearnRecord> list = learnRecordService.queryLearnRecord(userId, "BOOK");

@@ -1,5 +1,6 @@
 package com.zch.oss.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -115,7 +116,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
         String newFileName = generateNewFileName(originalFileName, from);
         // 3. 获取文件流
         InputStream inputStream;
-        Long userId = UserContext.getLoginId();
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
         try {
             inputStream = file.getInputStream();
         } catch (IOException e) {

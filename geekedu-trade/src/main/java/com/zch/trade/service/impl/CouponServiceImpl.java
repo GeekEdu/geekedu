@@ -1,5 +1,6 @@
 package com.zch.trade.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -11,6 +12,7 @@ import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
 import com.zch.common.redis.utils.RedisUtils;
+import com.zch.common.satoken.context.UserContext;
 import com.zch.trade.domain.po.Coupon;
 import com.zch.trade.domain.po.CouponCode;
 import com.zch.trade.domain.po.UserCoupon;
@@ -87,8 +89,8 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> impleme
     @Override
     public List<UserCouponVO> getUserCounponList() {
         List<UserCouponVO> vo = new ArrayList<>();
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         List<UserCoupon> list = userCouponService.list(new LambdaQueryWrapper<UserCoupon>()
                 .eq(UserCoupon::getUserId, userId));
         if (ObjectUtils.isNull(list) && CollUtils.isEmpty(list)) {

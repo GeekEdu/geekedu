@@ -8,6 +8,7 @@ import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
 import com.zch.gateway.result.SaResult;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.server.ServerWebExchange;
 
@@ -17,7 +18,7 @@ import org.springframework.web.server.ServerWebExchange;
  * @author Poison02
  * @date 2024/1/16
  */
-// @Configuration
+@Configuration
 public class SaTokenConfigure {
 
     @Bean
@@ -32,13 +33,55 @@ public class SaTokenConfigure {
                             .notMatch("/user/api/login")
                             .notMatch("/user/api/v2/login/password")
                             .notMatch("/user/api/v2/login/code")
-                            .notMatch("/system/api/v2/**")
-                            .notMatch("/system/api/index/mobile")
-                            .notMatch("/system/api/index/mobile/coupon")
-                            .notMatch("/system/api/index/v2/block")
                             .notMatch("/user/api/member/vip/list")
-                            .notMatch("/course/api/v2/**")
-                            .notMatch("/course/api/live/**")
+                            .notMatch("/user/api/getUserById")
+                            .notMatch("/user/api/thumb/count/{id}")
+                            .notMatch("/user/api/collection/count")
+                            .notMatch("/system/api/v2/config")
+                            .notMatch("/system/api/v2/navs")
+                            .notMatch("/system/api/v2/links")
+                            .notMatch("/system/api/v2/sliders")
+                            .notMatch("/system/api/v2/announcement/{id}")
+                            .notMatch("/system/api/v2/announcement")
+                            .notMatch("/system/api/v2/announcement/latest")
+                            .notMatch("/system/api/v2/ask/config")
+                            .notMatch("/system/api/v2/eBook/recommend")
+                            .notMatch("/system/api/v2/imageText/recommend")
+                            .notMatch("/system/api/index/mobile")
+                            .notMatch("/system/api/index/v2/block")
+                            .notMatch("/system/api/search/list")
+                            .notMatch("/course/api/v2/category/list")
+                            .notMatch("/course/api/v2/courses")
+                            .notMatch("/course/api/v2/detail/{id}")
+                            .notMatch("/course/api/v2/{id}/comments")
+                            .notMatch("/course/api/v2/learnedCourse")
+                            .notMatch("/course/api/v2/{id}/learnedDetail")
+                            .notMatch("/course/api/getCourseSimpleById/{id}")
+                            .notMatch("/course/api/getCourseById/{id}")
+                            .notMatch("/course/api/live/course/{id}/detail")
+                            .notMatch("/course/api/v2/search")
+                            .notMatch("/course/api/live/course/v2/list")
+                            .notMatch("/course/api/live/course/v2/{id}/detail")
+                            .notMatch("/course/api/live/course/v2/{id}/comments")
+                            .notMatch("/course/api/live/course/getCourseSimpleById/{id}")
+                            .notMatch("/book/api/eBook/v2/book/list")
+                            .notMatch("/book/api/eBook/v2/book/{id}/detail")
+                            .notMatch("/book/api/eBook/v2/book/{id}/comments")
+                            .notMatch("/book/api/eBook/v2/study/list")
+                            .notMatch("/book/api/imageText/v2/list")
+                            .notMatch("/book/api/imageText/v2/{id}/detail")
+                            .notMatch("/book/api/imageText/v2/{id}/comments")
+                            .notMatch("/book/api/imageText/v2/study/list")
+                            .notMatch("/book/api/path/v2/list")
+                            .notMatch("/book/api/path/v2/{id}/detail")
+                            .notMatch("/ask/api/question/v2/list")
+                            .notMatch("/ask/api/question/v2/category/list")
+                            .notMatch("/ask/api/question/v2/detail/{id}")
+                            .notMatch("/ask/api/comments/v2/list")
+                            .notMatch("/label/api/category/getCategoryById")
+                            .notMatch("/label/api/category/getCategoryList")
+                            .notMatch("/label/api/category/getCategorySimpleList")
+                            .notMatch("/label/api/category/getCategoryPage")
                             .check(r -> {
                                 ServerHttpRequest request = SaReactorSyncHolder.getContext().getRequest();
                                 String token = request.getHeaders().getFirst("Authorization");

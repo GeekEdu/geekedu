@@ -1,5 +1,6 @@
 package com.zch.book.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -138,7 +139,7 @@ public class BCommentServiceImpl extends ServiceImpl<BCommentMapper, BComment> i
         if (ObjectUtils.isNull(form) || ObjectUtils.isNull(form.getContent()) || StringUtils.isBlank(form.getContent())) {
             return 0;
         }
-        Long userId = UserContext.getLoginId();
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
         BComment comment = new BComment();
         comment.setContent(form.getContent());
         comment.setCType(CommentEnums.valueOf(cType));
@@ -146,7 +147,7 @@ public class BCommentServiceImpl extends ServiceImpl<BCommentMapper, BComment> i
         comment.setReplyId(form.getReplyId() == null ? 0 : form.getReplyId());
         comment.setRelationId(id);
 //        comment.setUserId(userId);
-        comment.setUserId(1745747394693820416L);
+        comment.setUserId(userId);
         commentMapper.insert(comment);
         // 如果是子评论，则父级评论的子评论数需要加1
         if (ObjectUtils.isNotNull(form.getParentId()) && form.getParentId() != 0) {
@@ -163,7 +164,7 @@ public class BCommentServiceImpl extends ServiceImpl<BCommentMapper, BComment> i
                 .eq(BComment::getRelationId, id)
                 .eq(BComment::getContent, form.getContent())
                 .eq(BComment::getCType, CommentEnums.valueOf(cType))
-                .eq(BComment::getUserId, 1745747394693820416L)
+                .eq(BComment::getUserId, userId)
                 .last(" limit 1"));
         return one.getId();
     }

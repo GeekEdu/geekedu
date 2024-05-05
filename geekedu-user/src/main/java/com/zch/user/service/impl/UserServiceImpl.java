@@ -118,7 +118,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public WxLoginVO bindPhone(BindPhoneForm form) {
         WxLoginVO vo = new WxLoginVO();
         // 登录用户
-        Long userId = UserContext.getLoginId();
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
         if (ObjectUtils.isNotNull(form) && StringUtils.isNotBlank(form.getPhone()) && StringUtils.isNotBlank(form.getCode())) {
             // 从redis中拿出来，若能拿到则ok
             String codeCache = RedisUtils.getCacheObject(SMS_CODE_KEY + userId);
@@ -226,12 +226,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public UserVO getLoginUserDetail() {
-//        Long userId = UserContext.getLoginId();
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
 //        if (ObjectUtils.isNull(userId)) {
 //            return null;
 //        }
 //        User user = userMapper.selectById(userId);
-        User user = userMapper.selectById(1745747394693820416L);
+        User user = userMapper.selectById(userId);
         if (ObjectUtils.isNull(user)) {
             return null;
         }
@@ -251,8 +251,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         Response<FileUploadVO> response = mediaFeignClient.uploadFile(file, 0);
         if (ObjectUtils.isNotNull(response) && ObjectUtils.isNotNull(response.getData())) {
             User user = new User();
-            // Long userId = UserContext.getLoginId();
-            Long userId = 1745747394693820416L;
+            Long userId = Long.valueOf((String) StpUtil.getLoginId());
+            // Long userId = 1745747394693820416L;
             user.setId(userId);
             user.setAvatar(response.getData().getLink());
             updateById(user);
@@ -263,16 +263,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public PageResult<OrderFullVO> getOrderPage(Integer pageNum, Integer pageSize) {
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         return tradeFeignClient.getOrderPage(userId, pageNum, pageSize);
     }
 
     @Override
     public Integer signIn() {
         // 返回当前登录用户
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         Map<String, Object> res = spliceKey(userId);
         String key = res.get("key").toString();
         int day = (int) res.get("day");
@@ -339,16 +339,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public Boolean isSign() {
         // 当前登录用户
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         Map<String, Object> res = spliceKey(userId);
         return RedisUtils.getBigMap(res.get("key").toString(), ((int) res.get("day")) - 1);
     }
 
     @Override
     public Boolean logout() {
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         if (StpUtil.isLogin()) {
             StpUtil.logout(userId);
             return true;
@@ -457,7 +457,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (ObjectUtils.isNull(form)) {
             return false;
         }
-        Long userId = UserContext.getLoginId();
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
         User user = userMapper.selectById(userId);
         if (ObjectUtils.isNull(user)) {
             return false;
@@ -735,8 +735,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public List<StudyRecordVO> queryCollectList(String type) {
         // 用户id
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         // 查询收藏表
         List<Collection> list = collectionService.queryList(userId, type);
         if (ObjectUtils.isNull(list) || CollUtils.isEmpty(list)) {

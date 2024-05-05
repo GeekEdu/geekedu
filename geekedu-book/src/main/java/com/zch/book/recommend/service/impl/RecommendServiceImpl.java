@@ -1,5 +1,6 @@
 package com.zch.book.recommend.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.zch.api.feignClient.trade.TradeFeignClient;
 import com.zch.api.vo.book.RecommendVO;
@@ -59,7 +60,7 @@ public class RecommendServiceImpl implements RecommendService {
 
     @Override
     public List<RelateDTO> getRelateData() {
-        Long userId = UserContext.getLoginId();
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
         List<RelateDTO> relateDTOList = new ArrayList<>();
         Response<List<OrderVO>> result = tradeFeignClient.queryPayOrderList(userId);
         if (ObjectUtils.isNotNull(result) && ObjectUtils.isNotNull(result.getData()) && CollUtils.isNotEmpty(result.getData())) {

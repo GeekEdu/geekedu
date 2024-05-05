@@ -1,5 +1,6 @@
 package com.zch.trade.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -24,6 +25,7 @@ import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
 import com.zch.common.mvc.result.Response;
+import com.zch.common.satoken.context.UserContext;
 import com.zch.trade.domain.dto.OrderCountDTO;
 import com.zch.trade.domain.dto.PayCountDTO;
 import com.zch.trade.domain.po.Order;
@@ -99,8 +101,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             vo.setGoodsType(REPLAY_COURSE.getValue());
         }
         // 用户id
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         vo.setUserId(userId);
         // 商品名
         vo.setGoodsName(form.getGoodsName());

@@ -1,5 +1,6 @@
 package com.zch.course.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.course.ChapterForm;
@@ -73,7 +74,7 @@ public class CourseChapterServiceImpl extends ServiceImpl<CourseChapterMapper, C
         if (ObjectUtils.isNotNull(one)) {
             return false;
         }
-        Long userId = UserContext.getLoginId();
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
         CourseChapter chapter = new CourseChapter();
         chapter.setName(form.getName());
         chapter.setCourseId(courseId);
@@ -95,7 +96,7 @@ public class CourseChapterServiceImpl extends ServiceImpl<CourseChapterMapper, C
         if (ObjectUtils.isNotNull(one)) {
             return false;
         }
-        Long userId = UserContext.getLoginId();
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
         CourseChapter chapter = new CourseChapter();
         chapter.setId(id);
         chapter.setCourseId(courseId);

@@ -1,5 +1,6 @@
 package com.zch.book.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -131,7 +132,7 @@ public class EBookArticleServiceImpl extends ServiceImpl<EBookArticleMapper, EBo
         if (ObjectUtils.isNotNull(one)) {
             return false;
         }
-        Long userId = UserContext.getLoginId();
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
         EBookArticle article = new EBookArticle();
         article.setTitle(form.getTitle());
         article.setBookId(form.getBookId());

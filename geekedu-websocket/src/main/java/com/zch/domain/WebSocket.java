@@ -1,5 +1,6 @@
 package com.zch.domain;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.common.core.utils.CollUtils;
@@ -60,8 +61,8 @@ public class WebSocket {
         this.session = session;
         // 校验当前token，看是否能拿到用户id
         if (StringUtils.isNotBlank(token)) {
-            // Long userId = (Long) StpUtil.getLoginIdByToken(token);
-            Long userId = 1745747394693820416L;
+            Long userId = (Long) StpUtil.getLoginIdByToken(token);
+            // Long userId = 1745747394693820416L;
             // 看是否能查找到用户
             // 先拿到 Bean
             UserFeignClient userFeignClient = (UserFeignClient) context.getBean("userFeignClient");

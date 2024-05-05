@@ -1,5 +1,6 @@
 package com.zch.book.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -17,6 +18,7 @@ import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
 import com.zch.common.mvc.result.Response;
+import com.zch.common.satoken.context.UserContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -182,8 +184,8 @@ public class LearnPathServiceImpl extends ServiceImpl<LearnPathMapper, LearnPath
         LearnPathVO data = getPathDetail(id);
         vo.setData(data);
         vo.setSteps(stepsService.getStepFullList(data.getId()));
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         // 查看是否购买
         Response<Boolean> res = tradeFeignClient.queryOrderIsPay(userId, id, "LEARN_PATH");
         if (ObjectUtils.isNotNull(res) && ObjectUtils.isNotNull(res.getData())) {

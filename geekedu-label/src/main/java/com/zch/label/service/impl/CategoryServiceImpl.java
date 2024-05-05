@@ -1,5 +1,6 @@
 package com.zch.label.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -214,7 +215,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     @Override
     public Boolean updateCategory(Integer id, CategoryForm form) {
         // 获取用户id
-        Long userId = UserContext.getLoginId();
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
         if (ObjectUtils.isNull(id)) {
             throw new CommonException("请传入正确的分类id！");
         }

@@ -1,5 +1,6 @@
 package com.zch.trade.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.trade.pay.PayInfoForm;
@@ -7,6 +8,7 @@ import com.zch.api.feignClient.user.UserFeignClient;
 import com.zch.api.vo.trade.pay.PayInfoVO;
 import com.zch.common.core.utils.BeanUtils;
 import com.zch.common.core.utils.ObjectUtils;
+import com.zch.common.satoken.context.UserContext;
 import com.zch.trade.adapter.PayAdapter;
 import com.zch.trade.domain.po.AliReturnPay;
 import com.zch.trade.domain.po.AliSandboxPay;
@@ -130,8 +132,8 @@ public class PayInfoServiceImpl extends ServiceImpl<PayInfoMapper, PayInfo> impl
 
     @Override
     public void createPayInfo(PayInfoForm form) {
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         // 查询支付信息
         if (ObjectUtils.isNotNull(form) && ObjectUtils.isNotNull(form.getOrderId())) {
             PayInfo one = getOne(new LambdaQueryWrapper<PayInfo>()

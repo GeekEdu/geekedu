@@ -1,5 +1,6 @@
 package com.zch.ask.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -180,19 +181,19 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
 
     @Override
     public Integer commentAnswer(Integer id, CommentAnswerForm form) {
-        // Long userId = UserContext.getLoginId();
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
         Comments comments = new Comments();
         comments.setAnswerId(id);
         comments.setCType(CommentsEnum.ASK_QUESTION);
         comments.setContent(form.getContent());
-        comments.setUserId(1745747394693820416L);
-        comments.setCreatedBy(1745747394693820416L);
-        comments.setUpdatedBy(1745747394693820416L);
+        comments.setUserId(userId);
+        comments.setCreatedBy(userId);
+        comments.setUpdatedBy(userId);
         save(comments);
         Comments one = commentsMapper.selectOne(new LambdaQueryWrapper<Comments>()
                 .eq(Comments::getCType, CommentsEnum.ASK_QUESTION)
                 .eq(Comments::getAnswerId, id)
-                .eq(Comments::getUserId, 1745747394693820416L)
+                .eq(Comments::getUserId, userId)
                 .orderByDesc(Comments::getCreatedTime)
                 .last(" limit 1"));
         return one.getId();
@@ -273,15 +274,15 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
 
     @Override
     public Boolean addComment(Integer relationId, String cType, AddCommentForm form) {
-        Long userId = UserContext.getLoginId();
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
         Comments comments = new Comments();
 //        comments.setUserId(userId);
-        comments.setUserId(1745747394693820416L);
+        comments.setUserId(userId);
         comments.setCType(CommentsEnum.valueOf(cType));
         comments.setContent(form.getContent());
         comments.setRelationId(relationId);
-        comments.setCreatedBy(1745747394693820416L);
-        comments.setCreatedBy(1745747394693820416L);
+        comments.setCreatedBy(userId);
+        comments.setCreatedBy(userId);
         return save(comments);
     }
 

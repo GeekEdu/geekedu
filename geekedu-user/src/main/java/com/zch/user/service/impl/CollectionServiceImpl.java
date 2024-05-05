@@ -1,5 +1,6 @@
 package com.zch.user.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.user.CollectForm;
@@ -7,6 +8,7 @@ import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
 import com.zch.common.redis.utils.RedisUtils;
+import com.zch.common.satoken.context.UserContext;
 import com.zch.user.domain.po.Collection;
 import com.zch.user.enums.CollectionEnums;
 import com.zch.user.mapper.CollectionMapper;
@@ -42,8 +44,8 @@ public class CollectionServiceImpl extends ServiceImpl<CollectionMapper, Collect
             return false;
         }
         // 用户id
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         String key = switch (CollectionEnums.valueOf(type)) {
             case E_BOOK -> E_BOOK_SET + relationId;
             case IMAGE_TEXT -> IMAGE_TEXT_SET + relationId;
@@ -73,8 +75,8 @@ public class CollectionServiceImpl extends ServiceImpl<CollectionMapper, Collect
             return false;
         }
         // 用户id
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         String key = switch (CollectionEnums.valueOf(form.getType())) {
             case E_BOOK -> E_BOOK_SET + form.getRelationId();
             case IMAGE_TEXT -> IMAGE_TEXT_SET + form.getRelationId();

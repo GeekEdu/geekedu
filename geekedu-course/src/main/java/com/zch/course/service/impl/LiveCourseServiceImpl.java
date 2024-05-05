@@ -1,5 +1,6 @@
 package com.zch.course.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -25,6 +26,7 @@ import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
+import com.zch.common.satoken.context.UserContext;
 import com.zch.course.domain.po.LiveCourse;
 import com.zch.course.mapper.LiveCourseMapper;
 import com.zch.course.service.ILiveChapterService;
@@ -305,8 +307,8 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
         if (ObjectUtils.isNull(id)) {
             return vo;
         }
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         // 查询是否存在该课程
         LiveCourse course = courseMapper.selectById(id);
         if (ObjectUtils.isNull(course)) {
@@ -390,6 +392,7 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
 
     @Override
     public LiveVO getPlayInfo(Integer id) {
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
         LiveVO vo = new LiveVO();
         LiveVideoVO video = videoService.getVideoDetail(id);
         LiveCourseVO course = getLiveCourseDetail(video.getCourseId());
@@ -398,7 +401,7 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
         vo.setTest(mediaFeignClient.getPushUrl().getData());
         vo.setWeb_rtc_play_url(mediaFeignClient.getPlayUrl().getData());
         LiveChatVO chat = new LiveChatVO();
-        chat.setUser(userFeignClient.getUserById("1745747394693820416").getData());
+        chat.setUser(userFeignClient.getUserById(userId + "").getData());
         chat.setConnect_url("ws://127.0.0.1:8091/live/course/:courseId/video/:videoId/token/:token");
         chat.setChannel("geekedu-live-chat");
         vo.setChat(chat);

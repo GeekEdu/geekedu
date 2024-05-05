@@ -1,5 +1,6 @@
 package com.zch.course.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -32,6 +33,7 @@ import com.zch.common.core.utils.StringUtils;
 import com.zch.common.meilisearch.result.SearchResult;
 import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
+import com.zch.common.satoken.context.UserContext;
 import com.zch.course.domain.dto.CourseMSDTO;
 import com.zch.course.domain.dto.LiveCourseMSDTO;
 import com.zch.course.domain.po.Course;
@@ -366,7 +368,8 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
             return vo;
         }
         // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         // 查询是否存在该课程
         Course course = courseMapper.selectById(id);
         if (ObjectUtils.isNull(course)) {
@@ -474,8 +477,8 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         if (ObjectUtils.isNull(sectionId)) {
             return vo;
         }
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         // 查询是否存在该课时
         CourseSectionVO section = sectionService.getSectionById(sectionId);
         if (ObjectUtils.isNull(section)) {
@@ -575,16 +578,16 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     @Override
     public Boolean courseRecord(Integer courseId, LearnRecordForm form) {
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         return learnRecordService.updateLearnRecord(courseId, form.getVideoId(), form.getDuration(), userId, "VOD");
     }
 
     @Override
     public Boolean courseStudy(Integer id, String type) {
         // 将课程学习记录进行初始化
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         // 查询课程信息，拿到对应的课程小节信息
         Course course = getById(id);
         if (ObjectUtils.isNotNull(course) && course.getSectionCount() != 0) {
@@ -609,8 +612,8 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     @Override
     public List<LearnedCourseVO> getLearnedCourse(Integer pageNum, Integer pageSize) {
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         List<LearnRecord> records = learnRecordService.list(new LambdaQueryWrapper<LearnRecord>()
                 .eq(LearnRecord::getUserId, userId)
                 .eq(LearnRecord::getType, "VOD"));

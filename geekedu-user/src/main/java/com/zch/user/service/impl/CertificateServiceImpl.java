@@ -1,5 +1,6 @@
 package com.zch.user.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -15,6 +16,7 @@ import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.mvc.result.Response;
 import com.zch.common.redis.utils.StringUtils;
+import com.zch.common.satoken.context.UserContext;
 import com.zch.user.domain.dto.CertificateDTO;
 import com.zch.user.domain.dto.UserCertDTO;
 import com.zch.user.domain.po.Certificate;
@@ -172,8 +174,8 @@ public class CertificateServiceImpl extends ServiceImpl<CertificateMapper, Certi
 
     @Override
     public Page<CertificateVO> queryMemberCertificatePage(Integer pageNum, Integer pageSize) {
-        // Long userId = UserContext.getLoginId();
-        Long userId = 1745747394693820416L;
+        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = 1745747394693820416L;
         Page<CertificateVO> vo = new Page<>();
         long count = userCertificateService.count(new LambdaQueryWrapper<UserCertificate>()
                 .eq(UserCertificate::getUserId, userId));

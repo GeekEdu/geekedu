@@ -1,5 +1,6 @@
 package com.zch.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zch.api.feignClient.user.UserFeignClient;
@@ -8,6 +9,7 @@ import com.zch.api.vo.course.live.LiveDurationVO;
 import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
+import com.zch.common.satoken.context.UserContext;
 import com.zch.domain.Danmu;
 import com.zch.domain.WebSocket;
 import com.zch.mapper.DanmuMapper;
@@ -40,8 +42,8 @@ public class DanmuServiceImpl extends ServiceImpl<DanmuMapper, Danmu> implements
                 && StringUtils.isNotBlank(duration.getContent())) {
             String content = duration.getContent();
             BigDecimal seconds = duration.getDuration();
-            // Long userId = UserContext.getLoginId();
-            Long userId = 1745747394693820416L;
+            Long userId = Long.valueOf((String) StpUtil.getLoginId());
+            // Long userId = 1745747394693820416L;
             // 构造信息发送
             UserSimpleVO user = userFeignClient.getUserById(userId + "").getData();
             ChatVO vo = new ChatVO();
