@@ -62,7 +62,7 @@ spring:
         - id: websocket-service
           uri: lb:ws://websocket-service
           predicates:
-            - Path=/live/course/{courseId}/video/{videoId}/token/{token}
+            - Path=/ws/**
       globalcors: # 全局的跨域处理
         add-to-simple-url-handler-mapping: true # 解决options请求被拦截问题
         corsConfigurations:

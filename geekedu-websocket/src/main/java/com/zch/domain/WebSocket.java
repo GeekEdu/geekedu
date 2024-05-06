@@ -31,7 +31,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 //注册成组件
 @Component
 //定义websocket服务器端，它的功能主要是将目前的类定义成一个websocket服务器端。注解的值将被用于监听用户连接的终端访问URL地址
-@ServerEndpoint("/live/course/{courseId}/video/{videoId}/token/{token}")
+@ServerEndpoint(value = "/live/course/{courseId}/video/{videoId}/token/{token}", subprotocols = {"protocol"})
 @Slf4j
 public class WebSocket {
 
@@ -61,7 +61,7 @@ public class WebSocket {
         this.session = session;
         // 校验当前token，看是否能拿到用户id
         if (StringUtils.isNotBlank(token)) {
-            Long userId = (Long) StpUtil.getLoginIdByToken(token);
+            Long userId = Long.valueOf((String) StpUtil.getLoginIdByToken(token));
             // Long userId = 1745747394693820416L;
             // 看是否能查找到用户
             // 先拿到 Bean

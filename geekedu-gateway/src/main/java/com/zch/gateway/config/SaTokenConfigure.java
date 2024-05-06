@@ -82,7 +82,7 @@ public class SaTokenConfigure {
                             .notMatch("/label/api/category/getCategoryList")
                             .notMatch("/label/api/category/getCategorySimpleList")
                             .notMatch("/label/api/category/getCategoryPage")
-                            .notMatch("/live/course/{courseId}/video/{videoId}/token/{token}")
+                            .notMatch("/ws/live/course/{courseId}/video/{videoId}/token/{token}")
                             .check(r -> {
                                 ServerHttpRequest request = SaReactorSyncHolder.getContext().getRequest();
                                 String token = request.getHeaders().getFirst("Authorization");
