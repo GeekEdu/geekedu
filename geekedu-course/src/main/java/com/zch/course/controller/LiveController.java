@@ -29,7 +29,7 @@ public class LiveController {
     public Response<Boolean> liveWatchRecord(@PathVariable("courseId") Integer courseId,
                                              @PathVariable("videoId") Integer videoId,
                                              @RequestBody LiveDurationVO duration) {
-        return Response.success();
+        return Response.success(liveCourseService.liveWatchRecord(courseId, videoId, duration));
     }
 
     @GetMapping("/course/{courseId}/video/{videoId}/chat/msg")

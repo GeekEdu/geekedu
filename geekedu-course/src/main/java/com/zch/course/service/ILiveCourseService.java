@@ -214,4 +214,12 @@ public interface ILiveCourseService extends IService<LiveCourse> {
      */
     Boolean courseCollect(Integer id);
 
+    /**
+     * 记录直播时长
+     * @param courseId
+     * @param videoId
+     * @param duration
+     */
+    Boolean liveWatchRecord(Integer courseId, Integer videoId, LiveDurationVO duration);
+
 }

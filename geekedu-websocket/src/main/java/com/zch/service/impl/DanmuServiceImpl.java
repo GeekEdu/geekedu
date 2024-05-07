@@ -26,7 +26,7 @@ import java.util.Map;
  * @author Poison02
  * @date 2024/3/15
  */
-@Service
+@Service("danmuService")
 @Slf4j
 @RequiredArgsConstructor
 public class DanmuServiceImpl extends ServiceImpl<DanmuMapper, Danmu> implements IDanmuService {

@@ -28,7 +28,9 @@ import com.zch.common.mvc.result.PageResult;
 import com.zch.common.mvc.result.Response;
 import com.zch.common.satoken.context.UserContext;
 import com.zch.course.domain.po.LiveCourse;
+import com.zch.course.domain.po.LiveVideo;
 import com.zch.course.mapper.LiveCourseMapper;
+import com.zch.course.mapper.LiveVideoMapper;
 import com.zch.course.service.ILiveChapterService;
 import com.zch.course.service.ILiveCourseService;
 import com.zch.course.service.ILiveVideoService;
@@ -64,6 +66,8 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
     private final LiveCourseMapper courseMapper;
 
     private final TradeFeignClient tradeFeignClient;
+    private final LiveCourseMapper liveCourseMapper;
+    private final LiveVideoMapper liveVideoMapper;
 
     @Override
     public LiveCourseFullVO getLiveCourseFullList(Integer pageNum, Integer pageSize, String sort, String order,
@@ -414,6 +418,17 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
         form.setRelationId(id);
         form.setType("LIVE_COURSE");
         return userFeignClient.hitCollectIcon(form).getData();
+    }
+
+    @Override
+    public Boolean liveWatchRecord(Integer courseId, Integer videoId, LiveDurationVO duration) {
+        LiveVideo liveVideo = liveVideoMapper.selectOne(new LambdaQueryWrapper<LiveVideo>()
+                .eq(LiveVideo::getCourseId, courseId)
+                .eq(LiveVideo::getId, videoId));
+        Long duration1 = duration.getDuration().longValue();
+        liveVideo.setDuration(duration1);
+        liveVideoMapper.updateById(liveVideo);
+        return true;
     }
 
     /**

@@ -1,12 +1,16 @@
 package com.zch.domain;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zch.api.feignClient.user.UserFeignClient;
+import com.zch.api.vo.course.live.ChatVO;
+import com.zch.api.vo.course.live.LiveDurationVO;
 import com.zch.api.vo.user.UserSimpleVO;
 import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
 import com.zch.common.mvc.result.Response;
+import com.zch.service.IDanmuService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -17,10 +21,13 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -50,7 +57,7 @@ public class WebSocket {
     //存放websocket的集合
     private static CopyOnWriteArraySet<WebSocket> webSocketSet = new CopyOnWriteArraySet<>();
 
-    private static final ConcurrentHashMap<String, Session> SESSION_MAP = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Session, String> SESSION_MAP = new ConcurrentHashMap<>();
 
     //前端请求时一个websocket时
     @OnOpen
@@ -68,12 +75,12 @@ public class WebSocket {
             UserFeignClient userFeignClient = (UserFeignClient) context.getBean("userFeignClient");
             Response<UserSimpleVO> user = userFeignClient.getUserById(userId + "");
             // 将传入的参数做一个简单的加密，做为键
-            String key = generateUniqueKey(courseId, videoId, token);
+            // String key = generateUniqueKey(courseId, videoId, token);
             if (ObjectUtils.isNotNull(user) && ObjectUtils.isNotNull(user.getData())) {
-                SESSION_MAP.put(key, session);
+                SESSION_MAP.put(session, token);
             }
             // 如果SESSION_MAP中有值且没有当前用户，则将当前用户放入Set中
-            if (CollUtils.isNotEmpty(SESSION_MAP) && SESSION_MAP.containsKey(key)) {
+            if (CollUtils.isNotEmpty(SESSION_MAP) && SESSION_MAP.containsKey(session)) {
                 webSocketSet.add(this);
             }
         }
@@ -92,7 +99,17 @@ public class WebSocket {
     @OnMessage
     public void onMessage(String message) {
         log.info("【websocket消息】收到客户端发来的消息:{}", message);
-        // sendMessage(message);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Message message1;
+        try {
+            message1 = objectMapper.readValue(message, Message.class);
+            LiveDurationVO vo = new LiveDurationVO();
+            vo.setContent(message1.getContent());
+            vo.setDuration(message1.getDuration());
+            saveMsg(message1.getCourseId(), message1.getVideoId(), vo);
+        } catch (Exception e) {
+
+        }
     }
 
     //新增一个方法用于主动向客户端发送消息
@@ -119,6 +136,52 @@ public class WebSocket {
 
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("无法初始化SHA-256哈希函数", e);
+        }
+    }
+
+    /**
+     * 持久消息
+     * @param courseId
+     * @param videoId
+     * @param duration
+     */
+    private void saveMsg(Integer courseId, Integer videoId, LiveDurationVO duration) {
+        if (ObjectUtils.isNotNull(duration) && ObjectUtils.isNotNull(duration.getDuration())
+                && StringUtils.isNotBlank(duration.getContent())) {
+            String content = duration.getContent();
+            BigDecimal seconds = duration.getDuration();
+            // 通过拿到当前session的token，然后拿到当前用户id
+            String token = SESSION_MAP.get(session);
+            Long userId = Long.valueOf((String) StpUtil.getLoginIdByToken(token));
+            // 构造信息发送
+            UserFeignClient userFeignClient = (UserFeignClient) context.getBean("userFeignClient");
+            UserSimpleVO user = userFeignClient.getUserById(userId + "").getData();
+            ChatVO vo = new ChatVO();
+            vo.setT("message");
+            Map<String, String> u = new HashMap<>(1);
+            u.put("nick_name", user.getName());
+            Map<String, Object> v = new HashMap<>(2);
+            v.put("chat_id", 1);
+            v.put("content", content);
+            vo.setU(u);
+            vo.setV(v);
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                String message = objectMapper.writeValueAsString(vo);
+                // 发送消息
+                sendMessage(StringUtils.isEmpty(message) ? "" : message);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            // 存数据库
+            Danmu danmu = new Danmu();
+            danmu.setContent(content);
+            danmu.setDuration(seconds);
+            danmu.setCourseId(courseId);
+            danmu.setVideoId(videoId);
+            danmu.setUserId(userId);
+            IDanmuService danmuService = (IDanmuService) context.getBean("danmuService");
+            danmuService.save(danmu);
         }
     }
 

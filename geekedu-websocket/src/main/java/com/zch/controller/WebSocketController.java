@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
  * @author Poison02
  * @date 2024/3/10
  */
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/chat")
 @RequiredArgsConstructor
