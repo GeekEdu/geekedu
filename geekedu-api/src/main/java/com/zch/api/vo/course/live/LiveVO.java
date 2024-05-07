@@ -39,6 +39,6 @@ public class LiveVO extends BaseVO {
 
     private List<Object> sign_in_record = new ArrayList<>(0);
 
-    private String test = "";
+    private String liveUrl = "";
 
 }

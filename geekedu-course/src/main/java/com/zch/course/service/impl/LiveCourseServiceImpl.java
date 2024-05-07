@@ -29,6 +29,7 @@ import com.zch.common.mvc.result.Response;
 import com.zch.common.satoken.context.UserContext;
 import com.zch.course.domain.po.LiveCourse;
 import com.zch.course.domain.po.LiveVideo;
+import com.zch.course.enums.LiveVideoStatusEnum;
 import com.zch.course.mapper.LiveCourseMapper;
 import com.zch.course.mapper.LiveVideoMapper;
 import com.zch.course.service.ILiveChapterService;
@@ -398,11 +399,15 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
     public LiveVO getPlayInfo(Integer id) {
         Long userId = Long.valueOf((String) StpUtil.getLoginId());
         LiveVO vo = new LiveVO();
+        LiveVideo liveVideo = liveVideoMapper.selectById(id);
+        // 更新视频直播状态为直播中
+        liveVideo.setStatus(LiveVideoStatusEnum.LIVING);
+        liveVideoMapper.updateById(liveVideo);
         LiveVideoVO video = videoService.getVideoDetail(id);
         LiveCourseVO course = getLiveCourseDetail(video.getCourseId());
         vo.setCourse(course);
         vo.setVideo(video);
-        vo.setTest(mediaFeignClient.getPushUrl().getData());
+        vo.setLiveUrl(mediaFeignClient.getPushUrl().getData());
         vo.setWeb_rtc_play_url(mediaFeignClient.getPlayUrl().getData());
         LiveChatVO chat = new LiveChatVO();
         chat.setUser(userFeignClient.getUserById(userId + "").getData());
