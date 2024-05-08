@@ -42,7 +42,7 @@ public class EBookForm implements Serializable {
     /**
      * 是否vip免费
      */
-    private Boolean isVipFree;
+    // private Boolean isVipFree;
 
     /**
      * 是否显示

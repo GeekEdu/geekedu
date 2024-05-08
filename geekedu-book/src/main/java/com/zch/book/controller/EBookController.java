@@ -112,7 +112,7 @@ public class EBookController {
      * @return
      */
     @PostMapping("/update/{id}")
-    public Response<Boolean> updateEBook(@PathVariable("id") Integer id, EBookForm form) {
+    public Response<Boolean> updateEBook(@PathVariable("id") Integer id, @RequestBody EBookForm form) {
         return Response.success(eBookService.updateEBook(id, form));
     }
 

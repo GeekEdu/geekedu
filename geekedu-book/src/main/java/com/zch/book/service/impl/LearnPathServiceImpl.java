@@ -101,6 +101,7 @@ public class LearnPathServiceImpl extends ServiceImpl<LearnPathMapper, LearnPath
             path.setIsShow(form.getIsShow());
             path.setIntro(form.getIntro());
             path.setGroundingTime(form.getGroundingTime());
+            updateById(path);
             return true;
         }
         return false;
@@ -187,9 +188,13 @@ public class LearnPathServiceImpl extends ServiceImpl<LearnPathMapper, LearnPath
         Long userId = Long.valueOf((String) StpUtil.getLoginId());
         // Long userId = 1745747394693820416L;
         // 查看是否购买
-        Response<Boolean> res = tradeFeignClient.queryOrderIsPay(userId, id, "LEARN_PATH");
-        if (ObjectUtils.isNotNull(res) && ObjectUtils.isNotNull(res.getData())) {
-            vo.setIsBuy(res.getData());
+        if (0 == data.getPrice().longValue()) {
+            vo.setIsBuy(true);
+        } else {
+            Response<Boolean> res = tradeFeignClient.queryOrderIsPay(userId, id, "LEARN_PATH");
+            if (ObjectUtils.isNotNull(res) && ObjectUtils.isNotNull(res.getData())) {
+                vo.setIsBuy(res.getData());
+            }
         }
         return vo;
     }

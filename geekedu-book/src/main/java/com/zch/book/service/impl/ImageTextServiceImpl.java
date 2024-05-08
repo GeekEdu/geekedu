@@ -340,7 +340,10 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
         BeanUtils.copyProperties(one, vo1);
         ImageTextSingleVO vo = new ImageTextSingleVO();
         // 查询是否购买
-        if (! BigDecimal.ZERO.equals(one.getPrice())) {
+        if (0 == one.getPrice().longValue()) {
+            // 如果图文本身就是免费的
+            vo.setIsBuy(true);
+        } else {
             Response<Boolean> res = tradeFeignClient.queryOrderIsPay(userId, id, "IMAGE_TEXT");
             if (ObjectUtils.isNotNull(res) && ObjectUtils.isNotNull(res.getData())) {
                 vo.setIsBuy(res.getData());

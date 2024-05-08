@@ -171,7 +171,7 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
         eBook.setGroundingTime(form.getGroundingTime());
         eBook.setIsShow(form.getIsShow());
         eBook.setPrice(new BigDecimal(form.getPrice()));
-        eBook.setIsVipFree(form.getIsVipFree());
+        // eBook.setIsVipFree(form.getIsVipFree());
         eBook.setCreatedBy(userId);
         eBook.setUpdatedBy(userId);
         save(eBook);
@@ -198,7 +198,7 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
         // 用户id
         Long userId = Long.valueOf((String) StpUtil.getLoginId());
         EBook one = bookMapper.selectById(id);
-        if (ObjectUtils.isNotNull(one)) {
+        if (ObjectUtils.isNull(one)) {
             return false;
         }
         one.setName(form.getName());
@@ -207,8 +207,8 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
         one.setFullDesc(form.getFullDesc());
         one.setIsShow(form.getIsShow());
         one.setSellType(form.getSellType());
-        one.setPrice(new BigDecimal(form.getPrice()));
-        one.setIsVipFree(form.getIsVipFree());
+        one.setPrice(new BigDecimal(ObjectUtils.isNull(form.getPrice()) ? "0" : form.getPrice()));
+        // one.setIsVipFree(form.getIsVipFree());
         one.setGroundingTime(form.getGroundingTime());
         one.setCategoryId(form.getCategoryId());
         one.setUpdatedBy(userId);
@@ -345,6 +345,8 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
             return vo;
         }
         LambdaQueryWrapper<EBook> wrapper = new LambdaQueryWrapper<>();
+        // 不能查询未显示的电子书
+        wrapper.eq(EBook::getIsShow, 1);
         if (! Objects.equals(categoryId, 0)) {
             wrapper.eq(EBook::getCategoryId, categoryId);
         }
@@ -394,7 +396,9 @@ public class EBookServiceImpl extends ServiceImpl<EBookMapper, EBook> implements
         }
         vo1.setCategory(res.getData());
         // 查找是否购买
-        if (! BigDecimal.ZERO.equals(eBook.getPrice())) {
+        if (0 == eBook.getPrice().longValue()) {
+            vo.setIsBuy(true);
+        } else {
             Response<Boolean> res1 = tradeFeignClient.queryOrderIsPay(userId, id, "E_BOOK");
             if (ObjectUtils.isNotNull(res1) && ObjectUtils.isNotNull(res1.getData())) {
                 vo.setIsBuy(res1.getData());

@@ -326,6 +326,8 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
             return vo;
         }
         LambdaQueryWrapper<Course> wrapper = new LambdaQueryWrapper<>();
+        // 不能查询后台设置为不显示的课程
+        wrapper.eq(Course::getIsShow, 1);
         if (StringUtils.isNotBlank(scene)) {
             if ("free".equals(scene)) {
                 // 免费

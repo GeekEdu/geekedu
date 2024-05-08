@@ -32,8 +32,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/api/v2/{id}/comments", "/api/v2/learnedCourse", "/api/v2/{id}/learnedDetail", "/api/live/course/v2/list",
                         "/api/getCourseSimpleById/{id}", "/api/getCourseById/{id}", "/api/live/course/{id}/detail", "/api/v2/search",
                         "/api/live/course/v2/{id}/detail", "/api/live/course/v2/{id}/comments", "/api/live/course/getCourseSimpleById/{id}", "/api/eBook/v2/book/list", "/api/eBook/v2/book/{id}/detail",
-                        "/api/eBook/v2/book/{id}/comments", "/api/eBook/v2/study/list", "/api/imageText/v2/list", "/api/imageText/v2/{id}/detail",
-                        "/api/imageText/v2/{id}/comments", "/api/imageText/v2/study/list", "/api/path/v2/list", "/api/path/v2/{id}/detail",
+                        "/api/eBook/v2/book/{id}/comments", "/api/eBook/v2/study/list", "/api/imageText/v2/list", "/api/imageText/v2/{id}/detail", "/api/eBook/getEBookById/{id}", "/api/imageText/getImageTextById/{id}",
+                        "/api/imageText/v2/{id}/comments", "/api/imageText/v2/study/list", "/api/path/v2/list", "/api/path/v2/{id}/detail", "/api/path/{id}/detail",
                         "/api/question/v2/list", "/api/question/v2/category/list", "/api/question/v2/detail/{id}", "/api/comments/v2/list",
                         "/api/category/getCategoryById", "/api/category/getCategoryList", "/api/category/getCategorySimpleList", "/api/category/getCategoryPage", "/live/course/{courseId}/video/{videoId}/token/{token}")
                 .order(1);
@@ -46,8 +46,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/api/v2/{id}/comments", "/api/v2/learnedCourse", "/api/v2/{id}/learnedDetail", "/api/live/course/v2/list",
                         "/api/getCourseSimpleById/{id}", "/api/getCourseById/{id}", "/api/live/course/{id}/detail", "/api/v2/search",
                         "/api/live/course/v2/{id}/detail", "/api/live/course/v2/{id}/comments", "/api/live/course/getCourseSimpleById/{id}", "/api/eBook/v2/book/list", "/api/eBook/v2/book/{id}/detail",
-                        "/api/eBook/v2/book/{id}/comments", "/api/eBook/v2/study/list", "/api/imageText/v2/list", "/api/imageText/v2/{id}/detail",
-                        "/api/imageText/v2/{id}/comments", "//api/imageText/v2/study/list", "/api/path/v2/list", "/api/path/v2/{id}/detail",
+                        "/api/eBook/v2/book/{id}/comments", "/api/eBook/v2/study/list", "/api/imageText/v2/list", "/api/imageText/v2/{id}/detail", "/api/eBook/getEBookById/{id}", "/api/imageText/getImageTextById/{id}",
+                        "/api/imageText/v2/{id}/comments", "//api/imageText/v2/study/list", "/api/path/v2/list", "/api/path/v2/{id}/detail", "/api/path/{id}/detail",
                         "/api/question/v2/list", "/api/question/v2/category/list", "/api/question/v2/detail/{id}", "/api/comments/v2/list",
                         "/api/category/getCategoryById", "/api/category/getCategoryList", "/api/category/getCategorySimpleList", "/api/category/getCategoryPage", "/live/course/{courseId}/video/{videoId}/token/{token}")
                 .order(0);
