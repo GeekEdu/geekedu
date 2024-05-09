@@ -10,11 +10,11 @@ import lombok.Getter;
 @Getter
 public enum GoodsTypeEnums {
 
-    VOD(1, "vod"),
-    LIVE(2, "live"),
-    BOOK(3, "book"),
-    VIP(4, "vip"),
-    VOT_V(5, "notV"),
+    VOD(1, "VOD"),
+    LIVE(2, "LIVE"),
+    BOOK(3, "BOOK"),
+    VIP(4, "VIP"),
+    NOT_V(5, "NOT_V"),
     ;
 
     @EnumValue

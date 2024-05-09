@@ -92,6 +92,8 @@ public class CreditMallController {
         return Response.success(creditMallService.updateGood(id, form));
     }
 
+    //=============================================================================
+    // 前台
     /**
      * 前台 返回积分商城列表
      * @param pageNum
