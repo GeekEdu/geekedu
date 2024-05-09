@@ -285,4 +285,6 @@ public interface IUserService extends IService<User> {
      * @return
      */
     Boolean editNickName(EditNickNameForm form);
+
+    Boolean updateUserVipInfo(Long userId, Integer vipId);
 }

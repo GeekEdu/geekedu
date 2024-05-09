@@ -192,4 +192,15 @@ public class UserController {
         return Response.success(userService.getUserById(userId));
     }
 
+    /**
+     * 更新用户vip信息
+     * @param userId
+     * @param vipId
+     * @return
+     */
+    @PostMapping("/v2/{userId}/update/vip/{vipId}")
+    public Response<Boolean> updateUserVipInfo(@PathVariable("userId") Long userId, @PathVariable("vipId") Integer vipId) {
+        return Response.success(userService.updateUserVipInfo(userId, vipId));
+    }
+
 }

@@ -154,8 +154,15 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Override
     public Page<OrderFullVO> getOrderPage(Long userId, Integer pageNum, Integer pageSize) {
         Page<OrderFullVO> vo = new Page<>();
+        long count = count(new LambdaQueryWrapper<Order>().eq(Order::getUserId, userId));
+        if (count == 0) {
+            vo.setRecords(new ArrayList<>(0));
+            vo.setTotal(0);
+            return vo;
+        }
         Page<Order> page = page(new Page<>(pageNum, pageSize), new LambdaQueryWrapper<Order>()
-                .eq(Order::getUserId, userId));
+                .eq(Order::getUserId, userId)
+                .orderByDesc(Order::getCreatedTime));
         if (ObjectUtils.isNull(page) || ObjectUtils.isNull(page.getRecords()) || CollUtils.isEmpty(page.getRecords())) {
             vo.setRecords(new ArrayList<>(0));
             vo.setTotal(0);
@@ -186,7 +193,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 CourseVO data = courseFeignClient.getCourseById(item.getGoodsId()).getData();
                 GoodsVO goods = new GoodsVO();
                 goods.setOrderNumber(item.getOrderNumber());
-                goods.setGoodsType(VIP.getValue());
+                goods.setGoodsType(REPLAY_COURSE.getValue());
                 goods.setGoodsPrice(data.getPrice());
                 goods.setGoodsId(data.getId());
                 goods.setGoodsName(data.getTitle());
@@ -196,7 +203,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 LiveCourseVO data = courseFeignClient.getLiveCourseDetail(item.getGoodsId()).getData();
                 GoodsVO goods = new GoodsVO();
                 goods.setOrderNumber(item.getOrderNumber());
-                goods.setGoodsType(VIP.getValue());
+                goods.setGoodsType(LIVE_COURSE.getValue());
                 goods.setGoodsPrice(data.getPrice());
                 goods.setGoodsId(data.getId());
                 goods.setGoodsName(data.getTitle());
@@ -205,7 +212,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 ImageTextVO data = bookFeignClient.getImageTextById(item.getGoodsId()).getData();
                 GoodsVO goods = new GoodsVO();
                 goods.setOrderNumber(item.getOrderNumber());
-                goods.setGoodsType(VIP.getValue());
+                goods.setGoodsType(IMAGE_TEXT.getValue());
                 goods.setGoodsPrice(data.getPrice());
                 goods.setGoodsId(data.getId());
                 goods.setGoodsName(data.getTitle());
@@ -214,7 +221,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 LearnPathVO data = bookFeignClient.getPathDetail(item.getGoodsId()).getData();
                 GoodsVO goods = new GoodsVO();
                 goods.setOrderNumber(item.getOrderNumber());
-                goods.setGoodsType(VIP.getValue());
+                goods.setGoodsType(LEARN_PATH.getValue());
                 goods.setGoodsPrice(data.getPrice());
                 goods.setGoodsId(data.getId());
                 goods.setGoodsName(data.getName());
@@ -223,7 +230,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 EBookVO data = bookFeignClient.getEBookById(item.getGoodsId()).getData();
                 GoodsVO goods = new GoodsVO();
                 goods.setOrderNumber(item.getOrderNumber());
-                goods.setGoodsType(VIP.getValue());
+                goods.setGoodsType(E_BOOK.getValue());
                 goods.setGoodsPrice(data.getPrice());
                 goods.setGoodsId(data.getId());
                 goods.setGoodsName(data.getName());
@@ -231,7 +238,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             }
             return vo1;
         }).collect(Collectors.toList()));
-        vo.setTotal(count());
+        vo.setTotal(count);
         return vo;
     }
 
@@ -260,6 +267,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             order.setOrderStatus(OrderStatusEnum.ORDERED_AND_PAID);
             order.setPayStatus(PayStatusEnum.HAVE_PAID);
             updateById(order);
+            // 如果是会员，同时还需要更新用户的会员信息
+            if (order.getGoodsType().equals(VIP)) {
+                userFeignClient.updateUserVipInfo(order.getUserId(), order.getGoodsId());
+            }
             return true;
         }
         return false;

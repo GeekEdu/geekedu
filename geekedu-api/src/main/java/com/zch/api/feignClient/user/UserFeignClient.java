@@ -157,4 +157,7 @@ public interface UserFeignClient {
     @GetMapping("/api/member/stat/regisCount")
     Response<Map<LocalDate, Long>> statRegisterCount();
 
+    @PostMapping("/api/v2/{userId}/update/vip/{vipId}")
+    Response<Boolean> updateUserVipInfo(@PathVariable("userId") Long userId, @PathVariable("vipId") Integer vipId);
+
 }

@@ -845,6 +845,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return false;
     }
 
+    @Override
+    public Boolean updateUserVipInfo(Long userId, Integer vipId) {
+        User user = getById(userId);
+        if (ObjectUtils.isNotNull(user)) {
+            user.setVipId(vipId);
+            // 查找当前vip的过期时间
+            VipVO vip = vipInfoService.getVipById(vipId);
+            // 将过期时间增加 day 天
+            user.setVipExpireTime(LocalDateTime.now().plusDays(vip.getDay()));
+            updateById(user);
+            return true;
+        }
+        return false;
+    }
+
     /**
      * 校验验证码是否相同
      *

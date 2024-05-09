@@ -36,7 +36,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/api/imageText/v2/{id}/comments", "/api/imageText/v2/study/list", "/api/path/v2/list", "/api/path/v2/{id}/detail", "/api/path/{id}/detail",
                         "/api/question/v2/list", "/api/question/v2/category/list", "/api/question/v2/detail/{id}", "/api/comments/v2/list",
                         "/api/category/getCategoryById", "/api/category/getCategoryList", "/api/category/getCategorySimpleList", "/api/category/getCategoryPage", "/live/course/{courseId}/video/{videoId}/token/{token}",
-                        "/api/pay/aliPay")
+                        "/api/pay/aliPay", "/v2/{userId}/update/vip/{vipId}")
                 .order(1);
         // 刷新token拦截器
         registry.addInterceptor(new RefreshTokenInterceptor())
@@ -51,7 +51,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/api/imageText/v2/{id}/comments", "//api/imageText/v2/study/list", "/api/path/v2/list", "/api/path/v2/{id}/detail", "/api/path/{id}/detail",
                         "/api/question/v2/list", "/api/question/v2/category/list", "/api/question/v2/detail/{id}", "/api/comments/v2/list",
                         "/api/category/getCategoryById", "/api/category/getCategoryList", "/api/category/getCategorySimpleList", "/api/category/getCategoryPage", "/live/course/{courseId}/video/{videoId}/token/{token}",
-                        "/api/pay/aliPay")
+                        "/api/pay/aliPay", "/v2/{userId}/update/vip/{vipId}")
                 .order(0);
     }
 
