@@ -371,8 +371,10 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
         // 更新阅读数
         one.setReadCount(one.getReadCount() + 1);
         updateById(one);
-        // 记录图文学习
-        learnRecordService.updateLearnRecord(null, null, id, userId, "TOPIC");
+        if (vo.getIsBuy()) {
+            // 记录图文学习
+            learnRecordService.updateLearnRecord(null, null, id, userId, "TOPIC");
+        }
         return vo;
     }
 

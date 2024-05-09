@@ -42,7 +42,7 @@ public class LearnRecordServiceImpl extends ServiceImpl<LearnRecordMapper, Learn
         } else if (StringUtils.isNotBlank(type) && "TOPIC".equals(type)) {
             // 更新图文学习记录
             if (ObjectUtils.isNotNull(topicId)) {
-                record.setBookId(bookId);
+                record.setTopicId(topicId);
                 record.setUserId(userId);
                 record.setType(type);
                 record.setLatestViewTime(LocalDateTime.now());

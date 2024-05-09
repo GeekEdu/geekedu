@@ -132,6 +132,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         form1.setPayChannel(form.getPayment());
         form1.setPayAmount(vo.getAmount());
         form1.setOrderId(vo.getOrderId());
+        form1.setUserId(userId);
         Message<PayInfoForm> payInfoMsg = MessageBuilder.withPayload(form1).build();
         rocketMQTemplate.asyncSend("payInfo-2Mysql-topic", payInfoMsg, new SendCallback() {
             @Override
@@ -144,7 +145,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 log.error("写入支付信息-消息发送失败");
             }
         });
-        tradeFeignClient.createPayInfo(form1);
+        // tradeFeignClient.createPayInfo(form1);
         // 存入数据库
         handle2MySQL(form, vo);
         return vo;

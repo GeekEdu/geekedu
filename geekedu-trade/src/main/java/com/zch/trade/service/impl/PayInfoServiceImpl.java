@@ -132,7 +132,7 @@ public class PayInfoServiceImpl extends ServiceImpl<PayInfoMapper, PayInfo> impl
 
     @Override
     public void createPayInfo(PayInfoForm form) {
-        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        Long userId = form.getUserId();
         // Long userId = 1745747394693820416L;
         // 查询支付信息
         if (ObjectUtils.isNotNull(form) && ObjectUtils.isNotNull(form.getOrderId())) {

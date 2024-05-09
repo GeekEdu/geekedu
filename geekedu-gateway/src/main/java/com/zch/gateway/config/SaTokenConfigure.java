@@ -86,6 +86,7 @@ public class SaTokenConfigure {
                             .notMatch("/label/api/category/getCategorySimpleList")
                             .notMatch("/label/api/category/getCategoryPage")
                             .notMatch("/ws/live/course/{courseId}/video/{videoId}/token/{token}")
+                            .notMatch("/trade//api/pay/aliPay")
                             .check(r -> {
                                 ServerHttpRequest request = SaReactorSyncHolder.getContext().getRequest();
                                 String token = request.getHeaders().getFirst("Authorization");
