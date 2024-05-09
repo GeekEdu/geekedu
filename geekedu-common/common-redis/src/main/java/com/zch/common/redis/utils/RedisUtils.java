@@ -5,10 +5,7 @@ import lombok.NoArgsConstructor;
 import org.redisson.api.*;
 
 import java.time.Duration;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -586,6 +583,15 @@ public class RedisUtils {
     public static void addRSetObject(String key, double score, String setName) {
         RScoredSortedSet<Object> set = CLIENT.getScoredSortedSet(key);
         set.add(score, setName);
+    }
+
+    public static List<String> getRSetSingle(String key) {
+        RScoredSortedSet<Object> set = CLIENT.getScoredSortedSet(key);
+        List<String> names = new ArrayList<>();
+        set.readAll().forEach(item -> {
+            names.add((String) item);
+        });
+        return names;
     }
 
     public static boolean rSetContainSingle(String key, Long userId) {

@@ -140,7 +140,7 @@ public class ThumbServiceImpl extends ServiceImpl<ThumbMapper, Thumb> implements
 
     @Override
     public Long queryCount(Integer relationId, String type) {
-        Long userId = Long.valueOf((String) StpUtil.getLoginId());
+        // Long userId = Long.valueOf((String) StpUtil.getLoginId());
         if (ObjectUtils.isNull(relationId) || StringUtils.isBlank(type)) {
             return 0L;
         }

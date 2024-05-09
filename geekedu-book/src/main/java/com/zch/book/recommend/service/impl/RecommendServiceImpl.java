@@ -6,6 +6,7 @@ import com.zch.api.feignClient.trade.TradeFeignClient;
 import com.zch.api.vo.book.RecommendVO;
 import com.zch.api.vo.order.OrderVO;
 import com.zch.book.domain.po.EBook;
+import com.zch.book.domain.po.ImageText;
 import com.zch.book.recommend.dto.ProductDTO;
 import com.zch.book.recommend.dto.RelateDTO;
 import com.zch.book.recommend.service.RecommendService;
@@ -42,14 +43,13 @@ public class RecommendServiceImpl implements RecommendService {
 
     @Override
     public List<ProductDTO> getProductData() {
-        List<EBook> bookList = bookService.list(new LambdaQueryWrapper<EBook>()
-                .gt(EBook::getPrice, 0.00));
-        if (ObjectUtils.isNotNull(bookList) && CollUtils.isNotEmpty(bookList)) {
+        List<ImageText> list = imageTextService.list();
+        if (ObjectUtils.isNotNull(list) && CollUtils.isNotEmpty(list)) {
             List<ProductDTO> vo = new ArrayList<>();
-            bookList.forEach(item -> {
+            list.forEach(item -> {
                 ProductDTO dto = new ProductDTO();
                 dto.setProductId(Long.valueOf(item.getId()));
-                dto.setProductName(item.getName());
+                dto.setProductName(item.getTitle());
                 dto.setProductPrice(String.valueOf(item.getPrice()));
                 vo.add(dto);
             });

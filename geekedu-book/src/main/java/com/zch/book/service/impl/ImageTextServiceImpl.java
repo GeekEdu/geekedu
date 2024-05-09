@@ -32,16 +32,22 @@ import com.zch.common.core.utils.CollUtils;
 import com.zch.common.core.utils.ObjectUtils;
 import com.zch.common.core.utils.StringUtils;
 import com.zch.common.mvc.result.Response;
+import com.zch.common.redis.utils.RedisUtils;
 import com.zch.common.satoken.context.UserContext;
+import io.gorse.gorse4j.Feedback;
+import io.gorse.gorse4j.Gorse;
+import io.gorse.gorse4j.Item;
+import io.gorse.gorse4j.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.zch.common.redis.constants.RedisConstants.IMAGE_TEXT_Z_SET;
 
 /**
  * @author Poison02
@@ -71,7 +77,7 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
                                                               String keywords,
                                                               Integer categoryId) {
         if (ObjectUtils.isNull(pageNum) || ObjectUtils.isNull(pageSize)
-        || StringUtils.isBlank(sort) || StringUtils.isBlank(order)) {
+                || StringUtils.isBlank(sort) || StringUtils.isBlank(order)) {
             pageNum = 1;
             pageSize = 10;
             sort = "id";
@@ -198,7 +204,7 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
         ImageText imageText = new ImageText();
         BeanUtils.copyProperties(form, imageText);
         // 注意 数据库定义是 0-免费 1-收费
-        imageText.setSellType(! form.getIsFree());
+        imageText.setSellType(!form.getIsFree());
         imageText.setPrice(new BigDecimal(form.getPrice()));
         imageText.setCreatedBy(userId);
         imageText.setUpdatedBy(userId);
@@ -268,7 +274,7 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
     @Override
     public ImageTextAndCategoryVO getImageTextList(Integer pageNum, Integer pageSize, String scene, Integer categoryId) {
         if (ObjectUtils.isNull(pageNum) || ObjectUtils.isNull(pageSize)
-        || StringUtils.isBlank(scene) || ObjectUtils.isNull(categoryId)) {
+                || StringUtils.isBlank(scene) || ObjectUtils.isNull(categoryId)) {
             pageNum = 1;
             pageSize = 10;
             scene = "default";
@@ -288,7 +294,7 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
             return vo;
         }
         LambdaQueryWrapper<ImageText> wrapper = new LambdaQueryWrapper<>();
-        if (! Objects.equals(categoryId, 0)) {
+        if (!Objects.equals(categoryId, 0)) {
             wrapper.eq(ImageText::getCategoryId, categoryId);
         }
         if (StringUtils.isNotBlank(scene)) {
@@ -314,7 +320,7 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
             Response<Long> thumbCount = userFeignClient.queryCount(item.getId(), "IMAGE_TEXT");
             Response<Long> collectionCount = userFeignClient.collectionCount(item.getId(), "IMAGE_TEXT");
             if (ObjectUtils.isNotNull(thumbCount) && ObjectUtils.isNotNull(thumbCount.getData())
-                && ObjectUtils.isNotNull(collectionCount) && ObjectUtils.isNotNull(collectionCount.getData())) {
+                    && ObjectUtils.isNotNull(collectionCount) && ObjectUtils.isNotNull(collectionCount.getData())) {
                 vo1.setThumbCount(thumbCount.getData());
                 vo1.setCollectCount(collectionCount.getData());
             }
@@ -322,6 +328,39 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
         }).collect(Collectors.toList());
         vo.getData().setData(list);
         vo.getData().setTotal(count);
+        return vo;
+    }
+
+    @Override
+    public List<ImageTextVO> getRecommendImageText(Long userId) {
+        List<ImageTextVO> vo = new ArrayList<>();
+        // 每个用户点赞过的图文id集合
+        Map<Long, List<Integer>> res = new HashMap<>();
+        // 从redis中获取图文点赞集合
+        List<ImageText> list = list();
+        if (ObjectUtils.isNotNull(list) && !CollUtils.isEmpty(list)) {
+            list.forEach(item -> {
+                // 同一个图文里面的点赞集合
+                List<String> thumbList = RedisUtils.getRSetSingle(IMAGE_TEXT_Z_SET + item.getId());
+                if (ObjectUtils.isNotNull(thumbList) && CollUtils.isNotEmpty(thumbList)) {
+                    thumbList.forEach(itemId -> {
+                        res.put(Long.valueOf(itemId), List.of(item.getId()));
+                    });
+                }
+            });
+        }
+        List<Integer> recommendedArticles = getRecommendedArticles(res, userId);
+        // 查询推荐的图文
+        recommendedArticles.forEach(item -> {
+            ImageTextVO vo1 = new ImageTextVO();
+            ImageText imageText = getById(item);
+            BeanUtils.copyProperties(imageText, vo1);
+            Response<CategorySimpleVO> res2 = labelFeignClient.getCategoryById(imageText.getCategoryId(), "IMAGE_TEXT");
+            if (ObjectUtils.isNotNull(res2) || ObjectUtils.isNotNull(res2.getData())) {
+                vo1.setCategory(res2.getData());
+            }
+            vo.add(vo1);
+        });
         return vo;
     }
 
@@ -352,7 +391,7 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
         // 查询图文点赞信息
         Response<Boolean> isThumb = userFeignClient.queryIsVote(id, "IMAGE_TEXT");
         Response<Long> thumbCount = userFeignClient.queryCount(id, "IMAGE_TEXT");
-        if (ObjectUtils.isNotNull(isThumb) && ObjectUtils.isNotNull(isThumb.getData()) ) {
+        if (ObjectUtils.isNotNull(isThumb) && ObjectUtils.isNotNull(isThumb.getData())) {
             vo.setIsThumb(isThumb.getData());
         }
         if (ObjectUtils.isNotNull(thumbCount) && ObjectUtils.isNotNull(thumbCount.getData())) {
@@ -361,7 +400,7 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
         // 查询图文收藏信息
         Response<Boolean> isCollect = userFeignClient.checkCollectStatus(id, "IMAGE_TEXT");
         Response<Long> collectionCount = userFeignClient.collectionCount(id, "IMAGE_TEXT");
-        if (ObjectUtils.isNotNull(isCollect) && ObjectUtils.isNotNull(isCollect.getData()) ) {
+        if (ObjectUtils.isNotNull(isCollect) && ObjectUtils.isNotNull(isCollect.getData())) {
             vo.setIsCollect(isCollect.getData());
         }
         if (ObjectUtils.isNotNull(collectionCount) && ObjectUtils.isNotNull(collectionCount.getData())) {
@@ -440,5 +479,69 @@ public class ImageTextServiceImpl extends ServiceImpl<ImageTextMapper, ImageText
             vo.add(vo1);
         });
         return vo;
+    }
+
+
+    public static List<Integer> getRecommendedArticles(Map<Long, List<Integer>> userLikes, Long userId) {
+        // 记录每篇图文被推荐的次数
+        Map<Integer, Integer> recommendedCounts = new HashMap<>();
+
+        // 获取用户点赞过的图文 id 集合
+        List<Integer> userLikedArticles = userLikes.getOrDefault(userId, new ArrayList<>());
+
+        // 如果用户没有点赞过任何图文，直接推荐点赞数最高的前5个图文
+        if (userLikedArticles.isEmpty()) {
+            // 统计所有图文的点赞数
+            for (List<Integer> articles : userLikes.values()) {
+                for (int articleId : articles) {
+                    recommendedCounts.put(articleId, recommendedCounts.getOrDefault(articleId, 0) + 1);
+                }
+            }
+
+            // 根据推荐次数排序
+            List<Map.Entry<Integer, Integer>> recommendedList = new ArrayList<>(recommendedCounts.entrySet());
+            recommendedList.sort((a, b) -> b.getValue().compareTo(a.getValue()));
+
+            // 返回推荐的前5个图文 id 列表
+            List<Integer> recommendedArticles = new ArrayList<>();
+            int count = 0;
+            for (Map.Entry<Integer, Integer> entry : recommendedList) {
+                recommendedArticles.add(entry.getKey());
+                count++;
+                if (count == 5) {
+                    break;
+                }
+            }
+            return recommendedArticles;
+        }
+
+        // 遍历用户点赞过的图文 id 集合
+        for (int likedArticleId : userLikedArticles) {
+            // 获取点赞过该图文的所有用户列表
+            for (long otherUserId : userLikes.keySet()) {
+                // 跳过当前用户
+                if (otherUserId == userId) continue;
+
+                List<Integer> otherUserLikedArticles = userLikes.get(otherUserId);
+
+                // 检查其他用户点赞过的图文，并过滤掉当前用户已经点赞过的图文
+                for (int otherUserLikedArticleId : otherUserLikedArticles) {
+                    if (!userLikedArticles.contains(otherUserLikedArticleId)) {
+                        recommendedCounts.put(otherUserLikedArticleId, recommendedCounts.getOrDefault(otherUserLikedArticleId, 0) + 1);
+                    }
+                }
+            }
+        }
+
+        // 根据推荐次数排序
+        List<Map.Entry<Integer, Integer>> recommendedList = new ArrayList<>(recommendedCounts.entrySet());
+        recommendedList.sort((a, b) -> b.getValue().compareTo(a.getValue()));
+
+        // 返回推荐的图文 id 列表
+        List<Integer> recommendedArticles = new ArrayList<>();
+        for (Map.Entry<Integer, Integer> entry : recommendedList) {
+            recommendedArticles.add(entry.getKey());
+        }
+        return recommendedArticles;
     }
 }

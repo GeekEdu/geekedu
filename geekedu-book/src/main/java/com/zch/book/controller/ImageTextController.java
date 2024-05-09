@@ -201,6 +201,16 @@ public class ImageTextController {
     }
 
     /**
+     * 前台 获取图文推荐
+     * @param userId
+     * @return
+     */
+    @GetMapping("/v2/recommend")
+    public Response<List<ImageTextVO>> getRecommendList(@RequestParam("userId") Long userId) {
+        return Response.success(imageTextService.getRecommendImageText(userId));
+    }
+
+    /**
      * 获取图文明细
      * @param id
      * @return

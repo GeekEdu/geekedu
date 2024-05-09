@@ -128,7 +128,7 @@ public class CollectionServiceImpl extends ServiceImpl<CollectionMapper, Collect
 //        if (ObjectUtils.isNull(collections) || CollUtils.isEmpty(collections)) {
 //            return 0L;
 //        }
-        Long userId = 1745747394693820416L;
+        // Long userId = 1745747394693820416L;
         String key = switch (CollectionEnums.valueOf(type)) {
             case E_BOOK -> E_BOOK_SET + relationId;
             case IMAGE_TEXT -> IMAGE_TEXT_SET + relationId;

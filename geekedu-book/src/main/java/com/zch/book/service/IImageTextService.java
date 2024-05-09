@@ -136,6 +136,13 @@ public interface IImageTextService extends IService<ImageText> {
     ImageTextAndCategoryVO getImageTextList(Integer pageNum, Integer pageSize, String scene, Integer categoryId);
 
     /**
+     * 获取推荐图文
+     * @param userId
+     * @return
+     */
+    List<ImageTextVO> getRecommendImageText(Long userId);
+
+    /**
      * 获取图文明细
      * @param id
      * @return
