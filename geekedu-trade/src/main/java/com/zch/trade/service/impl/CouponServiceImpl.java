@@ -7,10 +7,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zch.api.dto.trade.coupon.CouponForm;
 import com.zch.api.vo.trade.coupon.CouponVO;
 import com.zch.api.vo.trade.coupon.UserCouponVO;
-import com.zch.common.core.utils.BeanUtils;
-import com.zch.common.core.utils.CollUtils;
-import com.zch.common.core.utils.ObjectUtils;
-import com.zch.common.core.utils.StringUtils;
+import com.zch.common.core.utils.*;
+import com.zch.common.mvc.exception.CommonException;
 import com.zch.common.redis.utils.RedisUtils;
 import com.zch.common.satoken.context.UserContext;
 import com.zch.trade.domain.po.Coupon;
@@ -23,6 +21,9 @@ import com.zch.trade.service.IUserCouponService;
 import com.zch.trade.utils.CodeUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.zch.common.redis.constants.RedisConstants.COUPON_CODE_SERIAL;
-import static com.zch.common.redis.constants.RedisConstants.COUPON_RANGE_KEY;
+import static com.zch.common.redis.constants.RedisConstants.*;
 
 /**
  * @author Poison02
@@ -46,6 +46,16 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> impleme
     private final IUserCouponService userCouponService;
 
     private final ICouponCodeService couponCodeService;
+
+//    private final RedisTemplate<String, Object> redisTemplate;
+//
+//    private static final RedisScript<Long> RECEIVE_COUPON_SCRIPT;
+//    private static final RedisScript<String> EXCHANGE_COUPON_SCRIPT;
+//
+//    static {
+//        RECEIVE_COUPON_SCRIPT = RedisScript.of(new ClassPathResource("lua/receive_coupon.lua"), Long.class);
+//        EXCHANGE_COUPON_SCRIPT = RedisScript.of(new ClassPathResource("lua/exchange_coupon.lua"), String.class);
+//    }
 
     @Override
     public Page<CouponVO> getCouponList(Integer pageNum, Integer pageSize, String keywords) {
@@ -119,6 +129,39 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> impleme
             return vo1;
         }).collect(Collectors.toList());
         return vo;
+    }
+
+    @Override
+    public void receiveCoupon(Long couponId) {
+//        // 1.执行LUA脚本，判断结果
+//        // 1.1.准备参数
+//        String key1 = COUPON_CACHE_KEY_PREFIX + couponId;
+//        String key2 = USER_COUPON_CACHE_KEY_PREFIX + couponId;
+//        long userId = Long.parseLong((String) StpUtil.getLoginId());
+//        // 1.2.执行脚本
+//        Long r = redisTemplate.execute(RECEIVE_COUPON_SCRIPT, List.of(key1, key2), Long.toString(userId));
+//        int result = NumberUtils.null2Zero(r).intValue();
+//        if (result != 0) {
+//            // 结果大于0，说明出现异常
+//            throw new CommonException("发放优惠码失败");
+//        }
+    }
+
+    @Override
+    public void exchangeCoupon(String code) {
+//        // 1.校验并解析兑换码
+//        long serialNum = CodeUtils.parseCode(code);
+//        // 2.执行LUA脚本
+//        long userId = Long.parseLong((String) StpUtil.getLoginId());
+//        String result = redisTemplate.execute(
+//                EXCHANGE_COUPON_SCRIPT,
+//                List.of(COUPON_CODE_MAP_KEY, COUPON_RANGE_KEY),
+//                String.valueOf(serialNum), String.valueOf(serialNum + 5000), Long.toString(userId));
+//        long r = NumberUtils.parseLong(result);
+//        if (r < 10) {
+//            // 异常结果应该是在1~5之间
+//            throw new CommonException("兑换优惠码失败");
+//        }
     }
 
     /**

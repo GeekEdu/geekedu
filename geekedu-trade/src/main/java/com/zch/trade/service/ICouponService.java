@@ -37,4 +37,16 @@ public interface ICouponService extends IService<Coupon> {
      */
     List<UserCouponVO> getUserCounponList();
 
+    /**
+     * 领取优惠券
+     * @param couponId
+     */
+    void receiveCoupon(Long couponId);
+
+    /**
+     * 兑换优惠券
+     * @param code
+     */
+    void exchangeCoupon(String code);
+
 }
