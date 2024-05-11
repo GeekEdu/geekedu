@@ -173,7 +173,7 @@ public class IndexController {
         // course
         List<Map<String, Object>> listData = new ArrayList<>();
         Map<String, Object> listItem1 = new HashMap<>();
-        listItem1.put("cover", "https://geekedu-1315662121.cos.ap-chengdu.myqcloud.com/all/6f4b98a849e24799bf812fcc46cf7251.jpg");
+        listItem1.put("cover", "https://geekedu-1315662121.cos.ap-chengdu.myqcloud.com/all/a883bcc66d504aea8a12236c54532cc3.jpg");
         listItem1.put("id", 6);
         listItem1.put("price", "199.00");
         listItem1.put("t_price", "20.00");
@@ -183,7 +183,7 @@ public class IndexController {
         listData.add(listItem1);
 
         Map<String, Object> listItem2 = new HashMap<>();
-        listItem2.put("cover", "https://geekedu-1315662121.cos.ap-chengdu.myqcloud.com/all/958fae5ca65e4f43b38b682d99179448.png");
+        listItem2.put("cover", "https://geekedu-1315662121.cos.ap-chengdu.myqcloud.com/all/2326e7700e9b4d408f808d1633161c60.png");
         listItem2.put("id", 7);
         listItem2.put("price", "199.00");
         listItem2.put("t_price", "20.00");
@@ -193,7 +193,7 @@ public class IndexController {
         listData.add(listItem2);
 
         Map<String, Object> listItem3 = new HashMap<>();
-        listItem3.put("cover", "https://geekedu-1315662121.cos.ap-chengdu.myqcloud.com/all/d102950daa354487b41a257c4bf805a5.png");
+        listItem3.put("cover", "https://geekedu-1315662121.cos.ap-chengdu.myqcloud.com/all/4c7cc214b9d14263ba788eccfa290c91.jpg");
         listItem3.put("id", 11);
         listItem3.put("price", "88.00");
         listItem3.put("t_price", "100.00");
@@ -203,7 +203,7 @@ public class IndexController {
         listData.add(listItem3);
 
         Map<String, Object> listItem4 = new HashMap<>();
-        listItem4.put("cover", "https://geekedu-1315662121.cos.ap-chengdu.myqcloud.com/all/6f4b98a849e24799bf812fcc46cf7251.jpg");
+        listItem4.put("cover", "https://geekedu-1315662121.cos.ap-chengdu.myqcloud.com/all/182b0d13340748609f9f44557d4b79c4.png");
         listItem4.put("id", 3);
         listItem4.put("price", "159.00");
         listItem4.put("t_price", "20.00");
@@ -212,7 +212,7 @@ public class IndexController {
         listData.add(listItem4);
 
         Map<String, Object> listItem5 = new HashMap<>();
-        listItem5.put("cover", "https://geekedu-1315662121.cos.ap-chengdu.myqcloud.com/all/d102950daa354487b41a257c4bf805a5.png");
+        listItem5.put("cover", "https://geekedu-1315662121.cos.ap-chengdu.myqcloud.com/all/78d4edf3c22b48f78611bbb564d7dd96.png");
         listItem5.put("id", 25);
         listItem5.put("price", "99.00");
         listItem5.put("t_price", "20.00");
@@ -236,7 +236,7 @@ public class IndexController {
 
         List<Map<String, Object>> topicData = new ArrayList<>();
         Map<String, Object> topicData1 = new HashMap<>();
-        topicData1.put("cover", "https://geekedu-1315662121.cos.ap-chengdu.myqcloud.com/all/99d9c8254e264edfaef5a539e21627a8.png");
+        topicData1.put("cover", "https://geekedu-1315662121.cos.ap-chengdu.myqcloud.com/all/19430dcec563492686f6a9d4f769fb06.png");
         topicData1.put("id", 6);
         topicData1.put("price", "0");
         topicData1.put("t_price", "20.00");
@@ -245,7 +245,7 @@ public class IndexController {
         topicData1.put("type", "topic");
 
         Map<String, Object> topicData2 = new HashMap<>();
-        topicData2.put("cover", "https://geekedu-1315662121.cos.ap-chengdu.myqcloud.com/all/6f4b98a849e24799bf812fcc46cf7251.jpg");
+        topicData2.put("cover", "https://geekedu-1315662121.cos.ap-chengdu.myqcloud.com/all/2326e7700e9b4d408f808d1633161c60.png");
         topicData2.put("id", 6);
         topicData2.put("price", "12");
         topicData2.put("t_price", "20.00");
